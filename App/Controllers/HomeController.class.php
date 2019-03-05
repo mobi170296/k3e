@@ -4,8 +4,7 @@
     
     class HomeController extends \Core\Controller{
         public function Index($id, Student $student){
-            print_r($student);
-            echo 'Index action of HomeController id = ' . $id;
+            $this->redirectToAction("Home", "About", ['username' => 'linh170296', 'password' => '01208663626']);
         }
         public function About(){
             echo 'About action of HomeController';
