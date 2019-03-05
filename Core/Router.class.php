@@ -10,6 +10,8 @@
             $path = isset($component['path']) ? rtrim($component['path'], '/') : '';
             $this->path = str_replace('k3e_route=', '', $path);
             $this->query = isset($component['query']) ? $component['query'] : '';
+            #Convert query string to query array
+            parse_str($this->query, $this->query);
         }
         
         public function mapRoute($pattern, $defaultParams = []){
@@ -44,6 +46,11 @@
         }
         
         public function dispatch(){
+            #fetch $_REQUEST (POST + GET) to $this->params
+            $this->query = array_merge($this->query, $_REQUEST);
+            
+            $args = [];
+            
             $controllername = isset($this->params['controller']) ? $this->params['controller'] : '';
             $actionname = isset($this->params['action']) ? $this->params['action'] : '';
             
@@ -52,15 +59,38 @@
                 if(class_exists($controllername)){
                     $controller = new $controllername();
                     if(method_exists($controller, $actionname)){
-                        $controller->$actionname();
+                        $method = (new \ReflectionClass($controller))->getMethod($actionname);
+                        $methodparameters = $method->getParameters();
+                        
+                        foreach($methodparameters as $parameter){
+                            $parametername = $parameter->getName();
+                            if($parameter->getType() != null){
+                                #Class Parameter
+                                $classname = $parameter->getType()->getName();
+                                $obj = new $classname();
+                                
+                                $rclass = new \ReflectionClass($classname);
+                                $properties = $rclass->getProperties();
+                                
+                                foreach($properties as $property){
+                                    $obj->{$property->getName()} = isset($this->query[$property->getName()]) ? $this->query[$property->getName()] : null;
+                                }
+                                
+                                $args[$parametername] = $obj;
+                            }else{
+                                $args[$parametername] = isset($this->query[$parametername]) ? $this->query[$parametername] : null;
+                            }
+                        }
+                        
+                        call_user_func_array([$controller, $actionname], $args);
                     }else{
                         header('HTTP/1.1 404 Not Found');
-                        echo 'Action not found';
+                        echo '<b style="color: red">Action not found</b>';
                         exit;
                     }
                 }else{
                     header('HTTP/1.1 404 Not Found');
-                    echo 'Controller not found';
+                    echo '<b style="color: red">Controller not found</b>';
                     exit;
                 }
             }else{
