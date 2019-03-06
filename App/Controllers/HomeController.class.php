@@ -7,7 +7,8 @@
             $this->redirectToAction("Home", "About", ['username' => 'linh170296', 'password' => '01208663626']);
         }
         public function About(){
-            echo 'About action of HomeController';
+            $this->View->ViewData['title'] = 'About';
+            return $this->View->RenderTemplate();
         }
         public function Contact(){
             echo 'Contact action of HomeController';

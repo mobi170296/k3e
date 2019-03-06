@@ -57,7 +57,7 @@
             if(!empty($controllername) && !empty($actionname)){
                 $controllername = CONTROLLER_NS . '\\' . $controllername . 'Controller';
                 if(class_exists($controllername)){
-                    $controller = new $controllername();
+                    $controller = new $controllername($this->params['controller'], $this->params['action']);
                     if(method_exists($controller, $actionname)){
                         $method = (new \ReflectionClass($controller))->getMethod($actionname);
                         $methodparameters = $method->getParameters();
@@ -82,7 +82,8 @@
                             }
                         }
                         
-                        call_user_func_array([$controller, $actionname], $args);
+                        $view = call_user_func_array([$controller, $actionname], $args);
+                        $view->render();
                     }else{
                         header('HTTP/1.1 404 Not Found');
                         echo '<b style="color: red">Action not found</b>';

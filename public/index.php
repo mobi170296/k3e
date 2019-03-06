@@ -3,7 +3,7 @@
     define('DS', DIRECTORY_SEPARATOR);
     define('CONTROLLER_NS', 'App\Controllers');
     define('MODEL_NS', '\App\Controllers');
-    
+    define('VIEW_DIR', k3_ROOT . DS .  'App' . DS . 'Views');
     require_once k3_ROOT . DS . 'Config' . DS . 'config.php';
     
     require_once k3_ROOT . DS . 'Core' . DS . 'autoload.php';
