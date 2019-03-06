@@ -83,7 +83,7 @@
                         }
                         
                         $view = call_user_func_array([$controller, $actionname], $args);
-                        $view->render();
+                        return $view;
                     }else{
                         header('HTTP/1.1 404 Not Found');
                         echo '<b style="color: red">Action not found</b>';

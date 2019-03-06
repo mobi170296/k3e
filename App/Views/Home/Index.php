@@ -1,7 +1,6 @@
 <?php
-    $this->layout = true;
+    $this->layout = 'layout.php';
     $this->ViewData['title'] = 'Index of Home controller';
-    $this->addSection('script', '<script type="text/javascript">window.alert("Hello");</script>');
 ?>
 
 Trang chủ

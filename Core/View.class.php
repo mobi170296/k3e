@@ -7,7 +7,7 @@
         public $bodyContent;
         public $fileSection = [];
         public $contentSection = [];
-        public $layout = false;
+        public $layout = null;
         
         public function __construct($controller, $action){
             $this->controller = $controller;
@@ -16,8 +16,8 @@
         }
         
         public function render(){
-            if($this->layout){
-                require_once k3_ROOT . DS . 'App' . DS . 'Template' . DS . 'layout.php';
+            if($this->layout != null){
+                require_once TEMPLATE_DIR . DS . $this->layout;
             }else{
                 $this->renderBody();
             }
@@ -27,8 +27,9 @@
             if($file){
                 require_once $this->fileSection[$name];
             }else{
-                if(!empty($this->contentSection[$name]))
+                if (!empty($this->contentSection[$name])) {
                     echo $this->contentSection[$name];
+                }
             }
         }
         
@@ -50,7 +51,6 @@
         }
         
         public function RenderTemplate($controller = null, $action = null){
-            $this->layout = true;
             ob_start();
             if($controller == null || $action == null){
                 require_once VIEW_DIR . DS . $this->controller . DS . $this->action . '.php';

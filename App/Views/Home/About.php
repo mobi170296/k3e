@@ -1,4 +1,5 @@
 <?php
+    $this->layout = 'layout.php';
     $this->ViewData['title'] = 'About of Home controller';
     $this->addSection('head-script', <<<SCRIPT
             <script type="text/javascript">

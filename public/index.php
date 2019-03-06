@@ -4,6 +4,8 @@
     define('CONTROLLER_NS', 'App\Controllers');
     define('MODEL_NS', '\App\Controllers');
     define('VIEW_DIR', k3_ROOT . DS .  'App' . DS . 'Views');
+    define('TEMPLATE_DIR', k3_ROOT . DS . 'App' . DS . 'Template');
+    
     require_once k3_ROOT . DS . 'Config' . DS . 'config.php';
     
     require_once k3_ROOT . DS . 'Core' . DS . 'autoload.php';
@@ -17,9 +19,9 @@
     
     if($route->match()){
         #Call to Action method of Controller class
-        $route->dispatch();
-        #View is returned by Action of Controller
-//        $view->render();
+        $view = $route->dispatch();
+        #View to render
+        $view->render();
     }else{
         header('HTTP/1.1 404 Not Found');
         echo '<b style="color: red">404 Page</b>';

@@ -4,7 +4,7 @@
     
     class HomeController extends \Core\Controller{
         public function Index($id, Student $student){
-            $this->redirectToAction("Home", "About", ['username' => 'linh170296', 'password' => '01208663626']);
+            return $this->View->RenderContent("Content to dump data");
         }
         public function About(){
             $this->View->ViewData['title'] = 'About';
