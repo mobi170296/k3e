@@ -11,19 +11,19 @@
     
     require_once k3_ROOT . DS . 'Core' . DS . 'autoload.php';
     
-    #Begin Exception Handler Block
-    function ExceptionHandler(Exception $ex){
-        echo '<b>Đã xảy ra ngoại lệ</b>: <font color="red">' . $ex->getMessage() . '</font>';
-    }
-    set_exception_handler('\ExceptionHandler');
-    #End Exception Handler Block
-    
-    #Begin Error Handler Block
-    function ErrorHandler($errno, $error){
-        echo '<b>Đã xảy ra lỗi:</b> <font color="red">' . $error . '(' . $errno . ')' . '</font>';
-    }
-    set_error_handler('\ErrorHandler');
-    #End Error Handler Block
+//    #Begin Exception Handler Block
+//    function ExceptionHandler(Exception $ex){
+//        echo '<b>Đã xảy ra ngoại lệ</b>: <font color="red">' . $ex->getMessage() . '</font>';
+//    }
+//    set_exception_handler('\ExceptionHandler');
+//    #End Exception Handler Block
+//    
+//    #Begin Error Handler Block
+//    function ErrorHandler($errno, $error){
+//        echo '<b>Đã xảy ra lỗi:</b> <font color="red">' . $error . '(' . $errno . ')' . '</font>';
+//    }
+//    set_error_handler('\ErrorHandler');
+//    #End Error Handler Block
     
     $route = new Core\Router($_SERVER['QUERY_STRING']);
     
