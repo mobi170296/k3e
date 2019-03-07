@@ -1,0 +1,20 @@
+body{
+    margin: 0px;
+}
+
+div#main-container{
+    width: 1200px;
+    margin: 0px auto;
+}
+
+div#header-control{
+    text-align: right;
+}
+
+a{
+    text-decoration: none;
+    display: inline-block;
+    padding: 5px 20px;
+    background-color: #333;
+    color: #fff;
+}

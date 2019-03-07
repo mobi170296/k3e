@@ -3,9 +3,21 @@
     
     class UserController extends \Core\Controller{
         public function Index(){
-            echo 'Index action of UserController';
+            return $this->View->RenderTemplate();
+        }
+        public function Register(\App\Models\UserModel $user){
+            var_dump($user);
+            return $this->View->RenderTemplate();
+        }
+        public function Login($username, $password){
+            $this->View->ViewData['username'] = $username;
+            $this->View->ViewData['password'] = $password;
+            return $this->View->RenderTemplate();
+        }
+        public function Logout(){
+            
         }
         public function Info(){
-            echo 'Info action of UserController';
+            
         }
     }

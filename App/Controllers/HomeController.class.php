@@ -1,10 +1,10 @@
 <?php
     namespace App\Controllers;
-    use App\Models\Student;
     
     class HomeController extends \Core\Controller{
-        public function Index($id, Student $student){
-            return $this->View->RenderContent("Content to dump data");
+        public function Index($id, \App\Models\UserModel $userinfo){
+            
+            return $this->View->RenderTemplate();
         }
         public function About(){
             $this->View->ViewData['title'] = 'About';

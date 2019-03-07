@@ -67,6 +67,12 @@
                             if($parameter->getType() != null){
                                 #Class Parameter
                                 $classname = $parameter->getType()->getName();
+                                
+                                if(!class_exists($classname)){
+                                    $args[$parametername] = null;
+                                    break;
+                                }
+                                
                                 $obj = new $classname();
                                 
                                 $rclass = new \ReflectionClass($classname);
