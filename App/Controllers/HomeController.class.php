@@ -16,8 +16,13 @@
             return $this->View->RenderTemplate();
         }
         public function Contact(){
-            $db = new MySQLUtility('localhost', 'root', 'nguyenthithuyhang', 'employees', 3306);
-            $db->insert('user', [['name' => new DBString('Trịnh Văn Linh'), 'money' => new DBNumber(23), 'birthday' => new DBDateTime(17, 02, 1996)],
-                ['name' => new DBString('Dương Thúy Oanh'), 'money' => new DBNumber(500000), 'birthday' => new DBDateTime(1, 5, 1997)]]);
+            $db = new MySQLUtility('localhost', 'root', 'nguyenthithuyhang', 'employees');
+            $result = $db->select('first_name, last_name')->from('employees')->limit(10)->execute();
+            
+            while($row = $result->fetch_assoc()){
+                echo '<div style="white-space:pre-wrap">';
+                print_r($row);
+                echo '</div>' .PHP_EOL;
+            }
         }
     }
