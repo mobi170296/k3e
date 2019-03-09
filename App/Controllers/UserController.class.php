@@ -6,7 +6,7 @@
             return $this->View->RenderTemplate();
         }
         public function Register(\App\Models\UserModel $user){
-            #var_dump($user);
+            
             return $this->View->RenderTemplate();
         }
         public function Login($username, $password){

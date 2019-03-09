@@ -1,5 +1,5 @@
 <?php
-    namespace Core;
+    namespace Library;
     class MySQLUtility{
         public $select, $from, $where, $order, $limit, $groupby, $having;
         

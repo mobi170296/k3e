@@ -1,12 +1,18 @@
 <?php
     namespace App\Controllers;
-    use Core\MySQLUtility;
+    
+    use App\Models\MainCategoryModel;
+    use Library\MySQLUtility;
     use Library\DBDateTime;
     use Library\DBDate;
     use Library\DBString;
     use Library\DBNumber;
     
     class HomeController extends \Core\Controller{
+        public $dbcon;
+        protected function __init(){
+            $this->dbcon = new MySQLUtility($this->config['db']['host'], $this->config['db']['username'], $this->config['db']['password'], $this->config['db']['dbname']);
+        }
         public function Index($id, \App\Models\UserModel $userinfo){
             
             return $this->View->RenderTemplate();
@@ -16,7 +22,7 @@
             return $this->View->RenderTemplate();
         }
         public function Contact(){
-            $db = new MySQLUtility('localhost', 'root', 'nguyenthithuyhang', 'employees');
+            $db = new MySQLUtility($this->config['db']['host'], $this->config['db']['username'], $this->config['db']['password'], $this->config['db']['dbname']);
             $result = $db->select('first_name, last_name')->from('employees')->limit(10)->execute();
             
             while($row = $result->fetch_assoc()){
@@ -24,5 +30,17 @@
                 print_r($row);
                 echo '</div>' .PHP_EOL;
             }
+        }
+        public function Test(){
+            $categorylist = [];
+            $result = $this->dbcon->select('*')->from('maincategory')->execute();
+            while($row = $result->fetch_assoc()){
+                $mcate = new MainCategoryModel();
+                $mcate->id = $row['id'];
+                $mcate->loadFromDB($this->dbcon);
+                $categorylist[] = $mcate;
+            }
+            $this->View->ViewData['categorylist'] = $categorylist;
+            return $this->View->RenderTemplate();
         }
     }
