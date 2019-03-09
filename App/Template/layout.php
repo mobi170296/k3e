@@ -9,6 +9,7 @@
         ?>
     </head>
     <body>
+        <?php $this->renderSection('header.php', true);?>
         <div id="main-container">
             <div id="header">
                 <div id="header-control">

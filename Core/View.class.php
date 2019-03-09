@@ -25,7 +25,7 @@
         
         public function renderSection($name, $file = false){
             if($file){
-                require_once $this->fileSection[$name];
+                require_once k3_ROOT . DS . 'App' . DS . 'Template' . DS . $this->fileSection[$name];
             }else{
                 if (!empty($this->contentSection[$name])) {
                     echo $this->contentSection[$name];

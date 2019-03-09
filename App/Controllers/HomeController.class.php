@@ -9,7 +9,6 @@
     use Library\DBNumber;
     
     class HomeController extends \Core\Controller{
-        public $dbcon;
         protected function __init(){
             $this->dbcon = new MySQLUtility($this->config['db']['host'], $this->config['db']['username'], $this->config['db']['password'], $this->config['db']['dbname']);
         }
@@ -35,9 +34,9 @@
             $categorylist = [];
             $result = $this->dbcon->select('*')->from('maincategory')->execute();
             while($row = $result->fetch_assoc()){
-                $mcate = new MainCategoryModel();
+                $mcate = new MainCategoryModel($this->dbcon);
                 $mcate->id = $row['id'];
-                $mcate->loadFromDB($this->dbcon);
+                $mcate->loadFromDB();
                 $categorylist[] = $mcate;
             }
             $this->View->ViewData['categorylist'] = $categorylist;

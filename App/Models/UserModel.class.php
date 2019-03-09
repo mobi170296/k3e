@@ -16,8 +16,11 @@
         public $role;
         public $gender;
         
-        public function __construct(){
+        public function register(){
+            
+        }
+        
+        public function login(){
             
         }
     }
-?>

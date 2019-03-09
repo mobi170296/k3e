@@ -5,6 +5,7 @@
         public $View;
         public $controller, $action;
         public $config;
+        public $dbcon;
         
         public function __construct($controller, $action){
             global $k3_config;

@@ -73,7 +73,7 @@
                                     break;
                                 }
                                 
-                                $obj = new $classname();
+                                $obj = new $classname(null);
                                 
                                 $rclass = new \ReflectionClass($classname);
                                 $properties = $rclass->getProperties();
