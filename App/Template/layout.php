@@ -9,7 +9,7 @@
         ?>
     </head>
     <body>
-        <?php $this->renderSection('header.php', true);?>
+        <?php $this->renderSection('header', true);?>
         <div id="main-container">
             <div id="header">
                 <div id="header-control">

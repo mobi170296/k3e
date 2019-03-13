@@ -3,232 +3,398 @@
     <head>
         <meta charset="utf-8"/>
         <title>Template</title>
-        <style>
-            div#main-menu{
-                font-family: segoe ui;
-                display: inline-block;
-            }
-            div#main-menu ul{
-                list-style-type: none;
-                margin: 0px;
-                padding: 0px;
-                border: 1px solid rgb(121,178,89);
-            }
-            div#main-menu ul.main-cate{
-                position: relative;
-            }
-            div#main-menu a{
-                display: inline-block;
-                text-decoration: none;
-            }
-            div#main-menu ul.main-cate li > a{
-                display: block;
-                background: #fefefe;
-                padding: 5px 20px 5px 30px;
-                color: #777;
-                position: relative;
-            }
-            div#main-menu ul.main-cate li:hover > a::after{
-                content: '';
-                display: inline-block;
-                position: absolute;
-                top: 0px;
-                left: 100%;
-                margin-left: 1px;
-                border-style: solid;
-                border-width: 15px;
-                border-color: transparent transparent transparent rgb(121,178,89);
-            }
-            div#main-menu ul.main-cate li:hover > a{
-                background: rgb(121,178,89);
-                color: #fff;
-            }
-            div#main-menu ul.sub-cate{
-                position: absolute;
-                top: 0px;
-                left: 100%;
-                display: block;
-                width: 600px;
-                height: 100%;
-                border: 1px solid rgb(121,178,89);
-                display: none;
-                padding: 10px 20px;
-                box-sizing: border-box;
-                font-size: 11pt;
-            }
-            div#main-menu ul.main-cate > li:hover ul.sub-cate{
-                display: block;
-            }
+        <link rel="shortcut icon" href="/images/icons/icon.png"/>
+        <style type="text/css">
+			body{
+				margin: 0px;
+			}
+			div#top-bar{
+				padding: 5px 20px;
+				background-color: #1FBE80;
+				overflow: auto;
+			}
+			div#top-bar > a{
+				float: right;
+				color: white;
+				user-select: none;
+				-moz-user-select: none;
+				-webkit-user-select: none;
+				-ms-user-select: none;
+			}
+			div#control-bar-wrapper{
+				background-color: #26AD05;
+			}
+			div#control-bar{
+				width: 1200px;
+				margin: 0px auto;
+				line-height: 60px;
+			}
+			div#control-bar > div{
+				display: inline-block;
+			}
+			div#logo{
+                            position: relative;
+				user-select: none;
+				-webkit-user-select: none;
+			}
+			div#logo > span{
+                            color: #fff;
+				font-size: 24pt;
+				text-transform: uppercase;
+				font-family: segoe ui;
+				font-weight: bold;
+                                display: inline-block;
+			}
+			div#menu-wrapper{
+				border: 1px dashed #fff;
+                                border-radius: 3px;
+				width: 20px;
+				height: 20px;
+                                display: inline-block;
+                                vertical-align: bottom;
+			}
+			div#search-bar{
+				margin: 0px 30px;
+			}
+			div#search-bar input[type="text"]{
+				padding: 5px 15px;
+				border: 1px solid #fff;
+				border-radius: 3px 0px 0px 3px;
+				font-size: 14pt;
+				color: #21774E;
+			}
+			div#search-bar input[type="text"]:focus{
+				box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.1) inset;
+			}
+			div#search-bar button{
+				padding: 5px 20px;
+				border: 1px solid #fff;
+				border-radius: 0px 3px 3px 0px;
+				background-color: #fff;
+				color: #ABCC14;
+				font-size: 14pt;
+				transition: 500ms;
+			}
+			div#search-bar button:hover{
+				background-color: #ABCC14;
+				color: #fff;
+			}
+			div#slider-wrapper{
+                            margin: 0px auto;
+                            width: 1200px;
+				position: relative;
+				user-select: none;
+				-webkit-user-select: none;
+			}
+			div#slider{
+				height: 300px;
+				overflow: hidden;
+				position: relative;
+			}
+			div#slider img{
+				position: absolute;
+                                height: 100%;
+				left: 50%;
+				top: 0px;
+				animation-delay: 0s;
+				animation-duration: 700ms;
+				animation-iteration-count: 1;
+			}
+			div#slider-next{
+				font-size: 18pt;
+				font-weight: bolder;
+                                color: #0f0;
+				border: 1px solid rgba(0,255,0,0.3);
+                                border-radius: 5px;
+				background-color: rgba(255,255,255,0.7);
+				position: absolute;
+				width: 60px;
+				height: 30px;
+				display: inline-block;
+				top: 50%;
+				right: 20px;
+				margin: -15px 0px;
+				text-align: center;
+				line-height: 25px;
+				cursor: pointer;
+				user-select: none;
+				-webkit-user-select: none;
+			}
+			div#slider-next:hover{
+				box-shadow: 0px 0px 5px 0px #ddd;
+			}
+			div#slider-previous{
+				font-size: 18pt;
+				font-weight: bolder;
+                                color: #0f0;
+				border: 1px solid rgba(0,255,0,0.3);
+                                border-radius: 5px;
+				background-color: rgba(255,255,255,0.7);
+				position: absolute;
+				width: 60px;
+				height: 30px;
+				display: inline-block;
+				top: 50%;
+				left: 20px;
+				margin: -15px 0px;
+				text-align: center;
+				line-height: 30px;
+				cursor: pointer;
+				user-select: none;
+				-webkit-user-select: none;
+			}
+			div#slider-previous:hover{
+				box-shadow: 0px 0px 5px 0px #ddd;
+			}
+			div#slider-indicator{
+				position: absolute;
+				bottom: 10px;
+				left: 0px;
+				width: 100%;
+				text-align: center;
+				line-height: 0;
+				user-select: none;
+				-webkit-user-select: none;
+			}
+			div#slider-indicator div.slider-indicator-index{
+				background: rgba(92,180,118,0.75);
+				width: 30px;
+				height: 10px;
+				display: inline-block;
+			}
+			div#slider-indicator div.slider-indicator-index.active{
+				background: rgba(255,255,255,0.95);
+			}
+			@keyframes showImage{
+				from{
+					opacity: 0;
+				}
+				to{
+					opacity: 1;
+				}
+			}
+			@keyframes righttoleft{
+				from{
+					left: 150%;
+				}
+				to{
+					left: 50%;
+				}
+			}
+			@keyframes lefttoright{
+				from{
+					left: -50%;
+				}
+				to{
+					left: 50%;
+				}
+			}
+                        div#menu{
+                            background-color: #fff;
+                            box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.2);
+                            position: absolute;
+                            left: 0px;
+                            top: 100%;
+                            z-index: 1;
+                            display: none;
+                            line-height: initial;
+                        }
+                        div#menu-wrapper:hover div#menu{
+                            display: block;
+                        }
+                        div#menu a{
+                            text-decoration: none;
+                            font-family: segoe ui;
+                        }
+                        div#menu div.menu.l1 > a{
+                            display: block;
+                            white-space: nowrap;
+                            padding: 5px 20px;
+                            font-size: 10pt;
+                            font-weight: 600;
+                        }
+                        div#menu div.menu.l2{
+                            display: none;
+                            background-color: #fff;
+                        }
+                        div#menu div.menu.l2 > a{
+                            display: block;
+                            padding: 5px 20px;
+                            font-size: 10pt;
+                            font-weight: bold;
+                            white-space: nowrap;
+                            cursor: pointer;
+                        }
+                        div#menu div.menu.l2 > a:hover{
+                            background-color: rgba(0,255,0,0.9);
+                            color: #333;
+                        }
+                        div#menu div.menu.l1:hover > a{
+                            background-color: rgba(0,255,0,0.5);
+                            color: #fff;
+                        }
+                        div#menu div.menu.l1:hover div.menu.l2{
+                            position: absolute;
+                            left: 100%;
+                            top: 0px;
+                        }
+                        div#menu div.menu.l1:hover div.menu.l2{
+                            display: block;
+                        }
         </style>
     </head>
     <body>
-        <div id="main-menu">
-            <ul class="main-cate">
-                <li>
-                    <a href="#">Điện tử</a>
-                    <ul class="sub-cate">
-                        <li>Điện thoại</li>
-                        <li>Máy tính bảng</li>
-                        <li>Máy tính cá nhân</li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">Điện lạnh</a>
-                    <ul class="sub-cate">
-                        <li>Tủ lạnh</li>
-                        <li>Máy lạnh</li>
-                        <li>Quạt gió</li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">Văn phòng phẩm</a>
-                    <ul class="sub-cate">
-                        <li>Bút, viết</li>
-                        <li>Vở</li>
-                        <li>Sách giáo khoa</li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">Điện thoại - Máy tính</a>
-                    <ul class="sub-cate">
-                        <li>IPhone</li>
-                        <li>Smartphone</li>
-                        <li>Điện thoại phổ thông</li>
-                        <li>iPad</li>
-                        <li>IPhone cũ, IPhone lock</li>
-                        <li>Sony Xperia</li>
-                        <li>Máy tính bảng Android</li>
-                        <li>LG</li>
-                        <li>HTC</li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">Thời trang nữ</a>
-                    <ul class="sub-cate">
-                        <li>IPhone</li>
-                        <li>Smartphone</li>
-                        <li>Điện thoại phổ thông</li>
-                        <li>iPad</li>
-                        <li>IPhone cũ, IPhone lock</li>
-                        <li>Sony Xperia</li>
-                        <li>Máy tính bảng Android</li>
-                        <li>LG</li>
-                        <li>HTC</li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">Thời trang nam</a>
-                    <ul class="sub-cate">
-                        <li>IPhone</li>
-                        <li>Smartphone</li>
-                        <li>Điện thoại phổ thông</li>
-                        <li>iPad</li>
-                        <li>IPhone cũ, IPhone lock</li>
-                        <li>Sony Xperia</li>
-                        <li>Máy tính bảng Android</li>
-                        <li>LG</li>
-                        <li>HTC</li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">Giày dép - Túi xách</a>
-                    <ul class="sub-cate">
-                        <li>IPhone</li>
-                        <li>Smartphone</li>
-                        <li>Điện thoại phổ thông</li>
-                        <li>iPad</li>
-                        <li>IPhone cũ, IPhone lock</li>
-                        <li>Sony Xperia</li>
-                        <li>Máy tính bảng Android</li>
-                        <li>LG</li>
-                        <li>HTC</li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">Phụ kiện công nghệ</a>
-                    <ul class="sub-cate">
-                        <li>IPhone</li>
-                        <li>Smartphone</li>
-                        <li>Điện thoại phổ thông</li>
-                        <li>iPad</li>
-                        <li>IPhone cũ, IPhone lock</li>
-                        <li>Sony Xperia</li>
-                        <li>Máy tính bảng Android</li>
-                        <li>LG</li>
-                        <li>HTC</li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">Mẹ bé - Đồ chơi</a>
-                    <ul class="sub-cate">
-                        <li>IPhone</li>
-                        <li>Smartphone</li>
-                        <li>Điện thoại phổ thông</li>
-                        <li>iPad</li>
-                        <li>IPhone cũ, IPhone lock</li>
-                        <li>Sony Xperia</li>
-                        <li>Máy tính bảng Android</li>
-                        <li>LG</li>
-                        <li>HTC</li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">Đồng hồ - Phụ kiện</a>
-                    <ul class="sub-cate">
-                        <li>IPhone</li>
-                        <li>Smartphone</li>
-                        <li>Điện thoại phổ thông</li>
-                        <li>iPad</li>
-                        <li>IPhone cũ, IPhone lock</li>
-                        <li>Sony Xperia</li>
-                        <li>Máy tính bảng Android</li>
-                        <li>LG</li>
-                        <li>HTC</li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">Nhà cửa - Bách hóa</a>
-                    <ul class="sub-cate">
-                        <li>IPhone</li>
-                        <li>Smartphone</li>
-                        <li>Điện thoại phổ thông</li>
-                        <li>iPad</li>
-                        <li>IPhone cũ, IPhone lock</li>
-                        <li>Sony Xperia</li>
-                        <li>Máy tính bảng Android</li>
-                        <li>LG</li>
-                        <li>HTC</li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">Sức khỏe - Sắc đẹp</a>
-                    <ul class="sub-cate">
-                        <li>IPhone</li>
-                        <li>Smartphone</li>
-                        <li>Điện thoại phổ thông</li>
-                        <li>iPad</li>
-                        <li>IPhone cũ, IPhone lock</li>
-                        <li>Sony Xperia</li>
-                        <li>Máy tính bảng Android</li>
-                        <li>LG</li>
-                        <li>HTC</li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">Tivi - Giải trí - Máy lạnh</a>
-                    <ul class="sub-cate">
-                        <li>IPhone</li>
-                        <li>Smartphone</li>
-                        <li>Điện thoại phổ thông</li>
-                        <li>iPad</li>
-                        <li>IPhone cũ, IPhone lock</li>
-                        <li>Sony Xperia</li>
-                        <li>Máy tính bảng Android</li>
-                        <li>LG</li>
-                        <li>HTC</li>
-                    </ul>
-                </li>
-            </ul>
+        <div id="container">
+            <div id="header">
+                <div id="top-bar">
+                    <a>Liên hệ</a> <a>Bán hàng</a>
+                </div>
+                <div id="control-bar-wrapper">
+					<div id="control-bar">
+                                    <div id="logo">
+                                        <span>Kakaka</span>
+                                        <div id="menu-wrapper">
+                                            <div id="menu">
+                                                <div class="menu l1">
+                                                    <a>Hóa chất dùng cho công nghiệp</a>
+                                                    <div class="menu l2">
+                                                        <a>Các loại nhựa nhân tạo dạng thô</a>
+                                                        <a>Phân bón</a>
+                                                        <a>Hợp chất chữa cháy</a>
+                                                        <a>Chất phẩm dùng để hàn kim loại</a>
+                                                        <a>Chất bảo quản thực phẩm</a>
+                                                        <a>Chất để thuộc da</a>
+                                                        <a>Chất dính dùng trong công nghiệp</a>
+                                                    </div>
+                                                </div>
+                                                <div class="menu l1">
+                                                    <a>Thuốc màu, sơn, vecni</a>
+                                                    <div class="menu l2"></div>
+                                                </div>
+                                                <div class="menu l1">
+                                                    <a>Chất để tẩy trắng</a>
+                                                    <div class="menu l2"></div>
+                                                </div>
+                                                <div class="menu l1">
+                                                    <a>Dầu và mỡ công nghiệp</a>
+                                                    <div class="menu l2"></div>
+                                                </div>
+                                                <div class="menu l1">
+                                                    <a>Các chế phẩm dược thú y</a>
+                                                    <div class="menu l2"></div>
+                                                </div>
+                                                <div class="menu l1">
+                                                    <a>Kim loại thường hợp kim</a>
+                                                    <div class="menu l2"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+						
+						<div id="search-bar">
+							<form>
+								<input type="text" name="query" placeholder="Search query" size="60" autocomplete="off"/><button>Search</button>
+							</form>
+						</div>
+						<div id="account-control">
+                                                    <div>Trịnh Văn Linh</div>
+                                                </div>
+					</div>
+                </div>
+            </div>
+			<div id="slider-wrapper">
+				<div id="slider">
+					<img src="/images/banner/banner (1).jpg"/>
+					<img src="/images/banner/banner (1).png"/>
+					<img src="/images/banner/banner (2).jpg"/>
+					<img src="/images/banner/banner (2).png"/>
+					<img src="/images/banner/banner (3).png"/>
+				</div>
+                            <div id="slider-next">&gt;</div>
+                            <div id="slider-previous">&lt;</div>
+				<div id="slider-indicator">
+                                    <div class="slider-indicator-index active"></div>
+					<div class="slider-indicator-index"></div>
+					<div class="slider-indicator-index"></div>
+					<div class="slider-indicator-index"></div>
+					<div class="slider-indicator-index"></div>
+				</div>
+			</div>
+            <div id="content-wrapper">
+            </div>
+            <div id="footer"></div>
+			<script>
+                            var sliderController = new (function(){
+                                this.images = document.querySelectorAll('div#slider img');
+                                this.totalImage = this.images.length;
+                                for(var i=0; i<this.images.length; i++){
+                                    if(i==0){
+                                        this.images[i].onload = function(e){
+                                            this.style.marginLeft = -this.width/2 + 'px';
+                                        }
+                                    }else{
+                                        this.images[i].onload = function(e){
+                                            this.style.marginLeft = -this.width/2 + 'px';
+                                            this.style.display = 'none';
+                                            console.log('image onload');
+                                        }
+                                    }
+                                    if(this.images[i].complete){
+                                        this.images[i].onload();
+                                    }
+                                }
+                                this.indexButtons = document.querySelectorAll('div.slider-indicator-index');
+                                for(var i=0; i<this.indexButtons.length; i++){
+                                    this.indexButtons[i].index = i;
+                                    this.indexButtons[i].onclick = function(e){
+                                        if(this.index>sliderController.currentImage){
+                                            sliderController.images[this.index].style.animationName = 'righttoleft';
+                                        }else{
+                                            sliderController.images[this.index].style.animationName = 'lefttoright';
+                                        }
+                                        if(this.index!==sliderController.currentImage){
+                                            sliderController.clearActive();
+                                            sliderController.setActive(this.index);
+                                        }
+                                    }
+                                }
+                                this.nextButton = document.querySelector('div#slider-next');
+                                this.nextButton.onclick = function(e){
+                                    sliderController.next();
+                                }
+                                this.previousButton = document.querySelector('div#slider-previous');
+                                this.previousButton.onclick = function(e){
+                                    sliderController.previous();
+                                }
+                                this.currentImage = 0;
+                                this.setActive = function(n){
+                                    this.indexButtons[n].classList.add('active');
+                                    this.currentImage = n;
+                                    this.images[this.currentImage].style.display = 'inline-block';
+                                }
+                                this.clearActive = function(){
+                                    this.indexButtons[this.currentImage].classList.remove('active');
+                                    this.images[this.currentImage].style.display = 'none';
+                                }
+                                this.next = function(){
+                                    this.images[this.currentImage].style.display = 'none';
+                                    this.clearActive();
+                                    this.currentImage = (this.currentImage + 1)%this.totalImage;
+                                    this.images[this.currentImage].style.animationName = 'righttoleft';
+                                    this.setActive(this.currentImage);
+                                }
+                                this.previous = function(){
+                                    this.images[this.currentImage].style.display = 'none';
+                                    this.clearActive();
+                                    this.currentImage = (this.currentImage + this.totalImage - 1)%this.totalImage;
+                                    this.images[this.currentImage].style.animationName = 'lefttoright';
+                                    this.setActive(this.currentImage);
+                                }
+                                window.setInterval(function(e){
+                                    sliderController.next();
+                                },5000);
+                            })();
+			</script>
         </div>
     </body>
 </html>
