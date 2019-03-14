@@ -29,7 +29,7 @@
             }
             if($this->password[0] !== $this->password[1]){
                 $errors['password'] = 'Mật khẩu nhập lại không trùng khớp';
-            }else if(!preg_match('/^\.{6,}$/', $this->password[0])){
+            }else if(!preg_match('/^.{6,}$/', $this->password[0])){
                 $errors['password'] = 'Mật khẩu không hợp lệ phải từ 6 ký tự trở lên';
             }
             if(!preg_match('/^[A-z0-9.+%-]+@([A-z0-9-]+\.)[A-z]{2,}$/', $this->email)){

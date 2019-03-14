@@ -12,5 +12,12 @@
         public function getError($i){
             return $this->errors[$i];
         }
+        public function __toString() {
+            $result = '';
+            foreach($this->errors as $error){
+                $result .= '<div>'.$error.'</div>';
+            }
+            return $result;
+        }
     }
     

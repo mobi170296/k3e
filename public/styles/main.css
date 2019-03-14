@@ -8,6 +8,20 @@ a{
 .fl{
     float: left;
 }
+div.message-box{
+    padding: 10px 20px;
+    text-align: left;
+    border-radius: 10px;
+    font-family: segoe ui;
+}
+div.error{
+    background-color: red;
+    color: #fff;
+}
+div.success{
+    background-color: #26ad05;
+    color: #fff;
+}
 div.text-header{
     font-size: 12pt;
     font-weight: bold;
@@ -34,28 +48,28 @@ div.tfw{
 }
 div.tf{
     display: inline-block;
-    border-radius: 7px;
+    border-radius: 10px;
     overflow: hidden;
 }
 div.tf div.tf-header{
     text-align: center;
-    padding: 10px 0px;
-    font-size: 12pt;
+    padding: 30px 0px;
+    font-size: 18pt;
     font-weight: 600;
     text-transform: uppercase;
     font-family: segoe ui;
-    background-color: #000;
-    color: #fff;
+    background-color: #fff;
+    color: #333;
     user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
 }
 div.tf div.tf-content{
     text-align: center;
-    padding: 50px;
+    padding: 0px 50px 25px;
     background-color: #fff;
 }
-div.tf div.tf-content table{
+div.tf div.tf-content form{
     text-align: left;
     display: inline-block;
 }
@@ -67,6 +81,15 @@ div.tf div.tf-content table td:first-child{
 }
 div.tf div.tf-content table td:nth-child(2){
     padding: 10px 0px;
+}
+div.form-field{
+    padding: 5px 0px;
+}
+div.form-field-label{
+    padding: 5px 0px;
+}
+div.form-field-control{
+    padding: 5px 0px;
 }
 .clearfix::after{
     content:'';
@@ -91,7 +114,7 @@ label{
 input[type="text"], input[type="password"]{
     padding: 7px 15px;
     border: 2px solid #26ad05;
-    border-radius: 7px;
+    border-radius: 3px;
 }
 input[type="text"]:focus, input[type="password"]:focus{
     box-shadow: 0px 0px 10px 0px rgba(38,173,5,0.4);
@@ -105,7 +128,7 @@ input[type="submit"], input[type="reset"]{
     font-size: 10pt;
     font-family: segoe ui;
     font-weight: 600;
-    border-radius: 7px;
+    border-radius: 2em;
     transition: all 500ms;
 }
 input.btn-active{
@@ -127,9 +150,9 @@ input.btn-inactive:hover{
 div#top-bar{
     padding: 5px 20px;
     background-color: #1FBE80;
+    text-align: right;
 }
 div#top-bar > a{
-    float: right;
     color: white;
     user-select: none;
     -moz-user-select: none;
@@ -216,7 +239,7 @@ div#account-options{
     background-color: #fff;
     z-index: 1;
     border-radius: 5px;
-    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.4);
+    box-shadow: 0px 10px 20px 0px rgba(0,0,0,0.5);
     padding: 10px 0px;
 }
 div#account-options > a{

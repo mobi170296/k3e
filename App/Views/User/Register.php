@@ -7,43 +7,48 @@
         <div class="tf">
             <div class="tf-header">Đăng ký tài khoản</div>
             <div class="tf-content">
+                <?php
+                    if($this->ViewData['action']!=null){
+                        echo '<div class="message-box error">'.$this->ViewData['error'].'</div>';
+                    }
+                ?>
                 <form action="" method="post">
                     <table>
                         <tr>
                             <td><label>Tên tài khoản</label></td>
                             <td>
-                                <input type="text" name="username" placeholder="Tên tài khoản" size="30"/>
+                                <input type="text" name="username" value="<?php echo isset($this->ViewData['model'])?$this->ViewData['model']->username:''; ?>" placeholder="Tên tài khoản" size="30"/>
                             </td>
                         </tr>
                         <tr>
                             <td><label>Mật khẩu</label></td>
                             <td>
-                                <input type="password" name="password[]" placeholder="Mật khẩu" size="30"/>
+                                <input type="password" name="password[]" value="<?php echo isset($this->ViewData['model'])? $this->ViewData['model']->password[0]:''; ?>"  placeholder="Mật khẩu" size="30"/>
                             </td>
                         </tr>
                         <tr>
                             <td><label>Nhập lại mật khẩu</label></td>
                             <td>
-                                <input type="password" name="password[]" placeholder="Nhập lại mật khẩu" size="30"/>
+                                <input type="password" name="password[]" value="<?php echo isset($this->ViewData['model'])?$this->ViewData['model']->password[1]:'' ?>"  placeholder="Nhập lại mật khẩu" size="30"/>
                             </td>
                         </tr>
                         <tr>
                             <td><label>Số điện thoại</label></td>
                             <td>
-                                <input type="text" name="phone" placeholder="Số điện thoại" size="30"/>
+                                <input type="text" name="phone" value="<?php echo isset($this->ViewData['model'])?$this->ViewData['model']->phone:''; ?>"  placeholder="Số điện thoại" size="30"/>
                             </td>
                         </tr>
                         <tr>
                             <td><label>Email</label></td>
                             <td>
-                                <input type="text" name="email" placeholder="Email" size="30"/>
+                                <input type="text" name="email" value="<?php echo isset($this->ViewData['model'])?$this->ViewData['model']->email:''; ?>"  placeholder="Email" size="30"/>
                             </td>
                         </tr>
                         <tr>
                             <td><label>Giới tính</label></td>
                             <td>
-                                <label><input type="radio" name="gender" value="1" checked="checked"/> Nam</label>
-                                <label><input type="radio" name="gender" value="0"/> Nữ</label>
+                                <label><input type="radio" name="gender" value="1" <?php echo isset($this->ViewData['model'])?($this->ViewData['model']->gender==='0'?'':'checked="checked"'):'checked="checked"'; ?>/> Nam</label>
+                                <label><input type="radio" name="gender" value="0" <?php echo isset($this->ViewData['model'])&&$this->ViewData['model']->gender==='0'?'checked="checked"':''; ?>/> Nữ</label>
                             </td>
                         </tr>
                         <tr>

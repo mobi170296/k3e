@@ -10,6 +10,7 @@
             return $this->View->RenderTemplate();
         }
         public function Register($action, \App\Models\UserModel $user){
+            $this->View->ViewData['action'] = $action;
             if($action != null){
                 try{
                     $user->register();
@@ -17,17 +18,19 @@
                     $_SESSION['password'] = $user->password;
                     return $this->redirectToAction('Home', 'Index', null);
                 } catch (\App\Exception\InputException $ie) {
-                    echo 'InputException';
+                    $this->View->ViewData['model'] = $user;
+                    $this->View->ViewData['error'] = $ie;
+                    return $this->View->RenderTemplate();
                 } catch(\App\Exception\DBException $de){
-                    echo 'DBException';
+                    $this->View->ViewData['model'] = $user;
+                    $this->View->ViewData['error'] = $de;
+                    return $this->View->RenderTemplate();
                 }
             }else{
                 return $this->View->RenderTemplate();
             }
         }
         public function Login($username, $password){
-            $this->View->ViewData['username'] = $username;
-            $this->View->ViewData['password'] = $password;
             return $this->View->RenderTemplate();
         }
         public function Logout(){

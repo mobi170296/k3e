@@ -2,19 +2,31 @@
     $this->layout = 'layout.php';
     $this->ViewData['title'] = 'Đăng nhập - K3e';
 ?>
-<div>
-    Bạn đã nhập thông tin <?php echo $this->ViewData['username'] . ', ' . $this->ViewData['password']; ?>
+<div id="main-body">
+    <div class="tfw">
+        <div class="tf">
+            <div class="tf-header">đăng nhập</div>
+            <div class="tf-content">
+                <form action="" method="post">
+                    <div class="form-field">
+                        <div class="form-field-label">
+                            <label>Tên đăng nhập</label>
+                        </div>
+                        <div class="form-field-control">
+                            <input type="text" name="username" placeholder="Tên đăng nhập" size="30"/>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="form-field-label">
+                            <label>Mật khẩu</label>
+                        </div>
+                        <div class="form-field-control">
+                            <input type="password" name="password" placeholder="Mật khẩu" size="30"/>
+                        </div>
+                    </div>
+                    <input class="btn-active" type="submit" name="action" value="Đăng nhập"/>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
-<form action="" method="get">
-    <div>
-        <label>Tên đăng nhập<br/>
-            <input type="text" name="username" placeholder="Tên đăng nhập"/>
-        </label>
-    </div>
-    <div>
-        <label>Mật khẩu<br/>
-            <input type="password" name="password" placeholder="Mật khẩu"/>
-        </label>
-    </div>
-    <input type="submit" name="action" value="Đăng nhập"/>
-</form>

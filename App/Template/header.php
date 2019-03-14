@@ -1,6 +1,6 @@
 <div id="container">
     <div id="header">
-        <div id="top-bar" class="clearfix">
+        <div id="top-bar">
             <a href="/User/Login">Đăng nhập</a>
             <a href="/User/Register">Đăng ký</a>
         </div>
