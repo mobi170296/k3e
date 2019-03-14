@@ -11,7 +11,16 @@
         }
         public function Register($action, \App\Models\UserModel $user){
             if($action != null){
-                
+                try{
+                    $user->register();
+                    $_SESSION['username'] = $user->username;
+                    $_SESSION['password'] = $user->password;
+                    return $this->redirectToAction('Home', 'Index', null);
+                } catch (\App\Exception\InputException $ie) {
+                    echo 'InputException';
+                } catch(\App\Exception\DBException $de){
+                    echo 'DBException';
+                }
             }else{
                 return $this->View->RenderTemplate();
             }

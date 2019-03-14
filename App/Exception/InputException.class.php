@@ -1,5 +1,5 @@
 <?php
-    namespace \App\Exception;
+    namespace App\Exception;
     
     class InputException extends \Exception{
         public $errors = [];

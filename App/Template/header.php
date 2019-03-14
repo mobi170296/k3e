@@ -1,13 +1,16 @@
 <div id="container">
     <div id="header">
-        <div id="top-bar">
-            <a>Liên hệ</a> <a>Bán hàng</a>
+        <div id="top-bar" class="clearfix">
+            <a href="/User/Login">Đăng nhập</a>
+            <a href="/User/Register">Đăng ký</a>
         </div>
     </div>
     <div id="control-bar-wrapper">
         <div id="control-bar">
             <div id="logo">
-                <span>Kakaka</span>
+                <a href="/">
+                    <span>Kakaka</span>
+                </a>
                 <div id="menu-wrapper">
                     <div id="menu">
                         <?php

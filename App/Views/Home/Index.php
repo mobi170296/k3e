@@ -20,7 +20,7 @@
                 <div class="slider-indicator-index"></div>
         </div>
     </div>
-    <div id="content-wrapper">
+    <div id="main-body">
         
     </div>
 
