@@ -10,6 +10,10 @@
             $this->year = $year;
         }
         
+        public function isValid(){
+            return checkdate($this->month, $this->day, $this->year);
+        }
+        
         public function toValue(){
             return "'{$this->year}-{$this->month}-{$this->day}'";
         }

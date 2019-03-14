@@ -8,11 +8,15 @@
         public $fileSection = [];
         public $contentSection = [];
         public $layout = null;
+        public $config;
+        public $dbcon;
         
         public function __construct($controller, $action){
             $this->controller = $controller;
             $this->action = $action;
             $this->ViewData = [];
+            global $k3_config;
+            $this->config = $k3_config;
         }
         
         public function render(){

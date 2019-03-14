@@ -1,20 +1,276 @@
 body{
     margin: 0px;
 }
-
-div#main-container{
+div#top-bar{
+    padding: 5px 20px;
+    background-color: #1FBE80;
+    overflow: auto;
+}
+div#top-bar > a{
+    float: right;
+    color: white;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+div#control-bar-wrapper{
+    background-color: #26AD05;
+}
+div#control-bar{
     width: 1200px;
     margin: 0px auto;
+    line-height: 60px;
 }
-
-div#header-control{
-    text-align: right;
-}
-
-a{
-    text-decoration: none;
+div#control-bar > div{
     display: inline-block;
-    padding: 5px 20px;
-    background-color: #333;
+}
+div#logo{
+    position: relative;
+    user-select: none;
+    -webkit-user-select: none;
+}
+div#logo > span{
     color: #fff;
+    font-size: 24pt;
+    text-transform: uppercase;
+    font-family: segoe ui;
+    font-weight: bold;
+    display: inline-block;
+}
+div#menu-wrapper{
+    border: 1px dashed #fff;
+    border-radius: 3px;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    vertical-align: bottom;
+}
+div#search-bar{
+    margin: 0px 30px;
+}
+div#search-bar input[type="text"]{
+    padding: 5px 15px;
+    border: 1px solid #fff;
+    border-radius: 3px 0px 0px 3px;
+    font-size: 14pt;
+    color: #21774E;
+}
+div#search-bar input[type="text"]:focus{
+    box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.1) inset;
+}
+div#search-bar button{
+    padding: 5px 20px;
+    border: 1px solid #fff;
+    border-radius: 0px 3px 3px 0px;
+    background-color: #fff;
+    color: #ABCC14;
+    font-size: 14pt;
+    transition: 500ms;
+}
+div#search-bar button:hover{
+    background-color: #ABCC14;
+    color: #fff;
+}
+div#account-control{
+    position: relative;
+    font-weight: 500;
+    font-family: segoe ui;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+}
+div#account-name{
+    color: #fff;
+}
+div#account-options{
+    display: none;
+    line-height: initial;
+    position: absolute;
+    background-color: #fff;
+    z-index: 1;
+}
+div#account-options > a{
+    padding: 5px 20px;
+    white-space: nowrap;
+    display: block;
+}
+div#account-options > a:hover{
+    background-color: #0f0;
+}
+div#account-options::before{
+    content: '';
+    display: inline-block;
+    position: absolute;
+    left: 10px;
+    bottom: 100%;
+    border-width: 10px;
+    border-style: solid;
+    border-color: transparent transparent #fff transparent;
+}
+div#account-control:hover div#account-options{
+    display: block;
+}
+div#slider-wrapper{
+    margin: 0px auto;
+    width: 1200px;
+    position: relative;
+    user-select: none;
+    -webkit-user-select: none;
+}
+div#slider{
+    height: 300px;
+    overflow: hidden;
+    position: relative;
+}
+div#slider img{
+    position: absolute;
+    height: 100%;
+    left: 50%;
+    top: 0px;
+    animation-delay: 0s;
+    animation-duration: 700ms;
+    animation-iteration-count: 1;
+}
+div#slider-next{
+    font-size: 18pt;
+    font-weight: bolder;
+    color: #0f0;
+    border: 1px solid rgba(0,255,0,0.3);
+    border-radius: 5px;
+    background-color: rgba(255,255,255,0.7);
+    position: absolute;
+    width: 60px;
+    height: 30px;
+    display: inline-block;
+    top: 50%;
+    right: 20px;
+    margin: -15px 0px;
+    text-align: center;
+    line-height: 25px;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+}
+div#slider-next:hover{
+    box-shadow: 0px 0px 5px 0px #ddd;
+}
+div#slider-previous{
+    font-size: 18pt;
+    font-weight: bolder;
+    color: #0f0;
+    border: 1px solid rgba(0,255,0,0.3);
+    border-radius: 5px;
+    background-color: rgba(255,255,255,0.7);
+    position: absolute;
+    width: 60px;
+    height: 30px;
+    display: inline-block;
+    top: 50%;
+    left: 20px;
+    margin: -15px 0px;
+    text-align: center;
+    line-height: 30px;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+}
+div#slider-previous:hover{
+    box-shadow: 0px 0px 5px 0px #ddd;
+}
+div#slider-indicator{
+    position: absolute;
+    bottom: 10px;
+    left: 0px;
+    width: 100%;
+    text-align: center;
+    line-height: 0;
+    user-select: none;
+    -webkit-user-select: none;
+}
+div#slider-indicator div.slider-indicator-index{
+    background: rgba(92,180,118,0.75);
+    width: 30px;
+    height: 10px;
+    display: inline-block;
+}
+div#slider-indicator div.slider-indicator-index.active{
+    background: rgba(255,255,255,0.95);
+}
+@keyframes showImage{
+    from{
+            opacity: 0;
+    }
+    to{
+            opacity: 1;
+    }
+}
+@keyframes righttoleft{
+    from{
+            left: 150%;
+    }
+    to{
+            left: 50%;
+    }
+}
+@keyframes lefttoright{
+    from{
+            left: -50%;
+    }
+    to{
+            left: 50%;
+    }
+}
+div#menu{
+    background-color: #fff;
+    box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.2);
+    position: absolute;
+    left: 0px;
+    top: 100%;
+    z-index: 1;
+    display: none;
+    line-height: initial;
+}
+div#menu-wrapper:hover div#menu{
+    display: block;
+}
+div#menu a{
+    text-decoration: none;
+    font-family: segoe ui;
+}
+div#menu div.menu.l1 > a{
+    display: block;
+    white-space: nowrap;
+    padding: 5px 20px;
+    font-size: 10pt;
+    font-weight: 600;
+}
+div#menu div.menu.l2{
+    display: none;
+    background-color: #fff;
+    min-height: 100%;
+}
+div#menu div.menu.l2 > a{
+    display: block;
+    padding: 5px 20px;
+    font-size: 10pt;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+}
+div#menu div.menu.l2 > a:hover{
+    background-color: rgba(0,255,0,0.9);
+    color: #333;
+}
+div#menu div.menu.l1:hover > a{
+    background-color: rgba(0,255,0,0.5);
+    color: #fff;
+}
+div#menu div.menu.l1:hover div.menu.l2{
+    position: absolute;
+    left: 100%;
+    top: 0px;
+}
+div#menu div.menu.l1:hover div.menu.l2{
+    display: block;
 }

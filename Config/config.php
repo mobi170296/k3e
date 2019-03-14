@@ -1,5 +1,5 @@
 <?php
-    $k3_config['APP_NAME'] = '';
+    $k3_config['APP_NAME'] = 'K3';
     $k3_config['db']['host'] = 'localhost';
     $k3_config['db']['port'] = 3306;
     $k3_config['db']['username'] = 'root';

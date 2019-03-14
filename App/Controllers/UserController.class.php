@@ -2,12 +2,19 @@
     namespace App\Controllers;
     
     class UserController extends \Core\Controller{
+        public function __init(){
+            $this->dbcon = new \Library\MySQLUtility($this->config['db']['host'], $this->config['db']['username'], $this->config['db']['password'], $this->config['db']['dbname']);
+            $this->View->dbcon = $this->dbcon;
+        }
         public function Index(){
             return $this->View->RenderTemplate();
         }
-        public function Register(\App\Models\UserModel $user){
-            
-            return $this->View->RenderTemplate();
+        public function Register($action, \App\Models\UserModel $user){
+            if($action != null){
+                
+            }else{
+                return $this->View->RenderTemplate();
+            }
         }
         public function Login($username, $password){
             $this->View->ViewData['username'] = $username;

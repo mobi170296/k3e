@@ -7,7 +7,23 @@
 
         public function __construct($host, $username, $password, $dbname, $port = 3306){
             $this->select = $this->from = $this->where = $this->order = $this->limit = $this->groupby = $this->having = null;
-            $this->dbcon = new \mysqli($host, $username, $password, $dbname, $port);
+            $this->dbcon = @new \mysqli($host, $username, $password, $dbname, $port);
+        }
+        
+        public function error(){
+            return $this->dbcon->errno;
+        }
+        
+        public function errno(){
+            return $this->dbcon->error;
+        }
+        
+        public function connect_errno(){
+            return $this->dbcon->connect_errno;
+        }
+        
+        public function connect_error(){
+            return $this->dbcon->connect_error;
         }
         
         public function select($select){

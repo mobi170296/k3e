@@ -3,14 +3,15 @@
     
     use App\Models\MainCategoryModel;
     use Library\MySQLUtility;
-    use Library\DBDateTime;
-    use Library\DBDate;
-    use Library\DBString;
-    use Library\DBNumber;
     
     class HomeController extends \Core\Controller{
         protected function __init(){
             $this->dbcon = new MySQLUtility($this->config['db']['host'], $this->config['db']['username'], $this->config['db']['password'], $this->config['db']['dbname']);
+            if($this->dbcon->connect_errno()){
+                echo 'Lỗi Database: <b style="color:red">' . $this->dbcon->connect_error() .'</b>';
+                exit;
+            }
+            $this->View->dbcon = $this->dbcon;
         }
         public function Index($id, \App\Models\UserModel $userinfo){
             

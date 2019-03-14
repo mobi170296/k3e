@@ -27,6 +27,8 @@
     
     $route = new Core\Router($_SERVER['QUERY_STRING']);
     
+    #print_r($_SERVER);
+    
     $route->mapRoute('', ['controller' => 'Home', 'action' => 'Index']);
     $route->mapRoute('{controller}', ['controller' => 'Home', 'action' => 'Index']);
     $route->mapRoute('{controller}/{action}', ['controller' => 'Home', 'action' => 'Index']);
