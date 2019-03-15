@@ -1,6 +1,6 @@
 <?php
     $this->layout = 'layout.php';
-    $this->ViewData['title'] = 'Trang chủ';
+    $this->TemplateData['title'] = 'Trang chủ';
 ?>
     <div id="slider-wrapper">
         <div id="slider">

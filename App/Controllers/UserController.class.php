@@ -60,6 +60,29 @@
                 return $this->View->RenderTemplate();
             }
         }
+        public function Info($action, \App\Models\UserModel $user){
+            if($this->user->isLogin()){
+                if($action != null){
+                    try{
+                        $this->user->update($user);
+                        $this->View->ViewData['user'] = $user;
+                        $this->View->ViewData['success'] = 'Bạn đã cập nhật thông tin thành công';
+                        return $this->View->RenderTemplate();
+                    } catch (\App\Exception\DBException $de) {
+                        $this->View->ViewData['user'] = $user;
+                        $this->View->ViewData['error'] = $de;
+                        return $this->View->RenderTemplate();
+                    } catch (\App\Exception\InputException $ie){
+                        $this->View->ViewData['user'] = $user;
+                        $this->View->ViewData['error'] = $ie;
+                        return $this->View->RenderTemplate();
+                    }
+                }
+                return $this->View->RenderTemplate();
+            }else{
+                $this->redirectToAction('Home', 'Index', null);
+            }
+        }
         public function Logout(){
             unset($_SESSION['username']);
             unset($_SESSION['password']);

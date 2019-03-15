@@ -59,12 +59,42 @@
             if(count($errors)){
                 throw new \App\Exception\InputException($errors);
             }
-            $this->dbcon->insert('user', ['username'=>new DBString($this->username), 'firstname'=>new DBString($this->firstname), 'lastname'=>new DBString($this->lastname),'password'=>new DBRaw("md5('{$this->password[0]}')"), 'email'=>new DBString($this->email), 'address'=>new DBString(''), 'district_id'=>new DBRaw('null'), 'birthday'=>new DBDate($this->day, $this->month, $this->year), 'gender'=>new DBNumber($this->gender)]);
+            $this->dbcon->insert('user', ['username'=>new DBString($this->username), 'firstname'=>new DBString($this->firstname), 'lastname'=>new DBString($this->lastname),'password'=>new DBRaw("md5('{$this->password[0]}')"), 'email'=>new DBString($this->email), 'phone'=>new DBString($this->phone) ,'address'=>new DBString(''), 'district_id'=>new DBRaw('null'), 'birthday'=>new DBDate($this->day, $this->month, $this->year), 'gender'=>new DBNumber($this->gender)]);
             if($this->dbcon->errno()){
                 throw new \App\Exception\DBException($this->dbcon->error());
             }
         }
-        
+        public function update($user){
+            $errors = [];
+            if(empty($user->lastname)){
+                $errors['lastname'] = 'Họ không được để trống';
+            }
+            if(empty($user->firstname)){
+                $errors['firstname'] = 'Tên không được để trống';
+            }
+            if(!checkdate($user->month, $user->day, $user->year)){
+                $errors['birthday'] = 'Ngày tháng năm sinh không hợp lệ';
+            }
+            if($user->gender!=1&&$user->gender!=0){
+                $errors['gender'] = 'Giới tính không hợp lệ';
+            }
+            if(mb_strlen($user->address)>200){
+                $errors['address'] = 'Địa chỉ không được vượt quá 200 ký tự';
+            }
+            if(count($errors)){
+                throw new \App\Exception\InputException($errors);
+            }
+            $this->dbcon->update('user', ['lastname'=>new DBString($user->lastname),'firstname'=>new DBString($user->firstname),'birthday'=>new DBDate($user->day, $user->month, $user->year),'gender'=>new DBNumber($user->gender),'address'=>new DBString($user->address)], 'id='.$this->id);
+            if($this->dbcon->errno()){
+                throw new \App\Exception\DBException($this->dbcon->error());
+            }else{
+                $this->lastname = $user->lastname;
+                $this->firstname = $user->firstname;
+                $this->birthday = new DBDate($user->day, $user->month, $user->year);
+                $this->gender = $user->gender;
+                $this->address = $user->address;
+            }
+        }
         public function login(){
             $result = $this->dbcon->select('*')->from('user')->where("username='{$this->username}' and password=md5('{$this->password}')")->execute();
             if($result->num_rows){
@@ -75,6 +105,7 @@
                 $this->lastname = $row['lastname'];
                 $this->password = $row['password'];
                 $this->email = $row['email'];
+                $this->phone = $row['phone'];
                 $this->address = $row['address'];
                 $this->district_id = $row['district_id'];
                 $this->created_date = \Library\DBDateTime::parse($row['created_date']);

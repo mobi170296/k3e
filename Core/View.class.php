@@ -3,6 +3,7 @@
     
     class View{
         public $controller, $action;
+        public $TemplateData;
         public $ViewData;
         public $bodyContent;
         public $fileSection = [];

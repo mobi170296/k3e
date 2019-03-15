@@ -100,9 +100,6 @@
         }
 
         public function update($table, $nvp, $where){
-            if(count($cname)!=count($cvalue)){
-                return false;
-            }
             $arr = [];
             foreach($nvp as $key => $value){
                 $arr[] = $key . '=' . $value->toValue();

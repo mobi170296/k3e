@@ -102,6 +102,7 @@ CREATE TABLE IF NOT EXISTS `k3e_db`.`user` (
   `lastname` VARCHAR(100) NOT NULL,
   `password` VARCHAR(32) NOT NULL,
   `email` VARCHAR(254) NOT NULL,
+  `phone` VARCHAR(11) NOT NULL,
   `address` VARCHAR(200) NULL,
   `district_id` INT NULL,
   `created_date` DATETIME NOT NULL DEFAULT now(),

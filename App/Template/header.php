@@ -41,16 +41,22 @@
 
             <div id="search-bar">
                 <form>
-                    <input type="text" name="query" placeholder="Search query" size="60" autocomplete="off"/><button>Search</button>
+                    <input type="text" name="query" placeholder="Search query" size="80" autocomplete="off"/><button>Search</button>
                 </form>
             </div>
-            <div id="account-control">
-                <div id="account-name">Trịnh Văn Linh</div>
-                <div id="account-options">
-                    <a>Thông tin tài khoản</a>
-                    <a>Đơn hàng</a>
-                    <a>Đăng xuất</a>
-                </div>
-            </div>
+            <?php
+                if($this->user->isLogin()){
+                    echo <<<ACC_CONTROL
+                    <div id="account-control">
+                        <div id="account-name">{$this->user->lastname} {$this->user->firstname}</div>
+                        <div id="account-options">
+                            <a href="/User/Info">Thông tin tài khoản</a>
+                            <a href="/User/Orders">Đơn hàng</a>
+                            <a href="/User/Logout">Đăng xuất</a>
+                        </div>
+                    </div>
+ACC_CONTROL;
+                }
+            ?>
         </div>
     </div>

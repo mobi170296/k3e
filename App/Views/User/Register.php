@@ -1,6 +1,6 @@
 <?php
     $this->layout = 'layout.php';
-    $this->ViewData['title'] = 'Đăng ký tài khoản';
+    $this->TemplateData['title'] = 'Đăng ký tài khoản';
 ?>
 <div id="main-body">
     <div class="tfw">
