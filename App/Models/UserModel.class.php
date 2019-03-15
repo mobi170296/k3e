@@ -22,6 +22,10 @@
         public $role;
         public $gender;
         
+        public function isLogin(){
+            return isset($this->id);
+        }
+        
         public function register(){
             $errors = [];
             if(!preg_match('/^[A-z0-9]{6,}$/', $this->username)){
@@ -47,13 +51,31 @@
             if(count($errors)){
                 throw new \App\Exception\InputException($errors);
             }
-            $this->dbcon->insert('user', ['username'=>new DBString($this->username), 'password'=>new DBRaw("md5('{$this->password[0]}')"), 'email'=>new DBString($this->email), 'address'=>'', 'district_id'=>new DBRaw('null'), 'birthday'=>new DBDate($this->day, $this->month, $this->year), 'gender'=>new DBNumber($this->gender)]);
+            $this->dbcon->insert('user', ['username'=>new DBString($this->username), 'password'=>new DBRaw("md5('{$this->password[0]}')"), 'email'=>new DBString($this->email), 'address'=>new DBString(''), 'district_id'=>new DBRaw('null'), 'birthday'=>new DBDate($this->day, $this->month, $this->year), 'gender'=>new DBNumber($this->gender)]);
             if($this->dbcon->errno()){
                 throw new \App\Exception\DBException($this->dbcon->error());
             }
         }
         
         public function login(){
-            
+            $result = $this->dbcon->select('*')->from('user')->where("username='{$this->username}' and password=md5('{$this->password}')")->execute();
+            if($result->num_rows){
+                $row = $result->fetch_assoc();
+                $this->id = $row['id'];
+                $this->username = $row['username'];
+                $this->password = $row['password'];
+                $this->email = $row['email'];
+                $this->address = $row['address'];
+                $this->district_id = $row['district_id'];
+                $this->created_date = \Library\DBDateTime::parse($row['created_date']);
+                $this->locked = $row['locked'];
+                $this->birthday = DBDate::parse($row['birthday']);
+                $this->gender = $row['gender'];
+                $this->money = $row['money'];
+                $this->role = $row['role'];
+                return true;
+            }else{
+                return false;
+            }
         }
     }

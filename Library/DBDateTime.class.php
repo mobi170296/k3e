@@ -14,4 +14,12 @@
         public function toValue(){
             return "'{$this->year}-{$this->month}-{$this->day} {$this->hour}:{$this->minute}:{$this->seconds}'";
         }
+        
+        public static function parse($datetime){
+            if(preg_match('/^(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2}) (?<hour>\d{2}):(?<minute>\d{2}):(?<seconds>\d{2})$/', $datetime, $match)){
+                return new DBDateTime($match['day'], $match['month'], $match['year'], $match['hour'], $match['minute'], $match['seconds']);
+            }else{
+                return null;
+            }
+        }
     }

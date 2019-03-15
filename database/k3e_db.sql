@@ -110,6 +110,7 @@ CREATE TABLE IF NOT EXISTS `k3e_db`.`user` (
   `role` INT NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   INDEX `fk_user_district_idx` (`district_id` ASC) VISIBLE,
+  UNIQUE INDEX `username_UNIQUE` (`username` ASC) VISIBLE,
   CONSTRAINT `fk_user_district`
     FOREIGN KEY (`district_id`)
     REFERENCES `k3e_db`.`district` (`id`)

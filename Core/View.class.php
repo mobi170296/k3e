@@ -10,6 +10,7 @@
         public $layout = null;
         public $config;
         public $dbcon;
+        public $user;
         
         public function __construct($controller, $action){
             $this->controller = $controller;

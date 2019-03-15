@@ -1,8 +1,14 @@
 <div id="container">
     <div id="header">
         <div id="top-bar">
-            <a href="/User/Login">Đăng nhập</a>
-            <a href="/User/Register">Đăng ký</a>
+            <?php
+                if($this->user->isLogin()){
+                    echo '<a href="/User/Logout">Đăng xuất</a> ';
+                }else{
+                    echo '<a href="/User/Login">Đăng nhập</a> ';
+                    echo '<a href="/User/Register">Đăng ký</a> ';
+                }
+            ?>
         </div>
     </div>
     <div id="control-bar-wrapper">

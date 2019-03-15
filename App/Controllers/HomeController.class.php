@@ -11,7 +11,9 @@
                 echo 'Lỗi Database: <b style="color:red">' . $this->dbcon->connect_error() .'</b>';
                 exit;
             }
+            $this->authenticate();
             $this->View->dbcon = $this->dbcon;
+            $this->View->user = $this->user;
         }
         public function Index($id, \App\Models\UserModel $userinfo){
             
