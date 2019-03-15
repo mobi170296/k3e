@@ -33,6 +33,18 @@
                             </td>
                         </tr>
                         <tr>
+                            <td><label>Họ</label></td>
+                            <td>
+                                <input type="text" name="lastname" value="<?php echo isset($this->ViewData['model'])?$this->ViewData['model']->lastname:'' ?>"  placeholder="Họ" size="30"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label>Tên</label></td>
+                            <td>
+                                <input type="text" name="firstname" value="<?php echo isset($this->ViewData['model'])?$this->ViewData['model']->firstname:'' ?>"  placeholder="Tên" size="30"/>
+                            </td>
+                        </tr>
+                        <tr>
                             <td><label>Số điện thoại</label></td>
                             <td>
                                 <input type="text" name="phone" value="<?php echo isset($this->ViewData['model'])?$this->ViewData['model']->phone:''; ?>"  placeholder="Số điện thoại" size="30"/>

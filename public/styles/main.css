@@ -50,6 +50,7 @@ div.tf{
     display: inline-block;
     border-radius: 10px;
     overflow: hidden;
+    min-width: 480px;
 }
 div.tf div.tf-header{
     text-align: center;

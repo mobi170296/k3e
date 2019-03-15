@@ -98,6 +98,8 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `k3e_db`.`user` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(200) NOT NULL,
+  `firstname` VARCHAR(50) NOT NULL,
+  `lastname` VARCHAR(100) NOT NULL,
   `password` VARCHAR(32) NOT NULL,
   `email` VARCHAR(254) NOT NULL,
   `address` VARCHAR(200) NULL,
