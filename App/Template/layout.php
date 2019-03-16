@@ -5,6 +5,7 @@
         <title><?php echo $this->TemplateData['title'] . ' - ' . $this->config['APP_NAME']; ?></title>
         <link rel="shortcut icon" href="/images/icons/icon.png"/>
         <link rel="stylesheet" href="/styles/main.css"/>
+        <link rel="stylesheet" href="/styles/sub.css"/>
         <script type="text/javascript" src="/scripts/core.js"></script>
         <?php
             $this->renderSection('head-script');

@@ -41,7 +41,7 @@
 
             <div id="search-bar">
                 <form>
-                    <input type="text" name="query" placeholder="Search query" size="80" autocomplete="off"/><button>Search</button>
+                    <input type="text" name="query" placeholder="Search query" size="70" autocomplete="off"/><button>Search</button>
                 </form>
             </div>
             <?php
@@ -61,5 +61,11 @@
 ACC_CONTROL;
                 }
             ?>
+            <div id="scart-wrapper">
+                <span id="scart-icon"></span>
+                <div id="scart-list">
+                    <div class="scart-item"></div>
+                </div>
+            </div>
         </div>
     </div>

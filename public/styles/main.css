@@ -186,15 +186,21 @@ div#control-bar-wrapper{
     background-color: #26AD05;
 }
 div#control-bar{
+    display: flex;
+    align-items: center;
     width: 1200px;
     margin: 0px auto;
-    line-height: 60px;
+    height: 60px;
 }
 div#control-bar > div{
     display: inline-block;
+    vertical-align: bottom;
 }
-div#logo{
+div#control-bar > div#logo{
     position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
     user-select: none;
     -webkit-user-select: none;
 }
@@ -212,12 +218,13 @@ div#logo span{
 div#menu-wrapper{
     border-radius: 3px;
     width: 24px;
-    height: 24px;
+    height: 100%;
     display: inline-block;
     vertical-align: bottom;
     background-image: url('/images/icons/menu.png');
     background-size: 24px 24px;
     background-repeat: no-repeat;
+    background-position: 0px 100%;
 }
 div#search-bar{
     margin: 0px 30px;
@@ -250,17 +257,25 @@ div#account-control{
     position: relative;
     font-weight: 500;
     font-family: segoe ui;
+    height: 100%;
+    line-height: 60px;
     user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
 }
 div#account-name{
     color: #fff;
+    max-width: 10em;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 div#account-options{
     display: none;
     line-height: initial;
     position: absolute;
+    top: 100%;
+    left: 0px;
     background-color: #fff;
     z-index: 1;
     border-radius: 5px;
@@ -409,6 +424,7 @@ div#menu{
     z-index: 1;
     display: none;
     line-height: initial;
+    min-width: 150px;
 }
 div#menu-wrapper:hover div#menu{
     display: block;
@@ -438,11 +454,11 @@ div#menu div.menu.l2 > a{
     cursor: pointer;
 }
 div#menu div.menu.l2 > a:hover{
-    background-color: rgba(0,255,0,0.9);
-    color: #333;
+    background-color: #26ad05;
+    color: #fff;
 }
 div#menu div.menu.l1:hover > a{
-    background-color: rgba(0,255,0,0.5);
+    background-color: #26ad05;
     color: #fff;
 }
 div#menu div.menu.l1:hover div.menu.l2{
