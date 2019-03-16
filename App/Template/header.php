@@ -51,7 +51,10 @@
                         <div id="account-name">{$this->user->lastname} {$this->user->firstname}</div>
                         <div id="account-options">
                             <a href="/User/Info">Thông tin tài khoản</a>
+                            <a href="/User/Shop">Cửa hàng</a>
                             <a href="/User/Orders">Đơn hàng</a>
+                            <a>Địa chỉ vận chuyển</a>
+                            <a>Bài đánh giá</a>
                             <a href="/User/Logout">Đăng xuất</a>
                         </div>
                     </div>

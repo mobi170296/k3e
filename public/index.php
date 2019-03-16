@@ -9,6 +9,8 @@
     
     require_once k3_ROOT . DS . 'Config' . DS . 'config.php';
     
+    require_once k3_ROOT . DS . 'App' . DS . 'Define' . DS . 'define.php';
+    
     require_once k3_ROOT . DS . 'Core' . DS . 'autoload.php';
     
 //    #Begin Exception Handler Block

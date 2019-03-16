@@ -88,4 +88,7 @@
             unset($_SESSION['password']);
             $this->redirectToAction('Home', 'Index', null);
         }
+        public function Shop(){
+            
+        }
     }
