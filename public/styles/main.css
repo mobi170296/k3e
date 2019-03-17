@@ -8,6 +8,38 @@ a{
 .fl{
     float: left;
 }
+div#admin-wrapper{
+    margin: 20px auto;
+    width: 1270px;
+    font-family: Arial;
+}
+div#admin-wrapper div.left-menu{
+    float: left;
+    width: 250px;
+    font-size: 11pt;
+}
+div#admin-wrapper div.left-menu a{
+    display: block;
+    padding: 10px 20px;
+    margin-right: 20px;
+    border-radius: 3px;
+    color: #000;
+}
+div#admin-wrapper div.left-menu a.active{
+    background-color: #eee;
+}
+div#admin-wrapper div.left-menu a:hover{
+    background-color: #eee;
+}
+div#admin-wrapper div.right-content{
+    float: left;
+    box-sizing: border-box;
+    width: 1020px;
+    background-color: #fff;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    padding: 30px 20px 20px;
+}
 div.message-box{
     padding: 20px 30px;
     text-align: left;

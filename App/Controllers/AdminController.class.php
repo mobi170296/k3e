@@ -15,4 +15,10 @@
         public function Index(){
             return $this->View->RenderTemplate();
         }
+        public function MainCategory(){
+            return $this->View->RenderTemplate();
+        }
+        public function Subcategory(){
+            return $this->View->RenderTemplate();
+        }
     }
