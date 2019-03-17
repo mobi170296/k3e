@@ -59,7 +59,7 @@
             if(count($errors)){
                 throw new \App\Exception\InputException($errors);
             }
-            $this->dbcon->insert('user', ['username'=>new DBString($this->username), 'firstname'=>new DBString($this->firstname), 'lastname'=>new DBString($this->lastname),'password'=>new DBRaw("md5('{$this->password[0]}')"), 'email'=>new DBString($this->email), 'phone'=>new DBString($this->phone) ,'address'=>new DBString(''), 'district_id'=>new DBRaw('null'), 'birthday'=>new DBDate($this->day, $this->month, $this->year), 'gender'=>new DBNumber($this->gender)]);
+            $this->dbcon->insert(DB_TABLE_USER, ['username'=>new DBString($this->username), 'firstname'=>new DBString($this->firstname), 'lastname'=>new DBString($this->lastname),'password'=>new DBRaw("md5('{$this->password[0]}')"), 'email'=>new DBString($this->email), 'phone'=>new DBString($this->phone) ,'address'=>new DBString(''), 'district_id'=>new DBRaw('null'), 'birthday'=>new DBDate($this->day, $this->month, $this->year), 'gender'=>new DBNumber($this->gender)]);
             if($this->dbcon->errno()){
                 throw new \App\Exception\DBException($this->dbcon->error());
             }
@@ -84,7 +84,7 @@
             if(count($errors)){
                 throw new \App\Exception\InputException($errors);
             }
-            $this->dbcon->update('user', ['lastname'=>new DBString($user->lastname),'firstname'=>new DBString($user->firstname),'birthday'=>new DBDate($user->day, $user->month, $user->year),'gender'=>new DBNumber($user->gender),'address'=>new DBString($user->address)], 'id='.$this->id);
+            $this->dbcon->update(DB_TABLE_USER, ['lastname'=>new DBString($user->lastname),'firstname'=>new DBString($user->firstname),'birthday'=>new DBDate($user->day, $user->month, $user->year),'gender'=>new DBNumber($user->gender),'address'=>new DBString($user->address)], 'id='.$this->id);
             if($this->dbcon->errno()){
                 throw new \App\Exception\DBException($this->dbcon->error());
             }else{
@@ -96,7 +96,7 @@
             }
         }
         public function login(){
-            $result = $this->dbcon->select('*')->from('user')->where("username='{$this->username}' and password=md5('{$this->password}')")->execute();
+            $result = $this->dbcon->select('*')->from(DB_TABLE_USER)->where("username='{$this->username}' and password=md5('{$this->password}')")->execute();
             if($result->num_rows){
                 $row = $result->fetch_assoc();
                 $this->id = $row['id'];
@@ -118,5 +118,8 @@
             }else{
                 return false;
             }
+        }
+        public function haveRole($privilege){
+            return $this->role == $privilege;
         }
     }

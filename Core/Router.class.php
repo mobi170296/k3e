@@ -66,6 +66,10 @@
                     $controller = new $controllername($this->params['controller'], $this->params['action']);
                     if(method_exists($controller, $actionname)){
                         $method = (new \ReflectionClass($controller))->getMethod($actionname);
+                        if(!$method->isPublic()){
+                            echo '<b style="color: red">Action not exists</b>';
+                            exit;
+                        }
                         $methodparameters = $method->getParameters();
                         
                         foreach($methodparameters as $parameter){

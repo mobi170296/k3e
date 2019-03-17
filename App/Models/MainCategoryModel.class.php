@@ -7,13 +7,13 @@
         
         public function loadFromDB(){
             if($this->id != null){
-                $result = $this->dbcon->select('*')->from('maincategory')->where('id = ' . $this->id)->limit(1)->execute();
+                $result = $this->dbcon->select('*')->from(DB_TABLE_MAINCATEGORY)->where('id = ' . $this->id)->limit(1)->execute();
                 if($result->num_rows){
                     $row = $result->fetch_assoc();
                     $this->id = $row['id'];
                     $this->link = $row['link'];
                     $this->name = $row['name'];
-                    $result = $this->dbcon->select('*')->from('subcategory')->where('maincategory_id=' . $this->id)->execute();
+                    $result = $this->dbcon->select('*')->from(DB_TABLE_SUBCATEGORY)->where('maincategory_id=' . $this->id)->execute();
                     while($row = $result->fetch_assoc()){
                         $subcategory = new SubCategoryModel($this->dbcon);
                         $subcategory->id = $row['id'];
