@@ -15,4 +15,7 @@
             header('content-type: application/json');
             return $this->View->RenderJson();
         }
+        public function AddForm(){
+            return $this->View->RenderTemplate();
+        }
     }

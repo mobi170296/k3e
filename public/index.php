@@ -32,7 +32,8 @@
     #print_r($_SERVER);
     
     $route->mapRoute('', ['controller' => 'Home', 'action' => 'Index']);
-    $route->mapRoute('ajax/MainCategory/{action}/{id}', ['controller'=>'Ajax\MainCategory']);
+    $route->mapRoute('ajax/MainCategory/{action}', ['controller'=>'Ajax\MainCategory']);
+    $route->mapRoute('ajax/MainCategory/{action}/{id:"\d+"}', ['controller'=>'Ajax\MainCategory']);
     $route->mapRoute('{controller}', ['controller' => 'Home', 'action' => 'Index']);
     $route->mapRoute('{controller}/{action}', ['controller' => 'Home', 'action' => 'Index']);
     $route->mapRoute('{controller}/{action}/{id}', ['controller' => 'Home', 'action' => 'Index', 'id' => '']);

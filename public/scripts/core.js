@@ -44,3 +44,11 @@ Node.prototype.text = Element.prototype.text = function(t){
 Element.prototype.html = Node.prototype.html = function(h){
     this.innerHTML = h;
 }
+
+Element.prototype.on = Node.prototype.on = function(e, cb){
+    this.addEventListener(e, cb);
+}
+
+Element.prototype.data = Node.prototype.data = function(n){
+    return this.dataset[n];
+}

@@ -31,4 +31,16 @@
             }
             return false;
         }
+        
+        public function add(){
+            
+        }
+        
+        public function delete(){
+            
+        }
+        
+        public function update($mc){
+            
+        }
     }

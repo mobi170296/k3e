@@ -23,17 +23,17 @@ div#toast-wrapper div.toast-box{
 div#toast-wrapper div.success{
     border: 1px solid #7eb62e;
     background-color: #7eb62e;
-    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.7);
+    box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.3);
 }
 div#toast-wrapper div.error{
     border: 1px solid #f64b2f;
     background-color: #f64b2f;
-    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.7);
+    box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.3);
 }
 div#toast-wrapper div.warning{
     border: 1px solid #f6ca2f;
     background-color: #f6ca2f;
-    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.7);
+    box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.3);
 }
 .fadeout{
     opacity: 0 !important;

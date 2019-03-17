@@ -19,10 +19,39 @@
             </div>
         </div>
         <div class="right-content">
-            <button class="btn btn-add">Thêm danh mục chính</button>
+            <button class="btn btn-add modal-add">Thêm danh mục chính</button>
+            <div class="u-p10-0">
+                <?php
+                    if(count($this->ViewData['maincategorylist'])){
+                        echo '<table class="data-table maincategory">';
+                        echo '<tr>';
+                        echo '<th>ID</th>';
+                        echo '<th>Tên danh mục</th>';
+                        echo '<th>Liên kết</th>';
+                        echo '<th>Thao tác</th>';
+                        echo '</tr>';
+                        foreach($this->ViewData['maincategorylist'] as $maincategory){
+                            echo '<tr>';
+                            echo "<td>{$maincategory->id}</td>";
+                            echo "<td>{$maincategory->name}</td>";
+                            echo "<td>{$maincategory->link}</td>";
+                            echo '<td><button class="btn btn-success">Sửa</button> <button class="btn btn-error">Xóa</div></td>';
+                            echo '</tr>';
+                        }
+                        echo '</table>';
+                    }else{
+                        echo 'Danh sách danh mục sản phẩm chính hiện tại rỗng';
+                    }
+                ?>
+            </div>
         </div>
     </div>
-
 <script>
-    
+    $('button.modal-add').on('click', function(e){
+        XHR.create().url('/ajax/MainCategory/AddForm').get(null, function(e){
+            if(this.readyState === 4){
+                Modal.title('Thêm danh mục chính').html(this.response).show();
+            }
+        });
+    });
 </script>
