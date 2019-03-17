@@ -69,4 +69,8 @@
             ob_end_clean();
             return $this;
         }
+        public function RenderJson($obj){
+            $this->bodyContent = json_encode($obj);
+            return $this;
+        }
     }

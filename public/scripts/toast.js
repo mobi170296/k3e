@@ -20,7 +20,7 @@ var Toast = new (function(){
         b.css('transition-duration', t + 'ms');
         window.setTimeout(function(b){
             b.className += ' fadeout';
-        }, 100, b);
+        }, 2000, b);
     }
     this.makeError = function(m,t){
         var b = document.createElement('div');
@@ -36,7 +36,7 @@ var Toast = new (function(){
         b.css('transition-duration', t + 'ms');
         window.setTimeout(function(b){
             b.className += ' fadeout';
-        }, 100, b);
+        }, 2000, b);
     }
     this.makeSuccess = function(m,t){
         var b = document.createElement('div');
@@ -53,7 +53,7 @@ var Toast = new (function(){
         b.css('transition-duration', t + 'ms');
         window.setTimeout(function(b){
             b.className += ' fadeout';
-        }, 100, b);
+        }, 2000, b);
     }
     this.remove = function(){
         this.toastbody.firstElementChild.remove();

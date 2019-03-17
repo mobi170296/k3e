@@ -13,18 +13,38 @@
             $this->View->user = $this->user;
         }
         public function Index(){
+            if(!$this->user->isLogin() || !$this->user->haveRole(ADMIN_PRIV)){
+                $this->View->ViewData['error'] = 'Bạn không có quyền để thực hiện hành động này';
+                return $this->View->RenderTemplate('error_page', 'error');
+            }
             return $this->View->RenderTemplate();
         }
         public function MainCategory(){
+            if(!$this->user->isLogin() || !$this->user->haveRole(ADMIN_PRIV)){
+                $this->View->ViewData['error'] = 'Bạn không có quyền để thực hiện hành động này';
+                return $this->View->RenderTemplate('error_page', 'error');
+            }
             return $this->View->RenderTemplate();
         }
         public function Subcategory(){
+            if(!$this->user->isLogin() || !$this->user->haveRole(ADMIN_PRIV)){
+                $this->View->ViewData['error'] = 'Bạn không có quyền để thực hiện hành động này';
+                return $this->View->RenderTemplate('error_page', 'error');
+            }
             return $this->View->RenderTemplate();
         }
         public function AccountInfo(){
+            if(!$this->user->isLogin() || !$this->user->haveRole(ADMIN_PRIV)){
+                $this->View->ViewData['error'] = 'Bạn không có quyền để thực hiện hành động này';
+                return $this->View->RenderTemplate('error_page', 'error');
+            }
             return $this->View->RenderTemplate();
         }
         public function Orders(){
+            if(!$this->user->isLogin() || !$this->user->haveRole(ADMIN_PRIV)){
+                $this->View->ViewData['error'] = 'Bạn không có quyền để thực hiện hành động này';
+                return $this->View->RenderTemplate('error_page', 'error');
+            }
             return $this->View->RenderTemplate();
         }
     }

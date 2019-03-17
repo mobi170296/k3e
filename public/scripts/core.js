@@ -31,7 +31,12 @@ Node.prototype.$ = Element.prototype.$ = $ = function(q){
         return null;
     }
 }
-
+Node.prototype.addClass = Element.prototype.addClass = function(c){
+    this.classList.add(c);
+}
+Node.prototype.removeClass = Element.prototype.removeClass = function(c){
+    this.classList.remove(c);
+}
 Node.prototype.text = Element.prototype.text = function(t){
     this.innerText = t;
 }

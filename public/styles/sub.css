@@ -13,3 +13,76 @@ span#scart-icon{
     background-size: 100% 100%;
     filter: invert(100%);
 }
+
+button.btn{
+    padding: 7px 20px;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 3px;
+    color: #fff;
+    font-size: 10pt;
+}
+
+button.btn-success{
+    border-color: #5eba13;
+    background-color: #5eba13;
+}
+
+button.btn-error{
+    border-color: #e04b30;
+    background-color: #e04b30;
+}
+
+button.btn-info{
+    border-color: #71b8d5;
+    background-color: #71b8d5;
+}
+
+button.btn-add{
+    border-color: #4789cf;
+    background-color: #4789cf;
+}
+
+div#modal-wrapper{
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.3);
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    text-align: center;
+}
+div#modal-wrapper div.modal{
+    display: inline-block;
+    margin: 20px 0px;
+    text-align: initial;
+    background-color: #fff;
+    border: 1px solid #fff;
+    border-radius: 7px;
+    box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.5);
+    min-width: 540px;
+    overflow: hidden;
+}
+div#modal-wrapper div.modal-header-button{
+    display: inline-block;
+    float: right;
+    font-weight: bold;
+    font-size: 12pt;
+    font-family: segoe ui;
+    cursor: pointer;
+}
+div#modal-wrapper div.modal-header{
+    box-sizing: border-box;
+    padding: 10px 20px;
+    border-bottom: 1px dashed #777;
+}
+div#modal-wrapper div.modal-header-title{
+    float: left;
+    max-width: 20em;
+    font-size: 14pt;
+    font-weight: bold;
+}
+div#modal-wrapper div.modal-body{
+    padding: 20px;
+}
