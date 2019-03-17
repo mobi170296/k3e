@@ -9,15 +9,10 @@
                 exit;
             }
             $this->authenticate();
-            if($this->user->haveRole(ADMIN_PRIV)){
-                echo 'Bạn có quyền quản trị';
-            }else{
-                echo 'Bạn không có quyền quản trị';
-            }
             $this->View->dbcon = $this->dbcon;
             $this->View->user = $this->user;
         }
         public function Index(){
-            
+            return $this->View->RenderTemplate();
         }
     }

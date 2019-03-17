@@ -46,19 +46,20 @@
             </div>
             <?php
                 if($this->user->isLogin()){
-                    echo <<<ACC_CONTROL
-                    <div id="account-control">
-                        <div id="account-name">{$this->user->lastname} {$this->user->firstname}</div>
-                        <div id="account-options">
-                            <a href="/User/Info">Thông tin tài khoản</a>
-                            <a href="/User/Shop">Cửa hàng</a>
-                            <a href="/User/Orders">Đơn hàng</a>
-                            <a>Địa chỉ vận chuyển</a>
-                            <a>Bài đánh giá</a>
-                            <a href="/User/Logout">Đăng xuất</a>
-                        </div>
-                    </div>
-ACC_CONTROL;
+                    echo '<div id="account-control">';
+                    echo "<div id=\"account-name\">{$this->user->lastname} {$this->user->firstname}</div>";
+                    echo '<div id="account-options">';
+                    echo '<a href="/User/Info">Thông tin tài khoản</a>';
+                    if($this->user->haveRole(ADMIN_PRIV)){
+                        echo '<a href="/Admin/Index">Quản trị hệ thống</a>';
+                    }
+                    echo '<a href="/User/Shop">Cửa hàng</a>';
+                    echo '<a href="/User/Orders">Đơn hàng</a>';
+                    echo '<a>Địa chỉ vận chuyển</a>';
+                    echo '<a>Bài đánh giá</a>';
+                    echo '<a href="/User/Logout">Đăng xuất</a>';
+                    echo'</div>';
+                    echo '</div>';
                 }
             ?>
             <div id="scart-wrapper">
@@ -69,3 +70,4 @@ ACC_CONTROL;
             </div>
         </div>
     </div>
+    <div id="body-wrapper">
