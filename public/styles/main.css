@@ -174,6 +174,7 @@ div#top-bar{
     padding: 5px 20px;
     background-color: #1FBE80;
     text-align: right;
+    font-family: segoe ui;
 }
 div#top-bar > a{
     color: white;

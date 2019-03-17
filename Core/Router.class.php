@@ -23,17 +23,17 @@
         
         public function match(){
             $this->params = [];
-            
             if(is_array($this->routeTable)){
                 $total_route = count($this->routeTable);
                 for($i=0; $i<$total_route; $i++){
                     if(preg_match('/^' . $this->routeTable[$i]['pattern'] . '$/', $this->path, $params)){
                         $this->params = array_merge($this->params, $this->routeTable[$i]['params']);
-                        foreach($params as $key => $value){
-                            if(is_string($key)){
-                                $this->params[$key] = $value;
-                            }
-                        }
+                        $this->params = array_merge($this->params, $params);
+//                        foreach($params as $key => $value){
+//                            if(is_string($key)){
+//                                $this->params[$key] = $value;
+//                            }
+//                        }
                         return true;
                     }
                 }
@@ -47,6 +47,12 @@
         
         public function dispatch(){
             #fetch $_REQUEST (POST + GET) to $this->params
+            $paras = [];
+            $paras = array_merge($paras, $this->params);
+            unset($paras['controller']);
+            unset($paras['action']);
+            
+            $this->query = array_merge($this->query, $paras);
             $this->query = array_merge($this->query, $_REQUEST);
             
             $args = [];

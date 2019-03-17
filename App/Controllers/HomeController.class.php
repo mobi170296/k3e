@@ -15,6 +15,10 @@
             $this->View->dbcon = $this->dbcon;
             $this->View->user = $this->user;
         }
+        public function Who($id){
+            return $this->View->RenderContent('Who ' . $id);
+        }
+        
         public function Index($id, \App\Models\UserModel $userinfo){
             
             return $this->View->RenderTemplate();
