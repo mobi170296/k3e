@@ -6,7 +6,9 @@
         <link rel="shortcut icon" href="/images/icons/icon.png"/>
         <link rel="stylesheet" href="/styles/main.css"/>
         <link rel="stylesheet" href="/styles/sub.css"/>
+        <link rel="stylesheet" href="/styles/toast.css"/>
         <script type="text/javascript" src="/scripts/core.js"></script>
+        <script type="text/javascript" src="/scripts/toast.js"></script>
         <?php
             $this->renderSection('head-script');
         ?>

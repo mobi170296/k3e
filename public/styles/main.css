@@ -48,11 +48,12 @@ div.message-box{
     font-size: 12pt;
     margin: 20px 0px;
 }
-div.error{
+div.message-box.error{
     background-color: #ff4743;
     color: #fff;
 }
-div.error::before{
+
+div.message-box.error::before{
     content: 'Failed';
     display: block;
     background-image: url('/images/icons/failed.png');
@@ -62,11 +63,11 @@ div.error::before{
     font-weight: 600;
     font-size: 14pt;
 }
-div.success{
+div.message-box.success{
     background-color: #008549;
     color: #fff;
 }
-div.success:before{
+div.message-box.success:before{
     content: 'Success';
     display: block;
     background-image: url('/images/icons/success.png');

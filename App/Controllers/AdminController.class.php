@@ -21,4 +21,10 @@
         public function Subcategory(){
             return $this->View->RenderTemplate();
         }
+        public function AccountInfo(){
+            return $this->View->RenderTemplate();
+        }
+        public function Orders(){
+            return $this->View->RenderTemplate();
+        }
     }

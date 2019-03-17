@@ -12,7 +12,7 @@ String.prototype.toCapitalize = function(){
     return rs;
 }
 
-Element.prototype.css = function(n, v){
+Element.prototype.css = Node.prototype.css = function(n, v){
     n=n.replace('-',' ');
     n=n.toCapitalize();
     n=n.charAt(0).toLowerCase()+n.slice(1);
@@ -21,38 +21,21 @@ Element.prototype.css = function(n, v){
     return this;
 }
 
-Node.prototype.css = function(n, v){
-    n=n.replace('-',' ');
-    n=n.toCapitalize();
-    n=n.charAt(0).toLowerCase()+n.slice(1);
-    n=n.replace(' ','');
-    this.style[n]=v;
-    return this;
-}
-
-function $(q){
+Node.prototype.$ = Element.prototype.$ = $ = function(q){
     var r=document.querySelectorAll(q);
-    if(r.length==1){
+    if(r.length>1){
+        return r;
+    }else if(r.length===1){
         return r[0];
     }else{
-        return r;
+        return null;
     }
 }
 
-Node.prototype.$ = function(q){
-    var r=this.querySelectorAll(q);
-    if(r.length==1){
-        return r[0];
-    }else{
-        return r;
-    }
+Node.prototype.text = Element.prototype.text = function(t){
+    this.innerText = t;
 }
 
-Element.prototype.$ = function(q){
-    var r=this.querySelectorAll(q);
-    if(r.length==1){
-        return r[0];
-    }else{
-        return r;
-    }
+Element.prototype.html = Node.prototype.html = function(h){
+    this.innerHTML = h;
 }

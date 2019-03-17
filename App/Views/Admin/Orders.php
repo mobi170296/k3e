@@ -1,6 +1,6 @@
 <?php
     $this->layout = 'layout.php';
-    $this->TemplateData['title'] = 'Quản lý danh mục phụ ngành hàng';
+    $this->TemplateData['title'] = 'Quản lý đơn hàng';
 ?>
 
 <div id="admin-wrapper" class="clearfix">
@@ -9,16 +9,16 @@
             <a href="/Admin/MainCategory" >Quản lý danh mục chính</a>
         </div>
         <div>
-            <a href="/Admin/SubCategory" class="active">Quản lý danh mục phụ</a>
+            <a href="/Admin/SubCategory">Quản lý danh mục phụ</a>
         </div>
         <div>
             <a href="/Admin/AccountInfo">Thông tin tài khoản</a>
         </div>
         <div>
-            <a href="/Admin/Orders">Đơn hàng của tôi</a>
+            <a href="/Admin/Orders" class="active">Đơn hàng của tôi</a>
         </div>
     </div>
     <div class="right-content">
-        Nội dung quản lý danh mục phụ
+        Nội dung quản lý đơn hàng
     </div>
 </div>

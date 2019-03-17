@@ -8,13 +8,17 @@
     <div>
         <a href="/Admin/MainCategory" class="active">Quản lý danh mục chính</a>
     </div>
-    
     <div>
         <a href="/Admin/SubCategory">Quản lý danh mục phụ</a>
     </div>
-    
+    <div>
+        <a href="/Admin/AccountInfo">Thông tin tài khoản</a>
+    </div>
+    <div>
+        <a href="/Admin/Orders">Đơn hàng của tôi</a>
+    </div>
 </div>
     <div class="right-content">
-        Menu
+        Nội dung quản lý danh mục chính
     </div>
 </div>
