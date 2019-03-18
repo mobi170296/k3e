@@ -52,3 +52,19 @@ Element.prototype.on = Node.prototype.on = function(e, cb){
 Element.prototype.data = Node.prototype.data = function(n){
     return this.dataset[n];
 }
+Element.prototype.off = Node.prototype.off = function(e, cb){
+    this.removeEventListener(e, cb);
+}
+HTMLInputElement.prototype.val = function(v=null){
+    if(v===null){
+        return this.value;
+    }else{
+        this.value=v;
+    }
+}
+Element.prototype.next = Node.prototype.next = function(){
+    return this.nextElementSibling;
+}
+Element.prototype.previous = Node.prototype.previous = function(){
+    return this.previousElementSibling;
+}

@@ -14,7 +14,6 @@
             $this->View->user = $this->user;
         }
         public function Add(MainCategoryModel $maincategory){
-            print_r($maincategory);
             #Thêm danh mục sản phẩm chính
             header('content-type: application/json');
             try{

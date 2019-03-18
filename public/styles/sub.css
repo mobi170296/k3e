@@ -99,6 +99,7 @@ table.data-table tr:nth-child(odd){
 }
 table.data-table td{
     border: 1px solid #afafaf;
+    padding: 5px 10px;
 }
 table.data-table th{
     border: 1px solid #afafaf;
@@ -139,4 +140,11 @@ div.loading-i-wrapper div.loading-i{
     animation-duration: 500ms;
     animation-iteration-count: infinite;
     display: inline-block;
+}
+p.invalid-data{
+    margin: 0px;
+    padding: 5px 0px;
+    color: red;
+    font-size: 10pt;
+    font-family: arial;
 }

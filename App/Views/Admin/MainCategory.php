@@ -2,7 +2,48 @@
     $this->layout = 'layout.php';
     $this->TemplateData['title'] = 'Quản lý danh mục chính ngành hàng';
 ?>
-
+    <script>
+        function chkMainCategoryData(f){
+            var n=f['name'];
+            var l=f['link'];
+            var nv=n.val();
+            var lv=l.val();
+            var err=0;
+            if(nv.length>200||nv.length===0){
+                n.next().text('Độ dài tên danh mục chính không hợp lệ!');
+                err|=1;
+            }else{
+                n.next().text('');
+            }
+            if(lv.length>1024||lv.length===0){
+                l.next().text('Độ dài liên kết không hợp lệ!');
+                err|=1;
+            }else{
+                l.next().text('');
+            }
+            if(err){
+                return false;
+            }else{
+                return true;
+            }
+        }
+        function ajaxSubmitForm(f){
+            var fd=new FormData(f);
+            AJAX.create().url(f.action).success(function(e){
+                var result = JSON.parse(this.response);
+                if(result.error){
+                    Toast.makeError(result.message, 5000);
+                }else{
+                    Toast.makeSuccess(result.message, 5000);
+                }
+                Modal.hide();
+            }).error(function(e){
+                Toast.makeError('Đã xảy ra lỗi không mong muốn. Vui lòng kiểm tra lại kết nối mạng', 5000);
+                Modal.hide();
+            }).post(fd);
+            Modal.waiting();
+        }
+    </script>
     <div id="admin-wrapper" class="clearfix">
         <div class="left-menu">
             <div>
@@ -53,6 +94,17 @@
         Modal.waiting().show();
         AJAX.create().url('/ajax/MainCategory/AddForm').sync(true).success(function(e){
             Modal.title('Thêm danh mục chính').html(this.response).show();
+            document.forms['maincategory'].onsubmit = function(e){
+                return false;
+            }
+            $('div.modal form[name="maincategory"] button[name="add"]').on('click', function(e){
+                if(chkMainCategoryData(this.form)){
+                    ajaxSubmitForm(this.form);
+                }
+            });
+        }).error(function(e){
+            Toast.makeError('Không thể tải dữ liệu', 5000);
+            Modal.hide();
         }).get(null);
     });
 </script>

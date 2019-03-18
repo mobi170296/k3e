@@ -28,11 +28,11 @@ var AJAX = new (function(){
         return this;
     }
     this.success = function(cb){
-        this._xhr.onsuccess = cb;
+        this._xhr._onsuccess = cb;
         return this;
     }
     this.error = function(cb){
-        this._xhr.onerror = cb;
+        this._xhr._onerror = cb;
         return this;
     }
     this.send = function(data, cb=null){
@@ -42,10 +42,10 @@ var AJAX = new (function(){
         }else{
             this._xhr.onreadystatechange = function(e){
                 if(this.readyState===4 && this.status===200){
-                    this.onsuccess(e);
+                    this._onsuccess(e);
                 }
                 if(this.readyState===4 && this.status!==200){
-                    this.onerror(e);
+                    this._onerror(e);
                 }
             }
         }
@@ -58,10 +58,10 @@ var AJAX = new (function(){
         }else{
             this._xhr.onreadystatechange = function(e){
                 if(this.readyState===4 && this.status===200){
-                    this.onsuccess(e);
+                    this._onsuccess(e);
                 }
                 if(this.readyState===4 && this.status!==200){
-                    this.onerror(e);
+                    this._onerror(e);
                 }
             }
         }
@@ -69,16 +69,17 @@ var AJAX = new (function(){
     }
     this.post = function(data, cb=null){
         this._xhr.open('post', this._url, this._sync);
-        this._xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
+        if(typeof data === "string")
+            this._xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
         if(cb!==null){
             this._xhr.onreadystatechange = cb;
         }else{
             this._xhr.onreadystatechange = function(e){
                 if(this.readyState===4 && this.status===200){
-                    this.onsuccess(e);
+                    this._onsuccess(e);
                 }
                 if(this.readyState===4 && this.status!==200){
-                    this.onerror(e);
+                    this._onerror(e);
                 }
             }
         }
