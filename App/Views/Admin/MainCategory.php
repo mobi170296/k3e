@@ -19,7 +19,9 @@
             </div>
         </div>
         <div class="right-content">
-            <button class="btn btn-add modal-add">Thêm danh mục chính</button>
+            <div>
+                <button class="btn btn-allow modal-add">Thêm danh mục chính</button>
+            </div>
             <div class="u-p10-0">
                 <?php
                     if(count($this->ViewData['maincategorylist'])){
@@ -48,10 +50,8 @@
     </div>
 <script>
     $('button.modal-add').on('click', function(e){
-        XHR.create().url('/ajax/MainCategory/AddForm').get(null, function(e){
-            if(this.readyState === 4){
-                Modal.title('Thêm danh mục chính').html(this.response).show();
-            }
-        });
+        AJAX.create().url('/ajax/MainCategory/AddForm').sync(true).success(function(e){
+            Modal.title('Thêm danh mục chính').html(this.response).show();
+        }).get(null);
     });
 </script>

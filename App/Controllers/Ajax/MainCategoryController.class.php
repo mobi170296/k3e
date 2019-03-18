@@ -12,6 +12,7 @@
             $this->View->user = $this->user;
         }
         public function Add(){
+            #Thêm danh mục sản phẩm chính
             header('content-type: application/json');
             return $this->View->RenderJson();
         }

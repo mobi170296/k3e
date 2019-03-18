@@ -1,6 +1,6 @@
 /*XMLHttpRequest Controller*/
 
-var XHR = new (function(){
+var AJAX = new (function(){
     this._xhr = null;
     this._url = null;
     this._method = null;
@@ -25,20 +25,62 @@ var XHR = new (function(){
     }
     this.sync = function(b){
         this._sync = b;
+        return this;
     }
-    this.send = function(data, cb){
+    this.success = function(cb){
+        this._xhr.onsuccess = cb;
+        return this;
+    }
+    this.error = function(cb){
+        this._xhr.onerror = cb;
+        return this;
+    }
+    this.send = function(data, cb=null){
         this._xhr.open(this._method, this._url, this._sync);
-        this._xhr.onreadystatechange = cb;
+        if(cb!==null){
+            this._xhr.onreadystatechange = cb;
+        }else{
+            this._xhr.onreadystatechange = function(e){
+                if(this.readyState===4 && this.status===200){
+                    this.onsuccess(e);
+                }
+                if(this.readyState===4 && this.status!==200){
+                    this.onerror(e);
+                }
+            }
+        }
         this._xhr.send(data);
     }
-    this.get = function(data, cb){
+    this.get = function(data, cb=null){
         this._xhr.open('get', this._url, this._sync);
-        this._xhr.onreadystatechange = cb;
+        if(cb!==null){
+            this._xhr.onreadystatechange = cb;
+        }else{
+            this._xhr.onreadystatechange = function(e){
+                if(this.readyState===4 && this.status===200){
+                    this.onsuccess(e);
+                }
+                if(this.readyState===4 && this.status!==200){
+                    this.onerror(e);
+                }
+            }
+        }
         this._xhr.send(data);
     }
-    this.post = function(data, cb){
+    this.post = function(data, cb=null){
         this._xhr.open('post', this._url, this._sync);
-        this._xhr.onreadystatechange = cb;
+        if(cb!==null){
+            this._xhr.onreadystatechange = cb;
+        }else{
+            this._xhr.onreadystatechange = function(e){
+                if(this.readyState===4 && this.status===200){
+                    this.onsuccess(e);
+                }
+                if(this.readyState===4 && this.status!==200){
+                    this.onerror(e);
+                }
+            }
+        }
         this._xhr.send(data);
     }
 })();
@@ -127,4 +169,11 @@ var Modal = new (function(){
 })();
 document.onmousedown = function(e){
     Modal.hide();
+}
+
+HTMLFormElement.prototype.show = function(){
+    var controls = this.elements;
+    for(i=0;i<controls.length;i++){
+        console.log(controls[i].name + ' = ' + controls[i].value);
+    }
 }

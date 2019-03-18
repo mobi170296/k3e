@@ -37,12 +37,12 @@ Node.prototype.addClass = Element.prototype.addClass = function(c){
 Node.prototype.removeClass = Element.prototype.removeClass = function(c){
     this.classList.remove(c);
 }
-Node.prototype.text = Element.prototype.text = function(t){
-    this.innerText = t;
+Node.prototype.text = Element.prototype.text = function(t=null){
+    if(t!==null)this.innerText = t;else return this.innerText;
 }
 
-Element.prototype.html = Node.prototype.html = function(h){
-    this.innerHTML = h;
+Element.prototype.html = Node.prototype.html = function(h=null){
+    if(h!==null) this.innerHTML = h; else return this.innerHTML;
 }
 
 Element.prototype.on = Node.prototype.on = function(e, cb){

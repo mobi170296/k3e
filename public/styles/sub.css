@@ -28,7 +28,10 @@ button.btn-success{
     border-color: #5eba13;
     background-color: #5eba13;
 }
-
+button.btn-allow{
+    border-color: #4789cf;
+    background-color: #4789cf;
+}
 button.btn-error{
     border-color: #e04b30;
     background-color: #e04b30;
@@ -39,9 +42,8 @@ button.btn-info{
     background-color: #71b8d5;
 }
 
-button.btn-add{
-    border-color: #4789cf;
-    background-color: #4789cf;
+button.btn-add-i{
+    
 }
 
 div#modal-wrapper{
