@@ -36,6 +36,7 @@
                 }else{
                     Toast.makeSuccess(result.message, 5000);
                 }
+                window.location.reload();
                 Modal.hide();
             }).error(function(e){
                 Toast.makeError('Đã xảy ra lỗi không mong muốn. Vui lòng kiểm tra lại kết nối mạng', 5000);
@@ -78,7 +79,7 @@
                             echo "<td>{$maincategory->id}</td>";
                             echo "<td>{$maincategory->name}</td>";
                             echo "<td>{$maincategory->link}</td>";
-                            echo '<td><button class="btn btn-success">Sửa</button> <button class="btn btn-error">Xóa</div></td>';
+                            echo '<td><button class="btn btn-success modal-edit" data-id="'.$maincategory->id.'">Sửa</button> <button class="btn btn-error modal-del">Xóa</div></td>';
                             echo '</tr>';
                         }
                         echo '</table>';
@@ -107,4 +108,5 @@
             Modal.hide();
         }).get(null);
     });
+    
 </script>

@@ -21,5 +21,14 @@
             </div>
         </div>
     </div>
+    <script>
+        window.onscroll = function(e){
+            if(window.scrollY > $('#header').offsetTop + $('#header').offsetHeight){
+                $('#control-bar-wrapper').css('position', 'fixed').css('top','0px').css('left','0px').css('width','100%');
+            }else{
+                $('#control-bar-wrapper').css('position', 'relative');
+            }
+        }
+    </script>
     <!-- div of container -->
 </div>
