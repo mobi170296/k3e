@@ -69,6 +69,7 @@ var AJAX = new (function(){
     }
     this.post = function(data, cb=null){
         this._xhr.open('post', this._url, this._sync);
+        this._xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
         if(cb!==null){
             this._xhr.onreadystatechange = cb;
         }else{
@@ -166,14 +167,14 @@ var Modal = new (function(){
         this.modalheadertitle.text(t);
         return this;
     }
+    this.waiting = function(){
+        if(this.modalwrapper===null){
+            this.create();
+        }
+        this.html('<div class="loading-i-wrapper"><div class="loading-i"></div></div>');
+        return this;
+    }
 })();
 document.onmousedown = function(e){
     Modal.hide();
-}
-
-HTMLFormElement.prototype.show = function(){
-    var controls = this.elements;
-    for(i=0;i<controls.length;i++){
-        console.log(controls[i].name + ' = ' + controls[i].value);
-    }
 }

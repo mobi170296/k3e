@@ -83,7 +83,8 @@ div#modal-wrapper div.modal-header{
 div#modal-wrapper div.modal-header-title{
     float: left;
     max-width: 20em;
-    font-size: 14pt;
+    font-family: arial;
+    font-size: 12pt;
     font-weight: bold;
 }
 div#modal-wrapper div.modal-body{
@@ -114,4 +115,28 @@ table.data-table.maincategory td:nth-child(3){
 }
 .u-p10-0{
     padding: 10px 0px;
+}
+@keyframes anim-loading-icon{
+    from{
+        transform: rotate(0deg);
+    }
+    to{
+        transform: rotate(360deg);
+    }
+}
+div.loading-i-wrapper{
+    text-align: center;
+}
+div.loading-i-wrapper div.loading-i{
+    width: 30px;
+    height: 30px;
+    border-width: 10px;
+    border-style: solid;
+    border-color: red #0f0 #00f #ff0;
+    border-radius: 50%;
+    animation-name: anim-loading-icon;
+    animation-timing-function: linear;
+    animation-duration: 500ms;
+    animation-iteration-count: infinite;
+    display: inline-block;
 }

@@ -50,6 +50,7 @@
     </div>
 <script>
     $('button.modal-add').on('click', function(e){
+        Modal.waiting().show();
         AJAX.create().url('/ajax/MainCategory/AddForm').sync(true).success(function(e){
             Modal.title('Thêm danh mục chính').html(this.response).show();
         }).get(null);
