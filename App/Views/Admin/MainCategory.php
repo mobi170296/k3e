@@ -63,7 +63,7 @@
         </div>
         <div class="right-content">
             <div>
-                <button class="btn btn-allow modal-add">Thêm danh mục chính</button>
+                <button class="btn btn-allow modal-add btn-add-i">Thêm danh mục chính</button>
             </div>
             <div class="u-p10-0">
                 <?php
@@ -80,7 +80,7 @@
                             echo "<td>{$maincategory->id}</td>";
                             echo "<td>{$maincategory->name}</td>";
                             echo "<td>{$maincategory->link}</td>";
-                            echo '<td><button class="btn btn-success modal-edit" data-id="'.$maincategory->id.'">Sửa</button> <button class="btn btn-error modal-del" data-id="'.$maincategory->id.'">Xóa</div></td>';
+                            echo '<td><button class="btn btn-success modal-edit btn-edit-i" data-id="'.$maincategory->id.'">Sửa</button> <button class="btn btn-error modal-del btn-del-i" data-id="'.$maincategory->id.'">Xóa</div></td>';
                             echo '</tr>';
                         }
                         echo '</table>';

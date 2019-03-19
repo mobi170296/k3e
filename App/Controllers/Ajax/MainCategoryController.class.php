@@ -1,6 +1,7 @@
 <?php
     namespace App\Controllers\Ajax;
     use App\Models\MainCategoryModel;
+    use App\Exception\AuthenticationException;
     
     class MainCategoryController extends \Core\Controller{
         public function __init(){
@@ -17,6 +18,9 @@
             #Thêm danh mục sản phẩm chính
             header('content-type: application/json');
             try{
+                if(!$this->user->haveRole(ADMIN_PRIV)){
+                    throw new AuthenticationException('Bạn không có quyền thực hiện thao tác này');
+                }
                 $maincategory->dbcon = $this->dbcon;
                 $maincategory->add();
             } catch (\Exception $ex) {
@@ -36,6 +40,9 @@
             header('content-type: application/json');
             $result = new \stdClass();
             try{
+                if(!$this->user->haveRole(ADMIN_PRIV)){
+                    throw new AuthenticationException('Bạn không có quyền thực hiện thao tác này');
+                }
                 $maincategory = new MainCategoryModel($this->dbcon);
                 $maincategory->id = $id;
                 $maincategory->update($mcate);
@@ -54,6 +61,9 @@
             header('content-type: application/json');
             $result = new \stdClass();
             try{
+                if(!$this->user->haveRole(ADMIN_PRIV)){
+                    throw new AuthenticationException('Bạn không có quyền thực hiện thao tác này');
+                }
                 $maincategory = new MainCategoryModel($this->dbcon);
                 $maincategory->id = $id;
                 $maincategory->delete();

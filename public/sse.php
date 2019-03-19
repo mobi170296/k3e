@@ -1,7 +1,5 @@
+<meta charset="utf-8"/>
 <?php
-    header('content-type: text/event-stream');
-    header('cache-control: no-cache');
-    
-    $time = date('r');
-    echo "data: The server time is: {$time}\n\n";
-    flush();
+$s = 'NGUYỄN THỊ THÚY HẰNG';
+
+echo "\u{1ec4}";

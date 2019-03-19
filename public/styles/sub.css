@@ -42,8 +42,17 @@ button.btn-info{
     background-color: #71b8d5;
 }
 
-button.btn-add-i{
-    
+.btn-add-i::before{
+    content: '\271A';
+    padding-right: 5px;
+}
+.btn-del-i::before{
+    content: '\2716';
+    padding-right: 5px;
+}
+.btn-edit-i::before{
+    content: '\270E';
+    padding-right: 5px;
 }
 
 div#modal-wrapper{

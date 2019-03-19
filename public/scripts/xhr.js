@@ -85,6 +85,14 @@ var $AJAX = new (function(){
         }
         this._xhr.send(data);
     }
+    this.upprogress = function(cb){
+        this._xhr.upload.onprogress = cb;
+        return this;
+    }
+    this.downprogress = function(cb){
+        this._xhr.onprogress = cb;
+        return this;
+    }
 })();
 var $Modal = new (function(){
     this.modalwrapper = $('#modal-wrapper');

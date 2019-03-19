@@ -70,7 +70,7 @@
             return $this;
         }
         public function RenderJson($obj){
-            $this->bodyContent = json_encode($obj);
+            $this->bodyContent = json_encode($obj, JSON_UNESCAPED_UNICODE);
             return $this;
         }
     }
