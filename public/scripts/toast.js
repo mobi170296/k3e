@@ -1,5 +1,5 @@
 /* Library for toast */
-var Toast = new (function(){
+var $Toast = new (function(){
     this.toastbody = $('#toast-wrapper');
     this.createToastBody = function(){
         this.toastbody = document.createElement('div');

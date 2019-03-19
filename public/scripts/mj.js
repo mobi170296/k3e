@@ -15,7 +15,6 @@ function $qr(){
         for(var i=1;i<a.length;i++){
             a[i]=a[i][0].toUpperCase() + a[i].substr(1);
         }
-        console.log(a);
         n=a.join('');
         for(var i=0; i<this.length; i++){
             this[i].style[n]=v;

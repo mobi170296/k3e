@@ -3,6 +3,7 @@
     $this->TemplateData['title'] = 'Quản lý danh mục chính ngành hàng';
 ?>
     <script>
+        "use strict"
         function chkMainCategoryData(f){
             var n=f['name'];
             var l=f['link'];
@@ -29,20 +30,20 @@
         }
         function ajaxSubmitForm(f){
             var fd=new FormData(f);
-            AJAX.create().url(f.action).success(function(e){
+            window.$AJAX.create().url(f.action).success(function(e){
                 var result = JSON.parse(this.response);
                 if(result.error){
-                    Toast.makeError(result.message, 5000);
+                    window.$Toast.makeError(result.message, 5000);
                 }else{
-                    Toast.makeSuccess(result.message, 5000);
+                    window.$Toast.makeSuccess(result.message, 5000);
                 }
                 window.location.reload();
-                Modal.hide();
+                window.$Modal.hide();
             }).error(function(e){
-                Toast.makeError('Đã xảy ra lỗi không mong muốn. Vui lòng kiểm tra lại kết nối mạng', 5000);
-                Modal.hide();
+                window.$Toast.makeError('Đã xảy ra lỗi không mong muốn. Vui lòng kiểm tra lại kết nối mạng', 5000);
+                window.$Modal.hide();
             }).post(fd);
-            Modal.waiting();
+            window.$Modal.waiting();
         }
     </script>
     <div id="admin-wrapper" class="clearfix">
@@ -79,7 +80,7 @@
                             echo "<td>{$maincategory->id}</td>";
                             echo "<td>{$maincategory->name}</td>";
                             echo "<td>{$maincategory->link}</td>";
-                            echo '<td><button class="btn btn-success modal-edit" data-id="'.$maincategory->id.'">Sửa</button> <button class="btn btn-error modal-del">Xóa</div></td>';
+                            echo '<td><button class="btn btn-success modal-edit" data-id="'.$maincategory->id.'">Sửa</button> <button class="btn btn-error modal-del" data-id="'.$maincategory->id.'">Xóa</div></td>';
                             echo '</tr>';
                         }
                         echo '</table>';
@@ -92,21 +93,53 @@
     </div>
 <script>
     $('button.modal-add').on('click', function(e){
-        Modal.waiting().show();
-        AJAX.create().url('/ajax/MainCategory/AddForm').sync(true).success(function(e){
-            Modal.title('Thêm danh mục chính').html(this.response).show();
-            document.forms['maincategory'].onsubmit = function(e){
+        window.$Modal.waiting().show();
+        window.$AJAX.create().url('/ajax/MainCategory/AddForm').sync(true).success(function(e){
+            window.$Modal.title('Thêm danh mục chính').html(this.response).show();
+            $('form[name="maincategory"]').on('submit', function(e){
                 return false;
-            }
+            });
             $('div.modal form[name="maincategory"] button[name="add"]').on('click', function(e){
                 if(chkMainCategoryData(this.form)){
                     ajaxSubmitForm(this.form);
                 }
             });
         }).error(function(e){
-            Toast.makeError('Không thể tải dữ liệu', 5000);
-            Modal.hide();
+            window.$Toast.makeError('Không thể tải dữ liệu', 5000);
+            window.$Modal.hide();
         }).get(null);
     });
     
+    $('button.modal-edit').on('click', function(e){
+        window.$Modal.waiting().show();
+        window.$AJAX.create().url('/ajax/MainCategory/EditForm/'+$(this).data('id')).success(function(e){
+            window.$Modal.title('Sửa danh mục chính').html(this.response).show();
+            $('div.modal form[name="maincategory"] button[name="edit"]').on('click', function(e){
+                if(chkMainCategoryData(this.form)){
+                    ajaxSubmitForm(this.form);
+                }
+            });
+        }).error(function(e){
+            window.$Toast.makeError('Không thể tải dữ liệu', 5000);
+            window.$Modal.hide();
+        }).get(null);
+    });
+    
+    $('button.modal-del').on('click', function(e){
+        window.$Modal.waiting().show();
+        window.$AJAX.create().url('/ajax/MainCategory/DelForm/'+$(this).data('id')).success(function(e){
+            window.$Modal.title('Sửa danh mục chính').html(this.response).show();
+            $('form[name="maincategory"]').on('submit', function(e){
+                return false;
+            });
+            $('div.modal form[name="maincategory"] button[name="edit"]').on('click', function(e){
+                if(chkMainCategoryData(this.form)){
+                    ajaxSubmitForm(this.form);
+                }
+            });
+        }).error(function(e){
+            window.$Toast.makeError('Không thể tải dữ liệu', 5000);
+            window.$Modal.hide();
+        }).get(null);
+    });
 </script>

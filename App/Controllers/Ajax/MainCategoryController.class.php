@@ -33,6 +33,35 @@
             return $this->View->RenderJson($result);
         }
         public function AddForm(){
+            if(!$this->user->haveRole(ADMIN_PRIV)){
+                return $this->View->RenderContent("Bạn không có quyền thực hiện điều này");
+            }
             return $this->View->RenderTemplate();
+        }
+        public function EditForm($id){
+            if(!$this->user->haveRole(ADMIN_PRIV)){
+                return $this->View->RenderContent('Bạn không có quyền thực hiện điều này');
+            }
+            $mcate = new MainCategoryModel($this->dbcon);
+            $mcate->id = $id;
+            if($mcate->loadFromDB()){
+                $this->View->ViewData['maincategory'] = $mcate;
+                return $this->View->RenderTemplate();
+            }else{
+                return $this->View->RenderContent('Danh mục này không tồn tại');
+            }
+        }
+        public function DelForm($id){
+            if(!$this->user->haveRole(ADMIN_PRIV)){
+                return $this->View->RenderContent('Bạn không có quyền thực hiện điều này');
+            }
+            $mcate = new MainCategoryModel($this->dbcon);
+            $mcate->id = $id;
+            if($mcate->loadFromDB()){
+                $this->View->ViewData['maincategory'] = $mcate;
+                return $this->View->RenderTemplate();
+            }else{
+                return $this->View->RenderContent('Danh mục này không tồn tại');
+            }
         }
     }

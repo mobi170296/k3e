@@ -10,6 +10,7 @@
         <script type="text/javascript" src="/scripts/core.js"></script>
         <script type="text/javascript" src="/scripts/toast.js"></script>
         <script type="text/javascript" src="/scripts/xhr.js"></script>
+        <script type="text/javascript" src="/scripts/mj.js"></script>
         <?php
             $this->renderSection('head-script');
         ?>

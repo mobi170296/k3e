@@ -1,6 +1,6 @@
 /*XMLHttpRequest Controller*/
 
-var AJAX = new (function(){
+var $AJAX = new (function(){
     this._xhr = null;
     this._url = null;
     this._method = null;
@@ -51,7 +51,7 @@ var AJAX = new (function(){
         }
         this._xhr.send(data);
     }
-    this.get = function(data, cb=null){
+    this.get = function(data=null, cb=null){
         this._xhr.open('get', this._url, this._sync);
         if(cb!==null){
             this._xhr.onreadystatechange = cb;
@@ -67,7 +67,7 @@ var AJAX = new (function(){
         }
         this._xhr.send(data);
     }
-    this.post = function(data, cb=null){
+    this.post = function(data=null, cb=null){
         this._xhr.open('post', this._url, this._sync);
         if(typeof data === "string")
             this._xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
@@ -86,7 +86,7 @@ var AJAX = new (function(){
         this._xhr.send(data);
     }
 })();
-var Modal = new (function(){
+var $Modal = new (function(){
     this.modalwrapper = $('#modal-wrapper');
     if(this.modalwrapper !== null){
         this.modal = this.modalwrapper.$('.modal');
@@ -117,7 +117,7 @@ var Modal = new (function(){
         this.modalclosebutton.text('x');
         this.modalclosebutton.className = 'modal-header-button';
         this.modalclosebutton.onclick = function(e){
-            Modal.hide();
+            window.$Modal.hide();
         }
         
         this.modalheader.append(this.modalclosebutton);
@@ -176,6 +176,7 @@ var Modal = new (function(){
         return this;
     }
 })();
+
 document.onmousedown = function(e){
-    Modal.hide();
+    window.$Modal.hide();
 }

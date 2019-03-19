@@ -16,4 +16,6 @@
         </div>
         <input/>
     </body>
+    <script>
+        </script>
 </html>
