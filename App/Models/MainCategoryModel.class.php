@@ -2,6 +2,7 @@
     namespace App\Models;
     use \App\Exception\InputException;
     use \Library\DBString;
+    use \Library\DBNumber;
     use \App\Exception\DBException;
     
     class MainCategoryModel extends \Core\Model{
@@ -36,13 +37,7 @@
         }
         
         public function add(){
-            $errors = [];
-            if(mb_strlen($this->name)==0 || mb_strlen($this->name)>200){
-                $errors['name'] = 'Độ dài tên danh mục không hợp lệ!';
-            }
-            if(mb_strlen($this->link)>1024){
-                $errors['link'] = 'Độ dài liên kết không được vượt quá 1024';
-            }
+            $errors = $this->checkValid($this);
             if(count($errors)){
                 throw new InputException($errors);
             }
@@ -53,10 +48,37 @@
         }
         
         public function delete(){
-            
+            if($this->loadFromDB()){
+                $this->dbcon->delete(DB_TABLE_MAINCATEGORY, 'id='. new DBNumber($this->id));
+                if($this->dbcon->errno()){
+                    throw new DBException($this->dbcon->error());
+                }
+            }else{
+                throw new InputException(['id'=>'ID danh mục không tồn tại']);
+            }
         }
         
         public function update($mc){
-            
+            $errors = $this->checkValid($mc);
+            if(count($errors)){
+                throw new InputException($errors);
+            }
+            $this->name = $mc->name;
+            $this->link = $mc->link;
+            $this->dbcon->update(DB_TABLE_MAINCATEGORY, ['name'=>new DBString($this->name), 'link'=>new DBString($this->link)], 'id=' . new \Library\DBNumber($this->id));
+            if($this->dbcon->errno()){
+                throw new DBException($this->dbcon->error());
+            }
+        }
+        
+        private function checkValid($m){
+            $errors = [];
+            if(mb_strlen($m->name)==0 || mb_strlen($m->name)>200){
+                $errors['name'] = 'Độ dài tên danh mục không hợp lệ!';
+            }
+            if(mb_strlen($m->link)>1024){
+                $errors['link'] = 'Độ dài liên kết không được vượt quá 1024';
+            }
+            return $errors;
         }
     }

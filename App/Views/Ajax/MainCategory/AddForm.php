@@ -18,7 +18,7 @@
             <tr>
                 <td></td>
                 <td>
-                    <button type="submit" name="add" class="btn btn-allow">Thêm</button></td>
+                    <button type="submit" name="add" class="btn btn-allow">Thêm danh mục</button></td>
             </tr>
         </table>
     </form>

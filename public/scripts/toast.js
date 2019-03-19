@@ -9,13 +9,13 @@ var $Toast = new (function(){
     this.makeWarning = function(m,t){
         var b = document.createElement('div');
         b.className = 'toast-box warning';
-        b.text(m);
+        b.html(m);
         if(this.toastbody==null){
             this.createToastBody();
         }
         this.toastbody.append(b);
         window.setTimeout(function(){
-            Toast.remove();
+            window.$Toast.remove();
         }, t);
         b.css('transition-duration', t + 'ms');
         window.setTimeout(function(b){
@@ -25,13 +25,13 @@ var $Toast = new (function(){
     this.makeError = function(m,t){
         var b = document.createElement('div');
         b.className = 'toast-box error';
-        b.text(m);
+        b.html(m);
         if(this.toastbody==null){
             this.createToastBody();
         }
         this.toastbody.append(b);
         window.setTimeout(function(){
-            Toast.remove();
+            window.$Toast.remove();
         }, t);
         b.css('transition-duration', t + 'ms');
         window.setTimeout(function(b){
@@ -41,14 +41,14 @@ var $Toast = new (function(){
     this.makeSuccess = function(m,t){
         var b = document.createElement('div');
         b.className = 'toast-box success';
-        b.text(m);
+        b.html(m);
         if(this.toastbody==null){
             this.createToastBody();
         }
         console.log(this.toastbody);
         this.toastbody.append(b);
         window.setTimeout(function(){
-            Toast.remove();
+            window.$Toast.remove();
         }, t);
         b.css('transition-duration', t + 'ms');
         window.setTimeout(function(b){

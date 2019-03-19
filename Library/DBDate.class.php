@@ -17,6 +17,11 @@
         public function toValue(){
             return "'{$this->year}-{$this->month}-{$this->day}'";
         }
+        
+        public function __toString(){
+            return "'{$this->year}-{$this->month}-{$this->day}'";
+        }
+        
         public static function parse($date){
             if(preg_match('/^(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})$/', $date, $match)){
                 return new DBDate($match['day'], $match['month'], $match['year']);

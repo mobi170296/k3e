@@ -19,11 +19,11 @@
             try{
                 $maincategory->dbcon = $this->dbcon;
                 $maincategory->add();
-            } catch (Exception $ex) {
+            } catch (\Exception $ex) {
                 $result = new \stdClass();
                 $result->error = 1;
                 $result->code = 1;
-                $result->message = $ex;
+                $result->message = $ex . '';
                 return $this->View->RenderJson($result);
             }
             $result = new \stdClass();
@@ -31,6 +31,42 @@
             $result->code = 0;
             $result->message = 'Đã thêm thành công danh mục chính';
             return $this->View->RenderJson($result);
+        }
+        public function Edit($id, MainCategoryModel $mcate){
+            header('content-type: application/json');
+            $result = new \stdClass();
+            try{
+                $maincategory = new MainCategoryModel($this->dbcon);
+                $maincategory->id = $id;
+                $maincategory->update($mcate);
+                $result->code = 0;
+                $result->error = 0;
+                $result->message = 'Đã cập nhật thành công danh mục chính';
+                return $this->View->RenderJson($result);
+            } catch (\Exception $ex) {
+                $result->error = 1;
+                $result->code = 1;
+                $result->message = $ex . '';
+                return $this->View->RenderJson($result);
+            }
+        }
+        public function Del($id){
+            header('content-type: application/json');
+            $result = new \stdClass();
+            try{
+                $maincategory = new MainCategoryModel($this->dbcon);
+                $maincategory->id = $id;
+                $maincategory->delete();
+                $result->code = 0;
+                $result->error = 0;
+                $result->message = 'Xóa thành công danh mục chính';
+                return $this->View->RenderJson($result);
+            } catch (\Exception $ex) {
+                $result->error = 1;
+                $result->code = 1;
+                $result->message = $ex . '';
+                return $this->View->RenderJson($result);
+            }
         }
         public function AddForm(){
             if(!$this->user->haveRole(ADMIN_PRIV)){

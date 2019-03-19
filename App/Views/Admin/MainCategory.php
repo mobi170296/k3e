@@ -31,13 +31,13 @@
         function ajaxSubmitForm(f){
             var fd=new FormData(f);
             window.$AJAX.create().url(f.action).success(function(e){
-                var result = JSON.parse(this.response);
+                window.result = JSON.parse(this.response);
                 if(result.error){
                     window.$Toast.makeError(result.message, 5000);
                 }else{
                     window.$Toast.makeSuccess(result.message, 5000);
+                    window.location.reload();
                 }
-                window.location.reload();
                 window.$Modal.hide();
             }).error(function(e){
                 window.$Toast.makeError('Đã xảy ra lỗi không mong muốn. Vui lòng kiểm tra lại kết nối mạng', 5000);
@@ -128,14 +128,12 @@
     $('button.modal-del').on('click', function(e){
         window.$Modal.waiting().show();
         window.$AJAX.create().url('/ajax/MainCategory/DelForm/'+$(this).data('id')).success(function(e){
-            window.$Modal.title('Sửa danh mục chính').html(this.response).show();
+            window.$Modal.title('Xóa danh mục chính').html(this.response).show();
             $('form[name="maincategory"]').on('submit', function(e){
                 return false;
             });
-            $('div.modal form[name="maincategory"] button[name="edit"]').on('click', function(e){
-                if(chkMainCategoryData(this.form)){
-                    ajaxSubmitForm(this.form);
-                }
+            $('div.modal form[name="maincategory"] button[name="del"]').on('click', function(e){
+                ajaxSubmitForm(this.form);
             });
         }).error(function(e){
             window.$Toast.makeError('Không thể tải dữ liệu', 5000);

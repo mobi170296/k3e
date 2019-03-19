@@ -1,5 +1,5 @@
 <div>
-    <form name="maincategory" action="/ajax/MainCategory/Add" onsubmit="return false;">
+    <form name="maincategory" action="/ajax/MainCategory/Edit/<?php echo $this->ViewData['maincategory']->id; ?>" onsubmit="return false;">
         <table>
             <tr>
                 <td>Tên danh mục</td>
@@ -18,7 +18,7 @@
             <tr>
                 <td><input type="hidden" name="id" value="<?php echo $this->ViewData['maincategory']->id; ?>"/></td>
                 <td>
-                    <button type="submit" name="edit" class="btn btn-allow">Thêm</button></td>
+                    <button type="submit" name="edit" class="btn btn-success">Lưu thay đổi</button></td>
             </tr>
         </table>
     </form>

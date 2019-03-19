@@ -10,4 +10,7 @@
         public function toValue(){
             return "'{$this->string}'";
         }
+        public function __toString(){
+            return "'{$this->string}'";
+        }
     }

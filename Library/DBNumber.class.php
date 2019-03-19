@@ -7,8 +7,10 @@
         public function __construct($number){
             $this->number = $number;
         }
-        
         public function toValue(){
+            return $this->number;
+        }
+        public function __toString(){
             return $this->number;
         }
     }

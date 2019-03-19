@@ -8,4 +8,7 @@
         public function toValue(){
             return $this->raw;
         }
+        public function __toString(){
+            return $this->raw;
+        }
     }

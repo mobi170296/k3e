@@ -26,7 +26,7 @@
                                 $mcate->id = $row['id'];
                                 $mcate->loadFromDB();
                                 echo '<div class="menu l1">';
-                                echo '<a>' . $mcate->name . '</a>';
+                                echo '<a href="'.$mcate->link.'">' . $mcate->name . '</a>';
                                 echo '<div class="menu l2">';
                                 foreach($mcate->subcategory as $subcategory){
                                     echo '<a>'.$subcategory->name.'</a>';
@@ -41,7 +41,7 @@
 
             <div id="search-bar">
                 <form>
-                    <input type="text" name="query" placeholder="Search query" size="70" autocomplete="off"/><button>Search</button>
+                    <input type="text" name="query" placeholder="Search query" size="75" autocomplete="off"/><button>Tìm kiếm</button>
                 </form>
             </div>
             <?php

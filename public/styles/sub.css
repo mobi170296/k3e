@@ -55,6 +55,7 @@ div#modal-wrapper{
     top: 0px;
     left: 0px;
     text-align: center;
+    z-index: 3;
 }
 div#modal-wrapper div.modal{
     display: inline-block;

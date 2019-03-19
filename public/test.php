@@ -17,5 +17,9 @@
         <input/>
     </body>
     <script>
-        </script>
+        var source = new EventSource("/sse.php");
+        source.onmessage = function(event) {
+            $('#id').html(event.data);
+        };
+    </script>
 </html>

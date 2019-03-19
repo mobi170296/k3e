@@ -134,5 +134,8 @@ function $(s){
                 return r;
             }
     }
-    return new $qr;
+    var r=new $qr;
+    r.length=1;
+    r[0]=s;
+    return r;
 }
