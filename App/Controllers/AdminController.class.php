@@ -1,5 +1,7 @@
 <?php
     namespace App\Controllers;
+    use App\Models\SubCategoryModel;
+    use App\Models\MainCategoryModel;
     
     class AdminController extends \Core\Controller{
         protected function __init(){
@@ -28,7 +30,7 @@
             $this->View->ViewData['maincategorylist'] = [];
             $result = $this->dbcon->select('id')->from('maincategory')->execute();
             while($row = $result->fetch_assoc()){
-                $mcate = new \App\Models\MainCategoryModel($this->dbcon);
+                $mcate = new MainCategoryModel($this->dbcon);
                 $mcate->id = $row['id'];
                 $mcate->loadFromDB();
                 $this->View->ViewData['maincategorylist'][] = $mcate;
@@ -39,6 +41,14 @@
             if(!$this->user->isLogin() || !$this->user->haveRole(ADMIN_PRIV)){
                 $this->View->ViewData['error'] = 'Bạn không có quyền để thực hiện hành động này';
                 return $this->View->RenderTemplate('error_page', 'error');
+            }
+            $this->View->ViewData['subcategorylist'] = [];
+            $result = $this->dbcon->select('id')->from('subcategory')->execute();
+            while($row = $result->fetch_assoc()){
+                $scate = new SubCategoryModel($this->dbcon);
+                $scate->id = $row['id'];
+                $scate->loadFromDB();
+                $this->View->ViewData['subcategorylist'][] = $scate;
             }
             return $this->View->RenderTemplate();
         }

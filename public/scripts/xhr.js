@@ -146,6 +146,7 @@ var $Modal = new (function(){
             this.create();
         }
         this.modalwrapper.css('display', 'block');
+        $(window.document.body).css('overflow', 'hidden');
         return this;
     }
     this.hide = function(){
@@ -153,6 +154,7 @@ var $Modal = new (function(){
             this.create();
         }
         this.modalwrapper.css('display', 'none');
+        $(window.document.body).css('overflow', 'auto');
         return this;
     }
     this.text = function(t){

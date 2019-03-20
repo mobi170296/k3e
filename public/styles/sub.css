@@ -65,6 +65,7 @@ div#modal-wrapper{
     left: 0px;
     text-align: center;
     z-index: 3;
+    overflow: auto;
 }
 div#modal-wrapper div.modal{
     display: inline-block;
@@ -103,6 +104,7 @@ div#modal-wrapper div.modal-body{
 table.data-table{
     border-collapse: collapse;
     border: 1px;
+    width: 100%;
 }
 table.data-table tr:nth-child(odd){
     background-color: #eee;

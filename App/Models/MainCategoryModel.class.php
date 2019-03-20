@@ -65,7 +65,7 @@
             }
             $this->name = $mc->name;
             $this->link = $mc->link;
-            $this->dbcon->update(DB_TABLE_MAINCATEGORY, ['name'=>new DBString($this->name), 'link'=>new DBString($this->link)], 'id=' . new \Library\DBNumber($this->id));
+            $this->dbcon->update(DB_TABLE_MAINCATEGORY, ['name'=>new DBString($this->name), 'link'=>new DBString($this->link)], 'id=' . new DBNumber($this->id));
             if($this->dbcon->errno()){
                 throw new DBException($this->dbcon->error());
             }
