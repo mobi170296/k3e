@@ -62,7 +62,8 @@
                         echo "<td>{$subcategory->id}</td>";
                         echo "<td>{$subcategory->name}</td>";
                         echo "<td>{$subcategory->maincategory->name}</td>";
-                        echo '<td><button class="btn btn-edit-i btn-success">Sửa</button> <button class="btn btn-del-i btn-danger">Xóa</button></td>';
+                        echo "<td>{$subcategory->link}</td>";
+                        echo '<td><button class="btn btn-edit-i btn-success">Sửa</button> <button class="btn btn-del-i btn-error">Xóa</button></td>';
                         echo '</tr>';
                     }
                     
@@ -80,7 +81,21 @@
         $AJAX.create().url('/ajax/SubCategory/AddForm').success(function(e){
             $Modal.title('Thêm danh mục phụ').html(this.response).show();
             $('div.modal form[name="subcategory"] button[name="add"]').on('click', function(e){
-                checkSubCategoryData(this.form);
+                if(checkSubCategoryData(this.form)){
+                    $AJAX.create().success(function(e){
+                        var result = JSON.parse(this.response);
+                        if(result.error){
+                            window.$Toast.makeError(result.message, 5000);
+                        }else{
+                            window.$Toast.makeSuccess(result.message, 5000);
+                            window.location.reload();
+                        }
+                        window.$Toast.hide();
+                    }).error(function(e){
+                        $Toast.makeError('Đã xảy ra lỗi khi giao tiếp với máy chủ', 5000);
+                    }).postForm(this.form);
+                    window.$Modal.hide();
+                }
             });
         }).error(function(e){
             $Toast.makeError('Không thể tải dữ liệu', 10000);

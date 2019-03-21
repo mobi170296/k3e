@@ -93,7 +93,11 @@ var $AJAX = new (function(){
         this._xhr.onprogress = cb;
         return this;
     }
+    this.postForm = function(f, cb=null){
+        this.url(f.action).post(new FormData(f), cb);
+    }
 })();
+
 var $Modal = new (function(){
     this.modalwrapper = $('#modal-wrapper');
     if(this.modalwrapper !== null){

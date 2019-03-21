@@ -17,11 +17,15 @@
             if(mb_strlen($subcategory->link)>1024){
                 $errors['link'] = 'Liên kết danh mục phụ có độ dài tối đa cho phép là 1024';
             }
+            $result = $this->dbcon->select('id')->from('maincategory')->where('id='.new DBNumber($subcategory->maincategory->id))->execute();
+            if(!$result->num_rows){
+                $errors['maincategory_id'] = 'ID của danh mục chính không tồn tại!';
+            }
             return $errors;
         }
         
         public function loadFromDB(){
-            $result = $this->dbcon->select('*')->from(DB_TABLE_SUBCATEGORY)->where('id='.$this->id);
+            $result = $this->dbcon->select('*')->from(DB_TABLE_SUBCATEGORY)->where('id='.$this->id)->execute();
             if(!$this->dbcon->errno() && $result->num_rows){
                 $row = $result->fetch_assoc();
                 $this->id = $row['id'];
@@ -40,7 +44,7 @@
             if(count($errors)){
                 throw new InputException($errors);
             }
-            $this->dbcon->insert(DB_TABLE_SUBCATEGORY, ['name'=>new DBString($this->name), 'link'=>new DBString($this->name)]);
+            $this->dbcon->insert(DB_TABLE_SUBCATEGORY, ['name'=>new DBString($this->name), 'link'=>new DBString($this->name), 'maincategory_id'=>new DBNumber($this->maincategory->id)]);
             if($this->dbcon->errno()){
                 throw new DBException($this->dbcon->error());
             }
