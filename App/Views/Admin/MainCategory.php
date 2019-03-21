@@ -96,9 +96,6 @@
         window.$Modal.waiting().show();
         window.$AJAX.create().url('/ajax/MainCategory/AddForm').sync(true).success(function(e){
             window.$Modal.title('Thêm danh mục chính').html(this.response).show();
-            $('form[name="maincategory"]').on('submit', function(e){
-                return false;
-            });
             $('div.modal form[name="maincategory"] button[name="add"]').on('click', function(e){
                 if(chkMainCategoryData(this.form)){
                     ajaxSubmitForm(this.form);

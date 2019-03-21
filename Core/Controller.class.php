@@ -10,7 +10,7 @@
         #
         # Authentication for application via UserModel
         #
-        public function authenticate(){
+        protected function authenticate(){
             $this->user = new \App\Models\UserModel($this->dbcon);
             if(isset($_SESSION['username']) && isset($_SESSION['password'])){
                 $this->user->username = $_SESSION['username'];
@@ -40,7 +40,17 @@
         protected function __init(){
             
         }
-        public function redirectToAction($controller, $action, $params){
+        protected function __init_db_authenticate(){
+            $this->dbcon = new \Library\MySQLUtility($this->config['db']['host'], $this->config['db']['username'], $this->config['db']['password'], $this->config['db']['dbname']);
+            if($this->dbcon->connect_errno()){
+                echo 'Lỗi Database: <b style="color:red">' . $this->dbcon->connect_error() .'</b>';
+                exit;
+            }
+            $this->authenticate();
+            $this->View->dbcon = $this->dbcon;
+            $this->View->user = $this->user;
+        }
+        protected function redirectToAction($controller, $action, $params){
             $querystring = '';
             if($params!=null){
                 foreach($params as $k => $v){

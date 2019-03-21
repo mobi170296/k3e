@@ -27,6 +27,9 @@
                 $total_route = count($this->routeTable);
                 for($i=0; $i<$total_route; $i++){
                     if(preg_match('/^' . $this->routeTable[$i]['pattern'] . '$/', $this->path, $params)){
+                        if(isset($params['controller'])){
+                            $params['controller'] = str_replace('/', '\\', $params['controller']);
+                        }
                         $this->params = array_merge($this->params, $this->routeTable[$i]['params']);
                         $this->params = array_merge($this->params, $params);
 //                        foreach($params as $key => $value){

@@ -3,6 +3,29 @@
     $this->TemplateData['title'] = 'Quản lý danh mục phụ ngành hàng';
 ?>
 
+<script>
+    function checkSubCategoryData(f){
+        var err=0;
+        var n=f.name;
+        var l=f.link;
+        var nv=$(n).val();
+        var lv=$(l).val();
+        if(nv.length>200 || nv.length==0){
+            $(n).next().text('Độ dài tên danh mục không hợp lệ');
+            err|=1;
+        }else{
+            $(n).next().text('');
+        }
+        if(lv.length>1024){
+            $(l).next().text('Độ dài liên kết không hợp lệ');
+            err|=1;
+        }else{
+            $(l).next().text('');
+        }
+        return err===0;
+    }
+</script>
+
 <div id="admin-wrapper" class="clearfix">
     <div class="left-menu">
         <div>
@@ -51,3 +74,17 @@
         </div>
     </div>
 </div>
+<script>
+    $('.btn.modal-add').on('click', function(e){
+        $Modal.waiting().show();
+        $AJAX.create().url('/ajax/SubCategory/AddForm').success(function(e){
+            $Modal.title('Thêm danh mục phụ').html(this.response).show();
+            $('div.modal form[name="subcategory"] button[name="add"]').on('click', function(e){
+                checkSubCategoryData(this.form);
+            });
+        }).error(function(e){
+            $Toast.makeError('Không thể tải dữ liệu', 10000);
+            $Modal.hide();
+        }).get();
+    });
+</script>
