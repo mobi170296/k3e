@@ -97,7 +97,10 @@
                                 
                                 $args[$parametername] = $obj;
                             }else{
-                                $args[$parametername] = isset($this->query[$parametername]) ? $this->query[$parametername] : null;
+                                if(isset($this->query[$parametername])){
+                                    $args[$parametername] = $this->query[$parametername];
+                                }
+                                #$args[$parametername] = isset($this->query[$parametername]) ? $this->query[$parametername] : null;
                             }
                         }
                         
