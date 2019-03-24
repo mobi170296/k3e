@@ -97,6 +97,7 @@
                                 
                                 $args[$parametername] = $obj;
                             }else{
+                                $args[$parametername] = $parameter->isOptional() ? $parameter->getDefaultValue() : null;
                                 if(isset($this->query[$parametername])){
                                     $args[$parametername] = $this->query[$parametername];
                                 }
