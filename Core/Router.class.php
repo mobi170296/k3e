@@ -17,7 +17,8 @@
         public function mapRoute($pattern, $defaultParams = []){
             $pattern = preg_replace('/\//', '\/', $pattern);
             $pattern = preg_replace('/\{(\w+)\}/', '(?<$1>\w+)', $pattern);
-            $pattern = preg_replace('/\{(\w+):"(.+)"\}/', '(?<$1>$2)', $pattern);
+            #$pattern = preg_replace('/\{(\w+):"(.+)"\}/', '(?<$1>$2)', $pattern);
+            $pattern = preg_replace('/\{(\w+):"([^"]+)"\}/', '(?<$1>$2)', $pattern);
             $this->routeTable[] = ['pattern' => $pattern, 'params' => $defaultParams];
         }
         
@@ -67,6 +68,7 @@
                 $controllername = CONTROLLER_NS . '\\' . $controllername . 'Controller';
                 if(class_exists($controllername)){
                     $controller = new $controllername($this->params['controller'], $this->params['action']);
+                    $controller->request = $this->query;
                     if(method_exists($controller, $actionname)){
                         $method = (new \ReflectionClass($controller))->getMethod($actionname);
                         if(!$method->isPublic()){

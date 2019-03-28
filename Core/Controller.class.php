@@ -7,6 +7,7 @@
         public $config;
         public $dbcon;
         public $user;
+        public $request;
         #
         # Authentication for application via UserModel
         #
