@@ -77,15 +77,25 @@
             }
         }
     }
+    $qr.prototype.oncontextmenu = function (c) {
+        for (var i = 0; i < this.length; i++) {
+            if (this[i].oncontextmenu !== undefined) {
+                this[i].oncontextmenu = c;
+            }
+        }
+        return this;
+    }
     $qr.prototype.on = function(e,c){
         for(var i=0;i<this.length;i++){
             this[i].addEventListener(e,c);
         }
+        return this;
     }
     $qr.prototype.off = function(e,c){
         for(var i=0;i<this.length;i++){
             this[i].removeEventListener(e,c);
         }
+        return this;
     }
     $qr.prototype.haveClass = function (c) {
         if (this.length && typeof this[0].classList != 'undefined') {
@@ -429,6 +439,10 @@ function RichEditor(textarea) {
     this.container = $.create('div');
     $(this.container).addClass('richeditor');
 
+    this.getContainer = function () {
+        return this.container;
+    }
+
     this.toolbox = $.create('div');
     $(this.toolbox).addClass('toolbox');
     $(this.toolbox).on('mousedown', function (e) {
@@ -454,11 +468,12 @@ function RichEditor(textarea) {
         this.richeditor.updateToolBox();
     });
 
-    this.supportButtons = ['backColor', 'bold', 'copy', 'createLink', 'cut', 'decreaseFontSize', 'delete', 'fontName', 'fontSize', 'foreColor', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'increaseFontSize', 'indent', 'insertBrOnReturn', 'insertHorizontalRule', 'insertHTML', 'insertImage', 'insertOrderedList', 'insertUnorderedList', 'insertPagagraph', 'insertText', 'italic', 'justifyCenter', 'justifyFull', 'justifyLeft', 'justifyRight', 'outdent', 'redo', 'removeFormat', 'selectAll', 'strikeThrough', 'subscript', 'superscript', 'underline', 'undo', 'unlink', 'styleWithCSS', 'forwardDelete', 'remove'];
+    this.supportButtons = ['backColor', 'bold', 'copy', 'createLink', 'cut', 'decreaseFontSize', 'delete', 'fontName', 'fontSize', 'foreColor', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'increaseFontSize', 'indent', 'insertBrOnReturn', 'insertHorizontalRule', 'insertHTML', 'insertOrderedList', 'insertUnorderedList', 'insertPagagraph', 'insertText', 'italic', 'justifyCenter', 'justifyFull', 'justifyLeft', 'justifyRight', 'outdent', 'redo', 'removeFormat', 'selectAll', 'strikeThrough', 'subscript', 'superscript', 'underline', 'undo', 'unlink', 'styleWithCSS', 'forwardDelete', 'remove', 'insertImage'];
 
     for (var i = 0; i < this.supportButtons.length; i++) {
         var bn = this.supportButtons[i] + 'Button';
-        this[bn] = $.create('button');
+        this[bn] = $.create('span');
+        $(this[bn]).addClass('button');
         this[bn].__richEditor = this;
         $(this[bn]).addClass(bn);
     }
@@ -509,7 +524,7 @@ function RichEditor(textarea) {
         if (document.queryCommandState('justifyFull')) {
             $(this.justifyFullButton).addClass('active');
         } else {
-            $(this.justifyFullButton).remove('active');
+            $(this.justifyFullButton).removeClass('active');
         }
 
         if (document.queryCommandState('insertUnorderedList')) {
@@ -550,6 +565,10 @@ function RichEditor(textarea) {
         document.execCommand('bold');
         this.__richEditor.updateToolBox();
     });
+
+    this.focusEditor = function () {
+        this.editor.focus();
+    }
 
     $(this.italicButton).on('click', function (e) {
         document.execCommand('italic');
@@ -616,9 +635,30 @@ function RichEditor(textarea) {
         document.execCommand('unlink');
     });
 
+    $(this.insertImageButton).html('<label style="display: block; height: 100%; width: 100%"><input type="file" class="u-hidden"/></label>');
+
+    $(this.insertImageButton).$('input[type="file"]')[0].__container = this;
+    $(this.insertImageButton).$('input[type="file"]').on('change', function (e) {
+        var reader = new FileReader();
+        reader.__container = this.__container;
+        reader.onloadend = function (e) {
+            document.execCommand('insertImage', false, this.result);
+            this.__container.updateContextMenuImage();
+        }
+        reader.readAsDataURL(this.files[0]);
+    });
+
+    this.updateContextMenuImage = function () {
+        $(this.editor).$('img').oncontextmenu(function (e) {
+            var p = new ImagePropertyPopup(this);
+            p.show(e.x, e.y);
+            e.preventDefault();
+        });
+    }
+
     $(this.insertImageButton).on('click', function (e) {
         //Big function
-        window.alert('Thông báo chèn thêm ảnh vào WYSIWYG editor!');
+
     });
 
     $(this.removeFormatButton).on('click', function (e) {
@@ -650,7 +690,7 @@ function RichEditor(textarea) {
     this.justifyLeftButton.title = 'Canh trái';
     this.justifyCenterButton.title = 'Canh giữa';
     this.justifyRightButton.title = 'Canh phải';
-    this.justifyCenterButton.title = 'Canh đều';
+    this.justifyFullButton.title = 'Canh đều';
     this.insertUnorderedListButton.title = 'Định dạng danh sách không thứ tự';
     this.insertOrderedListButton.title = 'Định dạng danh sách có thứ tự';
     this.indentButton.title = 'Thụt đầu dòng';

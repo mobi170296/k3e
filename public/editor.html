@@ -1,0 +1,115 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>My Rich Edit</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <script type="text/javascript" src="/scripts/mj.js">
+    </script>
+    <link href="/styles/editor.css" rel="stylesheet" />
+    <style>
+        div.img-pro-context{
+            position: fixed;
+            display: inline-block;
+            background-color: rgba(238,238,238,0.9);
+            padding: 20px;
+            box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.3);
+            min-width: 150px;
+        }
+        div.img-pro-context div.content{
+
+        }
+        div.img-pro-context div.footer{
+
+        }
+        div.img-pro-context input{
+            border: 1px solid #ccc;
+        }
+        div.img-pro-context div.footer button{
+            float: right;
+            padding: 5px 10px;
+            border: none;
+            margin: 3px;
+        }
+        div.img-pro-context div.footer button[data-role="apply"]{
+            background-color: #589204;
+            color: #fff;
+        }
+        div.img-pro-context div.footer button[data-role="close"]{
+            background-color: #c45a5a;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <form action="test.php" enctype="application/x-www-form-urlencoded" method="post">
+
+        <textarea id="editor" name="content">
+        </textarea>
+        <button type="submit">post</button>
+    </form>
+    <script>
+        rich = new RichEditor(editor);
+        function ImagePropertyPopup(img) {
+            this.image = img;
+            this.getContainer = function () {
+                return this.container;
+            }
+            this.container = $.create('div');
+            $(this.container).data('role', 'popup').data('role-type', 'dynamic');
+            $(this.container).addClass('img-pro-context');
+            $(this.container).html('<div class="content"><table><tr><td><input type="text" name="width" size="4"/></td><td>px</td></tr><tr><td><input type="text" name="height" size="4"/></td><td>px</td></tr></table></div><div class="footer"><button type="button" data-role="close">Đóng</button><button type="button" data-role="apply">Áp dụng</button>');
+
+
+            this.widthText = $(this.container).$('input[name="width"]')[0];
+            this.heightText = $(this.container).$('input[name="height"]')[0];
+            this.applyButton = $(this.container).$('button[data-role="apply"]')[0];
+            this.applyButton.__container = this;
+            $(this.applyButton).on('click', function (e) {
+                this.__container.setImageSize();
+                this.__container.close();
+            });
+            this.closeButton = $(this.container).$('button[data-role="close"]')[0];
+            this.closeButton.__container = this;
+            $(this.closeButton).on('click', function (e) {
+                this.__container.close();
+            });
+            this.getWidth = function () {
+                return this.widthText.value;
+            }
+            this.getHeight = function () {
+                return this.heightText.value;
+            }
+            this.setImageSize = function () {
+                this.image.width = this.getWidth();
+                this.image.height = this.getHeight();
+            }
+            this.move = function (x, y) {
+                $(this.container).css('left', x + 'px');
+                $(this.container).css('top', y + 'px');
+            }
+            this.close = function () {
+                this.container.remove();
+            }
+            $(this.container).on('contextmenu', function (e) {
+                e.stopPropagation();
+            });
+            $(this.container).on('click', function (e) {
+                e.stopPropagation();
+            });
+            this.show = function (x, y) {
+                this.move(x, y);
+                $(document.body).addEnd(this.container);
+            }
+        }
+
+        $('img').on('contextmenu', function (e) {
+            var popup = new ImagePropertyPopup(this);
+            $(document.body).addEnd(popup.getContainer());
+            popup.move(e.x, e.y);
+            e.preventDefault();
+        });
+
+    </script>
+</body>
+</html>

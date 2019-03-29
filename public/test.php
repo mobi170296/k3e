@@ -1,25 +1,22 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title></title>
-        <!--<script src="/scripts/jquery-3.3.1.min.js"></script>-->
-        <script src="/scripts/mj.js"></script>
-    </head>
-    <body>
-        <div id="id" data-action="add"></div>
-        <div class="cls"></div>
-        <div class="cls"></div>
-        <div class="cls"></div>
-        <div class="cls"></div>
-        <div class="cls">
-            <a>A tag</a>
-        </div>
-        <input/>
-    </body>
-    <script>
-        var source = new EventSource("/sse.php");
-        source.onmessage = function(event) {
-            $('#id').html(event.data);
-        };
-    </script>
-</html>
+<?php
+	if(isset($_POST['content'])){
+		
+
+		$m = new mysqli('localhost', 'root', 'trinhvanlinh', 'test');
+		$data = $m->real_escape_string($_POST['content']);
+		if($m->query('insert into posts values(\'' . $data  . '\')')){
+			echo 'Success';
+		}else{
+			echo 'Failed';
+		}
+	}else{
+		$m = new mysqli('localhost', 'root', 'trinhvanlinh', 'test');
+		$result = $m->query('select * from posts');
+		$row = $result->fetch_assoc();
+		if($row){
+			echo $row['content'];
+		}else{
+			echo 'Không có nội dung ở bảng posts';
+		}
+	}
+?>
