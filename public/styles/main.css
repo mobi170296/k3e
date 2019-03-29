@@ -8,6 +8,12 @@ a{
 .fl{
     float: left;
 }
+.fr{
+    float: right;
+}
+.u-hidden{
+    display: none;
+}
 div#admin-wrapper{
     margin: 20px auto;
     width: 1270px;

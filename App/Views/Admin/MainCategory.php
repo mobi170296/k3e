@@ -30,7 +30,7 @@
         }
         function ajaxSubmitForm(f){
             var fd=new FormData(f);
-            window.$AJAX.create().url(f.action).success(function(e){
+            window.$.ajax().create().url(f.action).success(function(e){
                 window.result = JSON.parse(this.response);
                 if(result.error){
                     window.$Toast.makeError(result.message, 5000);
@@ -94,7 +94,7 @@
 <script>
     $('button.modal-add').on('click', function(e){
         window.$Modal.waiting().show();
-        window.$AJAX.create().url('/ajax/MainCategory/AddForm').sync(true).success(function(e){
+        window.$.ajax().create().url('/ajax/MainCategory/AddForm').sync(true).success(function(e){
             window.$Modal.title('Thêm danh mục chính').html(this.response).show();
             $('div.modal form[name="maincategory"] button[name="add"]').on('click', function(e){
                 if(chkMainCategoryData(this.form)){
@@ -109,7 +109,7 @@
     
     $('button.modal-edit').on('click', function(e){
         window.$Modal.waiting().show();
-        window.$AJAX.create().url('/ajax/MainCategory/EditForm/'+$(this).data('id')).success(function(e){
+        window.$.ajax().create().url('/ajax/MainCategory/EditForm/'+$(this).data('id')).success(function(e){
             window.$Modal.title('Sửa danh mục chính').html(this.response).show();
             $('div.modal form[name="maincategory"] button[name="edit"]').on('click', function(e){
                 if(chkMainCategoryData(this.form)){
@@ -124,7 +124,7 @@
     
     $('button.modal-del').on('click', function(e){
         window.$Modal.waiting().show();
-        window.$AJAX.create().url('/ajax/MainCategory/DelForm/'+$(this).data('id')).success(function(e){
+        $.ajax().create().url('/ajax/MainCategory/DelForm/'+$(this).data('id')).success(function(e){
             window.$Modal.title('Xóa danh mục chính').html(this.response).show();
             $('form[name="maincategory"]').on('submit', function(e){
                 return false;

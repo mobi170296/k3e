@@ -1,6 +1,6 @@
 /*XMLHttpRequest Controller*/
 
-var $AJAX = new (function(){
+function $AJAX(){
     this._xhr = null;
     this._url = null;
     this._method = null;
@@ -96,57 +96,62 @@ var $AJAX = new (function(){
     this.postForm = function(f, cb=null){
         this.url(f.action).post(new FormData(f), cb);
     }
-})();
+}
+
+
+//Updated for multiple ajax request
+$.ajax = function () {
+    return new $AJAX();
+}
+
 
 var $Modal = new (function(){
-    this.modalwrapper = $('#modal-wrapper');
+    this.modalwrapper = $('#modal-wrapper')[0];
     if(this.modalwrapper !== null){
-        this.modal = this.modalwrapper.$('.modal');
-        this.modalheader = this.modal.$('.modal-header');
-        this.modalheadertitle = this.modal.$('.modal-header-title');
-        this.modalbody = this.modal.$('.modal-body');
-        this.modalclosebutton = this.modaltitle.$('.modal-header-button');
+        this.modal = $(this.modalwrapper).$('.modal')[0];
+        this.modalheader = $(this.modal).$('.modal-header')[0];
+        this.modalheadertitle = $(this.modal).$('.modal-header-title')[0];
+        this.modalbody = $(this.modal).$('.modal-body')[0];
+        this.modalclosebutton = $(this.modaltitle).$('.modal-header-button')[0];
     }
     
     this.create = function(){
-        this.modalwrapper = document.createElement('div');
+        this.modalwrapper = $.create('div');
         this.modalwrapper.id = 'modal-wrapper';
-        this.modalwrapper.css('display', 'none');
-        this.modal = document.createElement('div');
-        this.modal.className = 'modal';
-        this.modal.onmousedown = function(e){
+        $(this.modalwwrapper).addClass('u-hidden');
+        this.modal = $.create('div');
+        $(this.modal).addClass('modal');
+        $(this.modal).on('mousedown', function (e) {
             e.stopPropagation();
-        }
-        this.modalheader = document.createElement('div');
-        this.modalheader.className = 'modal-header clearfix';
+        });
+        this.modalheader = $.create('div');
+        $(this.modalheader).addClass('modal-header').addClass('clearfix');
+        this.modalheadertitle = $.create('div');
+        $(this.modalheadertitle).addClass('modal-header-title');
+        $(this.modalheader).addEnd(this.modalheadertitle);
         
-        this.modalheadertitle = document.createElement('div');
-        this.modalheadertitle.className = 'modal-header-title';
-        
-        this.modalheader.append(this.modalheadertitle);
-        
-        this.modalclosebutton = document.createElement('div');
-        this.modalclosebutton.text('x');
-        this.modalclosebutton.className = 'modal-header-button';
-        this.modalclosebutton.onclick = function(e){
+        this.modalclosebutton = $.create('div');
+        $(this.modalclosebutton).text('x');
+        $(this.modalclosebutton).addClass('modal-header-button');
+        $(this.modalclosebutton).on('click', function (e) {
             window.$Modal.hide();
-        }
+        });
         
-        this.modalheader.append(this.modalclosebutton);
+        $(this.modalheader).addEnd(this.modalclosebutton);
         
-        this.modal.append(this.modalheader);
+        $(this.modal).addEnd(this.modalheader);
         
-        this.modalbody = document.createElement('div');
-        this.modalbody.className = 'modal-body';
-        this.modal.append(this.modalbody);
+        this.modalbody = $.create('div');
+        $(this.modalbody).addClass('modal-body');
+        $(this.modal).addEnd(this.modalbody);
         
-        this.modalwrapper.append(this.modal);
+        $(this.modalwrapper).addEnd(this.modal);
         
-        document.body.append(this.modalwrapper);
+        $(document.body).addEnd(this.modalwrapper);
         return this;
     }
     this.show = function(){
-        if(this.modalwrapper===null){
+        if (this.modalwrapper === undefined){
             this.create();
         }
         this.modalwrapper.css('display', 'block');
@@ -154,7 +159,7 @@ var $Modal = new (function(){
         return this;
     }
     this.hide = function(){
-        if(this.modalwrapper===null){
+        if (this.modalwrapper === undefined){
             this.create();
         }
         this.modalwrapper.css('display', 'none');
@@ -162,28 +167,28 @@ var $Modal = new (function(){
         return this;
     }
     this.text = function(t){
-        if(this.modalwrapper===null){
+        if (this.modalwrapper === undefined){
             this.create();
         }
         this.modalbody.text(t);
         return this;
     }
     this.html = function(t){
-        if(this.modalwrapper===null){
+        if (this.modalwrapper === undefined){
             this.create();
         }
         this.modalbody.html(t);
         return this;
     }
     this.title = function(t){
-        if(this.modalwrapper===null){
+        if (this.modalwrapper === undefined){
             this.create();
         }
         this.modalheadertitle.text(t);
         return this;
     }
     this.waiting = function(){
-        if(this.modalwrapper===null){
+        if (this.modalwrapper === undefined){
             this.create();
         }
         this.html('<div class="loading-i-wrapper"><div class="loading-i"></div></div>');

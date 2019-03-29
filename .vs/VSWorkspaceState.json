@@ -4,8 +4,13 @@
     "\\App",
     "\\App\\Controllers",
     "\\App\\Controllers\\Ajax",
+    "\\App\\Template",
+    "\\App\\Views",
+    "\\App\\Views\\Admin",
     "\\Core",
-    "\\public"
+    "\\public",
+    "\\public\\styles"
   ],
+  "SelectedNode": "\\App\\Template\\footer.php",
   "PreviewInSolutionExplorer": false
 }
