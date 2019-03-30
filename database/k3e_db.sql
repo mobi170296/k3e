@@ -209,16 +209,43 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `k3e_db`.`imagemap`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `k3e_db`.`imagemap` (
+  `id` BIGINT UNSIGNED NOT NULL,
+  `path` VARCHAR(512) NOT NULL,
+  `user_id` INT NOT NULL,
+  `linked` TINYINT NOT NULL DEFAULT 0,
+  `created_time` DATETIME NOT NULL DEFAULT now(),
+  `mimetype` VARCHAR(50) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `path_UNIQUE` (`path` ASC) VISIBLE,
+  INDEX `fk_imagemap_user_idx` (`user_id` ASC) VISIBLE,
+  CONSTRAINT `fk_imagemap_user`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `k3e_db`.`user` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `k3e_db`.`productimage`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `k3e_db`.`productimage` (
   `product_id` INT NOT NULL,
   `norder` INT UNSIGNED NOT NULL,
-  `link` VARCHAR(512) NOT NULL,
+  `imagemap_id` BIGINT UNSIGNED NOT NULL,
   PRIMARY KEY (`product_id`, `norder`),
+  UNIQUE INDEX `image_id_UNIQUE` (`imagemap_id` ASC) VISIBLE,
   CONSTRAINT `fk_productimage_product`
     FOREIGN KEY (`product_id`)
     REFERENCES `k3e_db`.`product` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_productimage_imagemap`
+    FOREIGN KEY (`imagemap_id`)
+    REFERENCES `k3e_db`.`imagemap` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
@@ -385,12 +412,18 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `k3e_db`.`orderimage` (
   `order_id` INT NOT NULL,
   `norder` INT UNSIGNED NOT NULL,
-  `link` VARCHAR(1024) NOT NULL,
+  `imagemap_id` BIGINT UNSIGNED NOT NULL,
   `created_date` DATETIME NOT NULL,
   PRIMARY KEY (`order_id`, `norder`),
+  UNIQUE INDEX `link_UNIQUE` (`imagemap_id` ASC) VISIBLE,
   CONSTRAINT `fk_orderimage_order`
     FOREIGN KEY (`order_id`)
     REFERENCES `k3e_db`.`order` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_orderimage_imagemap`
+    FOREIGN KEY (`imagemap_id`)
+    REFERENCES `k3e_db`.`imagemap` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
@@ -402,11 +435,17 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `k3e_db`.`assessmentimage` (
   `assessment_id` INT NOT NULL,
   `norder` INT UNSIGNED NOT NULL,
-  `link` VARCHAR(1024) NULL,
+  `imagemap_id` BIGINT UNSIGNED NOT NULL,
   PRIMARY KEY (`assessment_id`, `norder`),
+  INDEX `fk_assessmentimage_imagemap_idx` (`imagemap_id` ASC) VISIBLE,
   CONSTRAINT `fk_assessmentimage_assessment`
     FOREIGN KEY (`assessment_id`)
     REFERENCES `k3e_db`.`assessment` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_assessmentimage_imagemap`
+    FOREIGN KEY (`imagemap_id`)
+    REFERENCES `k3e_db`.`imagemap` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
