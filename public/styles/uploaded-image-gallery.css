@@ -1,0 +1,349 @@
+div.richeditor{
+    border: 1px solid #ddd;
+}
+div.richeditor div.toolbox {
+    border: 1px solid #eee;
+    background-color: #f8f8f8;
+    padding: 5px 10px;
+}
+div.richeditor div.content{
+    border: 1px solid #eee;
+    background-color: #eee;
+    resize: vertical;
+    overflow: auto;
+    height: 20em;
+}
+div.richeditor div.editor :focus{
+    outline: 1px dotted #000;
+}
+div.richeditor div.editor:focus {
+    outline: none;
+}
+
+div.editor *::selection{
+    background-color: #ddd;
+}
+
+div.editor *::-moz-selection{
+    background-color: #ddd;
+}
+
+div.richeditor div.content div.editor{
+    padding: 1px;
+    margin: 0px auto;
+    box-sizing: border-box;
+    width: 80%;
+    min-height: 100%;
+    background-color: #fff;
+    box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);
+}
+div.richeditor div.toolbox button{
+    margin: 5px;
+    padding: 5px;
+    border: 10px;
+    background-color: transparent;
+    background-image: url('editor-icons/icon.png');
+    background-repeat: no-repeat;
+    background-origin: content-box;
+    width: 16px;
+    height: 16px;
+    box-sizing: content-box;
+    cursor: pointer;
+    float: left;
+}
+div.richeditor div.toolbox button:hover{
+    background-color: #eee;
+}
+
+div.richeditor .toolbox button.active {
+    background-color: #ccc;
+}
+div.toolbox button.boldButton{
+    background-position: 0px -23px;
+}
+div.toolbox button.insertUnorderedListButton{
+    background-position: 0px -1585px;
+}
+div.toolbox button.justifyCenterButton{
+    background-position: 0px -1392px;
+}
+div.toolbox button.insertHTMLButton{
+    background-position: 0px 0px;
+}
+div.toolbox button.foreColorButton{
+    background-position: 0px 0px;
+}
+div.toolbox button.copyButton{
+    background-position: 0px 0px;
+}
+div.toolbox button.cutButton{
+    background-position: 0px 0px;
+}
+div.toolbox button.fontNameButton{
+    background-position: 0px 0px;
+}
+div.toolbox button.insertHorizontalRuleButton{
+    background-position: 0px 0px;
+}
+div.toolbox button.insertImageButton{
+    background-position: 0px -1223px;
+}
+div.toolbox button.indentButton{
+    background-position: 0px -1776px;
+}
+div.toolbox button.italicButton{
+    background-position: 0px -47px;
+}
+div.toolbox button.justifyFullButton{
+    background-position: 0px -1344px;
+}
+div.toolbox button.justifyLeftButton{
+    background-position: 0px -1392px;
+}
+div.toolbox button.createLinkButton{
+    background-position: 0px -1512px;
+}
+div.toolbox button.insertOrderedListButton{
+    background-position: 0px -1632px;
+}
+div.toolbox button.outdentButton{
+    background-position: 0px -1752px;
+}
+div.toolbox button.redoButton{
+    background-position: 0px -2400px;
+}
+div.toolbox button.removeFormatButton{
+    background-position: 0px -1992px;
+}
+div.toolbox button.justifyRightButton{
+    background-position: 0px -1417px;
+}
+div.toolbox button.increaseFontSizeButton{
+    background-position: 0px 0px;
+}
+div.toolbox button.strikeThroughButton{
+    background-position: 0px -71px;
+}
+div.toolbox button.subscriptButton{
+    background-position: 0px -97px;
+}
+div.toolbox button.superscriptButton{
+    background-position: 0px -120px;
+}
+div.toolbox button.underlineButton{
+    background-position: 0px -144px;
+}
+div.toolbox button.undoButton{
+    background-position: 0px -2377px;
+}
+div.toolbox button.unlinkButton{
+    background-position: 0px -1537px;
+}
+div.toolbox button.decreaseFontSizeButton{
+    background-position: 0px 0px;
+}
+div.toolbox button.removeButton{
+    background-position: 0px -453px;
+}
+
+.custom-select {
+    position: relative;
+    display: inline-block;
+    border: 1px solid #eee;
+    background-color: white;
+    font-family: segoe ui;
+    color: #000;
+    cursor: pointer;
+    user-select: none;
+    -moz-user-select: none;
+    margin: 2px;
+}
+
+.custom-select .custom-select-selected, .custom-select .custom-select-item {
+    padding: 3px 5px;
+    background-color: white;
+    position: relative;
+    white-space: nowrap;
+    font-size: 10pt;
+}
+
+.custom-select .custom-select-selected{
+    padding-right: 20px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    background-color: #eee;
+}
+
+.custom-select .custom-select-selected::after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 0px;
+    height: 0px;
+    border-width: 3px;
+    border-style: solid;
+    border-color: #000 transparent transparent transparent;
+}
+
+.custom-select .custom-select-items {
+    position: absolute;
+    border: 1px solid #eee;
+    max-height: 7em;
+    overflow-y: scroll;
+}
+
+.custom-select .custom-select-item {
+    white-space: nowrap;
+}
+
+.custom-select .custom-select-item.active {
+    background-color: #eee;
+    color: #000;
+}
+
+.custom-select .custom-select-item:hover {
+    background-color: #eee;
+    color: #000;
+}
+.clearfix::after {
+    clear: both;
+    content: '';
+    display: block;
+}
+.u-hidden {
+    display: none !important;
+}
+
+.u-block {
+    display: block;
+}
+
+.u-iblock {
+    display: inline-block;
+}
+
+div.color-control {
+    display: inline-block;
+    position: relative;
+    border: 1px solid #ccc;
+    margin: 0px 3px;
+}
+
+div.color-control span.color-node {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(0,0,0,0.1);
+    display: inline-block;
+    box-sizing: border-box;
+    float: left;
+    margin: 2px;
+    cursor: pointer;
+}
+
+div.color-control div.color-table {
+    background-color: #fff;
+    position: absolute;
+    display: block;
+    top: 24px;
+    left: 0px;
+    width: 96px;
+    box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);
+}
+
+span.color-control-dropdown {
+    height: 24px;
+    width: 16px;
+    background-color: #ddd;
+    display: inline-block;
+    position: relative;
+    float: left;
+}
+
+span.color-control-dropdown::after {
+    content: '';
+    border-width: 3px;
+    border-style: solid;
+    border-color: #000 transparent transparent transparent;
+    position: absolute;
+    top: 10px;
+    left: 5px;
+}
+
+
+
+
+.gallery-popup{
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.2);
+        }
+        .gallery-popup .uploaded-image-body{
+            background-color: #fff;
+            box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.1);
+            margin: 20px auto;
+            width: 790px;
+        }
+        .gallery-popup .upload-box{
+
+        }
+        .gallery-popup .uploaded-image-gallery{
+            overflow: auto;
+            width: 100%;
+            height: 600px;
+            background-color: #eee;
+        }
+        .gallery-popup .uploaded-image-gallery-wrapper{
+            width: 750px;
+            margin: auto;
+        }
+        .gallery-popup .uploaded-image-gallery .uploaded-image-gallery-item{
+            position: relative;
+            float: left;
+            width: 140px;
+            height: 140px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            margin: 5px;
+            border: 10px solid #fff;
+        }
+
+        .gallery-popup .uploaded-image-gallery-item img{
+            width: 100%;
+        }
+        .gallery-popup .uploaded-image-gallery .uploaded-image-gallery-item .select-image-button{
+            position: absolute;
+            display: block;
+            width: 32px;
+            height: 32px;
+            background-color: rgba(75, 221, 154, 0.53);
+            border: 1px solid #29ae96;
+            border-radius: 50%;
+            bottom: 18px;
+            left: 18px;
+            cursor: pointer;
+        }
+        .gallery-popup .uploaded-image-gallery .uploaded-image-gallery-item .delete-image-button{
+            position: absolute;
+            display: block;
+            width: 32px;
+            height: 32px;
+            background-color: rgba(255,0,0,0.5);
+            border: 1px solid red;
+            border-radius: 50%;
+            bottom: 18px;
+            right: 18px;
+            cursor: pointer;
+        }
+        .u-hidden{
+            display: none !important;
+        }
+        .clearfix::after{
+            content: '';
+            display: block;
+            clear: both;
+        }
