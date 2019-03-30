@@ -6,6 +6,8 @@
     define('MODEL_NS', '\App\Controllers');
     define('VIEW_DIR', k3_ROOT . DS .  'App' . DS . 'Views');
     define('TEMPLATE_DIR', k3_ROOT . DS . 'App' . DS . 'Template');
+    define('PUBLIC_UPLOAD_IMAGE_DIR', k3_ROOT . DS . 'public' . DS . 'upload' . DS . 'images');
+    define('PUBLIC_UPLOAD_IMAGE_PATH', '/public/upload/images');
     
     require_once k3_ROOT . DS . 'Config' . DS . 'config.php';
     
