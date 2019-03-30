@@ -1,5 +1,4 @@
 <?php
-    $this->layout = 'layout.php';
     $this->TemplateData['title'] = 'Đăng nhập';
 ?>
 <div id="main-body">

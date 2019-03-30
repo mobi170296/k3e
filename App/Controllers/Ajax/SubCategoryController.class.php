@@ -24,7 +24,7 @@
             }
             if(count($maincategorylist)){
                 $this->View->ViewData['maincategorylist'] = $maincategorylist;
-                return $this->View->RenderTemplate();
+                return $this->View->RenderPartial();
             }else{
                 return $this->View->RenderContent('Danh mục chính hiện tại rỗng không thể thêm!');
             }
@@ -46,7 +46,7 @@
                 }
                 $this->View->ViewData['maincategorylist'] = $maincategorylist;
                 $this->View->ViewData['subcategory'] = $subcate;
-                return $this->View->RenderTemplate();
+                return $this->View->RenderPartial();
             }else{
                 return $this->View->RenderContent('Danh mục phụ này không tồn tại!');
             }
@@ -59,7 +59,7 @@
             $subcate->id = $id;
             if($subcate->loadFromDB()){
                 $this->View->ViewData['subcategory'] = $subcate;
-                return $this->View->RenderTemplate();
+                return $this->View->RenderPartial();
             }else{
                 return $this->View->RenderContent('');
             }

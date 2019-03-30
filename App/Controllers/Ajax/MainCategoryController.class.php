@@ -83,7 +83,7 @@
             if(!$this->user->isLogin()||!$this->user->haveRole(ADMIN_PRIV)){
                 return $this->View->RenderContent("Bạn không có quyền thực hiện điều này");
             }
-            return $this->View->RenderTemplate();
+            return $this->View->RenderPartial();
         }
         public function EditForm($id){
             if(!$this->user->isLogin()||!$this->user->haveRole(ADMIN_PRIV)){
@@ -93,7 +93,7 @@
             $mcate->id = $id;
             if($mcate->loadFromDB()){
                 $this->View->ViewData['maincategory'] = $mcate;
-                return $this->View->RenderTemplate();
+                return $this->View->RenderPartial();
             }else{
                 return $this->View->RenderContent('Danh mục này không tồn tại');
             }
@@ -106,7 +106,7 @@
             $mcate->id = $id;
             if($mcate->loadFromDB()){
                 $this->View->ViewData['maincategory'] = $mcate;
-                return $this->View->RenderTemplate();
+                return $this->View->RenderPartial();
             }else{
                 return $this->View->RenderContent('Danh mục này không tồn tại');
             }

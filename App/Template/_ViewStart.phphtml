@@ -1,0 +1,3 @@
+<?php
+	$this->layout = DS . 'App' . DS . 'Template' . DS . 'layout.php';
+?>

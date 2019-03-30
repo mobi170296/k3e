@@ -4,13 +4,15 @@
     "\\App",
     "\\App\\Controllers",
     "\\App\\Controllers\\Ajax",
-    "\\App\\Template",
     "\\App\\Views",
-    "\\App\\Views\\Admin",
-    "\\Core",
-    "\\public",
-    "\\public\\styles"
+    "\\App\\Views\\Ajax",
+    "\\App\\Views\\Ajax\\MainCategory",
+    "\\App\\Views\\Ajax\\SubCategory",
+    "\\App\\Views\\error_page",
+    "\\App\\Views\\Home",
+    "\\App\\Views\\User",
+    "\\Core"
   ],
-  "SelectedNode": "\\App\\Template\\footer.php",
+  "SelectedNode": "\\App\\Views\\Home\\Index.phphtml",
   "PreviewInSolutionExplorer": false
 }

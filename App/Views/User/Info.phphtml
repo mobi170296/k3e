@@ -1,5 +1,4 @@
 <?php
-    $this->layout = 'layout.php';
     $this->TemplateData['title'] = 'Thông tin tài khoản';
 ?>
 

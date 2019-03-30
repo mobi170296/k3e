@@ -21,5 +21,8 @@
             $this->renderBody();
             require_once __DIR__ . DS. 'footer.php';
         ?>
+		<?php
+			$this->renderSection('upload_file', true);
+		?>
     </body>
 </html>
