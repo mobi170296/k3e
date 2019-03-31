@@ -20,12 +20,12 @@
             $this->ViewData = [];
             global $k3_config;
             $this->config = $k3_config;
-            include_once TEMPLATE_DIR . DS . '_ViewStart.phphtml';
+            require TEMPLATE_DIR . DS . '_ViewStart.phphtml';
         }
         
         public function render(){
             if($this->layout != null){
-                require_once k3_ROOT . $this->layout;
+                require_once k3_ROOT . str_replace('/', DS, $this->layout);
             }else{
                 $this->renderBody();
             }
@@ -35,7 +35,7 @@
             if($file){
                 if(isset($this->fileSection[$name])){
                     #require_once k3_ROOT . DS . 'App' . DS . 'Template' . DS . $this->fileSection[$name];
-                    require_once k3_ROOT . $this->fileSection[$name];
+                    require k3_ROOT . $this->fileSection[$name];
                 }
             }else{
                 if (!empty($this->contentSection[$name])) {
@@ -53,6 +53,7 @@
         }
         
         public function RenderContent($content){
+            $this->layout = null;
             $this->bodyContent = $content;
             return $this;
         }
@@ -61,25 +62,27 @@
             echo $this->bodyContent;
         }
         
-        public function RenderTemplate($controller = null, $action = null){
+        public function RenderTemplate($action = null, $controller = null){
+            $c = $controller == null ? $this->controller : $controller;
+            $a = $action == null ? $this->action : $action;
+            
             ob_start();
-            if($controller == null || $action == null){
-                require_once VIEW_DIR . DS . $this->controller . DS . $this->action . '.phphtml';
-            }else{
-                require_once VIEW_DIR . DS . $controller . DS . $action . '.phphtml';
-            }
+            
+            require VIEW_DIR . DS . $c . DS . $a . '.phphtml';
+            
             $this->bodyContent = ob_get_contents();
+            
             ob_end_clean();
             return $this;
         }
 
-        public function RenderPartial($controller = null, $action = null){
+        public function RenderPartial($action = null, $controller = null){
             $this->layout = null;
             ob_start();
             if($controller == null || $action == null){
-                    require_once VIEW_DIR . DS . $this->controller . DS . $this->action . '.phphtml';
+                    require VIEW_DIR . DS . $this->controller . DS . $this->action . '.phphtml';
             }else{
-                    require_once VIEW_DIR . DS . $controller . DS . $action . '.phphtml';
+                    require VIEW_DIR . DS . $controller . DS . $action . '.phphtml';
             }
             $this->bodyContent = ob_get_contents();
             ob_end_clean();

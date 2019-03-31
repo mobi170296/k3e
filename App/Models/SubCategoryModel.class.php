@@ -2,13 +2,30 @@
     namespace App\Models;
     use App\Exception\InputException;
     use App\Exception\DBException;
-    use Library\DBString;
-    use Library\DBNumber;
+    use Library\Database\DBString;
+    use Library\Database\DBNumber;
+    use Core\Model;
     
-    class SubCategoryModel extends \Core\Model{
+    class SubCategoryModel extends Model{
         #name:
-        private $id, $name, $link, $maincategory;
+        protected $id, $name, $link, $maincategory;
         
+        public function getId() {
+            return $this->id;
+        }
+
+        public function getName() {
+            return $this->name;
+        }
+
+        public function getLink() {
+            return $this->link;
+        }
+
+        public function getMainCategory() {
+            return $this->maincategory;
+        }
+
         public function checkValid($subcategory){
             $errors = [];
             if(mb_strlen($subcategory->name)==0||mb_strlen($subcategory->name)>200){

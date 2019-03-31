@@ -2,17 +2,11 @@
     namespace App\Controllers;
     use App\Models\SubCategoryModel;
     use App\Models\MainCategoryModel;
+    use Core\Controller;
     
-    class AdminController extends \Core\Controller{
+    class AdminController extends Controller{
         protected function __init(){
-            $this->dbcon = new \Library\MySQLUtility($this->config['db']['host'], $this->config['db']['username'], $this->config['db']['password'], $this->config['db']['dbname']);
-            if($this->dbcon->connect_errno()){
-                echo 'Lỗi Database: <b style="color:red">'. $thí->dbcon->connect_error() .'</style>';
-                exit;
-            }
-            $this->authenticate();
-            $this->View->dbcon = $this->dbcon;
-            $this->View->user = $this->user;
+            $this->__init_db_authenticate();
         }
         public function Index(){
             $this->redirectToAction('Admin', 'MainCategory', null);
@@ -50,6 +44,11 @@
                 $scate->loadFromDB();
                 $this->View->ViewData['subcategorylist'][] = $scate;
             }
+            
+            $sub = new SubCategoryModel(null);
+            $sub->id =20;
+            echo $sub->id;
+            
             return $this->View->RenderTemplate();
         }
         public function AccountInfo(){

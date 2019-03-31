@@ -1,52 +1,16 @@
 <?php
     namespace App\Controllers;
+    use Core\Controller;
     
-    use App\Models\MainCategoryModel;
-    use Library\MySQLUtility;
-    
-    class HomeController extends \Core\Controller{
+    class HomeController extends Controller{
         protected function __init(){
-            $this->dbcon = new MySQLUtility($this->config['db']['host'], $this->config['db']['username'], $this->config['db']['password'], $this->config['db']['dbname']);
-            if($this->dbcon->connect_errno()){
-                echo 'Lỗi Database: <b style="color:red">' . $this->dbcon->connect_error() .'</b>';
-                exit;
-            }
-            $this->authenticate();
-            $this->View->dbcon = $this->dbcon;
-            $this->View->user = $this->user;
+            $this->__init_db_authenticate();
         }
-        public function Who($id){
-            return $this->View->RenderContent('Who ' . $id);
-        }
-        
-        public function Index($id, \App\Models\UserModel $userinfo){
-            
+        public function Index(){
             return $this->View->RenderTemplate();
         }
         public function About(){
             $this->View->ViewData['title'] = 'About';
-            return $this->View->RenderTemplate();
-        }
-        public function Contact(){
-            $db = new MySQLUtility($this->config['db']['host'], $this->config['db']['username'], $this->config['db']['password'], $this->config['db']['dbname']);
-            $result = $db->select('first_name, last_name')->from('employees')->limit(10)->execute();
-            
-            while($row = $result->fetch_assoc()){
-                echo '<div style="white-space:pre-wrap">';
-                print_r($row);
-                echo '</div>' .PHP_EOL;
-            }
-        }
-        public function Test(){
-            $categorylist = [];
-            $result = $this->dbcon->select('*')->from('maincategory')->execute();
-            while($row = $result->fetch_assoc()){
-                $mcate = new MainCategoryModel($this->dbcon);
-                $mcate->id = $row['id'];
-                $mcate->loadFromDB();
-                $categorylist[] = $mcate;
-            }
-            $this->View->ViewData['categorylist'] = $categorylist;
             return $this->View->RenderTemplate();
         }
         public function Info(){

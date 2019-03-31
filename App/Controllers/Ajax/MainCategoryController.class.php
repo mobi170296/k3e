@@ -1,19 +1,12 @@
 <?php
     namespace App\Controllers\Ajax;
+    use Core\Controller;
     use App\Models\MainCategoryModel;
     use App\Exception\AuthenticationException;
-    use Exception;
     
-    class MainCategoryController extends \Core\Controller{
+    class MainCategoryController extends Controller{
         public function __init(){
-            $this->dbcon = new \Library\MySQLUtility($this->config['db']['host'], $this->config['db']['username'], $this->config['db']['password'], $this->config['db']['dbname']);
-            if($this->dbcon->connect_errno()){
-                echo 'Lỗi Database: <b style="color:red">' . $this->dbcon->connect_error() .'</b>';
-                exit;
-            }
-            $this->authenticate();
-            $this->View->dbcon = $this->dbcon;
-            $this->View->user = $this->user;
+            $this->__init_db_authenticate();
         }
         public function Add(MainCategoryModel $maincategory){
             #Thêm danh mục sản phẩm chính

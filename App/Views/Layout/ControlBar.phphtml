@@ -1,0 +1,53 @@
+<div id="control-bar">
+            <div id="logo">
+                <a href="/">
+                    <span>Kakaka</span>
+                </a>
+                <div id="menu-wrapper">
+                    <div id="menu">
+                        <?php
+                            foreach($this->ViewData['maincategorylist'] as $maincategory){
+                                echo '<div class="menu l1">';
+                                echo '<a href="'.$maincategory->getLink().'">' . $maincategory->getName(). '</a>';
+                                echo '<div class="menu l2">';
+                                foreach($maincategory->getSubcategories() as $subcategory){
+                                    echo '<a>' . $subcategory->getName() . '</a>';
+                                }
+                                echo '</div>';
+                                echo '</div>';
+                            }
+                        ?>
+                    </div>
+                </div>
+            </div>
+
+            <div id="search-bar">
+                <form>
+                    <input type="text" name="query" placeholder="Search query" size="75" autocomplete="off"/><button>Tìm kiếm</button>
+                </form>
+            </div>
+            <?php
+                if($this->ViewData['user']->isLogin()){
+                    echo '<div id="account-control">';
+                    echo "<div id=\"account-name\">{$this->ViewData['user']->getLastName()} {$this->ViewData['user']->getFirstName()}</div>";
+                    echo '<div id="account-options">';
+                    echo '<a href="/User/Info">Thông tin tài khoản</a>';
+                    if($this->ViewData['user']->haveRole(ADMIN_PRIV)){
+                        echo '<a href="/Admin/Index">Quản trị hệ thống</a>';
+                    }
+                    echo '<a href="/User/Shop">Cửa hàng</a>';
+                    echo '<a href="/User/Orders">Đơn hàng</a>';
+                    echo '<a>Địa chỉ vận chuyển</a>';
+                    echo '<a>Bài đánh giá</a>';
+                    echo '<a href="/User/Logout">Đăng xuất</a>';
+                    echo'</div>';
+                    echo '</div>';
+                }
+            ?>
+            <div id="scart-wrapper">
+                <span id="scart-icon"></span>
+                <div id="scart-list">
+                    <div class="scart-item"></div>
+                </div>
+            </div>
+        </div>

@@ -1,21 +1,18 @@
 <?php
     namespace App\Controllers;
+    use Core\Controller;
+    use App\Models\UserModel;
+    use App\Exception\DBException;
+    use App\Exception\InputException;
     
-    class UserController extends \Core\Controller{
+    class UserController extends Controller{
         public function __init(){
-            $this->dbcon = new \Library\MySQLUtility($this->config['db']['host'], $this->config['db']['username'], $this->config['db']['password'], $this->config['db']['dbname']);
-            if($this->dbcon->connect_errno()){
-                echo 'Lỗi Database: <b style="color:red">' . $this->dbcon->connect_error() .'</b>';
-                exit;
-            }
-            $this->authenticate();
-            $this->View->dbcon = $this->dbcon;
-            $this->View->user = $this->user;
+            $this->__init_db_authenticate();
         }
         public function Index(){
             return $this->View->RenderTemplate();
         }
-        public function Register($action, \App\Models\UserModel $user){
+        public function Register($action, UserModel $user){
             if($this->user->isLogin()){
                 $this->redirectToAction('Home', 'Index', null);
             }
@@ -27,15 +24,14 @@
                     $_SESSION['username'] = $user->username;
                     $_SESSION['password'] = $user->password[0];
                     return $this->redirectToAction('Home', 'Index', null);
-                } catch (\App\Exception\InputException $ie) {
+                } catch (InputException $ie) {
                     $this->View->ViewData['model'] = $user;
                     $this->View->ViewData['error'] = $ie;
-                    return $this->View->RenderTemplate();
-                } catch(\App\Exception\DBException $de){
+                } catch(DBException $de){
                     $this->View->ViewData['model'] = $user;
                     $this->View->ViewData['error'] = $de;
-                    return $this->View->RenderTemplate();
                 }
+                return $this->View->RenderTemplate();
             }else{
                 return $this->View->RenderTemplate();
             }
@@ -45,7 +41,7 @@
                 return $this->redirectToAction('Home', 'Index', null);
             }
             if($action!=null){
-                $user = new \App\Models\UserModel($this->dbcon);
+                $user = new UserModel($this->dbcon);
                 $user->username = $username;
                 $user->password = $password;
                 if($user->login()){
@@ -60,24 +56,21 @@
                 return $this->View->RenderTemplate();
             }
         }
-        public function Info($action, \App\Models\UserModel $user){
+        public function Info($action, UserModel $user){
             if($this->user->isLogin()){
+                $this->View->ViewData['action'] = $action;
+                $this->View->ViewData['input'] = $user;
                 if($action != null){
                     try{
                         $this->user->update($user);
-                        $this->View->ViewData['user'] = $user;
                         $this->View->ViewData['success'] = 'Bạn đã cập nhật thông tin thành công';
-                        return $this->View->RenderTemplate();
-                    } catch (\App\Exception\DBException $de) {
-                        $this->View->ViewData['user'] = $user;
+                    } catch (DBException $de) {
                         $this->View->ViewData['error'] = $de;
-                        return $this->View->RenderTemplate();
-                    } catch (\App\Exception\InputException $ie){
-                        $this->View->ViewData['user'] = $user;
+                    } catch (InputException $ie){
                         $this->View->ViewData['error'] = $ie;
-                        return $this->View->RenderTemplate();
                     }
                 }
+                $this->View->ViewData['user'] = $this->user;
                 return $this->View->RenderTemplate();
             }else{
                 $this->redirectToAction('Home', 'Index', null);

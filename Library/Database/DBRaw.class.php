@@ -1,5 +1,6 @@
 <?php
-    namespace Library;
+    namespace Library\Database;
+    
     class DBRaw implements DBDataType{
         public $raw;
         public function __construct($raw){

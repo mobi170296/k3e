@@ -1,6 +1,5 @@
 <?php
-
-    namespace Library;
+    namespace Library\Database;
     
     class DBString implements DBDataType{
         public $string;

@@ -1,5 +1,5 @@
 <?php
-    namespace Library;
+    namespace Library\Database;
     
     class DBNumber implements DBDataType{
         public $number;

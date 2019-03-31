@@ -1,5 +1,7 @@
 <?php
     namespace Core;
+    use Library\Database\DatabaseUtility;
+    use App\Models\UserModel;
     
     class Controller{
         public $View;
@@ -12,7 +14,7 @@
         # Authentication for application via UserModel
         #
         protected function authenticate(){
-            $this->user = new \App\Models\UserModel($this->dbcon);
+            $this->user = new UserModel($this->dbcon);
             if(isset($_SESSION['username']) && isset($_SESSION['password'])){
                 $this->user->username = $_SESSION['username'];
                 $this->user->password = $_SESSION['password'];
@@ -42,14 +44,12 @@
             
         }
         protected function __init_db_authenticate(){
-            $this->dbcon = new \Library\MySQLUtility($this->config['db']['host'], $this->config['db']['username'], $this->config['db']['password'], $this->config['db']['dbname']);
+            $this->dbcon = new DatabaseUtility($this->config['db']['host'], $this->config['db']['username'], $this->config['db']['password'], $this->config['db']['dbname']);
             if($this->dbcon->connect_errno()){
                 echo 'Lỗi Database: <b style="color:red">' . $this->dbcon->connect_error() .'</b>';
                 exit;
             }
             $this->authenticate();
-            $this->View->dbcon = $this->dbcon;
-            $this->View->user = $this->user;
         }
         protected function redirectToAction($controller, $action, $params){
             $querystring = '';

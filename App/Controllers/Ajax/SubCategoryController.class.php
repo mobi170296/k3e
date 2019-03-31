@@ -4,7 +4,6 @@
     use App\Models\SubCategoryModel;
     use App\Models\MainCategoryModel;
     use App\Exception\AuthenticationException;
-    use Exception;
     
     class SubCategoryController extends Controller{
         public function __init(){

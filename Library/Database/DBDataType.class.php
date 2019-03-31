@@ -1,5 +1,5 @@
 <?php
-    namespace Library;
+    namespace Library\Database;
     
     interface DBDataType{
         public function toValue();

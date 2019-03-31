@@ -7,7 +7,7 @@
             <div class="tf-header">Đăng ký tài khoản</div>
             <div class="tf-content">
                 <?php
-                    if($this->ViewData['action']!=null){
+                    if(isset($this->ViewData['error'])){
                         echo '<div class="message-box error">'.$this->ViewData['error'].'</div>';
                     }
                 ?>

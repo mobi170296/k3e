@@ -1,29 +1,179 @@
 <?php
     namespace App\Models;
-    use Library\DBString;
-    use Library\DBDate;
-    use Library\DBNumber;
-    use Library\DBRaw;
+    use Library\Database\DBString;
+    use Library\Database\DBDate;
+    use Library\Database\DBNumber;
+    use Library\Database\DBRaw;
+    use Library\Database\DBDateTime;
+    use App\Exception\DBException;
+    use App\Exception\InputException;
     
     class UserModel extends \Core\Model{
-        public $id;
-        public $username;
-        public $firstname;
-        public $lastname;
-        public $password;
-        public $email;
-        public $phone;
-        public $address;
-        public $district_id;
-        public $created_date;
-        public $locked;
-        public $day;
-        public $month;
-        public $year;
-        public $money;
-        public $role;
-        public $gender;
+        protected $id, $username, $firstname, $lastname, $password, $email, $phone, $address, $district_id, $created_date, $locked, $birthday, $day, $month, $year, $money, $role, $gender;
         
+        public function setId($id) {
+            $this->id = $id;
+            return $this;
+        }
+
+        public function setUserName($username) {
+            $this->username = $username;
+            return $this;
+        }
+
+        public function setFirstName($firstname) {
+            $this->firstname = $firstname;
+            return $this;
+        }
+
+        public function setLastName($lastname) {
+            $this->lastname = $lastname;
+            return $this;
+        }
+
+        public function setPassword($password) {
+            $this->password = $password;
+            return $this;
+        }
+
+        public function setEmail($email) {
+            $this->email = $email;
+            return $this;
+        }
+
+        public function setPhone($phone) {
+            $this->phone = $phone;
+            return $this;
+        }
+
+        public function setAddress($address) {
+            $this->address = $address;
+            return $this;
+        }
+
+        public function setDistrictId($district_id) {
+            $this->district_id = $district_id;
+            return $this;
+        }
+
+        public function setCreatedDate($created_date) {
+            $this->created_date = $created_date;
+            return $this;
+        }
+
+        public function setLocked($locked) {
+            $this->locked = $locked;
+            return $this;
+        }
+
+        public function setBirthday($birthday) {
+            $this->birthday = $birthday;
+            return $this;
+        }
+
+        public function setDay($day) {
+            $this->day = $day;
+            return $this;
+        }
+
+        public function setMonth($month) {
+            $this->month = $month;
+            return $this;
+        }
+
+        public function setYear($year) {
+            $this->year = $year;
+            return $this;
+        }
+
+        public function setMoney($money) {
+            $this->money = $money;
+            return $this;
+        }
+
+        public function setRole($role) {
+            $this->role = $role;
+            return $this;
+        }
+
+        public function setGender($gender) {
+            $this->gender = $gender;
+            return $this;
+        }
+                
+        public function getId() {
+            return $this->id;
+        }
+
+        public function getUserName() {
+            return $this->username;
+        }
+
+        public function getFirstName() {
+            return $this->firstname;
+        }
+
+        public function getLastName() {
+            return $this->lastname;
+        }
+
+        public function getPassword() {
+            return $this->password;
+        }
+
+        public function getEmail() {
+            return $this->email;
+        }
+
+        public function getPhone() {
+            return $this->phone;
+        }
+
+        public function getAddress() {
+            return $this->address;
+        }
+
+        public function getDistrictId() {
+            return $this->district_id;
+        }
+
+        public function getCreatedDate() {
+            return $this->created_date;
+        }
+
+        public function getLocked() {
+            return $this->locked;
+        }
+        
+        public function getBirthday(){
+            return $this->birthday;
+        }
+
+        public function getDay() {
+            return $this->day;
+        }
+
+        public function getMonth() {
+            return $this->month;
+        }
+
+        public function getYear() {
+            return $this->year;
+        }
+
+        public function getMoney() {
+            return $this->money;
+        }
+
+        public function getRole() {
+            return $this->role;
+        }
+
+        public function getGender() {
+            return $this->gender;
+        }
+
+                
         public function isLogin(){
             return isset($this->id);
         }
@@ -61,7 +211,7 @@
             }
             $this->dbcon->insert(DB_TABLE_USER, ['username'=>new DBString($this->username), 'firstname'=>new DBString($this->firstname), 'lastname'=>new DBString($this->lastname),'password'=>new DBRaw("md5('{$this->password[0]}')"), 'email'=>new DBString($this->email), 'phone'=>new DBString($this->phone) ,'address'=>new DBString(''), 'district_id'=>new DBRaw('null'), 'birthday'=>new DBDate($this->day, $this->month, $this->year), 'gender'=>new DBNumber($this->gender)]);
             if($this->dbcon->errno()){
-                throw new \App\Exception\DBException($this->dbcon->error());
+                throw new DBException($this->dbcon->error());
             }
         }
         public function update($user){
@@ -82,11 +232,11 @@
                 $errors['address'] = 'Địa chỉ không được vượt quá 200 ký tự';
             }
             if(count($errors)){
-                throw new \App\Exception\InputException($errors);
+                throw new InputException($errors);
             }
             $this->dbcon->update(DB_TABLE_USER, ['lastname'=>new DBString($user->lastname),'firstname'=>new DBString($user->firstname),'birthday'=>new DBDate($user->day, $user->month, $user->year),'gender'=>new DBNumber($user->gender),'address'=>new DBString($user->address)], 'id='.$this->id);
             if($this->dbcon->errno()){
-                throw new \App\Exception\DBException($this->dbcon->error());
+                throw new DBException($this->dbcon->error());
             }else{
                 $this->lastname = $user->lastname;
                 $this->firstname = $user->firstname;
@@ -108,7 +258,8 @@
                 $this->phone = $row['phone'];
                 $this->address = $row['address'];
                 $this->district_id = $row['district_id'];
-                $this->created_date = \Library\DBDateTime::parse($row['created_date']);
+                $this->birthday = DBDateTime::parse($row['birthday']);
+                $this->created_date = DBDateTime::parse($row['created_date']);
                 $this->locked = $row['locked'];
                 $this->birthday = DBDate::parse($row['birthday']);
                 $this->gender = $row['gender'];

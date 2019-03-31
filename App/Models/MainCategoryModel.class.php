@@ -1,13 +1,48 @@
 <?php
     namespace App\Models;
-    use \App\Exception\InputException;
-    use \Library\DBString;
-    use \Library\DBNumber;
-    use \App\Exception\DBException;
+    use App\Exception\InputException;
+    use App\Exception\DBException;
+    use Library\Database\DBString;
+    use Library\Database\DBNumber;
     
     class MainCategoryModel extends \Core\Model{
-        public $id, $name, $link;
-        public $subcategory = [];
+        protected $id, $name, $link, $subcategory = [];
+        
+        public function setId($id) {
+            $this->id = $id;
+            return $this;
+        }
+
+        public function setName($name) {
+            $this->name = $name;
+            return $this;
+        }
+
+        public function setLink($link) {
+            $this->link = $link;
+            return $this;
+        }
+
+        public function setSubcategory($subcategory) {
+            $this->subcategory = $subcategory;
+            return $this;
+        }
+        
+        public function getId(){
+            return $this->id;
+        }
+        
+        public function getName(){
+            return $this->name;
+        }
+        
+        public function getLink(){
+            return $this->link;
+        }
+        
+        public function getSubCategories(){
+            return $this->subcategory;
+        }
         
         public function loadFromDB(){
             if($this->id != null){
@@ -17,7 +52,7 @@
                     $this->id = $row['id'];
                     $this->link = $row['link'];
                     $this->name = $row['name'];
-                    $result = $this->dbcon->select('*')->from(DB_TABLE_SUBCATEGORY)->where('maincategory_id=' . $this->id)->execute();
+                    $result = $this->dbcon->select('*')->from(DB_TABLE_SUBCATEGORY)->where('maincategory_id=' . new DBNumber($this->id))->execute();
                     while($row = $result->fetch_assoc()){
                         $subcategory = new SubCategoryModel($this->dbcon);
                         $subcategory->id = $row['id'];

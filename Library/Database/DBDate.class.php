@@ -1,5 +1,5 @@
 <?php
-    namespace Library;
+    namespace Library\Database;
     
     class DBDate implements DBDataType{
         public $year, $month, $day;
@@ -8,6 +8,18 @@
             $this->day = $day;
             $this->month = $month;
             $this->year = $year;
+        }
+        
+        public function getYear() {
+            return $this->year;
+        }
+
+        public function getMonth() {
+            return $this->month;
+        }
+
+        public function getDay() {
+            return $this->day;
         }
         
         public function isValid(){

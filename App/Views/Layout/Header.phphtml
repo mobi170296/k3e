@@ -1,0 +1,11 @@
+<?php
+    if($this->ViewData['user']->isLogin()){
+        echo <<<LOGEDLINK
+<a href="/User/Logout">Đăng xuất</a>
+LOGEDLINK;
+    }else{
+        echo <<<LINK
+<a href="/User/Login">Đăng nhập</a>
+<a href="/User/Register">Đăng ký</a>
+LINK;
+    }

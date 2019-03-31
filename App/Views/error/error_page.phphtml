@@ -1,5 +1,5 @@
 <?php
-    $this->layout = DS . 'App' . DS . 'Template' . DS . 'error_page.php';
+    $this->layout = null;
     $this->TemplateData['title'] = 'Lỗi';
 ?>
 

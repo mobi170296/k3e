@@ -58,7 +58,7 @@
                     
                     foreach($this->ViewData['subcategorylist'] as $subcategory){
                         echo '<tr>';
-                        echo "<td>{$subcategory->id}</td>";
+                        echo "<td>{$subcategory->getId()}</td>";
                         echo "<td>{$subcategory->name}</td>";
                         echo "<td>{$subcategory->maincategory->name}</td>";
                         echo "<td>{$subcategory->link}</td>";

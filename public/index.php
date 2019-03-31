@@ -33,6 +33,8 @@
     
     #print_r($_SERVER);
     
+    $route->MapRoute('Layout/Header', ['controller' => 'Home', 'action' => 'Index']);
+    $route->MapRoute('Layout/ControlBar', ['controller' => 'Home', 'action' => 'Index']);
     $route->mapRoute('', ['controller' => 'Home', 'action' => 'Index']);
     $route->mapRoute('{controller:"\w+/\w+"}/{action}', []);
     $route->mapRoute('{controller:"\w+/\w+"}/{action}/{id:"\d+"}', []);

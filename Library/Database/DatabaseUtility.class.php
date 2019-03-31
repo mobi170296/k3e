@@ -1,6 +1,7 @@
 <?php
-    namespace Library;
-    class MySQLUtility{
+    namespace Library\Database;
+    
+    class DatabaseUtility{
         public $select, $from, $where, $order, $limit, $groupby, $having;
         
         public $dbcon;
