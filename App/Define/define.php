@@ -18,4 +18,5 @@
     define('DB_TABLE_SUBCATEGORY', 'subcategory');
     define('DB_TABLE_TRANSPORTER', 'transporter');
     define('DB_TABLE_USER', 'user');
+    define('DB_TABLE_IMAGEMAP', 'imagemap');
     

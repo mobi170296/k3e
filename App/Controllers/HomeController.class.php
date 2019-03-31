@@ -49,4 +49,7 @@
             $this->View->ViewData['categorylist'] = $categorylist;
             return $this->View->RenderTemplate();
         }
+        public function Info(){
+            return $this->View->RenderContent("NOI DUNG OF INFO");
+        }
     }

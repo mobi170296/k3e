@@ -14,6 +14,18 @@
             parse_str($this->query, $this->query);
         }
         
+        public function setController($controller){
+            $this->params['controller'] = $controller;
+        }
+        
+        public function setAction($action){
+            $this->params['action'] = $action;
+        }
+        
+        public function setQuery($query){
+            \array_merge($this->query, $query);
+        }
+        
         public function mapRoute($pattern, $defaultParams = []){
             $pattern = preg_replace('/\//', '\/', $pattern);
             $pattern = preg_replace('/\{(\w+)\}/', '(?<$1>\w+)', $pattern);

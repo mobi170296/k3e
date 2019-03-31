@@ -7,7 +7,7 @@
     
     class SubCategoryModel extends \Core\Model{
         #name:
-        public $id, $name, $link, $maincategory;
+        private $id, $name, $link, $maincategory;
         
         public function checkValid($subcategory){
             $errors = [];

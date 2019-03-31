@@ -20,6 +20,7 @@
             require_once __DIR__ . DS . 'header.php';
             $this->renderBody();
             require_once __DIR__ . DS. 'footer.php';
+            $this->Action('Info', 'Home');
         ?>
 		<?php
 			$this->renderSection('upload_file', true);

@@ -1,5 +1,6 @@
 <?php
     namespace Core;
+    use Core\Router;
     
     class View{
         public $controller, $action;
@@ -88,5 +89,22 @@
             $this->layout = null;
             $this->bodyContent = json_encode($obj, JSON_UNESCAPED_UNICODE);
             return $this;
+        }
+        
+        #Render Action
+        public function Action($action, $controller = null){
+            $childrouter = new Router('');
+            $childrouter->setAction($action);
+            $childrouter->setController($controller == null ? $this->controller : $controller);
+            
+            ob_start();
+            $view = $childrouter->dispatch();
+            if($view){
+                $view->render();
+            }
+            $resultofchildroute = ob_get_contents();
+            ob_end_clean();
+            
+            echo $resultofchildroute;
         }
     }
