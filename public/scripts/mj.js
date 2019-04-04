@@ -103,6 +103,9 @@
         }
         return false;
     }
+	$qr.prototype.hasClass = function(c){
+		return this.length&&this[0].classList!=undefined&&this[0].classList.contains(c);
+	}
     $qr.prototype.addClass = function(c){
         for(var i=0;i<this.length;i++){
             this[i].classList.add(c);

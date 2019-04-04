@@ -6,6 +6,7 @@
         public $controller, $action;
         public $TemplateData;
         public $ViewData;
+        public $Data;
         public $bodyContent;
         public $fileSection = [];
         public $contentSection = [];
@@ -18,6 +19,7 @@
             $this->controller = str_replace('\\', DS, $controller);
             $this->action = $action;
             $this->ViewData = [];
+            $this->Data = new \stdClass();
             global $k3_config;
             $this->config = $k3_config;
             require TEMPLATE_DIR . DS . '_ViewStart.phphtml';
