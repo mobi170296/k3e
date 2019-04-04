@@ -1,3 +1,47 @@
+div.img-pro-context {
+    position: fixed;
+    display: inline-block;
+    background-color: rgba(238,238,238,0.9);
+    padding: 20px;
+    box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.3);
+    min-width: 150px;
+}
+div.image-preview{
+    width: 600px;
+    height: 600px;
+    margin: 5px auto;
+    background-size: contain;
+    border: 1px solid #eee;
+    background-repeat: no-repeat;
+    background-position: 50%;
+}
+
+    div.img-pro-context div.content {
+    }
+
+    div.img-pro-context div.footer {
+    }
+
+    div.img-pro-context input {
+        border: 1px solid #ccc;
+    }
+
+    div.img-pro-context div.footer button {
+        float: right;
+        padding: 5px 10px;
+        border: none;
+        margin: 3px;
+    }
+
+        div.img-pro-context div.footer button[data-role="apply"] {
+            background-color: #589204;
+            color: #fff;
+        }
+
+        div.img-pro-context div.footer button[data-role="close"] {
+            background-color: #c45a5a;
+            color: #fff;
+        }
 div.richeditor{
     border: 1px solid #ddd;
 }
@@ -146,7 +190,7 @@ div.toolbox span.button.removeButton{
     background-position: 0px -453px;
 }
 
-.custom-select {
+.richeditor-custom-select {
     position: relative;
     display: inline-block;
     border: 1px solid #eee;
@@ -159,53 +203,52 @@ div.toolbox span.button.removeButton{
     margin: 2px;
 }
 
-.custom-select .custom-select-selected, .custom-select .custom-select-item {
-    padding: 3px 5px;
-    background-color: white;
-    position: relative;
-    white-space: nowrap;
-    font-size: 10pt;
-}
+    .richeditor-custom-select .custom-select-selected, .richeditor-custom-select .custom-select-item {
+        padding: 3px 5px;
+        background-color: white;
+        position: relative;
+        white-space: nowrap;
+        font-size: 10pt;
+    }
 
-.custom-select .custom-select-selected{
-    padding-right: 20px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    background-color: #eee;
-}
+    .richeditor-custom-select .custom-select-selected {
+        padding-right: 20px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        background-color: #eee;
+    }
 
-.custom-select .custom-select-selected::after {
-    content: '';
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 0px;
-    height: 0px;
-    border-width: 3px;
-    border-style: solid;
-    border-color: #000 transparent transparent transparent;
-}
+        .richeditor-custom-select .custom-select-selected::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 0px;
+            height: 0px;
+            border-width: 3px;
+            border-style: solid;
+            border-color: #000 transparent transparent transparent;
+        }
 
-.custom-select .custom-select-items {
-    position: absolute;
-    border: 1px solid #eee;
-    max-height: 7em;
-    overflow-y: scroll;
-}
+    .richeditor-custom-select .custom-select-items {
+        position: absolute;
+        border: 1px solid #eee;
+        max-height: 7em;
+        overflow-y: scroll;
+    }
 
-.custom-select .custom-select-item {
-    white-space: nowrap;
-}
+    .richeditor-custom-select .custom-select-item {
+        white-space: nowrap;
+    }
+        .richeditor-custom-select .custom-select-item.active {
+            background-color: #eee;
+            color: #000;
+        }
 
-.custom-select .custom-select-item.active {
-    background-color: #eee;
-    color: #000;
-}
-
-.custom-select .custom-select-item:hover {
-    background-color: #eee;
-    color: #000;
-}
+        .richeditor-custom-select .custom-select-item:hover {
+            background-color: #eee;
+            color: #000;
+        }
 .clearfix::after {
     clear: both;
     content: '';
