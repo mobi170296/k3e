@@ -3,4 +3,5 @@
     
     interface DBDataType{
         public function toValue();
+        public function SqlValue();
     }

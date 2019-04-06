@@ -29,6 +29,9 @@
         public function toValue(){
             return "'{$this->year}-{$this->month}-{$this->day}'";
         }
+        public function SqlValue(){
+            return "'{$this->year}-{$this->month}-{$this->day}'";
+        }
         
         public function __toString(){
             return "'{$this->year}-{$this->month}-{$this->day}'";

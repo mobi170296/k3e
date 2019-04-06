@@ -5,6 +5,7 @@
     define('MODEL_NS', '\App\Controllers');
     define('VIEW_DIR', k3_ROOT . DS .  'App' . DS . 'Views');
     define('TEMPLATE_DIR', k3_ROOT . DS . 'App' . DS . 'Template');
+    define('APP_DIR', k3_ROOT . DS . 'App');
     define('PUBLIC_UPLOAD_IMAGE_DIR', k3_ROOT . DS . 'public' . DS . 'upload' . DS . 'images');
     define('PUBLIC_UPLOAD_IMAGE_PATH', '/public/upload/images');
     

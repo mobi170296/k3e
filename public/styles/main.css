@@ -498,13 +498,20 @@ div#menu div.menu.l2{
     display: none;
     background-color: #fff;
     min-height: 100%;
+    width: 40em;
+    box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);
 }
 div#menu div.menu.l2 > a{
     display: block;
-    padding: 5px 20px;
+    padding: 7px 20px;
     font-size: 10pt;
     font-weight: 600;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 20em;
+    box-sizing: content-box;
+    float: left;
     cursor: pointer;
 }
 div#menu div.menu.l2 > a:hover{

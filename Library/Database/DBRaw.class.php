@@ -9,6 +9,9 @@
         public function toValue(){
             return $this->raw;
         }
+        public function SqlValue() {
+            return $this->raw;
+        }
         public function __toString(){
             return $this->raw;
         }

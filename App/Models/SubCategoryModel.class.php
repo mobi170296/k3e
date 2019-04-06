@@ -61,7 +61,7 @@
             if(count($errors)){
                 throw new InputException($errors);
             }
-            $this->dbcon->insert(DB_TABLE_SUBCATEGORY, ['name'=>new DBString($this->name), 'link'=>new DBString($this->name), 'maincategory_id'=>new DBNumber($this->maincategory->id)]);
+            $this->dbcon->insert(DB_TABLE_SUBCATEGORY, ['name'=>new DBString($this->name), 'link'=>new DBString($this->link), 'maincategory_id'=>new DBNumber($this->maincategory->id)]);
             if($this->dbcon->errno()){
                 throw new DBException($this->dbcon->error());
             }

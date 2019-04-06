@@ -40,7 +40,9 @@
         public function toValue(){
             return "'{$this->year}-{$this->month}-{$this->day} {$this->hour}:{$this->minute}:{$this->seconds}'";
         }
-        
+        public function SqlValue(){
+            return "'{$this->year}-{$this->month}-{$this->day} {$this->hour}:{$this->minute}:{$this->seconds}'";
+        }
         public function __toString(){
             return "'{$this->year}-{$this->month}-{$this->day} {$this->hour}:{$this->minute}:{$this->seconds}'";
         }

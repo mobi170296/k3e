@@ -13,4 +13,7 @@
         public function __toString(){
             return $this->number;
         }
+        public function SqlValue() {
+            return $this->number;
+        }
     }

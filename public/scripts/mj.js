@@ -162,10 +162,24 @@
 			return $(this[0].previousElementSibling);
 		}
     }
-    $qr.prototype.parent = function () {
-        if (this.length) {
-            return $(this[0].parentElement);
+    $qr.prototype.parent = function (s=null) {
+        if(s===null){
+            if (this.length) {
+                return $(this[0].parentElement);
+            }
+        }else{
+            if(this.length){
+                var o = this[0];
+                while(o.parentElement!==null){
+                    if(o.parentElement.matches(s)){
+                        return $(o.parentElement);
+                    }
+                    o = o.parentElement;
+                }
+                return $(null);
+            }
         }
+        
     }
     $qr.prototype.child = function () {
         if (this.length && typeof this[0].children != 'undefined') {

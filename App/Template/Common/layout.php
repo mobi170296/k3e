@@ -4,6 +4,7 @@
         <meta charset="utf-8"/>
         <title><?php echo $this->TemplateData['title'] . ' - ' . $this->config['APP_NAME']; ?></title>
         <link rel="shortcut icon" href="/images/icons/icon.png"/>
+        <link rel="stylesheet" href="/styles/utility.css"/>
         <link rel="stylesheet" href="/styles/main.css"/>
         <link rel="stylesheet" href="/styles/sub.css"/>
         <link rel="stylesheet" href="/styles/toast.css"/>

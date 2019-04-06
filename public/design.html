@@ -1,0 +1,60 @@
+
+    <script src="/scripts/mj.js">
+    </script>
+<script src="/scripts/xhr.js">
+    </script>
+    
+<meta charset="utf-8"/>
+<select data-role="data-source-select-maincategory" id="province" size="6" data-source="/maincategory.php?a=getall">
+    
+</select>
+
+<select data-role="data-source-select-subcategory" id="district" multiple size="10" data-source="/subcategory.php?a=get">
+    
+</select>
+
+
+<script>
+    window.onload = function(e){
+        
+        $.ajax().create().url('/maincategorylist.php').success(function(e){
+            
+        var select = $('select[data-role="data-source-select-maincategory"]')[0];
+            var maincates = JSON.parse(this.response);
+            for(var i =0;i<maincates.length;i++){
+                var option = $.create('option');
+                $(option).val(maincates[i].id);
+                $(option).html(maincates[i].name);
+                select.options.add(option);
+            }
+            
+            $(select).on('change', function(e){
+                var so = this.selectedOptions[0];
+                $.ajax().create().url('subcategorylist.php').success(function(e){
+                    var s = $('select[data-role="data-source-select-subcategory"]')[0];
+                    while(s.length){
+                        s.remove(0);
+                    }
+                    var subcates = JSON.parse(this.response);
+                    for(var i=0; i<subcates.length;i++){
+                        var option = $.create('option');
+                        $(option).val(subcates[i].id);
+                        $(option).html(subcates[i].name);
+                        s.options.add(option);
+                    }
+                    
+                }).error(function(e){
+                    console.log("error get subcategory");
+                }).post('id=' + $(so).val());
+            });
+        }
+        ).error(function(e){
+            console.log(this.response);
+        }).get();
+        }
+        
+        
+        window.addEventListener('load', function(e){
+            console.log('EVENT ON LOAD');
+        });
+    </script>

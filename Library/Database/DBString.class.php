@@ -12,4 +12,7 @@
         public function __toString(){
             return "'{$this->string}'";
         }
+        public function SqlValue() {
+            return "'{$this->string}'";
+        }
     }

@@ -45,10 +45,6 @@
                 $this->View->ViewData['subcategorylist'][] = $scate;
             }
             
-            $sub = new SubCategoryModel(null);
-            $sub->id =20;
-            echo $sub->id;
-            
             return $this->View->RenderTemplate();
         }
         public function AccountInfo(){

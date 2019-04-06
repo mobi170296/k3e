@@ -1,0 +1,9 @@
+<?php
+
+?>
+
+<?php
+    $this->Partial('pagepartition', 'error');
+
+?>
+
