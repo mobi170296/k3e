@@ -40,12 +40,83 @@
         </style>
     </head>
     <body>
-        <div>
-            <label class="cbx-custom">
-                <input type="checkbox"/>
-                <span class="tick"></span>
-                <span>Nam</span>
-            </label>
+        
+        <div data-role="jselect" data-type="date">
+            <select name="day" data-date-field="day"></select>
+            <select name="month" data-date-field="month"></select>
+            <select name="year" data-date-field="year"></select>
         </div>
+        
+        <script type="text/javascript">
+            function JDateSelector(e){
+                this.getMaxDay = function(mon, y){
+                    var m=[31,0,31,30,31,30,31,31,30,31,30,31];
+                    if(mon!==2){
+                        return m[mon-1];
+                    }
+                    var a=y%4===0,b=y%100===0,c=y%400===0;
+                    return a&(!(b^c)) ? 29 : 28;
+                }
+                
+                this.day = e.querySelector('select[data-date-field="day"]');
+                this.month = e.querySelector('select[data-date-field="month"]');
+                this.year = e.querySelector('select[data-date-field="year"]');
+                
+                this.year._container = this.month._container = this.day._container = this;
+                
+                var cd=new Date();
+                var my=cd.getFullYear()-70;
+                
+                for(var i=cd.getFullYear(); i>=my; i--){
+                    var o=document.createElement('option');
+                    o.innerHTML = o.value= i;
+                    this.year.options.add(o);
+                }
+                
+                for(var i=1; i<=12; i++){
+                    var o=document.createElement('option');
+                    o.innerHTML = o.value= i;
+                    this.month.options.add(o);
+                }
+                
+                var md = this.getMaxDay(this.month.selectedOptions[0].value, this.year.selectedOptions[0].value);
+                for(var i=1; i<=md; i++){
+                    var o=document.createElement('option');
+                    o.innerHTML = o.value= i;
+                    this.day.options.add(o);
+                }
+                
+                this.onchange = function(e){
+                    var m=parseInt(this.month.selectedOptions[0].value);
+                    var y=parseInt(this.year.selectedOptions[0].value);
+                    var d=parseInt(this.day.selectedOptions[0].value);
+                    var osi=this.day.selectedIndex;
+                    var md=this.getMaxDay(m, y);
+                    while(this.day.options.length) this.day.options.remove(0);
+                    for(var i=1; i<=md;i++){
+                        var o=document.createElement('option');
+                        o.innerHTML = i;
+                        this.day.options.add(o);
+                    }
+                    if(osi<=md){
+                        this.day.selectedIndex=osi;
+                    }
+                }
+                
+                this.year.onchange = function(e){
+                    this._container.onchange(e);
+                }
+                
+                this.month.onchange = function(e){
+                    this._container.onchange(e);
+                }
+            }
+            
+            
+            (function(){
+                var e = document.querySelector('[data-role="jselect"][data-type="date"]');
+                new (e !== null ? JDateSelector : function(){})(e);
+            })();
+        </script>
     </body>
 </html>

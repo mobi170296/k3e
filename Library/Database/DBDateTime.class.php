@@ -47,9 +47,11 @@
             return "'{$this->year}-{$this->month}-{$this->day} {$this->hour}:{$this->minute}:{$this->seconds}'";
         }
         
-        public static function parse($datetime){
-            if(preg_match('/^(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2}) (?<hour>\d{2}):(?<minute>\d{2}):(?<seconds>\d{2})$/', $datetime, $match)){
-                return new DBDateTime($match['day'], $match['month'], $match['year'], $match['hour'], $match['minute'], $match['seconds']);
+        public static function parse($s){
+            if(preg_match('/^(?<year>\d{4})-(?<month>\d{1,2})-(?<day>\d{1,2}) (?<hour>\d{1,2}):(?<minute>\d{1,2}):(?<second>\d{1,2})$/', $s, $match)){
+                return new DBDateTime($match['year'], $match['month'], $match['day'], $match['hour'], $match['minute'], $match['second']);
+            }elseif(preg_match('/^(?<year>\d{4})-(?<month>\d{1,2})-(?<day>\d{1,2})$/', $s, $match)){
+                return new DBDateTime($match['year'], $match['month'], $match['day']);
             }else{
                 return null;
             }

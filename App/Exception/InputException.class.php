@@ -4,20 +4,17 @@
     class InputException extends \Exception{
         public $errors = [];
         public function __construct($errors){
+            parent::__construct();
             $this->errors = $errors;
         }
         public function getLength(){
             return count($this->errors);
         }
-        public function getError($i){
-            return $this->errors[$i];
+        public function getErrorMessage($n){
+            return $this->errors[$n];
         }
-        public function __toString() {
-            $result = '';
-            foreach($this->errors as $error){
-                $result .= '<div>'.$error.'</div>';
-            }
-            return $result;
+        public function getErrorsMap(){
+            return $this->errors;
         }
     }
     

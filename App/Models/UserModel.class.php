@@ -10,7 +10,22 @@
     
     class UserModel extends \Core\Model{
         protected $id, $username, $firstname, $lastname, $password, $email, $phone, $address, $district_id, $created_date, $locked, $birthday, $day, $month, $year, $money, $role, $gender;
+        public $dbcon;
         
+        public function __construct($connection = null){
+            $this->dbcon = $connection;
+        }
+        
+        public function setConnection($connection){
+            $this->dbcon = $connection;
+            return $this;
+        }
+
+        #Old method
+        public function setDBCon($con){
+            $this->dbcon = $con;
+            return $this;
+        }
         public function setId($id) {
             $this->id = $id;
             return $this;

@@ -46,15 +46,15 @@
         
         public function loadFromDB(){
             if($this->id != null){
-                $result = $this->dbcon->select('*')->from(DB_TABLE_MAINCATEGORY)->where('id = ' . $this->id)->limit(1)->execute();
+                $result = $this->database->select('*')->from(DB_TABLE_MAINCATEGORY)->where('id = ' . $this->id)->limit(1)->execute();
                 if($result->num_rows){
                     $row = $result->fetch_assoc();
                     $this->id = $row['id'];
                     $this->link = $row['link'];
                     $this->name = $row['name'];
-                    $result = $this->dbcon->select('*')->from(DB_TABLE_SUBCATEGORY)->where('maincategory_id=' . new DBNumber($this->id))->execute();
+                    $result = $this->database->select('*')->from(DB_TABLE_SUBCATEGORY)->where('maincategory_id=' . new DBNumber($this->id))->execute();
                     while($row = $result->fetch_assoc()){
-                        $subcategory = new SubCategoryModel($this->dbcon);
+                        $subcategory = new SubCategoryModel($this->database);
                         $subcategory->id = $row['id'];
                         $subcategory->name = $row['name'];
                         $subcategory->link = $row['link'];
@@ -76,17 +76,17 @@
             if(count($errors)){
                 throw new InputException($errors);
             }
-            $this->dbcon->insert(DB_TABLE_MAINCATEGORY, ['name'=>new DBString($this->name), 'link'=>new DBString($this->link)]);
-            if($this->dbcon->errno()){
-                throw new DBException($this->dbcon->error());
+            $this->database->insert(DB_TABLE_MAINCATEGORY, ['name'=>new DBString($this->name), 'link'=>new DBString($this->link)]);
+            if($this->database->errno()){
+                throw new DBException($this->database->error());
             }
         }
         
         public function delete(){
             if($this->loadFromDB()){
-                $this->dbcon->delete(DB_TABLE_MAINCATEGORY, 'id='. new DBNumber($this->id));
-                if($this->dbcon->errno()){
-                    throw new DBException($this->dbcon->error());
+                $this->database->delete(DB_TABLE_MAINCATEGORY, 'id='. new DBNumber($this->id));
+                if($this->database->errno()){
+                    throw new DBException($this->database->error());
                 }
             }else{
                 throw new InputException(['id'=>'ID danh mục không tồn tại']);
@@ -100,9 +100,9 @@
             }
             $this->name = $mc->name;
             $this->link = $mc->link;
-            $this->dbcon->update(DB_TABLE_MAINCATEGORY, ['name'=>new DBString($this->name), 'link'=>new DBString($this->link)], 'id=' . new DBNumber($this->id));
-            if($this->dbcon->errno()){
-                throw new DBException($this->dbcon->error());
+            $this->database->update(DB_TABLE_MAINCATEGORY, ['name'=>new DBString($this->name), 'link'=>new DBString($this->link)], 'id=' . new DBNumber($this->id));
+            if($this->database->errno()){
+                throw new DBException($this->database->error());
             }
         }
         

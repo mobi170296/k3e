@@ -3,29 +3,27 @@
     
     class Model{
         public $_errorsmap = [];
-        public function AddErrorMessage($name, $message){
+        public $database;
+        
+        public function __construct($d){
+            $this->database = $d;
+            $this->_errorsmap = [];
+            $this->__init();
+        }
+        
+        public function addErrorMessage($name, $message){
             $this->_errorsmap[$name] = $message;
             return $this;
         }
-        public function GetErrorMessage($name){
+        public function getErrorMessage($name){
             return isset($this->_errorsmap[$name]) ? $this->_errorsmap : null;
         }
-        public function GetErrorsMap(){
+        public function getErrorsMap(){
             return $this->_errorsmap;
-        }
-                
-        public $dbcon;
-        public function __construct($dbcon){
-            $this->dbcon = $dbcon;
-            $this->__init();
         }
         
         protected function __init(){
             
-        }
-        
-        public function setDBCon($dbcon){
-            $this->dbcon = $dbcon;
         }
         
         public function __set($name, $value) {
