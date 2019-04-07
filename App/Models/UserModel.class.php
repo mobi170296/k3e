@@ -1,31 +1,16 @@
 <?php
     namespace App\Models;
     use Library\Database\DBString;
-    use Library\Database\DBDate;
     use Library\Database\DBNumber;
     use Library\Database\DBRaw;
     use Library\Database\DBDateTime;
-    use App\Exception\DBException;
-    use App\Exception\InputException;
+    use Core\Model;
     
-    class UserModel extends \Core\Model{
-        protected $id, $username, $firstname, $lastname, $password, $email, $phone, $address, $district_id, $created_date, $locked, $birthday, $day, $month, $year, $money, $role, $gender;
-        public $dbcon;
+    class UserModel extends Model{
+        const MALE = 1, FEMALE = 0;
+        const ADMIN_ROLE = 0, NORMAL_ROLE = 1;
+        protected $id, $username, $firstname, $lastname, $password, $email, $phone, $address, $district_id, $created_time, $locked, $birthday, $money, $role, $gender;
         
-        public function __construct($connection = null){
-            $this->dbcon = $connection;
-        }
-        
-        public function setConnection($connection){
-            $this->dbcon = $connection;
-            return $this;
-        }
-
-        #Old method
-        public function setDBCon($con){
-            $this->dbcon = $con;
-            return $this;
-        }
         public function setId($id) {
             $this->id = $id;
             return $this;
@@ -188,98 +173,160 @@
             return $this->gender;
         }
 
-                
+        ###
+        # Check input data
+        ###
+        
+        public function checkValidForUserName(){
+            if(!preg_match('/^[A-z0-9]{6,}$/', $this->username)){
+                $this->addErrorMessage('username', 'Tên đăng nhập không hợp lệ, phải là số hoặc ký tự, có chiều dài là 6');
+            }
+            return $this;
+        }
+        
+        public function checkValidForFirstName(){
+            if(empty($this->firstname)){
+                $this->addErrorMessage('firstname', 'Tên không được để trống');
+            }
+            return $this;
+        }
+        
+        public function checkValidForLastName(){
+            if(empty($this->lastname)){
+                $this->addErrorMessage('lastname', 'Họ không được để trống');
+            }
+            return $this;
+        }
+        
+        public function checkValidForPassword($p1 = null, $p2 = null){
+            if($p1 === null && $p2 === null){
+                if(!preg_match('/^.{6,}$/', $this->password)){
+                    $this->addErrorMessage('password', 'Mật khẩu không hợp lệ phải từ 6 ký tự trở lên');
+                }
+            }else{
+                if($p2 !== $p1){
+                    $this->addErrorMessage('password', 'Mật khẩu nhập lại không trùng khớp');
+                }else if(!preg_match('/^.{6,}$/', $p1)){
+                    $this->addErrorMessage('password', 'Mật khẩu không hợp lệ phải từ 6 ký tự trở lên');
+                }
+            }
+            
+            return $this;
+        }
+        
+        public function checkValidForEmail(){
+            if(!preg_match('/^[A-z0-9.+%-]+@([A-z0-9-]+\.)[A-z]{2,}$/', $this->email)){
+                $this->addErrorMessage('email', 'Địa chỉ email không hợp lệ');
+            }
+            return $this;
+        }
+        
+        public function checkValidForPhone(){
+            if(!preg_match('/^0[0-9]{9,10}$/', $this->phone)){
+                $this->addErrorMessage('phone', 'Số điện thoại không hợp lệ');
+            }
+            return $this;
+        }
+        
+        public function checkValidForAddress(){
+            if(mb_strlen($this->address)>200){
+                $this->addErrorMessage('address', 'Địa chỉ không được dài quá 200 ký tự');
+            }
+            return $this;
+        }
+        
+        public function checkValidForDistrictId(){
+            $result = $this->database->select('*')->from('district')->where('id=' . new DBNumber($this->district_id))->execute();
+            if(!count($result)){
+                $this->addErrorMessage('districtid', 'Quận/huyện không hợp lệ');
+            }
+            return $this;
+        }
+        
+        public function checkValidForBirthday(){
+            if(!checkdate($this->birthday->month, $this->birthday->day, $this->birthday->year)){
+                $this->addErrorMessage('birthday', 'Ngày tháng năm sinh không hợp lệ!');
+            }
+            return $this;
+        }
+        
+        public function checkValidForGender(){
+            if($this->gender != UserModel::FEMALE && $this->gender != UserModel::MALE){
+                $this->addErrorMessage('gender', 'Giới tính không hợp lệ');
+            }
+            return $this;
+        }
+        
+        public function checkValidForRole(){
+            if($this->role != UserModel::ADMIN_ROLE && $this->role != UserModel::NORMAL_ROLE){
+                $this->addErrorMessage('role', 'Quyền không hợp lệ!');
+            }
+            return $this;
+        }
+        
+        public function standardization(){
+            if($this->username){
+                $this->username = $this->database->escape($this->username);
+            }
+            
+            if($this->firstname){
+                $this->firstname = $this->database->escape($this->firstname);
+            }
+            
+            if($this->lastname){
+                $this->lastname = $this->database->escape($this->lastname);
+            }
+            
+            if($this->password){
+                $this->password = $this->database->escape($this->password);
+            }
+            
+            if($this->email){
+                $this->email = $this->database->escape($this->email);
+            }
+            
+            if($this->phone){
+                $this->email = $this->database->escape($this->phone);
+            }
+            
+            if($this->address){
+                $this->email = $this->database->escape($this->address);
+            }
+            return $this;
+        }
+        
         public function isLogin(){
             return isset($this->id);
         }
         
         public function register(){
-            $errors = [];
-            if(!preg_match('/^[A-z0-9]{6,}$/', $this->username)){
-                $errors['username'] = 'Tên đăng nhập không hợp lệ, phải là số hoặc ký tự, có chiều dài là 6';
-            }
-            if($this->password[0] !== $this->password[1]){
-                $errors['password'] = 'Mật khẩu nhập lại không trùng khớp';
-            }else if(!preg_match('/^.{6,}$/', $this->password[0])){
-                $errors['password'] = 'Mật khẩu không hợp lệ phải từ 6 ký tự trở lên';
-            }
-            if(empty($this->lastname)){
-                $errors['lastname'] = 'Họ không được để trống';
-            }
-            if(empty($this->firstname)){
-                $errors['firstname'] = 'Tên không được để trống';
-            }
-            if(!preg_match('/^[A-z0-9.+%-]+@([A-z0-9-]+\.)[A-z]{2,}$/', $this->email)){
-                $errors['email'] = 'Địa chỉ email không hợp lệ';
-            }
-            if(!checkdate($this->month, $this->day, $this->year)){
-                $errors['birthday'] = 'Ngày tháng năm sinh không hợp lệ';
-            }
-            if(!preg_match('/^0[0-9]{9,10}$/', $this->phone)){
-                $errors['phone'] = 'Số điện thoại không hợp lệ';
-            }
-            if($this->gender!=1&&$this->gender!=0){
-                $errors['gender'] = 'Giới tính không hợp lệ';
-            }
-            if(count($errors)){
-                throw new \App\Exception\InputException($errors);
-            }
-            $this->dbcon->insert(DB_TABLE_USER, ['username'=>new DBString($this->username), 'firstname'=>new DBString($this->firstname), 'lastname'=>new DBString($this->lastname),'password'=>new DBRaw("md5('{$this->password[0]}')"), 'email'=>new DBString($this->email), 'phone'=>new DBString($this->phone) ,'address'=>new DBString(''), 'district_id'=>new DBRaw('null'), 'birthday'=>new DBDate($this->day, $this->month, $this->year), 'gender'=>new DBNumber($this->gender)]);
-            if($this->dbcon->errno()){
-                throw new DBException($this->dbcon->error());
-            }
+            $this->database->insert(DB_TABLE_USER, ['username' => new DBString($this->username), 'firstname' => new DBString($this->firstname), 'lastname' => new DBString($this->lastname), 'password' => new DBRaw("md5('{$this->password}')"), 'email' => new DBString($this->email), 'phone' => new DBString($this->phone), 'address' => new DBString($this->address), 'district_id' => new DBRaw('null'), 'locked' => new DBNumber(0), 'birthday' => new DBDateTime($this->birthday->day, $this->birthday->month, $this->birthday->year), 'gender' => new DBNumber($this->gender), 'money' => new DBNumber(0), 'role' => new DBNumber(UserModel::NORMAL_ROLE)]);
+            return true;
         }
         public function update($user){
-            $errors = [];
-            if(empty($user->lastname)){
-                $errors['lastname'] = 'Họ không được để trống';
-            }
-            if(empty($user->firstname)){
-                $errors['firstname'] = 'Tên không được để trống';
-            }
-            if(!checkdate($user->month, $user->day, $user->year)){
-                $errors['birthday'] = 'Ngày tháng năm sinh không hợp lệ';
-            }
-            if($user->gender!=1&&$user->gender!=0){
-                $errors['gender'] = 'Giới tính không hợp lệ';
-            }
-            if(mb_strlen($user->address)>200){
-                $errors['address'] = 'Địa chỉ không được vượt quá 200 ký tự';
-            }
-            if(count($errors)){
-                throw new InputException($errors);
-            }
-            $this->dbcon->update(DB_TABLE_USER, ['lastname'=>new DBString($user->lastname),'firstname'=>new DBString($user->firstname),'birthday'=>new DBDate($user->day, $user->month, $user->year),'gender'=>new DBNumber($user->gender),'address'=>new DBString($user->address)], 'id='.$this->id);
-            if($this->dbcon->errno()){
-                throw new DBException($this->dbcon->error());
-            }else{
-                $this->lastname = $user->lastname;
-                $this->firstname = $user->firstname;
-                $this->birthday = new DBDate($user->day, $user->month, $user->year);
-                $this->gender = $user->gender;
-                $this->address = $user->address;
-            }
+            $this->database->update(DB_TABLE_USER, ['lastname' => new DBString($user->lastname),'firstname'=>new DBString($user->firstname),'birthday'=>new DBDateTime($user->birthday->day, $user->birthday->month, $user->birthday->year),'gender'=>new DBNumber($user->gender),'address'=>new DBString($user->address)], 'id='.$this->id);
+            return true;
         }
         public function login(){
-            $result = $this->dbcon->select('*')->from(DB_TABLE_USER)->where("username='{$this->username}' and password=md5('{$this->password}')")->execute();
-            if($result->num_rows){
-                $row = $result->fetch_assoc();
-                $this->id = $row['id'];
-                $this->username = $row['username'];
-                $this->firstname = $row['firstname'];
-                $this->lastname = $row['lastname'];
-                $this->password = $row['password'];
-                $this->email = $row['email'];
-                $this->phone = $row['phone'];
-                $this->address = $row['address'];
-                $this->district_id = $row['district_id'];
-                $this->birthday = DBDateTime::parse($row['birthday']);
-                $this->created_date = DBDateTime::parse($row['created_date']);
-                $this->locked = $row['locked'];
-                $this->birthday = DBDate::parse($row['birthday']);
-                $this->gender = $row['gender'];
-                $this->money = $row['money'];
-                $this->role = $row['role'];
+            $row = $this->database->select('*')->from(DB_TABLE_USER)->where("username='{$this->username}' and password=md5('{$this->password}')")->execute();
+            if(count($row)){
+                $row = $row[0];
+                $this->id = $row->id;
+                $this->username = $row->username;
+                $this->firstname = $row->firstname;
+                $this->lastname = $row->lastname;
+                $this->password = $row->password;
+                $this->email = $row->email;
+                $this->phone = $row->phone;
+                $this->address = $row->address;
+                $this->district_id = $row->district_id;
+                $this->birthday = DBDateTime::parse($row->birthday);
+                $this->created_time = DBDateTime::parse($row->created_time);
+                $this->locked = $row->locked;
+                $this->birthday = DBDateTime::parse($row->birthday);
+                $this->gender = $row->gender;
+                $this->money = $row->money;
+                $this->role = $row->role;
                 return true;
             }else{
                 return false;
@@ -287,5 +334,24 @@
         }
         public function haveRole($privilege){
             return $this->role == $privilege;
+        }
+        public function getRoleString($p){
+            switch($p){
+                case UserModel::ADMIN_ROLE:
+                    return "Quản trị hệ thống";
+                case UserModel::NORMAL_ROLE:
+                    return "Khách hàng";
+                default:
+                    return "";
+            }
+        }
+        public function getGenderString($g){
+            switch($g){
+                case UserModel::FEMALE:
+                    return "Nữ";
+                case UserModel::MALE:
+                    return "Nam";
+                default: return "Chưa xác định";
+            }
         }
     }

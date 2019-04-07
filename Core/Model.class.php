@@ -11,6 +11,11 @@
             $this->__init();
         }
         
+        public function setDatabase($d){
+            $this->database = $d;
+            return $this;
+        }
+        
         public function addErrorMessage($name, $message){
             $this->_errorsmap[$name] = $message;
             return $this;
@@ -20,6 +25,14 @@
         }
         public function getErrorsMap(){
             return $this->_errorsmap;
+        }
+        
+        public function getErrorsLength(){
+            return count($this->_errorsmap);
+        }
+        
+        public function isValid(){
+            return count($this->_errorsmap) === 0;
         }
         
         protected function __init(){

@@ -94,50 +94,47 @@
             $query .= empty($this->_orderby) ? "" : " ORDER BY {$this->_orderby} {$this->_order}";
             $query .= empty($this->_limit) ? "" : " LIMIT {$this->_limit}";
             
-            try{
-                $result = $this->connection->query($query);
             
-                $aresult = [];
-
-                while($row = $result->fetch_assoc()){
-                    $d = new \stdClass();
-                    foreach($row as $k => $v){
-                        $d->$k = $v;
-                    }
-                    $aresult[] = $d;
-                }
-
-                return $aresult;
-            } catch (\Exception $ex) {
-                throw new DBException($ex->getMessage(), $ex->getCode());
+            $result = $this->connection->query($query);
+            
+            if($this->connection->errno){
+                throw new DBException($this->connection->error, $this->connection->errno);
             }
-            
+
+            $aresult = [];
+
+            while($row = $result->fetch_assoc()){
+                $d = new \stdClass();
+                foreach($row as $k => $v){
+                    $d->$k = $v;
+                }
+                $aresult[] = $d;
+            }
+
+            return $aresult;
         }
         
         public function startTransaction(){
-            try{
-                $this->connection->query('start transaction read write');
-                return $this;
-            } catch (\Exception $ex) {
-                throw new DBException($ex->getMessage(), $ex->getCode());
+            $this->connection->query('start transaction read write');
+            
+            if($this->connection->errno){
+                throw new DBException($this->connection->error, $this->connection->errno);
             }
         }
         
         public function rollback(){
-            try{
-                $this->connection->query('rollback;');
-                return $this;
-            }catch(\Exception $ex){
-                throw new DBException($ex->getMessage(), $ex->getCode());
+            $this->connection->query('rollback');
+            
+            if($this->connection->errno){
+                throw new DBException($this->connection->error, $this->connection->errno);
             }
         }
         
         public function commit(){
-            try{
-                $this->connection->query('commit;');
-                return $this;
-            } catch (Exception $ex) {
-                throw new DBException($ex->getMessage(), $ex->getCode());
+            $this->connection->query('commit');
+            
+            if($this->connection->errno){
+                throw new DBException($this->connection->error, $this->connection->errno);
             }
         }
         
@@ -152,7 +149,13 @@
             
             $query = "INSERT INTO $table ($keystring) VALUES ($valuestring)";
             
-            return $this->connection->query($query);
+            $result = $this->connection->query($query);
+            
+            if($this->connection->errno){
+                throw new DBException($this->connection->error, $this->connection->errno);
+            }else{
+                return $result;
+            }
         }
         
         public function update($table, $keyvalue, $where){
@@ -160,14 +163,29 @@
                 $pairs[] = $k . '=' . $v->SqlValue();
             }
             
+            $query = "UPDATE $table SET " . implode(',', $pairs) . " $where";
+            $result =  $this->connection->query($query);
             
-            $query = "UPDATE $table SET " . implode(',', $pairs);
-            return $this->connection->query($query);
+            if($this->connection->errno){
+                throw new DBException($this->connection->error, $this->connection->errno);
+            }else{
+                return $result;
+            }
         }
         
         public function delete($table, $where){
             $query = "DELETE FROM $table WHERE $where";
-            return $this->connection->query($query);
+            $result = $this->connection->query($query);
+            
+            if($this->connection->errno){
+                throw new DBException($this->connection->error, $this->connection->errno);
+            }else{
+                return $result;
+            }
+        }
+        
+        public function escape($s){
+            return $this->connection->real_escape_string($s);
         }
         
         #Test function
