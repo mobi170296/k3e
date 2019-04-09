@@ -3,11 +3,11 @@
     
     class InputException extends \Exception{
         public $errors = [];
-        public function __construct($errors){
-            parent::__construct();
+        public function __construct($errors, $message = null, $code = null){
+            parent::__construct($message, $code);
             $this->errors = $errors;
         }
-        public function getLength(){
+        public function getErrorsLength(){
             return count($this->errors);
         }
         public function getErrorMessage($n){

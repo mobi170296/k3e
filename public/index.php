@@ -2,7 +2,7 @@
     session_start();
     define('k3_ROOT', dirname(__DIR__));
     define('DS', DIRECTORY_SEPARATOR);
-    define('CONTROLLER_NS', 'App\Controllers');
+    define('CONTROLLER_NS', '\App\Controllers');
     define('MODEL_NS', '\App\Controllers');
     define('VIEW_DIR', k3_ROOT . DS .  'App' . DS . 'Views');
     define('TEMPLATE_DIR', k3_ROOT . DS . 'App' . DS . 'Template');
@@ -34,8 +34,10 @@
     
     #print_r($_SERVER);
     
-    $route->MapRoute('Layout/Header', ['controller' => 'Home', 'action' => 'Index']);
-    $route->MapRoute('Layout/ControlBar', ['controller' => 'Home', 'action' => 'Index']);
+    $route->mapRoute('{controller:"api/\w+"}/{action}', []);
+    $route->mapRoute('{controller:"api/\w+"}/{action}/{id}', []);
+    $route->mapRoute('Layout/Header', ['controller' => 'Home', 'action' => 'Index']);
+    $route->mapRoute('Layout/ControlBar', ['controller' => 'Home', 'action' => 'Index']);
     $route->mapRoute('', ['controller' => 'Home', 'action' => 'Index']);
     $route->mapRoute('{controller:"\w+/\w+"}/{action}', []);
     $route->mapRoute('{controller:"\w+/\w+"}/{action}/{id:"\d+"}', []);

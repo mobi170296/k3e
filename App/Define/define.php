@@ -1,5 +1,4 @@
 <?php
-    define('ADMIN_PRIV', 1);
     define('DB_TABLE_ASSESSMENT', 'assessment');
     define('DB_TABLE_ASSESSMENTIMAGE', 'assessmentimage');
     define('DB_TABLE_CARTITEM', 'cartitem');

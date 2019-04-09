@@ -14,46 +14,6 @@ span#scart-icon{
     filter: invert(100%);
 }
 
-button.btn{
-    padding: 5px 10px;
-    border-width: 1px;
-    border-style: solid;
-    border-radius: 3px;
-    color: #fff;
-    font-size: 10pt;
-    font-weight: bold;
-}
-
-button.btn-success{
-    border-color: #5eba13;
-    background-color: #5eba13;
-}
-button.btn-allow{
-    border-color: #4789cf;
-    background-color: #4789cf;
-}
-button.btn-error{
-    border-color: #e04b30;
-    background-color: #e04b30;
-}
-
-button.btn-info{
-    border-color: #71b8d5;
-    background-color: #71b8d5;
-}
-
-.btn-add-i::before{
-    content: '\271A';
-    padding-right: 5px;
-}
-.btn-del-i::before{
-    content: '\2716';
-    padding-right: 5px;
-}
-.btn-edit-i::before{
-    content: '\270E';
-    padding-right: 5px;
-}
 
 div#modal-wrapper{
     display: block;
@@ -73,7 +33,7 @@ div#modal-wrapper div.modal{
     text-align: initial;
     background-color: #fff;
     border: 1px solid #fff;
-    border-radius: 7px;
+    border-radius: 3px;
     box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.3);
     min-width: 540px;
     overflow: hidden;
@@ -89,7 +49,6 @@ div#modal-wrapper div.modal-header-button{
 div#modal-wrapper div.modal-header{
     box-sizing: border-box;
     padding: 10px 20px;
-    border-bottom: 1px dashed #777;
 }
 div#modal-wrapper div.modal-header-title{
     float: left;
@@ -140,12 +99,12 @@ table.data-table.maincategory td:nth-child(3){
 div.loading-i-wrapper{
     text-align: center;
 }
-div.loading-i-wrapper div.loading-i{
-    width: 30px;
-    height: 30px;
-    border-width: 10px;
+div.loading-i{
+    width: 10px;
+    height: 10px;
+    border-width: 3px;
     border-style: solid;
-    border-color: red #0f0 #00f #ff0;
+    border-color: red transparent;
     border-radius: 50%;
     animation-name: anim-loading-icon;
     animation-timing-function: linear;

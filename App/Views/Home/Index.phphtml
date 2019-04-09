@@ -1,5 +1,5 @@
 <?php
-    $this->TemplateData['title'] = 'Trang chủ';
+    $this->Data->Title = 'Trang chủ';
 ?>
     <div id="slider-wrapper">
         <div id="slider">

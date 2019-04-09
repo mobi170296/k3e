@@ -2,86 +2,125 @@
     namespace App\Controllers;
     use Core\Controller;
     use App\Models\UserModel;
-    use App\Exception\DBException;
+    use Library\Database\DBException;
+    use Library\Database\Database;
     use App\Exception\InputException;
+    use App\Models\Authenticate;
+    use App\Exception\AuthenticateException;
+    use Library\Database\DBDateTime;
     
     class UserController extends Controller{
-        public function __init(){
-            $this->__init_db_authenticate();
-        }
         public function Index(){
             return $this->View->RenderTemplate();
         }
-        public function Register($action, UserModel $user){
-            if($this->user->isLogin()){
-                $this->redirectToAction('Home', 'Index', null);
+        
+        public function Register($register, $day, $month, $year, UserModel $input){
+            try{
+                $database = new Database();
+                new Authenticate($database);
+                return $this->redirectToAction('Index', 'Home');
+            } catch (AuthenticateException $ex) {
+                #XAC THUC THAT BAI CHO PHEP TRUY CAP DANG KY
+            } catch (DBException $e){
+                $this->View->Data->ErrorMessage = $e->getMessage();
+                return $this->View->RenderTemplate('_error');
             }
-            $user->dbcon = $this->dbcon;
-            $this->View->ViewData['action'] = $action;
-            if($action != null){
+            
+            if($register != null && $this->isPOST()){
+                #SEND ACTION
                 try{
-                    $user->register();
-                    $_SESSION['username'] = $user->username;
-                    $_SESSION['password'] = $user->password[0];
-                    return $this->redirectToAction('Home', 'Index', null);
-                } catch (InputException $ie) {
-                    $this->View->ViewData['model'] = $user;
-                    $this->View->ViewData['error'] = $ie;
-                } catch(DBException $de){
-                    $this->View->ViewData['model'] = $user;
-                    $this->View->ViewData['error'] = $de;
-                }
-                return $this->View->RenderTemplate();
-            }else{
-                return $this->View->RenderTemplate();
-            }
-        }
-        public function Login($action, $username, $password){
-            if($this->user->isLogin()){
-                return $this->redirectToAction('Home', 'Index', null);
-            }
-            if($action!=null){
-                $user = new UserModel($this->dbcon);
-                $user->username = $username;
-                $user->password = $password;
-                if($user->login()){
-                    $_SESSION['username'] = $username;
-                    $_SESSION['password'] = $password;
-                    return $this->redirectToAction('Home', 'Index', null);
-                }else{
-                    $this->View->ViewData['error'] = 'Tên đăng nhập hoặc mật khẩu không đúng';
+                    $input->setDatabase($database);
+                    $input->birthday = new DBDateTime($day, $month, $year);
+                    $input->checkValidForUserName()->checkValidForUserNameExists()->checkValidForPassword($input->password[0], $input->password[1])->checkValidForEmail()->checkValidForPhone()->checkValidForBirthday()->checkValidForGender()->checkValidForLastName()->checkValidForFirstName();
+                    
+                    if($input->getErrorsLength()){
+                        $this->View->Data->Model = $input;
+                        throw new InputException($input->getErrorsMap());
+                    }
+                    
+                    $input->password = $input->password[0];
+                    $input->register();
+                    
+                    $_SESSION['username'] = $input->username;
+                    $_SESSION['password'] = $input->password;
+                    
+                    return $this->redirectToAction('Index', 'Home');
+                } catch (DBException $ex) {
+                    $this->View->Data->ErrorMessage = $ex->getMessage();
+                    return $this->View->RenderTemplate("_error");
+                } catch(InputException $ex){
+                    $this->View->Data->ErrorsMap = $ex->getErrorsMap();
                     return $this->View->RenderTemplate();
                 }
             }else{
                 return $this->View->RenderTemplate();
             }
         }
-        public function Info($action, UserModel $user){
-            if($this->user->isLogin()){
-                $this->View->ViewData['action'] = $action;
-                $this->View->ViewData['input'] = $user;
-                if($action != null){
-                    try{
-                        $this->user->update($user);
-                        $this->View->ViewData['success'] = 'Bạn đã cập nhật thông tin thành công';
-                    } catch (DBException $de) {
-                        $this->View->ViewData['error'] = $de;
-                    } catch (InputException $ie){
-                        $this->View->ViewData['error'] = $ie;
-                    }
-                }
-                $this->View->ViewData['user'] = $this->user;
-                return $this->View->RenderTemplate();
-            }else{
-                $this->redirectToAction('Home', 'Index', null);
+        public function Login($login, $username, $password){
+            try{
+                $database = new Database();
+                new Authenticate($database);
+                return $this->redirectToAction('Index', 'Home');
+            } catch (DBException $ex) {
+                return $this->View->RenderTemplate("_error");
+            } catch (AuthenticateException $e){
+                #normal access 
             }
+            
+            try{
+                if($login && $this->isPOST()){
+                    $input = new UserModel($database);
+                    $input->username = $username;
+                    $input->password = $password;
+                    $input->checkValidForUserName()->checkValidForPassword();
+                    
+                    if($input->getErrorsLength()){
+                        throw new InputException($input->getErrorsMap());
+                    }
+                    
+                    $input->standardization();
+                    if($input->login()){
+                        if($input->isLocked()){
+                            $this->View->Data->ErrorMessage = 'Tài khoản của bạn đã bị khóa, vui lòng liên hệ với quản trị viên để được trợ giúp';
+                            return $this->View->RenderTemplate();
+                        }else{
+                            $_SESSION['username'] = $username;
+                            $_SESSION['password'] = $password;
+                            return $this->redirectToAction('Index', 'Home');
+                        }
+                    }else{
+                        $this->View->Data->ErrorMessage = 'Tên đăng nhập hoặc tài khoản không đúng';
+                        throw new InputException(null);
+                    }
+                }else{
+                    return $this->View->RenderTemplate();
+                }
+            } catch (InputException $ex) {
+                $this->View->Data->ErrorsMap = $ex->getErrorsMap();
+                return $this->View->RenderTemplate();
+            } catch (DBException $e){
+                $this->View->Data->ErrorMessage = $e->getMessage();
+                return $this->View->RenderTemplate("_error");
+            }
+        }
+        public function Info($action, UserModel $user){
+            return $this->View->RenderTemplate();
         }
         public function Logout(){
             unset($_SESSION['username']);
             unset($_SESSION['password']);
-            $this->redirectToAction('Home', 'Index', null);
+            $this->redirectToAction('Index', 'Home');
         }
         public function Shop(){
+            
+        }
+        public function ChangePassword(){
+            
+        }
+        public function Orders(){
+            
+        }
+        public function DeliveryAddresses(){
             
         }
     }

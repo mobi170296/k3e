@@ -1,26 +1,38 @@
 <?php
     namespace App\Controllers;
     use Core\Controller;
-    use App\Models\MainCategoryModel;
+    use App\Models\MainCategoryList;
+    use Library\Database\Database;
+    use Library\Database\DBException;
+    use App\Models\Authenticate;
+    use App\Exception\AuthenticateException;
     
     class LayoutController extends Controller{
-        public function __init(){
-            $this->__init_db_authenticate();
-        }
         public function Header(){
-            $this->View->ViewData['user'] = $this->user;
+            try{
+                $database = new Database();
+                $authenticate = new Authenticate($database);
+                $user = $authenticate->getUser();
+                $this->View->Data->user = $user;
+            }catch(DBException $e){
+                return $this->View->RenderContent('Cannot load Header of Layout ' . $e->getMessage());
+            }catch(AuthenticateException $e){
+                $this->View->Data->user = null;
+            }
             return $this->View->RenderPartial();
         }
         public function ControlBar(){
-            $this->View->ViewData['user'] = $this->user;
-            $this->View->ViewData['maincategorylist'] = [];
-            $result = $this->dbcon->select('id')->from('maincategory')->execute();
-            while($row = $result->fetch_assoc()){
-                $mcate = new MainCategoryModel($this->dbcon);
-                $mcate->id = $row['id'];
-                $mcate->loadFromDB();
-                $this->View->ViewData['maincategorylist'][] = $mcate;
+            try{
+                $database = new Database();
+                $authenticate = new Authenticate($database);
+                $user = $authenticate->getUser();
+                $this->View->Data->user = $user;
+            } catch (AuthenticateException $ex) {
+                $this->View->Data->user = null;
+            } catch(DBException $e){
+                return $this->View->RenderContent('Cannot load ControlBar of layout ' . $e->getMessage());
             }
+            $this->View->Data->maincategorylist = (new MainCategoryList($database))->getAll();
             return $this->View->RenderPartial();
         }
     }

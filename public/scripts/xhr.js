@@ -67,10 +67,14 @@ function $AJAX(){
             //this._xhr.onreadystatechange = this._xhr._onsuccess;
             this._xhr.onreadystatechange = function(e){
                 if(this.readyState===4 && this.status===200){
-                    this._onsuccess(e);
+                    if(this._onsuccess != undefined){
+                        this._onsuccess(e);
+                    }
                 }
                 if(this.readyState===4 && this.status!==200){
-                    this._onerror(e);
+                    if(this._onerror != undefined){
+                        this._onerror(e);
+                    }
                 }
             }
         }
@@ -82,18 +86,23 @@ function $AJAX(){
             this._xhr._cb = cbs;
             this._xhr._cb();
         }
-        if(typeof data === "string")
+        if(typeof data === "string"){
             this._xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
+        }
         if(cb!==null){
             this._xhr.onreadystatechange = cb;
         }else{
 //            this._xhr.onreadystatechange = this._xhr._onsuccess;
             this._xhr.onreadystatechange = function(e){
                 if(this.readyState===4 && this.status===200){
-                    this._onsuccess(e);
+                    if(this._onsuccess != undefined){
+                        this._onsuccess(e);
+                    }
                 }
                 if(this.readyState===4 && this.status!==200){
-                    this._onerror(e);
+                    if(this._onerror != undefined){
+                        this._onerror(e);
+                    }
                 }
             }
         }
@@ -191,7 +200,7 @@ var $Modal = new (function(){
         if (this.modalwrapper === undefined){
             this.create();
         }
-        this.modalbody.html(t);
+        $(this.modalbody).html(t);
         return this;
     }
     this.contenttext = function(t){
@@ -219,7 +228,7 @@ var $Modal = new (function(){
         if (this.modalwrapper === undefined){
             this.create();
         }
-        this.contenthtml('<div class="loading-i-wrapper"><div class="loading-i"></div></div>');
+        this.html('<div class="loading-i-wrapper"><div class="loading-i"></div></div>');
         return this;
     }
 })();

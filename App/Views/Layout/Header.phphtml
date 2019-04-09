@@ -1,5 +1,5 @@
 <?php
-    if($this->ViewData['user']->isLogin()){
+    if($this->Data->user){
         echo <<<LOGEDLINK
 <a href="/User/Logout">Đăng xuất</a>
 LOGEDLINK;

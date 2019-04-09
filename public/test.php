@@ -1,4 +1,14 @@
 <?php
+function getBoolean(){
+    try{
+        return true;
+    } catch (Exception $ex) {
 
-    $a = new stdClass();
-    $a->name = 'trinh van linh';
+    } finally {
+        echo 'finally statement';
+    }
+}
+
+var_dump(getBoolean());
+    
+?>

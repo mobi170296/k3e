@@ -1,5 +1,5 @@
 <div>
-    <form name="maincategory" action="/ajax/MainCategory/Add" onsubmit="return false;">
+    <form name="maincategory" action="/api/maincategory/add" onsubmit="return false;">
         <table>
             <tr>
                 <td>Tên danh mục</td>
@@ -18,7 +18,7 @@
             <tr>
                 <td></td>
                 <td>
-                    <button type="submit" name="add" class="btn btn-allow">Thêm danh mục</button></td>
+                    <button type="submit" name="add" class="btn btn-save btn-save-i">Thêm danh mục</button></td>
             </tr>
         </table>
     </form>

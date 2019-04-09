@@ -1,0 +1,9 @@
+<div>
+    <form name="maincategory" action="/api/maincategory/del" onsubmit="return false;">
+        Bạn có muốn xóa danh mục <b style="font-family: tahoma;"><?php echo $this->Data->maincategory->name; ?></b>?
+        <div class="u-p10-0">
+            <input type="hidden" name="id" value="<?php echo $this->Data->maincategory->id; ?>"/>
+            <button class="btn btn-del btn-del-i" type="submit" name="del" value="del">Xóa danh mục</button>
+        </div>
+    </form>
+</div>

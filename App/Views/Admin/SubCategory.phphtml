@@ -1,5 +1,5 @@
 <?php
-    $this->TemplateData['title'] = 'Quản lý danh mục phụ ngành hàng';
+    $this->Data->Title = 'Quản lý danh mục phụ ngành hàng';
 ?>
 
 <script>
@@ -33,40 +33,24 @@
         <div>
             <a href="/Admin/SubCategory" class="active">Quản lý danh mục phụ</a>
         </div>
-        <div>
-            <a href="/Admin/AccountInfo">Thông tin tài khoản</a>
-        </div>
-        <div>
-            <a href="/Admin/Orders">Đơn hàng của tôi</a>
-        </div>
     </div>
     <div class="right-content">
         <div>
-            <button class="btn btn-allow modal-add btn-add-i">Thêm danh mục phụ</button>
+            <button class="btn btn-add btn-add-i">Thêm danh mục phụ</button>
         </div>
-        <div class="u-p10-0">
+        <div class="u-pt-5">
             <?php
-                if(count($this->ViewData['subcategorylist'])){
-                    echo '<table class="data-table subcategory">';
-                    echo '<tr>';
-                    echo '<th>ID</th>';
-                    echo '<th>Tên danh mục phụ</th>';
-                    echo '<th>Tên danh mục chính</th>';
-                    echo '<th>Liên kết</th>';
-                    echo '<th>Thao tác</th>';
-                    echo '</tr>';
-                    
-                    foreach($this->ViewData['subcategorylist'] as $subcategory){
-                        echo '<tr>';
-                        echo "<td>{$subcategory->getId()}</td>";
-                        echo "<td>{$subcategory->name}</td>";
-                        echo "<td>{$subcategory->maincategory->name}</td>";
-                        echo "<td>{$subcategory->link}</td>";
-                        echo '<td><button class="btn btn-edit-i btn-success">Sửa</button> <button class="btn btn-del-i btn-error">Xóa</button></td>';
-                        echo '</tr>';
-                    }
-                    
-                    echo '</table>';
+                if(count($this->Data->maincategorylist)){
+                    echo '<select data-role="toggle-subcategory">';
+                        echo '<option>Chọn danh mục chính để chỉnh sửa danh mục phụ</option>';
+                        foreach($this->Data->maincategorylist as $maincategory){
+                            echo "<option value=\"{$maincategory->id}\">{$maincategory->name}</option>";
+                        }
+                    echo '</select>';
+                    echo <<<DATAPRESENTATION
+                    <div data-role="table-presentation" data-table="subcategory">
+                    </div>
+DATAPRESENTATION;
                 }else{
                     echo 'Danh sách danh mục phụ sản phẩm hiện tại rỗng';
                 }
@@ -75,30 +59,7 @@
     </div>
 </div>
 <script>
-    $('.btn.modal-add').on('click', function(e){
-        $Modal.waiting().show();
-        $.ajax().create().url('/ajax/SubCategory/AddForm').success(function(e){
-            $Modal.title('Thêm danh mục phụ').html(this.response).show();
-            $('div.modal form[name="subcategory"] button[name="add"]').on('click', function(e){
-                if(checkSubCategoryData(this.form)){
-                    $.ajax().create().success(function(e){
-                        var result = JSON.parse(this.response);
-                        if(result.error){
-                            window.$Toast.makeError(result.message, 5000);
-                        }else{
-                            window.$Toast.makeSuccess(result.message, 5000);
-                            window.location.reload();
-                        }
-                        window.$Toast.hide();
-                    }).error(function(e){
-                        $Toast.makeError('Đã xảy ra lỗi khi giao tiếp với máy chủ', 5000);
-                    }).postForm(this.form);
-                    window.$Modal.hide();
-                }
-            });
-        }).error(function(e){
-            $Toast.makeError('Không thể tải dữ liệu', 10000);
-            $Modal.hide();
-        }).get();
-    });
+    (function(){
+        
+    })();
 </script>

@@ -1,0 +1,20 @@
+echo '<table class="data-table subcategory">';
+                    echo '<tr>';
+                    echo '<th>ID</th>';
+                    echo '<th>Tên danh mục phụ</th>';
+                    echo '<th>Tên danh mục chính</th>';
+                    echo '<th>Liên kết</th>';
+                    echo '<th>Thao tác</th>';
+                    echo '</tr>';
+                    
+                    foreach($this->ViewData['subcategorylist'] as $subcategory){
+                        echo '<tr>';
+                        echo "<td>{$subcategory->getId()}</td>";
+                        echo "<td>{$subcategory->name}</td>";
+                        echo "<td>{$subcategory->maincategory->name}</td>";
+                        echo "<td>{$subcategory->link}</td>";
+                        echo '<td><button class="btn btn-edit-i btn-success">Sửa</button> <button class="btn btn-del-i btn-error">Xóa</button></td>';
+                        echo '</tr>';
+                    }
+                    
+                    echo '</table>';

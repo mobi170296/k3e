@@ -1,38 +1,22 @@
 <?php
     namespace Core;
-    use Library\Database\DatabaseUtility;
-    use App\Models\UserModel;
     
     class Controller{
         public $View;
         public $controller, $action;
         public $config;
-        public $dbcon;
-        public $user;
         public $request;
-        #
-        # Authentication for application via UserModel
-        #
-        protected function authenticate(){
-            $this->user = new UserModel($this->dbcon);
-            if(isset($_SESSION['username']) && isset($_SESSION['password'])){
-                $this->user->username = $_SESSION['username'];
-                $this->user->password = $_SESSION['password'];
-                if($this->user->login()){
-                    return true;
-                }else{
-                    unset($_SESSION['username']);
-                    unset($_SESSION['password']);
-                    return false;
-                }
-            }else{
-                unset($_SESSION['username']);
-                unset($_SESSION['password']);
-                return false;
-            }
-        }
+        public $get;
+        public $files;
+        public $post;
+        public $method;
         
         public function __construct($controller, $action){
+            $this->get = new \stdClass();
+            $this->post = new \stdClass();
+            $this->files = new \stdClass();
+            $this->request = new \stdClass();
+            $this->method = $_SERVER['REQUEST_METHOD'];
             global $k3_config;
             $this->config = $k3_config;
             $this->View = new View($controller, $action);
@@ -43,15 +27,40 @@
         protected function __init(){
             
         }
-        protected function __init_db_authenticate(){
-            $this->dbcon = new DatabaseUtility($this->config['db']['host'], $this->config['db']['username'], $this->config['db']['password'], $this->config['db']['dbname']);
-            if($this->dbcon->connect_errno()){
-                echo 'Lỗi Database: <b style="color:red">' . $this->dbcon->connect_error() .'</b>';
-                exit;
-            }
-            $this->authenticate();
+        
+        public function isPOST(){
+            return $this->method === 'POST';
         }
-        protected function redirectToAction($controller, $action, $params){
+        
+        public function isGET(){
+            return $this->method === 'GET';
+        }
+        
+        public function isPUT(){
+            return $this->method === 'PUT';
+        }
+        
+        public function isHEAD(){
+            return $this->method === 'HEAD';
+        }
+        
+        public function isDELETE(){
+            return $this->method === 'DELETE';
+        }
+        
+        public function isCONNECT(){
+            return $this->method === 'CONNECT';
+        }
+        
+        public function isOPTIONS(){
+            return $this->method === 'OPTIONS';
+        }
+        
+        public function isTRACE(){
+            return $this->method === 'TRACE';
+        }
+        
+        protected function redirectToAction($action, $controller, $params=null){
             $querystring = '';
             if($params!=null){
                 foreach($params as $k => $v){

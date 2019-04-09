@@ -1,8 +1,11 @@
 <?php
     namespace Library\Database;
     class Database{
+        public $lastquery;
+        
+        
         public $connection;
-        public $_select, $_from, $_join, $_on, $_where, $_groupby, $_having, $_order, $_orderby, $_limit;
+        public $_select, $_from, $_join, $_on, $_where, $_groupby, $_having, $_order, $_orderby, $_limit, $_forupdate = false;
         public function __construct(){
             global $k3_config;
             $this->connection = @new \mysqli($k3_config['db']['host'], $k3_config['db']['username'], $k3_config['db']['password'], $k3_config['db']['dbname']);
@@ -22,11 +25,46 @@
         public function getErrorMessage(){
             return $this->connection->error;
         }
-        
+        public function lock(){
+            $this->_forupdate = true;
+            $query = "";
+            $query .= "SELECT {$this->_select}";
+            $query .= empty($this->_from) ? "" : " FROM {$this->_from}";
+            for($i=0; $i<count($this->_join); $i++){
+                $query .= " JOIN {$this->_join[$i]} ON {$this->_on[$i]}";
+            }
+            $query .= empty($this->_where) ? "" : " WHERE {$this->_where}";
+            $query .= empty($this->_groupby) ? "" : " GROUP BY {$this->_groupby}";
+            $query .= empty($this->_having) ? "" : " HAVING {$this->_having}";
+            $query .= empty($this->_orderby) ? "" : " ORDER BY {$this->_orderby} {$this->_order}";
+            $query .= empty($this->_limit) ? "" : " LIMIT {$this->_limit}";
+            $query .= $this->_forupdate ? " FOR UPDATE" : "";
+            
+            
+            $result = $this->connection->query($query);
+            
+            if($this->connection->errno){
+                throw new DBException($this->connection->error, $this->connection->errno);
+            }
+
+            $aresult = [];
+
+            while($row = $result->fetch_assoc()){
+                $d = new \stdClass();
+                foreach($row as $k => $v){
+                    $d->$k = $v;
+                }
+                $aresult[] = $d;
+            }
+
+            return $aresult;
+        }
         public function select($s){
             $this->_select = $this->_from = $this->_where = $this->_groupby = $this->_having = $this->_order = $this->_orderby = $this->_limit = "";
             $this->_join = [];
             $this->_on = [];
+            $this->_forupdate = false;
+            
             $this->_select = $s;
             return $this;
         }
@@ -94,6 +132,8 @@
             $query .= empty($this->_orderby) ? "" : " ORDER BY {$this->_orderby} {$this->_order}";
             $query .= empty($this->_limit) ? "" : " LIMIT {$this->_limit}";
             
+            #
+            $this->lastquery = $query;
             
             $result = $this->connection->query($query);
             
@@ -149,6 +189,9 @@
             
             $query = "INSERT INTO $table ($keystring) VALUES ($valuestring)";
             
+            #
+            $this->lastquery = $query;
+            
             $result = $this->connection->query($query);
             
             if($this->connection->errno){
@@ -163,7 +206,10 @@
                 $pairs[] = $k . '=' . $v->SqlValue();
             }
             
-            $query = "UPDATE $table SET " . implode(',', $pairs) . " $where";
+            $query = "UPDATE $table SET " . implode(',', $pairs) . " WHERE $where";
+            
+            $this->lastquery = $query;
+            
             $result =  $this->connection->query($query);
             
             if($this->connection->errno){
@@ -175,6 +221,9 @@
         
         public function delete($table, $where){
             $query = "DELETE FROM $table WHERE $where";
+            
+            $this->lastquery = $query;
+            
             $result = $this->connection->query($query);
             
             if($this->connection->errno){
@@ -186,6 +235,10 @@
         
         public function escape($s){
             return $this->connection->real_escape_string($s);
+        }
+        
+        public function close(){
+            @$this->connection->close();
         }
         
         #Test function
@@ -203,5 +256,9 @@
             $query .= empty($this->_limit) ? "" : " LIMIT {$this->_limit}";
             
             return $query;
+        }
+        
+        public function lastquery(){
+            return $this->lastquery;
         }
     }

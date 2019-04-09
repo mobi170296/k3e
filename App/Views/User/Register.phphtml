@@ -1,5 +1,5 @@
 <?php
-    $this->TemplateData['title'] = 'Đăng ký tài khoản';
+    $this->Data->Title = 'Đăng ký tài khoản';
 ?>
 <div id="main-body">
     <div class="tfw">
@@ -7,97 +7,153 @@
             <div class="tf-header">Đăng ký tài khoản</div>
             <div class="tf-content">
                 <?php
-                    if(isset($this->ViewData['error'])){
-                        echo '<div class="message-box error">'.$this->ViewData['error'].'</div>';
+                    if(isset($this->Data->ErrorMessage)){
+                        echo '<div class="message-box error">'. $this->Data->ErrorMessage .'</div>';
+                    }
+                    if(isset($this->Data->ErrorsMap)){
+                        echo '<div class="message-box error">';
+                        foreach($this->Data->ErrorsMap as $k => $v){
+                            echo "<div>$v</div>";
+                        }
+                        echo '</div>';
                     }
                 ?>
-                <form action="" method="post">
+                <form action="" method="post" autocomplete="off">
                     <table>
                         <tr>
                             <td><label>Tên tài khoản</label></td>
                             <td>
-                                <input type="text" name="username" value="<?php echo isset($this->ViewData['model'])?$this->ViewData['model']->username:''; ?>" placeholder="Tên tài khoản" size="30"/>
+                                <input type="text" name="username" value="<?php echo isset($this->Data->Model)?$this->Data->Model->username:''; ?>" placeholder="Tên tài khoản" size="30"/>
                             </td>
                         </tr>
                         <tr>
                             <td><label>Mật khẩu</label></td>
                             <td>
-                                <input type="password" name="password[]" value="<?php echo isset($this->ViewData['model'])? $this->ViewData['model']->password[0]:''; ?>"  placeholder="Mật khẩu" size="30"/>
+                                <input type="password" name="password[]" value=""  placeholder="Mật khẩu" size="30"/>
                             </td>
                         </tr>
                         <tr>
                             <td><label>Nhập lại mật khẩu</label></td>
                             <td>
-                                <input type="password" name="password[]" value="<?php echo isset($this->ViewData['model'])?$this->ViewData['model']->password[1]:'' ?>"  placeholder="Nhập lại mật khẩu" size="30"/>
+                                <input type="password" name="password[]" value=""  placeholder="Nhập lại mật khẩu" size="30"/>
                             </td>
                         </tr>
                         <tr>
                             <td><label>Họ</label></td>
                             <td>
-                                <input type="text" name="lastname" value="<?php echo isset($this->ViewData['model'])?$this->ViewData['model']->lastname:'' ?>"  placeholder="Họ" size="30"/>
+                                <input type="text" name="lastname" value="<?php echo isset($this->Data->Model)?$this->Data->Model->lastname:'' ?>"  placeholder="Họ" size="30"/>
                             </td>
                         </tr>
                         <tr>
                             <td><label>Tên</label></td>
                             <td>
-                                <input type="text" name="firstname" value="<?php echo isset($this->ViewData['model'])?$this->ViewData['model']->firstname:'' ?>"  placeholder="Tên" size="30"/>
+                                <input type="text" name="firstname" value="<?php echo isset($this->Data->Model)?$this->Data->Model->firstname:'' ?>"  placeholder="Tên" size="30"/>
                             </td>
                         </tr>
                         <tr>
                             <td><label>Số điện thoại</label></td>
                             <td>
-                                <input type="text" name="phone" value="<?php echo isset($this->ViewData['model'])?$this->ViewData['model']->phone:''; ?>"  placeholder="Số điện thoại" size="30"/>
+                                <input type="text" name="phone" value="<?php echo isset($this->Data->Model)?$this->Data->Model->phone:''; ?>"  placeholder="Số điện thoại" size="30"/>
                             </td>
                         </tr>
                         <tr>
                             <td><label>Email</label></td>
                             <td>
-                                <input type="text" name="email" value="<?php echo isset($this->ViewData['model'])?$this->ViewData['model']->email:''; ?>"  placeholder="Email" size="30"/>
+                                <input type="text" name="email" value="<?php echo isset($this->Data->Model)?$this->Data->Model->email:''; ?>"  placeholder="Email" size="30"/>
                             </td>
                         </tr>
                         <tr>
                             <td><label>Giới tính</label></td>
                             <td>
-                                <label><input type="radio" name="gender" value="1" <?php echo isset($this->ViewData['model'])?($this->ViewData['model']->gender==='0'?'':'checked="checked"'):'checked="checked"'; ?>/> Nam</label>
-                                <label><input type="radio" name="gender" value="0" <?php echo isset($this->ViewData['model'])&&$this->ViewData['model']->gender==='0'?'checked="checked"':''; ?>/> Nữ</label>
+                                <label><input type="radio" name="gender" value="1" <?php echo isset($this->Data->Model)?($this->Data->Model->gender==='0'?'':'checked="checked"'):'checked="checked"'; ?>/> Nam</label>
+                                <label><input type="radio" name="gender" value="0" <?php echo isset($this->Data->Model)&&$this->Data->Model->gender==='0'?'checked="checked"':''; ?>/> Nữ</label>
                             </td>
                         </tr>
                         <tr>
                             <td><label>Ngày tháng năm sinh</label></td>
                             <td>
-                                <select name="year">
-                                    <option value="0">Năm</option>
-                                    <?php
-                                        for($i = date("Y"); $i>=1900; $i--){
-                                            echo '<option value="' . $i . '">' . $i . '</option>';
-                                        }
-                                    ?>
-                                </select>
-                                <select name="month">
-                                    <option value="0">Tháng</option>
-                                    <?php
-                                        for($i=1; $i<=12; $i++){
-                                            echo "<option value=\"$i\">$i</option>";
-                                        }
-                                    ?>
-                                </select>
-                                <select name="day">
-                                    <option value="0">Ngày</option>
-                                    <?php
-                                        for($i=1; $i<=31; $i++){
-                                            echo "<option value=\"$i\">$i</option>";
-                                        }
-                                    ?>
-                                </select>
+                                <div data-role="jselect" data-type="date">
+                                    <select name="day" data-date-field="day">
+                                        <?php
+                                            for($i=1; $i<=31; $i++){
+                                                echo '<option value="' . $i  .'" ' . ((isset($this->Data->Model) && $this->Data->Model->birthday->day == $i)?"selected":"") . '>'.$i.'</option>';
+                                            }
+                                        ?>
+                                        
+                                    </select>
+                                    <select name="month" data-date-field="month">
+                                        <?php
+                                            for($i=1; $i<=12; $i++){
+                                                echo '<option value="' . $i  .'" ' . (isset($this->Data->Model) && $this->Data->Model->birthday->month == $i?"selected":"") . '>'.$i.'</option>';
+                                            }
+                                        ?>
+                                    </select>
+                                    <select name="year" data-date-field="year">
+                                        <?php
+                                            for($i = date("Y"); $i>=1900; $i--){
+                                                echo '<option value="' . $i  .'" ' . (isset($this->Data->Model) && $this->Data->Model->birthday->year == $i?"selected":"") . '>'.$i.'</option>';
+                                            }
+                                        ?>
+                                    </select>
+                                </div>
                             </td>
                         </tr>
                         <tr>
                             <td></td>
-                            <td><input class="btn-active" type="submit" name="action" value="Đăng ký"/></td>
+                            <td><input class="btn-active" type="submit" name="register" value="Đăng ký"/></td>
                         </tr>
                     </table>
                 </form>
             </div>
         </div>
     </div>
+    <script type="text/javascript">
+            function JDateSelector(e){
+                this.getMaxDay = function(mon, y){
+                    var m=[31,0,31,30,31,30,31,31,30,31,30,31];
+                    if(mon!==2){
+                        return m[mon-1];
+                    }
+                    var a=y%4===0,b=y%100===0,c=y%400===0;
+                    return a&(!(b^c)) ? 29 : 28;
+                }
+                
+                this.day = e.querySelector('select[data-date-field="day"]');
+                this.month = e.querySelector('select[data-date-field="month"]');
+                this.year = e.querySelector('select[data-date-field="year"]');
+                
+                this.year._container = this.month._container = this.day._container = this;
+                
+                this.onchange = function(e){
+                    var m=parseInt(this.month.selectedOptions[0].value);
+                    var y=parseInt(this.year.selectedOptions[0].value);
+                    var d=parseInt(this.day.selectedOptions[0].value);
+                    var osi=this.day.selectedIndex;
+                    var md=this.getMaxDay(m, y);
+                    while(this.day.options.length) this.day.options.remove(0);
+                    for(var i=1; i<=md;i++){
+                        var o=$.create('option');
+                        $(o).html(i).val(i);
+                        this.day.options.add(o);
+                    }
+                    if(osi<=md){
+                        this.day.selectedIndex=osi;
+                    }
+                }
+                
+                this.year.onchange = function(e){
+                    this._container.onchange(e);
+                }
+                
+                this.month.onchange = function(e){
+                    this._container.onchange(e);
+                }
+            }
+            
+            
+            (function(){
+                var e = document.querySelector('[data-role="jselect"][data-type="date"]');
+                new (e !== null ? JDateSelector : function(){})(e);
+            })();
+        </script>
 </div>

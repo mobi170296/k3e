@@ -1,17 +1,17 @@
 <?php
     namespace Core;
     class Router{
-        private $routeTable;
-        private $path;
-        private $query;
-        private $params = [];
+        public $routeTable;
+        public $path;
+        public $query;
+        public $params = [];
         public function __construct($querystring){
-            $component = parse_url($querystring);
-            $path = isset($component['path']) ? rtrim($component['path'], '/') : '';
-            $this->path = str_replace('k3e_route=', '', $path);
-            $this->query = isset($component['query']) ? $component['query'] : '';
-            #Convert query string to query array
-            parse_str($this->query, $this->query);
+            #k3e_route={path}&querystring
+            parse_str($querystring, $this->query);
+            $this->path = isset($this->query['k3e_route']) ? rtrim($this->query['k3e_route'], '/') : '';
+            unset($this->query['k3e_route']);
+            unset($_GET['k3e_route']);
+            unset($_REQUEST['k3e_route']);
         }
         
         public function setController($controller){
@@ -36,6 +36,7 @@
         
         public function match(){
             $this->params = [];
+            $params = null;
             if(is_array($this->routeTable)){
                 $total_route = count($this->routeTable);
                 for($i=0; $i<$total_route; $i++){
@@ -43,13 +44,15 @@
                         if(isset($params['controller'])){
                             $params['controller'] = str_replace('/', '\\', $params['controller']);
                         }
+                        #Lay param mac dinh
                         $this->params = array_merge($this->params, $this->routeTable[$i]['params']);
+                        #Lay duoc tu path bo di nhung index thua la number
+                        foreach($params as $k => $v){
+                            if(is_numeric($k)){
+                                unset($params[$k]);
+                            }
+                        }
                         $this->params = array_merge($this->params, $params);
-//                        foreach($params as $key => $value){
-//                            if(is_string($key)){
-//                                $this->params[$key] = $value;
-//                            }
-//                        }
                         return true;
                     }
                 }
@@ -80,7 +83,19 @@
                 $controllername = CONTROLLER_NS . '\\' . $controllername . 'Controller';
                 if(class_exists($controllername)){
                     $controller = new $controllername($this->params['controller'], $this->params['action']);
-                    $controller->request = $this->query;
+                    foreach($_REQUEST as $k => $v){
+                        $controller->request->$k = $v;
+                    }
+                    foreach($_GET as $k => $v){
+                        $controller->get->$k = $v;
+                    }
+                    foreach($_POST as $k => $v){
+                        $controller->post->$k = $v;
+                    }
+                    foreach($_FILES as $k => $v){
+                        $controller->files->$k = $v;
+                    }
+                    $controller->method = $_SERVER['REQUEST_METHOD'];
                     if(method_exists($controller, $actionname)){
                         $method = (new \ReflectionClass($controller))->getMethod($actionname);
                         if(!$method->isPublic()){
@@ -111,7 +126,8 @@
                                 
                                 $args[$parametername] = $obj;
                             }else{
-                                $args[$parametername] = $parameter->isOptional() ? $parameter->getDefaultValue() : null;
+                                #$args[$parametername] = $parameter->isOptional() ? $parameter->getDefaultValue() : null;
+                                $args[$parametername] = $parameter->isDefaultValueAvailable() ? $parameter->getDefaultValue() : null;
                                 if(isset($this->query[$parametername])){
                                     $args[$parametername] = $this->query[$parametername];
                                 }

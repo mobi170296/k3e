@@ -9,7 +9,7 @@
     class UserModel extends Model{
         const MALE = 1, FEMALE = 0;
         const ADMIN_ROLE = 0, NORMAL_ROLE = 1;
-        protected $id, $username, $firstname, $lastname, $password, $email, $phone, $address, $district_id, $created_time, $locked, $birthday, $money, $role, $gender;
+        public $id, $username, $firstname, $lastname, $password, $email, $phone, $address, $district_id, $created_time, $locked, $birthday, $money, $role, $gender;
         
         public function setId($id) {
             $this->id = $id;
@@ -178,36 +178,61 @@
         ###
         
         public function checkValidForUserName(){
-            if(!preg_match('/^[A-z0-9]{6,}$/', $this->username)){
-                $this->addErrorMessage('username', 'Tên đăng nhập không hợp lệ, phải là số hoặc ký tự, có chiều dài là 6');
+            if(isset($this->username) && is_string($this->username)){
+                if(!preg_match('/^[A-z0-9]{6,}$/', $this->username)){
+                    $this->addErrorMessage('username', 'Tên đăng nhập không hợp lệ, phải là số hoặc ký tự, có chiều dài là 6');
+                }
+            }else{
+                $this->addErrorMessage('username', 'Tên tài khoản không hợp lệ!');
+            }
+            
+            return $this;
+        }
+        
+        public function checkValidForUserNameExists(){
+            $rows = $this->database->select('*')->from(DB_TABLE_USER)->where('username=' . new DBString($this->username))->execute();
+            if(count($rows)){
+                $this->addErrorMessage('usernameduplicate', 'Tên đăng nhập ' . $this->username .' đã tồn tại!');
             }
             return $this;
         }
         
         public function checkValidForFirstName(){
-            if(empty($this->firstname)){
-                $this->addErrorMessage('firstname', 'Tên không được để trống');
+            if(!isset($this->firstname) || !is_string($this->firstname)){
+                $this->addErrorMessage('firstname', 'Tên không hợp lệ');
+            }else{
+                if(empty($this->firstname)){
+                    $this->addErrorMessage('firstname', 'Tên không được để trống');
+                }
             }
             return $this;
         }
         
         public function checkValidForLastName(){
-            if(empty($this->lastname)){
-                $this->addErrorMessage('lastname', 'Họ không được để trống');
+            if(!isset($this->lastname) || !is_string($this->lastname)){
+                $this->addErrorMessage('lastname', 'Họ không hợp lệ');
+            }else{
+                if(empty($this->lastname)){
+                    $this->addErrorMessage('lastname', 'Họ không được để trống');
+                }
             }
             return $this;
         }
         
         public function checkValidForPassword($p1 = null, $p2 = null){
             if($p1 === null && $p2 === null){
-                if(!preg_match('/^.{6,}$/', $this->password)){
+                if(!isset($this->password) || !is_string($this->password) || !preg_match('/^.{6,}$/', $this->password)){
                     $this->addErrorMessage('password', 'Mật khẩu không hợp lệ phải từ 6 ký tự trở lên');
                 }
             }else{
-                if($p2 !== $p1){
-                    $this->addErrorMessage('password', 'Mật khẩu nhập lại không trùng khớp');
-                }else if(!preg_match('/^.{6,}$/', $p1)){
-                    $this->addErrorMessage('password', 'Mật khẩu không hợp lệ phải từ 6 ký tự trở lên');
+                if(is_string($p1) && is_string($p2)){
+                    if($p2 !== $p1){
+                        $this->addErrorMessage('password', 'Mật khẩu nhập lại không trùng khớp');
+                    }else if(!preg_match('/^.{6,}$/', $p1)){
+                        $this->addErrorMessage('password', 'Mật khẩu không hợp lệ phải từ 6 ký tự trở lên');
+                    }
+                }else{
+                    $this->addErrorMessage('password', 'Mật khẩu không hợp lệ!');
                 }
             }
             
@@ -215,27 +240,36 @@
         }
         
         public function checkValidForEmail(){
-            if(!preg_match('/^[A-z0-9.+%-]+@([A-z0-9-]+\.)[A-z]{2,}$/', $this->email)){
+            if(!isset($this->email) || !is_string($this->email) || !preg_match('/^[A-z0-9.+%-]+@([A-z0-9-]+\.)[A-z]{2,}$/', $this->email)){
                 $this->addErrorMessage('email', 'Địa chỉ email không hợp lệ');
             }
             return $this;
         }
         
         public function checkValidForPhone(){
-            if(!preg_match('/^0[0-9]{9,10}$/', $this->phone)){
+            if(!isset($this->phone) || !is_string($this->phone) || !preg_match('/^0[0-9]{9,10}$/', $this->phone)){
                 $this->addErrorMessage('phone', 'Số điện thoại không hợp lệ');
             }
+            
             return $this;
         }
         
         public function checkValidForAddress(){
-            if(mb_strlen($this->address)>200){
-                $this->addErrorMessage('address', 'Địa chỉ không được dài quá 200 ký tự');
+            if(!isset($this->address) || !is_string($this->address)){
+                $this->addErrorMessage('address', 'Địa chỉ không hợp lệ!');
+            }else{
+                if(mb_strlen($this->address)>200){
+                    $this->addErrorMessage('address', 'Địa chỉ không được dài quá 200 ký tự');
+                }
             }
             return $this;
         }
         
         public function checkValidForDistrictId(){
+            if(!isset($this->district_id) || !is_numeric($this->district_id)){
+                $this->addErrorMessage('districtid', 'Địa chỉ Quận huyện không hợp lệ!');
+                return $this;
+            }
             $result = $this->database->select('*')->from('district')->where('id=' . new DBNumber($this->district_id))->execute();
             if(!count($result)){
                 $this->addErrorMessage('districtid', 'Quận/huyện không hợp lệ');
@@ -244,21 +278,21 @@
         }
         
         public function checkValidForBirthday(){
-            if(!checkdate($this->birthday->month, $this->birthday->day, $this->birthday->year)){
-                $this->addErrorMessage('birthday', 'Ngày tháng năm sinh không hợp lệ!');
+            if(!isset($this->birthday) || !checkdate($this->birthday->month, $this->birthday->day, $this->birthday->year)){
+                $this->addErrorMessage('birthday', "{$this->birthday->day}/{$this->birthday->month}/{$this->birthday->year} không hợp lệ!");
             }
             return $this;
         }
         
         public function checkValidForGender(){
-            if($this->gender != UserModel::FEMALE && $this->gender != UserModel::MALE){
+            if(!isset($this->gender) || !is_numeric($this->gender) || ($this->gender != UserModel::FEMALE && $this->gender != UserModel::MALE)){
                 $this->addErrorMessage('gender', 'Giới tính không hợp lệ');
             }
             return $this;
         }
         
         public function checkValidForRole(){
-            if($this->role != UserModel::ADMIN_ROLE && $this->role != UserModel::NORMAL_ROLE){
+            if(!isset($this->role) || !is_numeric($this->role) || ($this->role != UserModel::ADMIN_ROLE && $this->role != UserModel::NORMAL_ROLE)){
                 $this->addErrorMessage('role', 'Quyền không hợp lệ!');
             }
             return $this;
@@ -299,6 +333,35 @@
             return isset($this->id);
         }
         
+        public function isLocked(){
+            return $this->locked == 1;
+        }
+        
+        public function loadData(){
+            $row = $this->database->select('*')->from(DB_TABLE_USER)->where('id='.new DBNumber($this->id))->execute();
+            if(count($row)){
+                $row = $row[0];
+                $this->id = $row->id;
+                $this->username = $row->username;
+                $this->firstname = $row->firstname;
+                $this->lastname = $row->lastname;
+                $this->password = $row->password;
+                $this->email = $row->email;
+                $this->phone = $row->phone;
+                $this->address = $row->address;
+                $this->district_id = $row->district_id;
+                $this->birthday = DBDateTime::parse($row->birthday);
+                $this->created_time = DBDateTime::parse($row->created_time);
+                $this->locked = $row->locked;
+                $this->birthday = DBDateTime::parse($row->birthday);
+                $this->gender = $row->gender;
+                $this->money = $row->money;
+                $this->role = $row->role;
+                return true;
+            }else{
+                return false;
+            }
+        }
         public function register(){
             $this->database->insert(DB_TABLE_USER, ['username' => new DBString($this->username), 'firstname' => new DBString($this->firstname), 'lastname' => new DBString($this->lastname), 'password' => new DBRaw("md5('{$this->password}')"), 'email' => new DBString($this->email), 'phone' => new DBString($this->phone), 'address' => new DBString($this->address), 'district_id' => new DBRaw('null'), 'locked' => new DBNumber(0), 'birthday' => new DBDateTime($this->birthday->day, $this->birthday->month, $this->birthday->year), 'gender' => new DBNumber($this->gender), 'money' => new DBNumber(0), 'role' => new DBNumber(UserModel::NORMAL_ROLE)]);
             return true;

@@ -111,7 +111,7 @@ div.tf{
     display: inline-block;
     border-radius: 10px;
     overflow: hidden;
-    min-width: 480px;
+    width: 480px;
 }
 div.tf div.tf-header{
     text-align: center;
@@ -167,48 +167,7 @@ div#footer-wrapper{
     width: 1200px;
     margin: 20px auto;
 }
-label{
-    user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    -moz-user-select: none;
-}
-input[type="text"], input[type="password"]{
-    padding: 7px 15px;
-    border: 2px solid #26ad05;
-    border-radius: 3px;
-}
-input[type="text"]:focus, input[type="password"]:focus{
-    box-shadow: 0px 0px 10px 0px rgba(38,173,5,0.4);
-    text-align: center;
-}
-input[type="submit"], input[type="reset"]{
-    padding: 5px 25px;
-    border: 2px solid #000;
-    background-color: #fff;
-    color: #000;
-    font-size: 10pt;
-    font-family: segoe ui;
-    font-weight: 600;
-    border-radius: 2em;
-    transition: all 500ms;
-}
-input.btn-active{
-    border-color: #26ad05;
-    color: #26ad05;
-}
-input.btn-inactive{
-    border-color: red;
-    color: red;
-}
-input.btn-active:hover{
-    background-color: #26ad05;
-    color: #fff;
-}
-input.btn-inactive:hover{
-    background-color: red;
-    color: #fff;
-}
+
 div#top-bar{
     padding: 5px 20px;
     background-color: #1FBE80;

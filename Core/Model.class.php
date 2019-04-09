@@ -5,7 +5,7 @@
         public $_errorsmap = [];
         public $database;
         
-        public function __construct($d){
+        public function __construct($d = null){
             $this->database = $d;
             $this->_errorsmap = [];
             $this->__init();
@@ -38,13 +38,4 @@
         protected function __init(){
             
         }
-        
-        public function __set($name, $value) {
-            $this->$name = $value;
-        }
-        
-        public function __get($name) {
-            return $this->$name;
-        }
-        
     }

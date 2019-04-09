@@ -1,3 +1,7 @@
+<?php
+    use App\Models\UserModel;
+?>
+
 <div id="control-bar">
             <div id="logo">
                 <a href="/">
@@ -6,7 +10,7 @@
                 <div id="menu-wrapper">
                     <div id="menu">
                         <?php
-                            foreach($this->ViewData['maincategorylist'] as $maincategory){
+                            foreach($this->Data->maincategorylist as $maincategory){
                                 echo '<div class="menu l1">';
                                 echo '<a href="'.$maincategory->getLink().'">' . $maincategory->getName(). '</a>';
                                 echo '<div class="menu l2">';
@@ -27,12 +31,12 @@
                 </form>
             </div>
             <?php
-                if($this->ViewData['user']->isLogin()){
+                if($this->Data->user){
                     echo '<div id="account-control">';
-                    echo "<div id=\"account-name\">{$this->ViewData['user']->getLastName()} {$this->ViewData['user']->getFirstName()}</div>";
+                    echo "<div id=\"account-name\">{$this->Data->user->getLastName()} {$this->Data->user->getFirstName()}</div>";
                     echo '<div id="account-options">';
                     echo '<a href="/User/Info">Thông tin tài khoản</a>';
-                    if($this->ViewData['user']->haveRole(ADMIN_PRIV)){
+                    if($this->Data->user->haveRole(UserModel::ADMIN_ROLE)){
                         echo '<a href="/Admin/Index">Quản trị hệ thống</a>';
                     }
                     echo '<a href="/User/Shop">Cửa hàng</a>';

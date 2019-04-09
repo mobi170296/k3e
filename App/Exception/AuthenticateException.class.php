@@ -1,6 +1,6 @@
 <?php
 
-    namespace App\Models\Exception;
+    namespace App\Exception;
     
     class AuthenticateException extends \Exception{
         public function __construct($message, $code){

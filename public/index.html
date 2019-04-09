@@ -40,12 +40,24 @@
         </style>
     </head>
     <body>
-        
-        <div data-role="jselect" data-type="date">
-            <select name="day" data-date-field="day"></select>
-            <select name="month" data-date-field="month"></select>
-            <select name="year" data-date-field="year"></select>
+        <div>
+            <input id="t1">
+            <button id="btn">Button</button>
+            <input id="t2">
+            <script>
+                (function(){
+                    var button = window.btn;
+                    var input1 = window.t1;
+                    var input2 = window.t2;
+                    
+                    button.addEventListener('click', function(e){
+                        input2.value = input1.value;
+                        input1.value = '';
+                    });
+                })();
+                </script>
         </div>
+    </body>
         
         <script type="text/javascript">
             function JDateSelector(e){

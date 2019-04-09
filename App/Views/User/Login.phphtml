@@ -1,15 +1,23 @@
 <?php
-    $this->TemplateData['title'] = 'Đăng nhập';
+    $this->Data->Title = 'Đăng nhập';
 ?>
 <div id="main-body">
     <div class="tfw">
         <div class="tf">
-            <div class="tf-header">đăng nhập</div>
+            <div class="tf-header">Đăng nhập tài khoản</div>
             <div class="tf-content">
                 <?php
-                    if(isset($this->ViewData['error'])){
+                    if(isset($this->Data->ErrorMessage)){
                         echo '<div class="message-box error">';
-                        echo '<div>'.$this->ViewData['error'].'</div>';
+                        echo '<div>'.$this->Data->ErrorMessage.'</div>';
+                        echo '</div>';
+                    }
+                    
+                    if(isset($this->Data->ErrorsMap)){
+                        echo '<div class="message-box error">';
+                        foreach($this->Data->ErrorsMap as $k => $v){
+                            echo "<div>$v</div>";
+                        }
                         echo '</div>';
                     }
                 ?>
@@ -19,7 +27,7 @@
                             <label>Tên đăng nhập</label>
                         </div>
                         <div class="form-field-control">
-                            <input type="text" name="username" placeholder="Tên đăng nhập" size="30"/>
+                            <input type="text" name="username" placeholder="Tên đăng nhập" value="" size="30"/>
                         </div>
                     </div>
                     <div class="form-field">
@@ -27,10 +35,10 @@
                             <label>Mật khẩu</label>
                         </div>
                         <div class="form-field-control">
-                            <input type="password" name="password" placeholder="Mật khẩu" size="30"/>
+                            <input type="password" name="password" placeholder="Mật khẩu" value="" size="30"/>
                         </div>
                     </div>
-                    <input class="btn-active" type="submit" name="action" value="Đăng nhập"/>
+                    <input class="btn-active" type="submit" name="login" value="Đăng nhập"/>
                 </form>
             </div>
         </div>

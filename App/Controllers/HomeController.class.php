@@ -3,9 +3,6 @@
     use Core\Controller;
     
     class HomeController extends Controller{
-        protected function __init(){
-            $this->__init_db_authenticate();
-        }
         public function Index(){
             return $this->View->RenderTemplate();
         }
