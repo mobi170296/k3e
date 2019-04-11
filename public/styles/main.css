@@ -14,39 +14,83 @@ a{
 .u-hidden{
     display: none;
 }
-div#admin-wrapper{
+#admin-wrapper{
     margin: 20px auto;
     width: 1270px;
     font-family: Arial;
 }
-div#admin-wrapper div.left-menu{
+#admin-wrapper .left-menu{
     float: left;
     width: 250px;
     font-size: 11pt;
 }
-div#admin-wrapper div.left-menu a{
+#admin-wrapper .left-menu a{
     display: block;
     padding: 10px 20px;
     margin-right: 20px;
     border-radius: 3px;
     color: #000;
 }
-div#admin-wrapper div.left-menu a.active{
+#admin-wrapper .left-menu a.active{
     background-color: #eee;
 }
-div#admin-wrapper div.left-menu a:hover{
+#admin-wrapper .left-menu a:hover{
     background-color: #eee;
 }
-div#admin-wrapper div.right-content{
+#admin-wrapper .right-content{
     float: left;
     box-sizing: border-box;
     width: 1020px;
+    min-height: 100vh;
     background-color: #fff;
     border: 1px solid #fff;
     border-radius: 5px;
     padding: 30px 20px 20px;
 }
-div.message-box{
+#user-wrapper{
+    width: 1270px;
+    margin: 0px auto;
+}
+#user-wrapper .left-panel{
+    width: 250px;
+    float: left;
+}
+#user-wrapper .right-panel{
+    width: 1020px;
+    float: left;
+}
+#user-wrapper .user-profile{
+    border-radius: 5px;
+    padding: 0px 20px;
+}
+#user-wrapper .user-profile-card .header{
+    font-weight: bold;
+    font-size: 1.2em;
+    padding-bottom: 20px;
+}
+#user-wrapper .user-profile-card .content{
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 3px;
+}
+#user-wrapper .left-panel .menu .menu-item{
+    
+}
+#user-wrapper .left-panel .menu-item > a{
+    font-family: segoe ui;
+    font-size: 11pt;
+    color: #000;
+    border-radius: 3px;
+    display: block;
+    padding: 10px 30px;
+}
+#user-wrapper .left-panel .menu-item.active > a{
+    background-color: #ddd;
+}
+#user-wrapper .left-panel .menu-item > a:hover{
+    background-color: #eee;
+}
+.message-box{
     padding: 20px 30px;
     text-align: left;
     border-radius: 5px;
@@ -54,12 +98,11 @@ div.message-box{
     font-size: 12pt;
     margin: 20px 0px;
 }
-div.message-box.error{
+.message-box.error{
     background-color: #ff4743;
     color: #fff;
 }
-
-div.message-box.error::before{
+.message-box.error::before{
     content: 'Failed';
     display: block;
     background-image: url('/images/icons/failed.png');
@@ -69,11 +112,11 @@ div.message-box.error::before{
     font-weight: 600;
     font-size: 14pt;
 }
-div.message-box.success{
+.message-box.success{
     background-color: #008549;
     color: #fff;
 }
-div.message-box.success:before{
+.message-box.success:before{
     content: 'Success';
     display: block;
     background-image: url('/images/icons/success.png');
@@ -83,37 +126,37 @@ div.message-box.success:before{
     font-weight: 600;
     font-size: 14pt;
 }
-div.text-header{
+.text-header{
     font-size: 12pt;
     font-weight: bold;
 }
-div.text-content{
+.text-content{
     font-size: 11pt;
 }
-div.text-desc{
+.text-desc{
     font-size: 10pt;
 }
-div.col{
+.col{
     margin: 0px 1em;
 }
-div#main-body{
+#main-body{
     box-sizing: border-box;
     width: 1200px;
     margin: 0px auto;
     background-color: #fff;
 }
-div.tfw{
+.tfw{
     padding: 20px;
     text-align: center;
     background-image: linear-gradient(45deg,#09adea,orange);
 }
-div.tf{
+.tf{
     display: inline-block;
     border-radius: 10px;
     overflow: hidden;
     width: 480px;
 }
-div.tf div.tf-header{
+.tf .tf-header{
     text-align: center;
     padding: 30px 0px;
     font-size: 18pt;
@@ -126,31 +169,31 @@ div.tf div.tf-header{
     -webkit-user-select: none;
     -moz-user-select: none;
 }
-div.tf div.tf-content{
+.tf .tf-content{
     text-align: center;
     padding: 1px 50px 25px;
     background-color: #fff;
 }
-div.tf div.tf-content form{
+.tf .tf-content form{
     text-align: left;
     display: inline-block;
 }
-div.tf div.tf-content table td:first-child{
+.tf .tf-content table td:first-child{
     padding: 10px 2em 10px 0px;
     font-family: segoe ui;
     font-weight: 600;
     font-size: 11pt;
 }
-div.tf div.tf-content table td:nth-child(2){
+.tf .tf-content table td:nth-child(2){
     padding: 10px 0px;
 }
-div.form-field{
+.form-field{
     padding: 5px 0px;
 }
-div.form-field-label{
+.form-field-label{
     padding: 5px 0px;
 }
-div.form-field-control{
+.form-field-control{
     padding: 5px 0px;
 }
 .clearfix::after{
@@ -158,47 +201,47 @@ div.form-field-control{
     clear:both;
     display: block;
 }
-div#footer{
+#footer{
     margin: 20px 0px;
     padding: 20px 0px;
     background-color: #fff;
 }
-div#footer-wrapper{
+#footer-wrapper{
     width: 1200px;
     margin: 20px auto;
 }
 
-div#top-bar{
+#top-bar{
     padding: 5px 20px;
     background-color: #1FBE80;
     text-align: right;
     font-family: segoe ui;
 }
-div#top-bar > a{
+#top-bar > a{
     color: white;
     user-select: none;
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
 }
-div#control-bar-wrapper{
+#control-bar-wrapper{
     background-color: #26AD05;
     position: sticky;
     top: 0px;
     z-index: 2;
 }
-div#control-bar{
+#control-bar{
     display: flex;
     align-items: center;
     width: 1200px;
     margin: 0px auto;
     height: 60px;
 }
-div#control-bar > div{
+#control-bar > div{
     display: inline-block;
     vertical-align: bottom;
 }
-div#control-bar > div#logo{
+#control-bar > #logo{
     position: relative;
     height: 100%;
     display: flex;
@@ -206,10 +249,10 @@ div#control-bar > div#logo{
     user-select: none;
     -webkit-user-select: none;
 }
-div#logo > a{
+#logo > a{
     display: inline-block;
 }
-div#logo span{
+#logo span{
     color: #fff;
     font-size: 24pt;
     text-transform: uppercase;
@@ -217,7 +260,7 @@ div#logo span{
     font-weight: bold;
     display: inline-block;
 }
-div#menu-wrapper{
+#megamenu-wrapper{
     border-radius: 3px;
     width: 24px;
     height: 100%;
@@ -228,20 +271,20 @@ div#menu-wrapper{
     background-repeat: no-repeat;
     background-position: 0px 100%;
 }
-div#search-bar{
+#search-bar{
     margin: 0px 30px;
 }
-div#search-bar input[type="text"]{
+#search-bar input[type="text"]{
     padding: 10px 15px;
     border: 1px solid #fff;
     border-radius: 3px 0px 0px 3px;
     font-size: 10pt;
     color: #333;
 }
-div#search-bar input[type="text"]:focus{
+#search-bar input[type="text"]:focus{
     text-align: left;
 }
-div#search-bar button{
+#search-bar button{
     padding: 10px 20px;
     border: 1px solid #fff;
     border-radius: 0px 3px 3px 0px;
@@ -250,11 +293,11 @@ div#search-bar button{
     font-size: 10pt;
     transition: 500ms;
 }
-div#search-bar button:hover{
+#search-bar button:hover{
     background-color: #26ad05;
     color: #fff;
 }
-div#account-control{
+#account-control{
     position: relative;
     font-weight: 500;
     font-family: segoe ui;
@@ -264,14 +307,14 @@ div#account-control{
     -webkit-user-select: none;
     -moz-user-select: none;
 }
-div#account-name{
+#account-name{
     color: #fff;
     max-width: 10em;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
 }
-div#account-options{
+#account-options{
     display: none;
     line-height: initial;
     position: absolute;
@@ -283,17 +326,17 @@ div#account-options{
     box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.3);
     padding: 10px 0px;
 }
-div#account-options > a{
+#account-options > a{
     padding: 5px 20px;
     white-space: nowrap;
     display: block;
     color: #000;
 }
-div#account-options > a:hover{
+#account-options > a:hover{
     background-color: #26ad05;
     color: #fff;
 }
-div#account-options::before{
+#account-options::before{
     content: '';
     display: inline-block;
     position: absolute;
@@ -303,22 +346,22 @@ div#account-options::before{
     border-style: solid;
     border-color: transparent transparent #fff transparent;
 }
-div#account-control:hover div#account-options{
+#account-control:hover #account-options{
     display: block;
 }
-div#slider-wrapper{
+#slider-wrapper{
     margin: 0px auto;
     width: 1200px;
     position: relative;
     user-select: none;
     -webkit-user-select: none;
 }
-div#slider{
+#slider{
     height: 300px;
     overflow: hidden;
     position: relative;
 }
-div#slider img{
+#slider img{
     position: absolute;
     height: 100%;
     left: 50%;
@@ -327,7 +370,7 @@ div#slider img{
     animation-duration: 700ms;
     animation-iteration-count: 1;
 }
-div#slider-next{
+#slider-next{
     font-size: 18pt;
     font-weight: bolder;
     color: #0f0;
@@ -347,10 +390,10 @@ div#slider-next{
     user-select: none;
     -webkit-user-select: none;
 }
-div#slider-next:hover{
+#slider-next:hover{
     box-shadow: 0px 0px 5px 0px #ddd;
 }
-div#slider-previous{
+#slider-previous{
     font-size: 18pt;
     font-weight: bolder;
     color: #0f0;
@@ -370,10 +413,10 @@ div#slider-previous{
     user-select: none;
     -webkit-user-select: none;
 }
-div#slider-previous:hover{
+#slider-previous:hover{
     box-shadow: 0px 0px 5px 0px #ddd;
 }
-div#slider-indicator{
+#slider-indicator{
     position: absolute;
     bottom: 10px;
     left: 0px;
@@ -383,13 +426,13 @@ div#slider-indicator{
     user-select: none;
     -webkit-user-select: none;
 }
-div#slider-indicator div.slider-indicator-index{
+#slider-indicator .slider-indicator-index{
     background: rgba(92,180,118,0.75);
     width: 30px;
     height: 10px;
     display: inline-block;
 }
-div#slider-indicator div.slider-indicator-index.active{
+#slider-indicator .slider-indicator-index.active{
     background: rgba(255,255,255,0.95);
 }
 @keyframes showImage{
@@ -416,7 +459,7 @@ div#slider-indicator div.slider-indicator-index.active{
             left: 50%;
     }
 }
-div#menu{
+#megamenu{
     background-color: #fff;
     box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.3);
     position: absolute;
@@ -427,7 +470,7 @@ div#menu{
     line-height: initial;
     min-width: 150px;
 }
-div#menu::after{
+#megamenu::after{
     display: inline-block;
     content: '';
     position: absolute;
@@ -437,14 +480,14 @@ div#menu::after{
     border-style: solid;
     border-color: transparent transparent #fff transparent;
 }
-div#menu-wrapper:hover div#menu{
+#megamenu-wrapper:hover #megamenu{
     display: block;
 }
-div#menu a{
+#megamenu a{
     text-decoration: none;
     font-family: segoe ui;
 }
-div#menu div.menu.l1 > a{
+#megamenu .menu.l1 > a{
     display: block;
     white-space: nowrap;
     padding: 7px 20px;
@@ -453,14 +496,14 @@ div#menu div.menu.l1 > a{
     min-width: 160px;
     color: #000;
 }
-div#menu div.menu.l2{
+#megamenu .menu.l2{
     display: none;
     background-color: #fff;
     min-height: 100%;
     width: 40em;
     box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);
 }
-div#menu div.menu.l2 > a{
+#megamenu .menu.l2 > a{
     display: block;
     padding: 7px 20px;
     font-size: 10pt;
@@ -473,19 +516,19 @@ div#menu div.menu.l2 > a{
     float: left;
     cursor: pointer;
 }
-div#menu div.menu.l2 > a:hover{
+#megamenu .menu.l2 > a:hover{
     background-color: #26ad05;
     color: #fff;
 }
-div#menu div.menu.l1:hover > a{
+#megamenu .menu.l1:hover > a{
     background-color: #26ad05;
     color: #fff;
 }
-div#menu div.menu.l1:hover div.menu.l2{
+#megamenu .menu.l1:hover .menu.l2{
     position: absolute;
     left: 100%;
     top: 0px;
 }
-div#menu div.menu.l1:hover div.menu.l2{
+#megamenu .menu.l1:hover .menu.l2{
     display: block;
 }

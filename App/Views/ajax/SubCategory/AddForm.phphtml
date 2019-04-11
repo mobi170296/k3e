@@ -1,13 +1,13 @@
 <div>
-    <form name="subcategory" action="/Ajax/SubCategory/Add" onsubmit="return false;">
+    <form name="subcategory" action="/api/subcategory/add" onsubmit="return false;">
         <table>
             <tr>
                 <td>Chọn danh mục chính</td>
                 <td>
                     <?php
                         echo '<select name="maincategory_id">';
-                        foreach($this->ViewData['maincategorylist'] as $maincategory){
-                            echo '<option value="' . $maincategory->id . '">'.$maincategory->name.'</option>';
+                        foreach($this->Data->maincategories as $maincategory){
+                            echo '<option value="' . $maincategory->id . '" ' . ($maincategory->id===$this->Data->maincategory_id ? "selected" : "") . '>'.$maincategory->name.'</option>';
                         }
                         echo '</select>';
                     ?>
@@ -30,7 +30,7 @@
             </tr>
             <tr>
                 <td></td>
-                <td><button class="btn btn-allow" name="add" value="">Thêm danh mục phụ</button></td>
+                <td><button class="btn btn-save btn-save-i">Thêm danh mục phụ</button></td>
             </tr>
         </table>
     </form>

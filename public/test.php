@@ -1,14 +1,9 @@
-<?php
-function getBoolean(){
-    try{
-        return true;
-    } catch (Exception $ex) {
+<form action="">
+    <input type="" name="password[][]">
+    <input type="" name="password[][]">
+    <button>OK</button>
+</form>
 
-    } finally {
-        echo 'finally statement';
-    }
-}
 
-var_dump(getBoolean());
-    
-?>
+<?php 
+print_r($_GET);

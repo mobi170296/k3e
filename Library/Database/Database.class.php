@@ -237,6 +237,11 @@
             return $this->connection->real_escape_string($s);
         }
         
+        public function  unescape($s){
+            return stripslashes($s);
+        }
+
+
         public function close(){
             @$this->connection->close();
         }

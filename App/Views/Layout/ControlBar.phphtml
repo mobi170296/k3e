@@ -7,15 +7,15 @@
                 <a href="/">
                     <span>Kakaka</span>
                 </a>
-                <div id="menu-wrapper">
-                    <div id="menu">
+                <div id="megamenu-wrapper">
+                    <div id="megamenu">
                         <?php
                             foreach($this->Data->maincategorylist as $maincategory){
                                 echo '<div class="menu l1">';
-                                echo '<a href="'.$maincategory->getLink().'">' . $maincategory->getName(). '</a>';
+                                echo '<a href="'.$maincategory->link.'">' . $maincategory->name . '</a>';
                                 echo '<div class="menu l2">';
-                                foreach($maincategory->getSubcategories() as $subcategory){
-                                    echo '<a>' . $subcategory->getName() . '</a>';
+                                foreach($maincategory->subcategories as $subcategory){
+                                    echo '<a href="'. $subcategory->link .'">' . $subcategory->name . '</a>';
                                 }
                                 echo '</div>';
                                 echo '</div>';
@@ -33,16 +33,14 @@
             <?php
                 if($this->Data->user){
                     echo '<div id="account-control">';
-                    echo "<div id=\"account-name\">{$this->Data->user->getLastName()} {$this->Data->user->getFirstName()}</div>";
+                    echo "<div id=\"account-name\">{$this->Data->user->lastname} {$this->Data->user->firstname}</div>";
                     echo '<div id="account-options">';
-                    echo '<a href="/User/Info">Thông tin tài khoản</a>';
+                    echo '<a href="/User/Index">Thông tin tài khoản</a>';
                     if($this->Data->user->haveRole(UserModel::ADMIN_ROLE)){
                         echo '<a href="/Admin/Index">Quản trị hệ thống</a>';
                     }
-                    echo '<a href="/User/Shop">Cửa hàng</a>';
+                    echo '<a href="/Shop/Index">Cửa hàng</a>';
                     echo '<a href="/User/Orders">Đơn hàng</a>';
-                    echo '<a>Địa chỉ vận chuyển</a>';
-                    echo '<a>Bài đánh giá</a>';
                     echo '<a href="/User/Logout">Đăng xuất</a>';
                     echo'</div>';
                     echo '</div>';

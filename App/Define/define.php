@@ -5,7 +5,7 @@
     define('DB_TABLE_DELIVERYADDRESS', 'deliveryaddress');
     define('DB_TABLE_DISTRICT', 'district');
     define('DB_TABLE_MAINCATEGORY', 'maincategory');
-    define('DB_TABLE_ORDER', 'order');
+    define('DB_TABLE_ORDER', '`order`');
     define('DB_TABLE_ORDERIMAGE', 'orderimage');
     define('DB_TABLE_ORDERITEM', 'orderitem');
     define('DB_TABLE_PAYMETHOD', 'paymethod');

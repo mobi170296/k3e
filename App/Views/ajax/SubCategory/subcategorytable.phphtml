@@ -1,20 +1,39 @@
-echo '<table class="data-table subcategory">';
-                    echo '<tr>';
-                    echo '<th>ID</th>';
-                    echo '<th>Tên danh mục phụ</th>';
-                    echo '<th>Tên danh mục chính</th>';
-                    echo '<th>Liên kết</th>';
-                    echo '<th>Thao tác</th>';
-                    echo '</tr>';
-                    
-                    foreach($this->ViewData['subcategorylist'] as $subcategory){
-                        echo '<tr>';
-                        echo "<td>{$subcategory->getId()}</td>";
-                        echo "<td>{$subcategory->name}</td>";
-                        echo "<td>{$subcategory->maincategory->name}</td>";
-                        echo "<td>{$subcategory->link}</td>";
-                        echo '<td><button class="btn btn-edit-i btn-success">Sửa</button> <button class="btn btn-del-i btn-error">Xóa</button></td>';
-                        echo '</tr>';
-                    }
-                    
-                    echo '</table>';
+<div class="u-my-5">
+    <button class="btn btn-add btn-add-i" data-action="add" data-field-id="<?php echo $this->Data->maincategory_id ; ?>">Thêm danh mục phụ</button>
+</div>
+
+
+<?php
+    if(count($this->Data->subcategories)){
+?>
+<table class="data-table subcategory">
+    <tr>
+        <th>ID</th>
+        <th>Thứ tự</th>
+        <th>Tên danh mục phụ</th>
+        <th>Liên kết</th>
+        <th>Thao tác</th>
+    </tr>
+    <?php
+        foreach($this->Data->subcategories as $subcategory){
+            echo <<<ROW
+            <tr>
+                <td>{$subcategory->id}</td>
+                <td>{$subcategory->norder}</td>
+                <td>{$subcategory->name}</td>
+                <td>{$subcategory->link}</td>
+                <td>
+                    <button class="btn btn-edit btn-edit-i" data-action="edit" data-field-id="{$subcategory->id}">Sửa</button>
+                </td>
+            </tr>
+ROW;
+        }
+    ?>
+</table>
+
+<?php
+    }else{
+?>
+<div>Danh mục hiện tại rỗng</div>
+<?php
+    }

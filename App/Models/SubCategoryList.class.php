@@ -21,7 +21,7 @@
         
         public function getWhere($where){
             $this->list = [];
-            $rows = $this->database->select('*')->from(DB_TABLE_SUBCATEGORY)->where($where)->execute();
+            $rows = $this->database->select('*')->from(DB_TABLE_SUBCATEGORY)->where($where)->orderby('norder')->execute();
             foreach($rows as $row){
                 $subcategory = new SubCategoryModel($this->database);
                 $subcategory->id = $row->id;

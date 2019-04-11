@@ -9,7 +9,7 @@
         public $id, $name, $link, $norder, $maincategory_id, $maincategory;
         #danh mục phụ bao gồm nhiều sản phẩm
         #sản phẩm thuộc vào một danh mục phụ
-        public $product;
+        public $products;
         
         public function getId() {
             return $this->id;

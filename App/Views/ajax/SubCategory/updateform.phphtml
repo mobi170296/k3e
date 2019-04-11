@@ -1,13 +1,13 @@
 <div>
-    <form action="/Ajax/SubCategory/Edit/<?php echo $this->ViewData['subcategory']->id; ?>" onsubmit="return false;">
+    <form action="/api/subcategory/update" onsubmit="return false;">
         <table>
             <tr>
                 <td>Chọn danh mục chính</td>
                 <td>
                     <?php
                         echo '<select name="maincategory_id">';
-                        foreach($this->ViewData['maincategorylist'] as $maincategory){
-                            echo '<option value="' . $maincategory->id . '" '.($this->ViewData['subcategory']->maincategory->id===$maincategory->id?'selected':'').'>'.$maincategory->name.'</option>';
+                        foreach($this->Data->maincategories as $maincategory){
+                            echo '<option value="' . $maincategory->id . '" '.($this->Data->subcategory->maincategory_id===$maincategory->id?'selected':'').'>'.$maincategory->name.'</option>';
                         }
                         echo '</select>';
                     ?>
@@ -17,18 +17,20 @@
             <tr>
                 <td>Tên danh mục phụ</td>
                 <td>
-                    <input type="text" size="60" name="name" placeholder="Tên danh mục phụ" value="<?php echo $this->ViewData['subcategory']->name; ?>"/>
+                    <input type="text" size="60" name="name" placeholder="Tên danh mục phụ" value="<?php echo $this->Data->subcategory->name; ?>"/>
+                    <p class="invalid-data"></p>
                 </td>
             </tr>
             <tr>
                 <td>Liên kết danh mục</td>
                 <td>
-                    <input type="text" size="60" name="link" placeholder="Liên kết" value="<?php echo $this->ViewData['subcategory']->link; ?>"/>
+                    <input type="text" size="60" name="link" placeholder="Liên kết" value="<?php echo $this->Data->subcategory->link; ?>"/>
+                    <p class="invalid-data"></p>
                 </td>
             </tr>
             <tr>
-                <td></td>
-                <td><button class="btn btn-allow" name="add" value="">Thêm danh mục phụ</button></td>
+                <td><input type="hidden" name="id" value="<?php echo $this->Data->subcategory->id; ?>"/></td>
+                <td><button class="btn btn-save btn-save-i" name="add" value="">Lưu lại</button></td>
             </tr>
         </table>
     </form>

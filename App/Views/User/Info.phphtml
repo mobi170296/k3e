@@ -1,97 +1,137 @@
 <?php
-    $this->TemplateData['title'] = 'Thông tin tài khoản';
+    use App\Models\UserModel;
+    $this->Data->Title = 'Thông tin tài khoản';
 ?>
+<div id="user-wrapper" class="clearfix u-my-5">
+    <div class="left-panel">
+        <div class="menu">
+            <div class="menu-item active"><a href="/User/Info">Thông tin tài khoản</a></div>
+            <div class="menu-item"><a href="/User/ChangePassword">Đổi mật khẩu</a></div>
+            <div class="menu-item"><a href="/User/DeliveryAddresses">Địa chỉ giao hàng</a></div>
+            <div class="menu-item"><a href="/User/Orders">Quản lý đơn hàng</a></div>
+            <div class="menu-item"><a href="/User/ViewHistory">Sản phẩm đã xem</a></div>
+            <div class="menu-item"><a href="/User/Assessment">Đánh giá sản phẩm</a></div>
+        </div>
+    </div>
+    <div class="right-panel">
+        <div class="user-profile">
+            <div class="user-profile-card">
+                <div class="header">Thông tin tài khoản</div>
+                <div class="content">
+                    <?php
+                        if(isset($this->Data->ErrorMessage)){
+                            echo '<div class="message-box error">' . $this->Data->ErrorMessage . '</div>';
+                        }
+                        if(isset($this->Data->SuccessMessage)){
+                            echo '<div class="message-box success">'. $this->Data->SuccessMessage. '</div>';
+                        }
+                        if(isset($this->Data->ErrorsMap)){
+                            echo '<div class="message-box error">';
+                            foreach($this->Data->ErrorsMap as $error){
+                                echo '<div>' . $error . '</div>';
+                            }
+                            echo '</div>';
+                        }
+                    ?>
+                    <form action="" method="post">
+                        <table>
+                            <tr>
+                                <td>Tên tài khoản</td>
+                                <td><input type="text" name="username" size="30" value="<?php echo $this->Data->user->username; ?>" disabled="disabled"/></td>
+                            </tr>
+
+                            <tr>
+                                <td>Số điện thoại</td>
+                                <td><input type="text" name="phone" size="30" value="<?php echo $this->Data->user->phone; ?>" disabled="disabled"/></td>
+                            </tr>
+
+                            <tr>
+                                <td>Email</td>
+                                <td><input type="text" name="email" size="30" value="<?php echo $this->Data->user->email; ?>" disabled="disabled"/></td>
+                            </tr>
+                            <tr>
+                                <td>Họ và tên đệm</td>
+                                <td><input type="text" name="lastname" size="30" value="<?php echo empty($this->Data->update) ?$this->Data->user->lastname : $this->Data->input->lastname; ?>"/></td>
+                            </tr>
+
+                            <tr>
+                                <td>Tên</td>
+                                <td><input type="text" name="firstname" size="30" value="<?php echo empty($this->Data->update) ?$this->Data->user->firstname : $this->Data->input->firstname; ?>"/></td>
+                            </tr>
 
 
-<div id="main-body">
-    <div class="tfw">
-        <div class="tf">
-            <div class="tf-header">Thông tin tài khoản</div>
-            <div class="tf-content">
-                <?php
-                    if(isset($this->ViewData['error'])){
-                        echo '<div class="message-box error">' . $this->ViewData['error'] . '</div>';
-                    }
-                    if(isset($this->ViewData['success'])){
-                        echo '<div class="message-box success">'. $this->ViewData['success']. '</div>';
-                    }
-                ?>
-                <form action="" method="post">
-                    <table>
-                        <tr>
-                            <td>Tên tài khoản</td>
-                            <td><input type="text" name="username" size="30" value="<?php echo $this->ViewData['user']->username; ?>" disabled="disabled"/></td>
-                        </tr>
-                        
-                        <tr>
-                            <td>Họ và tên đệm</td>
-                            <td><input type="text" name="lastname" size="30" value="<?php echo $this->ViewData['action'] == null ?$this->ViewData['user']->lastname:$this->ViewData['input']->lastname; ?>"/></td>
-                        </tr>
-                        
-                        <tr>
-                            <td>Tên</td>
-                            <td><input type="text" name="firstname" size="30" value="<?php echo $this->ViewData['action'] == null ?$this->ViewData['user']->firstname:$this->ViewData['input']->firstname; ?>"/></td>
-                        </tr>
-                        
-                        <tr>
-                            <td>Số điện thoại</td>
-                            <td><input type="text" name="phone" size="30" value="<?php echo $this->ViewData['user']->phone; ?>" disabled="disabled"/></td>
-                        </tr>
-                        
-                        <tr>
-                            <td>Email</td>
-                            <td><input type="text" name="email" size="30" value="<?php echo $this->ViewData['user']->email; ?>" disabled="disabled"/></td>
-                        </tr>
-                        
-                        <tr>
-                            <td>Địa chỉ</td>
-                            <td><input type="text" name="address" size="30" value="<?php echo $this->ViewData['action'] == null ?$this->ViewData['user']->address:$this->ViewData['input']->address; ?>"/></td>
-                        </tr>
-                        
-                        <tr>
-                            <td>Ngày tháng năm sinh</td>
-                            <td>
-                                <select name="year">
-                                    <option value="0">Năm</option>
-                                    <?php
-                                        for($i=date("Y"); $i>=1900; $i--){
-                                            echo '<option value="' . $i . '" '.($this->ViewData['user']->birthday->year==$i?'selected="selected"':'').'>' . $i . '</option>';
-                                        }
-                                    ?>
-                                </select>
-                                <select name="month">
-                                    <option value="0">Tháng</option>
-                                    <?php
-                                        for($i=1; $i<=12; $i++){
-                                            echo "<option value=\"$i\" ".($this->ViewData['user']->birthday->month==$i?'selected="selected"':'').">$i</option>";
-                                        }
-                                    ?>
-                                </select>
-                                <select name="day">
-                                    <option value="0">Ngày</option>
-                                    <?php
-                                        for($i=1; $i<=31; $i++){
-                                            echo "<option value=\"$i\" ".($this->ViewData['user']->birthday->day==$i?'selected="selected"':'').">$i</option>";
-                                        }
-                                    ?>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Giới tính</td>
-                            <td><label><input type="radio" name="gender" value="1" <?php echo $this->ViewData['user']->gender==1?'checked="checked"':''; ?>/> Nam</label> <label><input type="radio" name="gender" value="0" <?php echo $this->ViewData['user']->gender==1?'':'checked="checked"';?>/> Nữ</label></td>
-                        </tr>
-                        <tr>
-                            <td>Số dư tài khoản</td>
-                            <td><?php echo $this->ViewData['user']->money .'đ'; ?></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td><input class="btn-active" type="submit" name="action" value="Cập nhật thông tin"/></td>
-                        </tr>
-                    </table>
-                </form>
+                            <tr>
+                                <td>Địa chỉ</td>
+                                <td><input type="text" name="address" size="30" value="<?php echo empty($this->Data->update) ?$this->Data->user->address : $this->Data->input->address; ?>"/></td>
+                            </tr>
+                            
+                            <tr>
+                                <td>Ngày tháng năm sinh</td>
+                                <td>
+                                    <select name="year">
+                                        <option value="0">Năm</option>
+                                        <?php
+                                            for($i=date("Y"); $i>=1900; $i--){
+                                                echo '<option value="' . $i . '" '.($this->Data->user->birthday->year==$i?'selected="selected"':'').'>' . $i . '</option>';
+                                            }
+                                        ?>
+                                    </select>
+                                    <select name="month">
+                                        <option value="0">Tháng</option>
+                                        <?php
+                                            for($i=1; $i<=12; $i++){
+                                                echo "<option value=\"$i\" ".($this->Data->user->birthday->month==$i?'selected="selected"':'').">$i</option>";
+                                            }
+                                        ?>
+                                    </select>
+                                    <select name="day">
+                                        <option value="0">Ngày</option>
+                                        <?php
+                                            for($i=1; $i<=31; $i++){
+                                                echo "<option value=\"$i\" ".($this->Data->user->birthday->day==$i?'selected="selected"':'').">$i</option>";
+                                            }
+                                        ?>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Giới tính</td>
+                                <td><label><input type="radio" name="gender" value="<?php echo UserModel::MALE; ?>" <?php echo $this->Data->user->gender == UserModel::MALE ? 'checked="checked"':''; ?>/> Nam</label> <label><input type="radio" name="gender" value="<?php echo UserModel::FEMALE; ?>" <?php echo $this->Data->user->gender == UserModel::FEMALE?'checked="checked"':'';?>/> Nữ</label></td>
+                            </tr>
+                            <tr>
+                                <td>Số dư tài khoản</td>
+                                <td><?php echo $this->Data->user->money .'đ'; ?></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td><button type="submit" class="btn btn-save btn-save-i" name="update" value="update">Lưu thông tin</button></td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    (function(){
+        var sp = $('[data-field-id="province_id"]');
+        var sd = $('[data-field-id="district_id"]');
+        sp.on('change', function(e){
+            var aa = $(this).data('source');
+            $.ajax().create().url(aa).success(function(e){
+                sd.html('');
+                var r=JSON.parse(this.response);
+                for(var i in r.body.data){
+                    var o = $.create('option');
+                    o.value = r.body.data[i].id;
+                    o.innerHTML = r.body.data[i].name;
+                    sd.addEnd(o);
+                }
+            }).error(function(e){
+                $Toast.makeError('Lỗi kết nối', 1e4);
+            }).post('province_id=' + this.selectedOptions[0].value);
+        });
+    })();
+</script>

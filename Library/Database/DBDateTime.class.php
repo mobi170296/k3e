@@ -49,9 +49,9 @@
         
         public static function parse($s){
             if(preg_match('/^(?<year>\d{4})-(?<month>\d{1,2})-(?<day>\d{1,2}) (?<hour>\d{1,2}):(?<minute>\d{1,2}):(?<second>\d{1,2})$/', $s, $match)){
-                return new DBDateTime($match['year'], $match['month'], $match['day'], $match['hour'], $match['minute'], $match['second']);
+                return new DBDateTime($match['day'], $match['month'], $match['year'], $match['hour'], $match['minute'], $match['second']);
             }elseif(preg_match('/^(?<year>\d{4})-(?<month>\d{1,2})-(?<day>\d{1,2})$/', $s, $match)){
-                return new DBDateTime($match['year'], $match['month'], $match['day']);
+                return new DBDateTime($match['day'], $match['month'], $match['year']);
             }else{
                 return null;
             }

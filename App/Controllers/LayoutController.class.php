@@ -33,6 +33,9 @@
                 return $this->View->RenderContent('Cannot load ControlBar of layout ' . $e->getMessage());
             }
             $this->View->Data->maincategorylist = (new MainCategoryList($database))->getAll();
+            foreach($this->View->Data->maincategorylist as $maincategory){
+                $maincategory->loadSubCategories();
+            }
             return $this->View->RenderPartial();
         }
     }

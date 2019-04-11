@@ -100,7 +100,7 @@
                         </tr>
                         <tr>
                             <td></td>
-                            <td><input class="btn-active" type="submit" name="register" value="Đăng ký"/></td>
+                            <td><button class="btn btn-add" type="submit" name="register" value="Đăng ký">Đăng ký</button></td>
                         </tr>
                     </table>
                 </form>

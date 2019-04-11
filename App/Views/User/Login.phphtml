@@ -38,7 +38,7 @@
                             <input type="password" name="password" placeholder="Mật khẩu" value="" size="30"/>
                         </div>
                     </div>
-                    <input class="btn-active" type="submit" name="login" value="Đăng nhập"/>
+                    <button class="btn btn-login" type="submit" name="login" value="Đăng nhập">Đăng nhập</button>
                 </form>
             </div>
         </div>

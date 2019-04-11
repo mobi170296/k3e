@@ -16,3 +16,4 @@
     require_once k3_ROOT . DS . 'Core' . DS . 'autoload.php';
     
     #require file này ở PHP CLI
+    

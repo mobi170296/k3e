@@ -1,0 +1,123 @@
+<?php
+    $this->Data->Title = 'Thêm địa chỉ giao hàng';
+?>
+<div id="user-wrapper" class="clearfix u-my-5">
+    <div class="left-panel">
+        <div class="menu">
+            <div class="menu-item"><a href="/User/Info">Thông tin tài khoản</a></div>
+            <div class="menu-item"><a href="/User/ChangePassword">Đổi mật khẩu</a></div>
+            <div class="menu-item active"><a href="/User/DeliveryAddresses">Địa chỉ giao hàng</a></div>
+            <div class="menu-item"><a href="/User/Orders">Quản lý đơn hàng</a></div>
+            <div class="menu-item"><a href="/User/ViewHistory">Sản phẩm đã xem</a></div>
+            <div class="menu-item"><a href="/User/Assessment">Đánh giá sản phẩm</a></div>
+        </div>
+    </div>
+    <div class="right-panel">
+        <div class="user-profile">
+            <div class="user-profile-card">
+                <div class="header">Thêm địa chỉ giao hàng mới</div>
+                <div class="content">
+                    <?php
+                        if(isset($this->Data->ErrorMessage)){
+                            echo '<div class="message-box error">' . $this->Data->ErrorMessage . '</div>';
+                        }
+                        if(isset($this->Data->SuccessMessage)){
+                            echo '<div class="message-box success">'. $this->Data->SuccessMessage. '</div>';
+                        }
+                        if(isset($this->Data->ErrorsMap)){
+                            echo '<div class="message-box error">';
+                            foreach($this->Data->ErrorsMap as $error){
+                                echo '<div>' . $error . '</div>';
+                            }
+                            echo '</div>';
+                        }
+                    ?>
+                    <form action="" method="post" autocomplete="off">
+                        <table>
+                            <tr>
+                                <td>Họ</td>
+                                <td><input type="text" name="lastname" size="40" value="<?php echo (isset($this->Data->input) ? $this->Data->input->lastname : "") ?>"/></td>
+                            </tr>
+                            <tr>
+                                <td>Tên</td>
+                                <td><input type="text" name="firstname" size="40" value="<?php echo (isset($this->Data->input) ? $this->Data->input->firstname : "") ?>"/></td>
+                            </tr>
+                            <tr>
+                                <td>Số điện thoại</td>
+                                <td><input type="text" name="phone" size="40" value="<?php echo (isset($this->Data->input) ? $this->Data->input->phone : "") ?>"/></td>
+                            </tr>
+                            <tr>
+                                <td>Địa chỉ</td>
+                                <td><input type="text" name="address" size="60" value="<?php echo (isset($this->Data->input) ? $this->Data->input->address : "") ?>"/></td>
+                            </tr>
+                            <tr>
+                                <td>Tỉnh thành</td>
+                                <td>
+                                    <select name="province_id" data-field-id="province_id" data-source="/api/address/getdistrictfromprovince">
+                                        <?php
+                                        foreach($this->Data->provincelist as $province){
+                                            echo '<option value="'.$province->id.'" '.(isset($this->Data->province_id) && $province->id == $this->Data->province_id ? "selected" : "").'>' . $province->name . '</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Quận huyện</td>
+                                <td>
+                                    <select name="district_id" data-field-id="district_id">
+                                        <?php
+                                        foreach($this->Data->districtlist as $district){
+                                            echo '<option value="'.$district->id.'" '.(isset($this->Data->district_id) && $this->Data->district_id == $district->id ? "selected" : "").'>' . $district->name .'</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <?php
+                                        if($this->Data->total==0){
+                                            echo '<span style="color: #090">Địa chỉ này sẽ là địa chỉ mặc định khi thêm</span>';
+                                        }else{
+                                            echo '<label><input type="checkbox" name="def" value="1"/> Đặt làm địa chỉ mặc định</label>';
+                                        }
+                                    ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <button type="submit" name="add" value="add" class="btn btn-add btn-add-i">Thêm địa chỉ</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function(){
+        var sp = $('[data-field-id="province_id"]');
+        var sd = $('[data-field-id="district_id"]');
+        sp.on('change', function(e){
+            var aa = $(this).data('source');
+            $.ajax().create().url(aa).success(function(e){
+                sd.html('');
+                var r=JSON.parse(this.response);
+                for(var i in r.body.data){
+                    var o = $.create('option');
+                    o.value = r.body.data[i].id;
+                    o.innerHTML = r.body.data[i].name;
+                    sd.addEnd(o);
+                }
+            }).error(function(e){
+                $Toast.makeError('Lỗi kết nối', 1e4);
+            }).post('province_id=' + this.selectedOptions[0].value);
+        });
+    })();
+</script>

@@ -2,29 +2,6 @@
     $this->Data->Title = 'Quản lý danh mục phụ ngành hàng';
 ?>
 
-<script>
-    function checkSubCategoryData(f){
-        var err=0;
-        var n=f.name;
-        var l=f.link;
-        var nv=$(n).val();
-        var lv=$(l).val();
-        if(nv.length>200 || nv.length==0){
-            $(n).next().text('Độ dài tên danh mục không hợp lệ');
-            err|=1;
-        }else{
-            $(n).next().text('');
-        }
-        if(lv.length>1024){
-            $(l).next().text('Độ dài liên kết không hợp lệ');
-            err|=1;
-        }else{
-            $(l).next().text('');
-        }
-        return err===0;
-    }
-</script>
-
 <div id="admin-wrapper" class="clearfix">
     <div class="left-menu">
         <div>
@@ -36,20 +13,16 @@
     </div>
     <div class="right-content">
         <div>
-            <button class="btn btn-add btn-add-i">Thêm danh mục phụ</button>
-        </div>
-        <div class="u-pt-5">
             <?php
                 if(count($this->Data->maincategorylist)){
                     echo '<select data-role="toggle-subcategory">';
                         echo '<option>Chọn danh mục chính để chỉnh sửa danh mục phụ</option>';
                         foreach($this->Data->maincategorylist as $maincategory){
-                            echo "<option value=\"{$maincategory->id}\">{$maincategory->name}</option>";
+                            echo "<option data-mid=\"{$maincategory->id}\">{$maincategory->name}</option>";
                         }
                     echo '</select>';
                     echo <<<DATAPRESENTATION
-                    <div data-role="table-presentation" data-table="subcategory">
-                    </div>
+                    <div data-role="table-presentation" data-table="subcategory"></div>
 DATAPRESENTATION;
                 }else{
                     echo 'Danh sách danh mục phụ sản phẩm hiện tại rỗng';
@@ -60,6 +33,104 @@ DATAPRESENTATION;
 </div>
 <script>
     (function(){
-        
+        function checkSubCategory(f){
+            var err=0;
+            var n=f.name;
+            var l=f.link;
+            var nv=$(n).val();
+            var lv=$(l).val();
+            if(nv.length>200 || nv.length===0){
+                $(n).next().text('Tên danh mục không được rỗng và chỉ có nhiều nhất 200 ký tự');
+                err|=1;
+            }else{
+                $(n).next().text('');
+            }
+            if(lv.length>1024){
+                $(l).next().text('Độ dài liên kết không hợp lệ');
+                err|=1;
+            }else{
+                $(l).next().text('');
+            }
+            return err===0;
+        }
+        var ss = $('select[data-role="toggle-subcategory"]');
+        var presentation = $('div[data-role="table-presentation"]');
+        var flashevent = function(mid){
+            presentation.$('[data-action="add"]').on('click', function(e){
+                $Modal.waiting().show();
+                $.ajax().create().url('/ajax/subcategory/addform').success(function(e){
+                    $Modal.html(this.response).show();
+                    $($Modal.modalwrapper).$('form').on('submit', function(e){
+                        if(checkSubCategory(this)){
+                            $Modal.waiting();
+                            $.ajax().create().success(function(e){
+                                var result = JSON.parse(this.response);
+                                if(result.header.code){
+                                    var msg = '';
+                                    for(var m in result.header.errors){
+                                        msg += m;
+                                    }
+                                    $Toast.makeError(msg);
+                                }else{
+                                    $Toast.makeSuccess(result.header.message);
+                                }
+                                $Modal.hide();
+                                loadtable(mid);
+                            }).error(function(e){
+                                $Toast.makeError('Lỗi kết nối');
+                            }).postForm(this);
+                        }
+                    });
+                }).error(function(e){
+                    $Toast.makeError('Tải giao diện thất bại!', 10e3);
+                }).post('maincategory_id=' + $(this).data('field-id'));
+            });
+            presentation.$('[data-action="edit"]').on('click', function(e){
+                $Modal.waiting().show();
+                $.ajax().create().url('/ajax/subcategory/updateform').success(function(e){
+                    $Modal.html(this.response).show();
+                    $($Modal.modalwrapper).$('form').on('submit', function(e){
+                        if(checkSubCategory(this)){
+                            $Modal.waiting().show();
+                            $.ajax().create().success(function(e){
+                                var result = JSON.parse(this.response);
+                                if(result.header.code){
+                                    var msg = '';
+                                    for(var m in result.header.errors){
+                                        msg += m;
+                                    }
+                                    $Toast.makeError(msg);
+                                }else{
+                                    $Toast.makeSuccess(result.header.message);
+                                }
+                                $Modal.hide();
+                                loadtable(mid);
+                            }).error(function(e){
+                                $Toast.makeError('Lỗi kết nối');
+                            }).postForm(this);
+                        }
+                    });
+                }).error(function(e){
+                    $Toast.makeError('Tải giao diện thất bại!', 10e3);
+                }).post('id='+$(this).data('field-id'));
+            });
+        }
+        var loadtable = function(mid){
+            presentation.html('<div class="loading-i-wrapper"><div class="loading-i"></div></div>');
+            $.ajax().create().url('/ajax/subcategory/subcategorytable').success(function(e){
+                presentation.html(this.response);
+                flashevent(mid);
+            }).error(function(e){
+                $Toast.makeError('Tải giao diện thất bại', 10000);
+                presentation.html('');
+            }).post('maincategory_id='+mid);
+        }
+        ss.on('change', function(e){
+            var so = this.selectedOptions[0];
+            var mid = $(so).data('mid');
+            if(mid!==undefined){
+                loadtable(mid);
+            }
+        });
     })();
 </script>

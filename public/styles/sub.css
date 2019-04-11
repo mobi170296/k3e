@@ -1,4 +1,36 @@
-div#scart-wrapper{
+.daddress-item{
+    margin: 20px 0px;
+    padding: 20px;
+    border: 1px solid #eee;
+}
+
+.daddress-item:hover{
+    background-color: #eee;
+}
+
+.daddress-item .dname{
+    font-size: 1.2em;
+    font-weight: bold;
+}
+.daddress-item .ddef{
+    color: #60a5ed;
+}
+.daddress-item .dphone{
+    letter-spacing: 1px;
+}
+.daddress-item .daddress{
+    padding: 20px 0px 0px 0px;
+}
+.progress-total{
+    height: 20px;
+    background-color: #eee;
+}
+.progress-current{
+    height: 100%;
+    background-color: #06a24f;
+}
+
+#scart-wrapper{
     display: inline-block;
     width: 32px;
     height: 32px;
@@ -15,7 +47,7 @@ span#scart-icon{
 }
 
 
-div#modal-wrapper{
+#modal-wrapper{
     display: block;
     width: 100vw;
     height: 100vh;
@@ -27,7 +59,7 @@ div#modal-wrapper{
     z-index: 3;
     overflow: auto;
 }
-div#modal-wrapper div.modal{
+#modal-wrapper .modal{
     display: inline-block;
     margin: 30px 0px;
     text-align: initial;
@@ -38,7 +70,7 @@ div#modal-wrapper div.modal{
     min-width: 540px;
     overflow: hidden;
 }
-div#modal-wrapper div.modal-header-button{
+#modal-wrapper .modal-header-button{
     display: inline-block;
     float: right;
     font-weight: bold;
@@ -46,18 +78,18 @@ div#modal-wrapper div.modal-header-button{
     font-family: segoe ui;
     cursor: pointer;
 }
-div#modal-wrapper div.modal-header{
+#modal-wrapper .modal-header{
     box-sizing: border-box;
     padding: 10px 20px;
 }
-div#modal-wrapper div.modal-header-title{
+#modal-wrapper .modal-header-title{
     float: left;
     max-width: 20em;
     font-family: arial;
     font-size: 12pt;
     font-weight: bold;
 }
-div#modal-wrapper div.modal-body{
+#modal-wrapper .modal-body{
     padding: 20px;
 }
 table.data-table{
@@ -96,10 +128,10 @@ table.data-table.maincategory td:nth-child(3){
         transform: rotate(360deg);
     }
 }
-div.loading-i-wrapper{
+.loading-i-wrapper{
     text-align: center;
 }
-div.loading-i{
+.loading-i{
     width: 10px;
     height: 10px;
     border-width: 3px;

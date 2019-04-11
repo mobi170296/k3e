@@ -8,10 +8,13 @@
     use App\Models\Authenticate;
     use App\Exception\AuthenticateException;
     use Library\Database\DBDateTime;
+    use App\Models\ProvinceList;
+    use App\Models\DeliveryAddressModel;
+    use App\Models\DistrictList;
     
     class UserController extends Controller{
         public function Index(){
-            return $this->View->RenderTemplate();
+            return $this->redirectToAction('Info', 'User');
         }
         
         public function Register($register, $day, $month, $year, UserModel $input){
@@ -103,24 +106,216 @@
                 return $this->View->RenderTemplate("_error");
             }
         }
-        public function Info($action, UserModel $user){
-            return $this->View->RenderTemplate();
+        public function Info($update, $day, $month, $year, UserModel $input){
+            if($update!== null && !$this->isPOST()){
+                return $this->redirectToAction('Index', 'Home');
+            }
+            try{
+                $database = new Database();
+                $authenticate = new Authenticate($database);
+                $user = $authenticate->getUser();
+                $this->View->Data->user = $user;
+                if($update!==null){
+                    $input->birthday = new DBDateTime($day, $month, $year);
+                    $input->setDatabase($database);
+                    $input->checkValidForAddress()->checkValidForBirthday()->checkValidForFirstName()->checkValidForLastName()->checkValidForGender();
+                    if($input->isValid()){
+                        $input->standardization();
+                        $user->update($input);
+                        $this->View->Data->SuccessMessage = 'Bạn đã cập nhật thông tin thành công';
+                        $this->View->RenderTemplate();
+                    }else{
+                        throw new InputException($input->getErrorsMap());
+                    }
+                }
+                return $this->View->RenderTemplate();
+            } catch (DBException $ex) {
+                $this->View->Data->ErrorMessage = $ex->getMessage();
+                return $this->View->RenderTemplate('_error');
+            } catch(AuthenticateException $e){
+                return $this->redirectToAction('Login', 'User');
+            } catch(InputException $e){
+                $this->View->Data->ErrorsMap = $e->getErrorsMap();
+                return $this->View->RenderTemplate();
+            }
         }
         public function Logout(){
             unset($_SESSION['username']);
             unset($_SESSION['password']);
             $this->redirectToAction('Index', 'Home');
         }
-        public function Shop(){
-            
-        }
         public function ChangePassword(){
-            
+            try{
+                $database = new Database();
+                new Authenticate($database);
+                return $this->View->RenderTemplate();
+            } catch (DBException $ex) {
+                $this->View->Data->ErrorMessage = $ex->getMessage();
+                return $this->View->RenderTemplate('_error');
+            } catch (AuthenticateException $e){
+                return $this->redirectToAction('Index', 'Home');
+            }
         }
         public function Orders(){
             
         }
         public function DeliveryAddresses(){
-            
+            try{
+                $database = new Database;
+                $user = (new Authenticate($database))->getUser();
+                $user->loadDeliveryAddresses();
+                $this->View->Data->deliveryaddresses = $user->deliveryaddresses;
+                
+                return $this->View->RenderTemplate();
+            } catch (DBException $ex) {
+                $this->View->Data->ErrorMessage = $ex->getMessage();
+                return $this->View->RenderTemplate('_error');
+            } catch (AuthenticateException $e){
+                return $this->redirectToAction('Login', 'User');
+            }
+        }
+        public function AddDeliveryAddress($add, $province_id, DeliveryAddressModel $input){
+            try{
+                $database = new Database;
+                $user = (new Authenticate($database))->getUser();
+                $this->View->Data->total = $user->getDeliveryAddressesTotal();
+                $this->View->Data->provincelist = (new ProvinceList($database))->getAll();
+                
+                if($add!=null){
+                    $this->View->Data->district_id = $input->district_id;
+                    $this->View->Data->province_id = $province_id;
+                    $this->View->Data->districtlist = (new DistrictList($database))->getAllFromProvince((int)$province_id);
+                }else{
+                    $this->View->Data->districtlist = (new DistrictList($database))->getAllFromProvince($this->View->Data->provincelist[0]->id);
+                }
+                
+                if($add!=null){
+                    #request update
+                    $this->View->Data->input = $input;
+                    $input->def = $input->def == 0 ? 0 : 1;
+                    $input->setDatabase($database);
+                    $input->checkValidForAddress()->checkValidForFirstName()->checkValidForLastName()->checkValidForPhone()->checkValidForDistrictId();
+                    
+                    if($input->isValid()){
+                        $input->user_id = $user->id;
+                        $input->add();
+                        return $this->redirectToAction('DeliveryAddresses', 'User');
+                    }else{
+                        $this->View->Data->input = $input;
+                        throw new InputException($input->getErrorsMap());
+                    }
+                }else{
+                    #request form
+                    return $this->View->RenderTemplate();
+                }
+            } catch (DBException $ex) {
+                $this->View->Data->ErrorMessage = $ex->getMessage();
+                return $this->View->RenderTemplate('_error');
+            } catch (AuthenticateException $e){
+                return $this->redirectToAction('Login', 'User');
+            } catch(InputException $e){
+                $this->View->Data->ErrorsMap = $e->getErrorsMap();
+                return $this->View->RenderTemplate();
+            }
+        }
+        public function UpdateDeliveryAddress($update, DeliveryAddressModel $input){
+            if(!is_numeric($input->id)){
+                $this->View->Data->ErrorMessage = 'invalid';
+                return $this->View->RenderTemplate('_error');
+            }
+            try{
+                $database = new Database;
+                $user = (new Authenticate($database))->getUser();
+                
+                $input->def = $input->def == 0 ? 0 : 1;
+                
+                $deliveryaddress = new DeliveryAddressModel($database);
+                $deliveryaddress->id = $input->id;
+                
+                if($deliveryaddress->loadData() && $deliveryaddress->user_id == $user->id){
+                    $this->View->Data->deliveryaddress = $deliveryaddress;
+                    $deliveryaddress->loadDistrict();
+                    $deliveryaddress->district->loadProvince();
+                    
+                    $this->View->Data->provincelist = (new ProvinceList($database))->getAll();
+                    $this->View->Data->districtlist = (new DistrictList($database))->getAllFromProvince($deliveryaddress->district->province_id);
+                    
+                    if($update!==null){
+                        #request update
+                        if($deliveryaddress->def == 1){
+                            $input->def = 1;
+                        }
+                        
+                        $deliveryaddress->lastname = $input->lastname;
+                        $deliveryaddress->firstname = $input->firstname;
+                        $deliveryaddress->address = $input->address;
+                        $deliveryaddress->phone  = $input->phone;
+                        
+                        $input->checkValidForAddress()->checkValidForFirstName()->checkValidForLastName()->checkValidForPhone();
+                        if($input->isValid()){
+                            $deliveryaddress->update($input);
+                            $this->View->Data->SuccessMessage = 'Đã cập nhật địa chỉ thành công';
+                            $user->loadDeliveryAddresses();
+                            $this->View->Data->deliveryaddresses = $user->deliveryaddresses;
+                            return $this->View->RenderTemplate('DeliveryAddresses', 'User');
+                        }else{
+                            throw new InputException($input->getErrorsMap());
+                        }
+
+                    } else {
+                        #get form
+                        return $this->View->RenderTemplate();
+                    }
+                }else{
+                    return $this->redirectToAction('DeliveryAddresses', 'User');
+                }
+            } catch (DBException $ex) {
+                $this->View->Data->ErrorMessage = $ex->getMessage();
+                return $this->View->RenderTemplate('_error');
+            } catch (InputException $ex){
+                $this->View->Data->ErrorsMap = $ex->getErrorsMap();
+                return $this->View->RenderTemplate();
+            } catch (AuthenticateException $e){
+                return $this->redirectToAction('Login', 'User');
+            }
+        }
+        public function DeleteDeliveryAddress($delete, $id){
+            if(!is_numeric($id)){
+                $this->View->ErrorMessage = 'Trang này không tìm thấy';
+                return $this->View->RenderTemplate('_error');
+            }
+            try{
+                $database = new Database;
+                $user = (new Authenticate($database))->getUser();
+                $deliveryaddress = new DeliveryAddressModel($database);
+                $deliveryaddress->id = $id;
+                if($deliveryaddress->loadData() && $deliveryaddress->user_id == $user->id){
+                    $this->View->Data->deliveryaddress = $deliveryaddress;
+                    $deliveryaddress->loadDistrict();
+                    $deliveryaddress->district->loadProvince();
+                    if($deliveryaddress->def==1){
+                        return $this->redirectToAction('DeliveryAddresses', 'User');
+                    }
+                    if($delete!=null){
+                        $deliveryaddress->delete();
+                        $this->View->Data->SuccessMessage = 'Đã xóa địa chỉ giao hàng thành công';
+                        $user->loadDeliveryAddresses();
+                        $this->View->Data->deliveryaddresses = $user->deliveryaddresses;
+                        return $this->View->RenderTemplate('DeliveryAddresses', 'User');
+                    }else{
+                        return $this->View->RenderTemplate();
+                    }
+                }else{
+                    return $this->redirectToAction('DeliveryAddresses', 'User');
+                }
+            } catch (DBException $ex) {
+                $this->View->Data->ErrorMessage = $ex->getMessage();
+                return $this->View->RenderTemplate('_error');
+            } catch (AuthenticateException $e){
+                return $this->redirectToAction('Login', 'User');
+            } catch (InputException $e){
+                $this->View->Data->ErrorsMap = $e->getErrorsMap();
+                return $this->View->RenderTemplate();
+            }
         }
     }
