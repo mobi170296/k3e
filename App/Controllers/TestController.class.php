@@ -1,13 +1,10 @@
 <?php
     namespace App\Controllers;
     use Core\Controller;
-    
+    use App\Models\UserModel;
     class TestController extends Controller{
-        public function Index($category){
-            if($category === null){
-                return $this->View->RenderContent("CATEGORY KHONG CO!");
-            }else{
-                return $this->View->RenderContent("CATEGORY = " . $category);
-            }
+        public function Index(UserModel $user){
+            $this->View->Data->user = $user;
+            return $this->View->RenderTemplate();
         }
     }

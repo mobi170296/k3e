@@ -6,8 +6,8 @@
     use Library\Database\DBDateTime;
     
     class DeliveryAddressModel extends Model{
-        public $id, $firstname, $lastname, $user_id, $def = 0, $address, $district_id, $phone, $created;
-        public $district;
+        public $id, $firstname, $lastname, $user_id, $def = 0, $address, $ward_id, $phone, $created;
+        public $ward;
         
         public function checkValidForId(){
             return $this;
@@ -31,10 +31,10 @@
             }
             return $this;
         }
-        public function checkValidForDistrictId(){
-            $rows = $this->database->select('*')->from(DB_TABLE_DISTRICT)->where('id=' . (int)$this->district_id)->execute();
+        public function checkValidForWardId(){
+            $rows = $this->database->select('*')->from(DB_TABLE_WARD)->where('id=' . (int)$this->ward_id)->execute();
             if(!count($rows)){
-                $this->addErrorMessage('district_id', 'Quận/Huyện không tồn tại!');
+                $this->addErrorMessage('ward_id', 'Phường xã không tồn tại!');
             }
             return $this;
         }
@@ -74,7 +74,7 @@
                 $this->created = DBDateTime::parse($row->created);
                 $this->def = $row->def;
                 $this->phone = $row->phone;
-                $this->district_id = $row->district_id;
+                $this->ward_id = $row->ward_id;
                 $this->lastname = $row->lastname;
                 $this->firstname = $row->firstname;
                 return true;
@@ -83,10 +83,10 @@
             }
         }
         
-        public function loadDistrict(){
-            $this->district = new DistrictModel($this->database);
-            $this->district->id = $this->district_id;
-            $this->district->loadData();
+        public function loadWard(){
+            $this->ward = new WardModel($this->database);
+            $this->ward->id = $this->ward_id;
+            return $this->ward->loadData();
         }
         
         public function add(){
@@ -100,22 +100,22 @@
             }else{
                 $def = 1;
             }
-            $this->database->insert(DB_TABLE_DELIVERYADDRESS, ['user_id' => new DBNumber((int)$this->user_id), 'lastname' => new DBString($this->database->escape($this->lastname)), 'firstname'=> new DBString($this->database->escape($this->firstname)), 'def' => new DBNumber($def), 'address' => new DBString($this->database->escape($this->address)), 'district_id' => new DBNumber($this->district_id), 'phone' => new DBString($this->phone)]);
+            $this->database->insert(DB_TABLE_DELIVERYADDRESS, ['user_id' => new DBNumber((int)$this->user_id), 'lastname' => new DBString($this->database->escape($this->lastname)), 'firstname'=> new DBString($this->database->escape($this->firstname)), 'def' => new DBNumber($def), 'address' => new DBString($this->database->escape($this->address)), 'ward_id' => new DBNumber($this->ward_id), 'phone' => new DBString($this->phone)]);
             return true;
         }
         
         public function update(DeliveryAddressModel $deliveryaddress){
-            #address, phone, district_id, def
+            #address, phone, ward_id, def
             if($deliveryaddress->def){
                 $this->database->update(DB_TABLE_DELIVERYADDRESS, ['def' => new DBNumber(0)], 'user_id='. (int)$this->user_id);
             }
-            $this->database->update(DB_TABLE_DELIVERYADDRESS, ['lastname' => new DBString($this->database->escape($deliveryaddress->lastname)), 'firstname' => new DBString($this->database->escape($deliveryaddress->firstname)), 'def' => new DBNumber($deliveryaddress->def), 'address' => new DBString($this->database->escape($deliveryaddress->address)), 'phone' => new DBString($deliveryaddress->phone), 'district_id' => new DBNumber($deliveryaddress->district_id)], 'id=' . (int)$this->id);
+            $this->database->update(DB_TABLE_DELIVERYADDRESS, ['lastname' => new DBString($this->database->escape($deliveryaddress->lastname)), 'firstname' => new DBString($this->database->escape($deliveryaddress->firstname)), 'def' => new DBNumber($deliveryaddress->def), 'address' => new DBString($this->database->escape($deliveryaddress->address)), 'phone' => new DBString($deliveryaddress->phone), 'ward_id' => new DBNumber($deliveryaddress->ward_id)], 'id=' . (int)$this->id);
             $this->lastname = $deliveryaddress->lastname;
             $this->firstname = $deliveryaddress->firstname;
             $this->def = $deliveryaddress->def;
             $this->address = $deliveryaddress->address;
             $this->phone = $deliveryaddress->phone;
-            $this->district_id = $deliveryaddress->district_id;
+            $this->ward_id = $deliveryaddress->ward_id;
             return true;
         }
         

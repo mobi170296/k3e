@@ -5,6 +5,8 @@
     use Library\Database\DBException;
     use App\Models\ProvinceList;
     use App\Models\DistrictList;
+    use App\Models\DistrictModel;
+    use App\Models\WardList;
     use App\Models\ProvinceModel;
     
     
@@ -69,6 +71,44 @@
                     $o = new \stdClass();
                     $o->id = $district->id;
                     $o->name = $district->name;
+                    $result->body->data[] = $o;
+                }
+                return $this->View->RenderJson($result);
+            } catch (DBException $ex) {
+                $result->header->code = 1;
+                $result->header->errors = [$ex->getMessage()];
+                return $this->View->RenderJson($result);
+            }
+        }
+        
+        public function getwardfromdistrict($district_id){
+            $result = new \stdClass();
+            $result->header = new \stdClass();
+            if(!$this->isPOST() || !is_numeric($district_id)){
+                $result->header ->code = 1;
+                $result->header->errors = ['invalid'];
+                return $this->View->RenderJson($result);
+            }
+            
+            try{
+                $database = new Database();
+                $district = new DistrictModel($database);
+                $district->id = $district_id;
+                if(!$district->loadData()){
+                    $result->header->code = 1;
+                    $result->header->errors = ['Không tồn tại quận huyện này'];
+                    return $this->View->RenderJson($result);
+                }
+                $district->loadWards();
+                $result->header->code = 0;
+                $result->header->message = '';
+                $result->body = new \stdClass();
+                foreach($district->wards as $ward){
+                    $o = new \stdClass();
+                    $o->name = $ward->name;
+                    $o->id = $ward->id;
+                    $o->code = $ward->code;
+                    $o->district_id = $ward->district_id;
                     $result->body->data[] = $o;
                 }
                 return $this->View->RenderJson($result);

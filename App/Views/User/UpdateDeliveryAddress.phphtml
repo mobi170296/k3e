@@ -56,7 +56,7 @@
                                     <select name="province_id" data-field-id="province_id" data-source="/api/address/getdistrictfromprovince">
                                         <?php
                                         foreach($this->Data->provincelist as $province){
-                                            echo '<option value="'.$province->id.'" '.($province->id == $this->Data->deliveryaddress->district->province_id ? "selected" : "").'>' . $province->name . '</option>';
+                                            echo '<option value="'.$province->id.'" '.(isset($this->Data->province_id) && $province->id == $this->Data->province_id ? "selected" : "").'>' . $province->name . '</option>';
                                         }
                                         ?>
                                     </select>
@@ -65,10 +65,22 @@
                             <tr>
                                 <td>Quận huyện</td>
                                 <td>
-                                    <select name="district_id" data-field-id="district_id">
+                                    <select name="district_id" data-field-id="district_id" data-source="/api/address/getwardfromdistrict">
                                         <?php
                                         foreach($this->Data->districtlist as $district){
-                                            echo '<option value="'.$district->id.'" ' . ($district->id == $this->Data->deliveryaddress->district->id ? "selected" : "") .  '>' .$district->name .'</option>';
+                                            echo '<option value="'.$district->id.'" '.(isset($this->Data->district_id) && $this->Data->district_id == $district->id ? "selected" : "").'>' . $district->name .'</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Phường xã</td>
+                                <td>
+                                    <select name="ward_id" data-field-id="ward_id">
+                                        <?php
+                                        foreach($this->Data->wardlist as $ward){
+                                            echo '<option value="'.$ward->id.'" '.(isset($this->Data->ward_id) && $this->Data->ward_id == $ward->id ? "selected" : "").'>' . $ward->name .'</option>';
                                         }
                                         ?>
                                     </select>
@@ -102,6 +114,7 @@
     (function(){
         var sp = $('[data-field-id="province_id"]');
         var sd = $('[data-field-id="district_id"]');
+        var sw = $('[data-field-id="ward_id"]');
         sp.on('change', function(e){
             var aa = $(this).data('source');
             $.ajax().create().url(aa).success(function(e){
@@ -113,9 +126,25 @@
                     o.innerHTML = r.body.data[i].name;
                     sd.addEnd(o);
                 }
+                sd[0].dispatchEvent(new Event('change'));
             }).error(function(e){
                 $Toast.makeError('Lỗi kết nối', 1e4);
             }).post('province_id=' + this.selectedOptions[0].value);
+        });
+        sd.on('change', function(e){
+            var aa = $(this).data('source');
+            $.ajax().create().url(aa).success(function(e){
+                sw.html('');
+                var r=JSON.parse(this.response);
+                for(var i in r.body.data){
+                    var o = $.create('option');
+                    o.value = r.body.data[i].id;
+                    o.innerHTML = r.body.data[i].name;
+                    sw.addEnd(o);
+                }
+            }).error(function(e){
+                $Toast.makeError('Lỗi kết nối', 1e4);
+            }).post('district_id=' + this.selectedOptions[0].value);
         });
     })();
 </script>

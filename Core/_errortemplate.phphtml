@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>Không tìm thấy</title>
+        <style>
+        </style>
+    </head>
+    <body style="background-color: #fafafa">
+        <div style="width: 600px; margin: 0px auto">
+            <div id="error" style="font-size: 32pt; font-weight: bold; margin: 20px 0px; text-align: center; transition: all 300ms;">
+                404 Not Found
+            </div>
+            <div style="text-align: center">
+                <a href="/" id="backtohome" style="display: inline-block; text-decoration: none; font-size: 18pt; padding: 20px 10px; background-color: #7eb62e; color: #fff; font-family: segoe ui">Trở về trang chủ tiếp tục mua sắm</a>
+            </div>
+        </div>
+    </body>
+    <script>
+        backtohome.onmouseenter = function(e){
+            error.style.transform = 'scale(0)';
+        }
+        backtohome.onmouseleave = function(e){
+            error.style.transform = 'scale(1)';
+        }
+        </script>
+</html>

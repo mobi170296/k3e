@@ -1,0 +1,17 @@
+<script type="text/javascript" src="/scripts/core.js">
+</script>
+
+<ul id="links">
+    <li class="dynamic-link" data-id="1542">List item 1</li>
+    <li class="dynamic-link"  data-id="1532342">List item 2</li>
+    <li class="dynamic-link"  data-id="1111">List item 3</li>
+    <li class="dynamic-link"  data-id="3232">List item 4</li>
+</ul>
+
+
+<script type="text/javascript">
+    
+    $('ul > li[class="dynamic-link"]').on('click', function(e){
+        window.alert('I am ' + $(this).data('id'));
+    });
+</script>

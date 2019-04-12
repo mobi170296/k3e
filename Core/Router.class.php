@@ -99,8 +99,7 @@
                     if(method_exists($controller, $actionname)){
                         $method = (new \ReflectionClass($controller))->getMethod($actionname);
                         if(!$method->isPublic()){
-                            echo '<b style="color: red">Action not exists</b>';
-                            exit;
+                            throw new RouterException('Action Not Found', -1);
                         }
                         $methodparameters = $method->getParameters();
                         
@@ -138,24 +137,13 @@
                         $view = call_user_func_array([$controller, $actionname], $args);
                         return $view;
                     }else{
-                        header('HTTP/1.1 404 Not Found');
-                        echo '<b style="color: red">Action not found</b>';
-                        exit;
+                        throw new RouterException('Action Not Found', -1);
                     }
                 }else{
-                    header('HTTP/1.1 404 Not Found');
-                    echo '<b style="color: red">Controller not found</b>';
-                    exit;
+                    throw new RouterException('Controller Not Found', -1);
                 }
             }else{
-                die('Controller/Action not exists');
+                throw new RouterException('Controller/Action not exists');
             }
-        }
-        
-        public function __toString(){
-            echo '<div style="white-space: pre-wrap">';
-            print_r($this);
-            echo '</div>';
-            return '';
         }
     }

@@ -35,7 +35,7 @@
                     <div class="daddress-item">
                         <div class="dname"><?php echo $this->Data->deliveryaddress->lastname . ' ' . $this->Data->deliveryaddress->firstname; ?></div>
                         <div class="dphone"><?php echo $this->Data->deliveryaddress->phone; ?></div>
-                        <div class="daddress"><?php echo $this->Data->deliveryaddress->address . ', ' . $this->Data->deliveryaddress->district->name . ', ' . $this->Data->deliveryaddress->district->province->name;?></div>
+                        <div class="daddress"><?php echo $this->Data->deliveryaddress->address . ', ' . $this->Data->deliveryaddress->ward->name .', '. $this->Data->deliveryaddress->ward->district->name . ', ' . $this->Data->deliveryaddress->ward->district->province->name;?></div>
                     </div>
                     <form action="" method="post">
                         <input type="hidden" name="id" value="<?php echo $this->Data->deliveryaddress->id; ?>"/>

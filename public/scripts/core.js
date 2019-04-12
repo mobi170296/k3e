@@ -194,6 +194,15 @@ function $qr(){
             return r;
         }
     }
+    $qr.prototype.children = function(){
+        var r = new $qr();
+        for(var i=0;i<this.length; i++){
+            for(var j=0;j<this[i].children.length;j++){
+                r[r.length++]=this[i].children[j];
+            }
+        }
+        return r;
+    }
 	$qr.prototype.remove = function(){
 		for(var i=0;i<this.length;i++){
 			this[i].remove();
@@ -292,4 +301,8 @@ $.create = function (n, p = {}){
     return e;
 }
 
-
+$(function(e){
+    $('[data-role="dropdown-btn"]').on('click', function(e){
+        
+    });
+});

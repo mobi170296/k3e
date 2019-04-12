@@ -5,7 +5,6 @@
     class View{
         public $controller, $action;
         public $TemplateData;
-        public $ViewData;
         public $Data;
         public $bodyContent;
         public $fileSection = [];
@@ -16,8 +15,8 @@
         public function __construct($controller, $action){
             $this->controller = str_replace('\\', DS, $controller);
             $this->action = $action;
-            $this->ViewData = [];
             $this->Data = new \stdClass();
+            $this->TemplateData = new \stdClass();
             global $k3_config;
             $this->config = $k3_config;
             require TEMPLATE_DIR . DS . '_ViewStart.phphtml';
@@ -59,27 +58,42 @@
         
         public function Partial($action = null, $controller = null){
             #utility in view context, include a file such as page partition
-            if($controller == null){
-                if($action != null){
-                    if(file_exists(VIEW_DIR . DS . $this->controller . DS . $action . '.phphtml')){
-                        require VIEW_DIR . DS . $this->controller . DS . $action . '.phphtml';
-                    }else{
-                        throw new \Exception('NOT FOUND PARTIAL', -1);
-                    }
+            $path = '';
+            if($controller != null){
+                if($action == null){
+                    throw new \Exception('View not found!', -1);
                 }else{
-                    throw new \Exception('YOU MUST SPECIFY ACTION', -1);
+                    if(file_exists(VIEW_DIR . DS . $controller . DS . $action . '.phphtml')){
+                        $path = VIEW_DIR . DS . $controller . DS . $action . '.phphtml';
+                    }else{
+                        throw new \Exception('View not found!', -1);
+                    }
                 }
             }else{
-                if($action != null){
-                    if(file_exists(VIEW_DIR . DS . $controller . DS . $action . '.phphtml')){
-                        require VIEW_DIR . DS . $controller . DS . $action . '.phphtml';
+                if($action == null){
+                    if(file_exists(VIEW_DIR . DS . $this->controller . DS . $this->action . '.phphtml')){
+                        $path = VIEW_DIR . DS . $this->controller . DS . $this->action . '.phphtml';
                     }else{
-                        throw new \Exception('NOT FOUND PARTIAL', -1);
+                        throw new \Exception('View not found!', -1);
                     }
                 }else{
-                    throw new \Exception('YOU MUST SPECIFY ACTION', -1);
+                    //ORDER TO FIND
+                    # Current Action of Controller View
+                    # App/Template
+                    # App/Template/Common
+                    if(file_exists(VIEW_DIR . DS . $this->controller . DS . $action . '.phphtml')){
+                        $path = VIEW_DIR. DS . $this->controller . DS . $action . '.phphtml';
+                    }else if(file_exists(APP_DIR . DS . 'Template'. DS . $action . '.phphtml')){
+                        $path = APP_DIR . DS . 'Template' . DS . $action . '.phphtml';
+                    }else if(file_exists(APP_DIR . DS . 'Template' . DS . 'Common' . DS . $action . '.phphtml')){
+                        $path = APP_DIR . DS . 'Template' . DS . 'Common' . DS . $action . '.phphtml';
+                    }else{
+                        throw new \Exception('View not found!', -1);
+                    }
                 }
             }
+            
+            require $path;
         }
         
         public function RenderContent($content){

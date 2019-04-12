@@ -2,15 +2,15 @@
     namespace Library\Database;
     class Database{
         public $lastquery;
-        
-        
-        public $connection;
+        public static $connection = null;
         public $_select, $_from, $_join, $_on, $_where, $_groupby, $_having, $_order, $_orderby, $_limit, $_forupdate = false;
         public function __construct(){
             global $k3_config;
-            $this->connection = @new \mysqli($k3_config['db']['host'], $k3_config['db']['username'], $k3_config['db']['password'], $k3_config['db']['dbname']);
-            if($this->connection->connect_errno){
-                throw new DBException($this->connection->connect_error, $this->connection->connect_errno);
+            if(self::$connection == null){
+                self::$connection = @new \mysqli($k3_config['db']['host'], $k3_config['db']['username'], $k3_config['db']['password'], $k3_config['db']['dbname']);
+            }
+            if(self::$connection->connect_errno){
+                throw new DBException(self::$connection->connect_error, self::$connection->connect_errno);
             }
             
             $this->_select = $this->_from = $this->_where = $this->_groupby = $this->_having = $this->_order = $this->_orderby = $this->_limit = "";
@@ -19,11 +19,11 @@
         }
         
         public function getErrorCode(){
-            return $this->connection->errno;
+            return self::$connection->errno;
         }
         
         public function getErrorMessage(){
-            return $this->connection->error;
+            return self::$connection->error;
         }
         public function lock(){
             $this->_forupdate = true;
@@ -41,10 +41,10 @@
             $query .= $this->_forupdate ? " FOR UPDATE" : "";
             
             
-            $result = $this->connection->query($query);
+            $result = self::$connection->query($query);
             
-            if($this->connection->errno){
-                throw new DBException($this->connection->error, $this->connection->errno);
+            if(self::$connection->errno){
+                throw new DBException(self::$connection->error, self::$connection->errno);
             }
 
             $aresult = [];
@@ -66,6 +66,16 @@
             $this->_forupdate = false;
             
             $this->_select = $s;
+            return $this;
+        }
+        
+        public function selectall(){
+            $this->_select = $this->_from = $this->_where = $this->_groupby = $this->_having = $this->_order = $this->_orderby = $this->_limit = "";
+            $this->_join = [];
+            $this->_on = [];
+            $this->_forupdate = false;
+            
+            $this->_select = '*';
             return $this;
         }
         
@@ -135,10 +145,10 @@
             #
             $this->lastquery = $query;
             
-            $result = $this->connection->query($query);
+            $result = self::$connection->query($query);
             
-            if($this->connection->errno){
-                throw new DBException($this->connection->error, $this->connection->errno);
+            if(self::$connection->errno){
+                throw new DBException(self::$connection->error, self::$connection->errno);
             }
 
             $aresult = [];
@@ -155,26 +165,26 @@
         }
         
         public function startTransaction(){
-            $this->connection->query('start transaction read write');
+            self::$connection->query('start transaction read write');
             
-            if($this->connection->errno){
-                throw new DBException($this->connection->error, $this->connection->errno);
+            if(self::$connection->errno){
+                throw new DBException(self::$connection->error, self::$connection->errno);
             }
         }
         
         public function rollback(){
-            $this->connection->query('rollback');
+            self::$connection->query('rollback');
             
-            if($this->connection->errno){
-                throw new DBException($this->connection->error, $this->connection->errno);
+            if(self::$connection->errno){
+                throw new DBException(self::$connection->error, self::$connection->errno);
             }
         }
         
         public function commit(){
-            $this->connection->query('commit');
+            self::$connection->query('commit');
             
-            if($this->connection->errno){
-                throw new DBException($this->connection->error, $this->connection->errno);
+            if(self::$connection->errno){
+                throw new DBException(self::$connection->error, self::$connection->errno);
             }
         }
         
@@ -192,10 +202,10 @@
             #
             $this->lastquery = $query;
             
-            $result = $this->connection->query($query);
+            $result = self::$connection->query($query);
             
-            if($this->connection->errno){
-                throw new DBException($this->connection->error, $this->connection->errno);
+            if(self::$connection->errno){
+                throw new DBException(self::$connection->error, self::$connection->errno);
             }else{
                 return $result;
             }
@@ -210,10 +220,10 @@
             
             $this->lastquery = $query;
             
-            $result =  $this->connection->query($query);
+            $result =  self::$connection->query($query);
             
-            if($this->connection->errno){
-                throw new DBException($this->connection->error, $this->connection->errno);
+            if(self::$connection->errno){
+                throw new DBException(self::$connection->error, self::$connection->errno);
             }else{
                 return $result;
             }
@@ -224,17 +234,17 @@
             
             $this->lastquery = $query;
             
-            $result = $this->connection->query($query);
+            $result = self::$connection->query($query);
             
-            if($this->connection->errno){
-                throw new DBException($this->connection->error, $this->connection->errno);
+            if(self::$connection->errno){
+                throw new DBException(self::$connection->error, self::$connection->errno);
             }else{
                 return $result;
             }
         }
         
         public function escape($s){
-            return $this->connection->real_escape_string($s);
+            return self::$connection->real_escape_string($s);
         }
         
         public function  unescape($s){
@@ -243,7 +253,7 @@
 
 
         public function close(){
-            @$this->connection->close();
+            @self::$connection->close();
         }
         
         #Test function

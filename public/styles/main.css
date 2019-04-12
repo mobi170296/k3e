@@ -1,7 +1,12 @@
+::selection{
+    background: #008549;
+    color: #fff;
+}
 body{
     margin: 0px;
     background-color: #fafafa;
 }
+
 a{
     text-decoration: none;
 }

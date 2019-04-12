@@ -9,7 +9,7 @@
     class UserModel extends Model{
         const MALE = 1, FEMALE = 0;
         const ADMIN_ROLE = 0, NORMAL_ROLE = 1;
-        public $id, $username, $firstname, $lastname, $password, $email, $phone, $address, $district_id, $created_time, $locked, $birthday, $money, $role, $gender;
+        public $id, $username, $firstname, $lastname, $password, $email, $phone, $district_id, $created_time, $locked, $birthday, $money, $role, $gender;
         public $shop;
         public $orders = [];
         public $assessments = [];
@@ -95,13 +95,6 @@
             return $this;
         }
         
-        public function checkValidForAddress(){
-            if(!isset($this->address) || !is_string($this->address) || mb_strlen($this->address) > 100){
-                $this->addErrorMessage('address', 'Địa chỉ không hợp lệ độ dài tối đa cho phép là 100 ký tự');
-            }
-            return $this;
-        }
-        
         public function checkValidForDistrictId(){
             if(!isset($this->district_id) || !is_numeric($this->district_id)){
                 $this->addErrorMessage('districtid', 'Địa chỉ Quận/Huyện không hợp lệ!');
@@ -160,9 +153,6 @@
                 $this->phone = $this->database->escape($this->phone);
             }
             
-            if(!empty($this->address)){
-                $this->address = $this->database->escape($this->address);
-            }
             return $this;
         }
         
@@ -196,8 +186,9 @@
                 $d = new DeliveryAddressModel($this->database);
                 $d->id = $row->id;
                 $d->loadData();
-                $d->loadDistrict();
-                $d->district->loadProvince();
+                $d->loadWard();
+                $d->ward->loadDistrict();
+                $d->ward->district->loadProvince();
                 $this->deliveryaddresses[] = $d;
             }
         }
@@ -218,7 +209,6 @@
                 $this->password = $row->password;
                 $this->email = $row->email;
                 $this->phone = $row->phone;
-                $this->address = $row->address;
                 $this->district_id = $row->district_id;
                 $this->birthday = DBDateTime::parse($row->birthday);
                 $this->created_time = DBDateTime::parse($row->created_time);
@@ -233,14 +223,13 @@
             }
         }
         public function register(){
-            $this->database->insert(DB_TABLE_USER, ['username' => new DBString($this->username), 'firstname' => new DBString($this->firstname), 'lastname' => new DBString($this->lastname), 'password' => new DBRaw("md5('{$this->password}')"), 'email' => new DBString($this->email), 'phone' => new DBString($this->phone), 'address' => new DBString($this->address), 'district_id' => new DBRaw('null'), 'locked' => new DBNumber(0), 'birthday' => new DBDateTime($this->birthday->day, $this->birthday->month, $this->birthday->year), 'gender' => new DBNumber($this->gender), 'money' => new DBNumber(0), 'role' => new DBNumber(UserModel::NORMAL_ROLE)]);
+            $this->database->insert(DB_TABLE_USER, ['username' => new DBString($this->username), 'firstname' => new DBString($this->firstname), 'lastname' => new DBString($this->lastname), 'password' => new DBRaw("md5('{$this->password}')"), 'email' => new DBString($this->email), 'phone' => new DBString($this->phone), 'district_id' => new DBRaw('null'), 'locked' => new DBNumber(0), 'birthday' => new DBDateTime($this->birthday->day, $this->birthday->month, $this->birthday->year), 'gender' => new DBNumber($this->gender), 'money' => new DBNumber(0), 'role' => new DBNumber(UserModel::NORMAL_ROLE)]);
             return true;
         }
         public function update($user){
-            $this->database->update(DB_TABLE_USER, ['lastname' => new DBString($user->lastname),'firstname'=>new DBString($user->firstname),'birthday'=>new DBDateTime($user->birthday->day, $user->birthday->month, $user->birthday->year),'gender'=>new DBNumber($user->gender),'address'=>new DBString($user->address)], 'id='. (int)$this->id);
+            $this->database->update(DB_TABLE_USER, ['lastname' => new DBString($user->lastname),'firstname'=>new DBString($user->firstname),'birthday'=>new DBDateTime($user->birthday->day, $user->birthday->month, $user->birthday->year),'gender'=>new DBNumber($user->gender)], 'id='. (int)$this->id);
             $this->lastname = $this->database->unescape($user->lastname);
             $this->firstname = $this->database->unescape($user->firstname);
-            $this->address = $this->database->unescape($user->address);
             $this->birthday = $user->birthday;
             return true;
         }
@@ -255,7 +244,6 @@
                 $this->password = $row->password;
                 $this->email = $row->email;
                 $this->phone = $row->phone;
-                $this->address = $row->address;
                 $this->district_id = $row->district_id;
                 $this->birthday = DBDateTime::parse($row->birthday);
                 $this->created_time = DBDateTime::parse($row->created_time);
@@ -277,6 +265,12 @@
         public function haveRole($privilege){
             return $this->role == $privilege;
         }
+        
+        public function isShop(){
+            $rows = $this->database->select('count(*) as total')->from(DB_TABLE_SHOP)->where('owner_id='.(int)$this->id)->execute();
+            return $rows[0]->total != 0;
+        }
+        
         public function getRoleString($p){
             switch($p){
                 case UserModel::ADMIN_ROLE:

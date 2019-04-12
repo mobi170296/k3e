@@ -1,9 +1,3 @@
-<form action="">
-    <input type="" name="password[][]">
-    <input type="" name="password[][]">
-    <button>OK</button>
-</form>
+<?php
 
-
-<?php 
-print_r($_GET);
+echo 'KKK'. mb_strtoupper(uniqid());

@@ -11,6 +11,7 @@
     use App\Models\ProvinceList;
     use App\Models\DeliveryAddressModel;
     use App\Models\DistrictList;
+    use App\Models\WardList;
     
     class UserController extends Controller{
         public function Index(){
@@ -65,6 +66,7 @@
                 new Authenticate($database);
                 return $this->redirectToAction('Index', 'Home');
             } catch (DBException $ex) {
+                $this->View->Data->ErrorMessage = $ex->getMessage();
                 return $this->View->RenderTemplate("_error");
             } catch (AuthenticateException $e){
                 #normal access 
@@ -118,7 +120,7 @@
                 if($update!==null){
                     $input->birthday = new DBDateTime($day, $month, $year);
                     $input->setDatabase($database);
-                    $input->checkValidForAddress()->checkValidForBirthday()->checkValidForFirstName()->checkValidForLastName()->checkValidForGender();
+                    $input->checkValidForBirthday()->checkValidForFirstName()->checkValidForLastName()->checkValidForGender();
                     if($input->isValid()){
                         $input->standardization();
                         $user->update($input);
@@ -174,19 +176,23 @@
                 return $this->redirectToAction('Login', 'User');
             }
         }
-        public function AddDeliveryAddress($add, $province_id, DeliveryAddressModel $input){
+        public function AddDeliveryAddress($add, $province_id, $district_id, DeliveryAddressModel $input){
             try{
                 $database = new Database;
                 $user = (new Authenticate($database))->getUser();
+                #Tổng số địa chỉ trong sổ địa chỉ
                 $this->View->Data->total = $user->getDeliveryAddressesTotal();
+                #Danh sách tỉnh cho người dùng chọn đầu tiên
                 $this->View->Data->provincelist = (new ProvinceList($database))->getAll();
                 
                 if($add!=null){
-                    $this->View->Data->district_id = $input->district_id;
+                    $this->View->Data->district_id = $input->ward_id;
                     $this->View->Data->province_id = $province_id;
                     $this->View->Data->districtlist = (new DistrictList($database))->getAllFromProvince((int)$province_id);
+                    $this->View->Data->district_id = $district_id;
                 }else{
                     $this->View->Data->districtlist = (new DistrictList($database))->getAllFromProvince($this->View->Data->provincelist[0]->id);
+                    $this->View->Data->wardlist = (new WardList($database))->getAllFromDistrict($this->View->Data->districtlist[0]->id);
                 }
                 
                 if($add!=null){
@@ -194,7 +200,7 @@
                     $this->View->Data->input = $input;
                     $input->def = $input->def == 0 ? 0 : 1;
                     $input->setDatabase($database);
-                    $input->checkValidForAddress()->checkValidForFirstName()->checkValidForLastName()->checkValidForPhone()->checkValidForDistrictId();
+                    $input->checkValidForAddress()->checkValidForFirstName()->checkValidForLastName()->checkValidForPhone()->checkValidForWardId();
                     
                     if($input->isValid()){
                         $input->user_id = $user->id;
@@ -218,7 +224,7 @@
                 return $this->View->RenderTemplate();
             }
         }
-        public function UpdateDeliveryAddress($update, DeliveryAddressModel $input){
+        public function UpdateDeliveryAddress($update, $district_id, $province_id, DeliveryAddressModel $input){
             if(!is_numeric($input->id)){
                 $this->View->Data->ErrorMessage = 'invalid';
                 return $this->View->RenderTemplate('_error');
@@ -234,11 +240,13 @@
                 
                 if($deliveryaddress->loadData() && $deliveryaddress->user_id == $user->id){
                     $this->View->Data->deliveryaddress = $deliveryaddress;
-                    $deliveryaddress->loadDistrict();
-                    $deliveryaddress->district->loadProvince();
+                    $deliveryaddress->loadWard();
+                    $deliveryaddress->ward->loadDistrict();
+                    $deliveryaddress->ward->district->loadProvince();
                     
                     $this->View->Data->provincelist = (new ProvinceList($database))->getAll();
-                    $this->View->Data->districtlist = (new DistrictList($database))->getAllFromProvince($deliveryaddress->district->province_id);
+                    $this->View->Data->districtlist = (new DistrictList($database))->getAllFromProvince($deliveryaddress->ward->district->province_id);
+                    $this->View->Data->wardlist = (new WardList($database))->getAllFromDistrict($deliveryaddress->ward->district->id);
                     
                     if($update!==null){
                         #request update
@@ -259,11 +267,16 @@
                             $this->View->Data->deliveryaddresses = $user->deliveryaddresses;
                             return $this->View->RenderTemplate('DeliveryAddresses', 'User');
                         }else{
+                            $this->View->Data->province_id = $province_id;
+                            $this->View->Data->district_id = $district_id;
+                            $this->View->Data->ward_id = $input->ward_id;
                             throw new InputException($input->getErrorsMap());
                         }
-
                     } else {
                         #get form
+                        $this->View->Data->province_id = $deliveryaddress->ward->district->province_id;
+                        $this->View->Data->district_id = $deliveryaddress->ward->district_id;
+                        $this->View->Data->ward_id = $deliveryaddress->ward_id;
                         return $this->View->RenderTemplate();
                     }
                 }else{
@@ -291,8 +304,9 @@
                 $deliveryaddress->id = $id;
                 if($deliveryaddress->loadData() && $deliveryaddress->user_id == $user->id){
                     $this->View->Data->deliveryaddress = $deliveryaddress;
-                    $deliveryaddress->loadDistrict();
-                    $deliveryaddress->district->loadProvince();
+                    $deliveryaddress->loadWard();
+                    $deliveryaddress->ward->loadDistrict();
+                    $deliveryaddress->ward->district->loadProvince();
                     if($deliveryaddress->def==1){
                         return $this->redirectToAction('DeliveryAddresses', 'User');
                     }

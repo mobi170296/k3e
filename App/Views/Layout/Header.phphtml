@@ -1,8 +1,8 @@
 <?php
     if($this->Data->user){
-        echo <<<LOGEDLINK
-<a href="/User/Logout">Đăng xuất</a>
-LOGEDLINK;
+        if(!$this->Data->user->isShop()){
+            echo '<a href="/Shop/Open">Mở cửa hàng</a>';
+        }
     }else{
         echo <<<LINK
 <a href="/User/Login">Đăng nhập</a>

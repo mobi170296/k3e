@@ -1,5 +1,13 @@
 <?php
     $this->layout = null;
-    if(isset($this->Data->ErrorMessage)){
-        echo "Đã gặp lỗi " . $this->Data->ErrorMessage;
-    }
+?>
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Trang lỗi</title>
+    </head>
+    <body>
+        <span style="color: red; font-size: 24pt"><?php echo $this->Data->ErrorMessage; ?></span>
+    </body>
+</html>

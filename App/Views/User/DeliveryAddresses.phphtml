@@ -47,7 +47,7 @@
                                 if($deliveryaddress->def){
                                     echo '<div class="ddef">Mặc định</div>';
                                 }
-                                echo '<div class="daddress">' . $deliveryaddress->address . ', ' . $deliveryaddress->district->name . ', ' . $deliveryaddress->district->province->name . '</div>';
+                                echo '<div class="daddress">' . $deliveryaddress->address . ', ' . $deliveryaddress->ward->name . ', ' . $deliveryaddress->ward->district->name . ', ' . $deliveryaddress->ward->district->province->name . '</div>';
                                 echo '</div>';
                             }
                         }else{

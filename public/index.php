@@ -45,14 +45,21 @@
     $route->mapRoute('{controller}/{action}', ['controller' => 'Home', 'action' => 'Index']);
     $route->mapRoute('{controller}/{action}/{id}', ['controller' => 'Home', 'action' => 'Index', 'id' => '']);
     
-    if($route->match()){
-        #Call to Action method of Controller class
-        $view = $route->dispatch();
-        #View to render
-        if($view){
-            $view->render();
+    try{
+        if($route->match()){
+            #Call to Action method of Controller class
+            $view = $route->dispatch();
+            #View to render
+            if($view){
+                $view->render();
+            }
+        }else{
+            throw new Core\RouterException('Controller Not Found!', -1);
         }
-    }else{
+    } catch (Core\RouterException $e) {
+        $message = $e->getMessage();
         header('HTTP/1.1 404 Not Found');
-        echo '<b style="color: red">404 Page</b>';
+        require k3_ROOT . DS . 'Core' . DS . '_errortemplate.phphtml';
+    } catch (Exception $e){
+        echo $e->getMessage();
     }

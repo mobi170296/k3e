@@ -20,7 +20,9 @@
         </div>
     </div>
     <div id="main-body">
-        
+        <?php
+            $this->Partial("_pagination");
+        ?>
     </div>
 
                 <script>

@@ -58,12 +58,6 @@
                                 <td>Tên</td>
                                 <td><input type="text" name="firstname" size="30" value="<?php echo empty($this->Data->update) ?$this->Data->user->firstname : $this->Data->input->firstname; ?>"/></td>
                             </tr>
-
-
-                            <tr>
-                                <td>Địa chỉ</td>
-                                <td><input type="text" name="address" size="30" value="<?php echo empty($this->Data->update) ?$this->Data->user->address : $this->Data->input->address; ?>"/></td>
-                            </tr>
                             
                             <tr>
                                 <td>Ngày tháng năm sinh</td>

@@ -1,3 +1,20 @@
+.pagination-wrapper{
+    text-align: center;
+}
+.pagination-wrapper > a{
+    display: inline-block;
+    padding: 5px;
+    text-decoration: none;
+    color: white;
+    background-color: #06a24f;
+    margin: 2px;
+    width: 2em;
+    height: 2em;
+    line-height: 2em;
+}
+.pagination-wrapper > a.active{
+    background-color: red;
+}
 .daddress-item{
     margin: 20px 0px;
     padding: 20px;
