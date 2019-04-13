@@ -5,7 +5,9 @@
         public $path;
         public $query;
         public $params = [];
+        public $rawbody;
         public function __construct($querystring){
+            $this->rawbody = file_get_contents('php://input');
             #k3e_route={path}&querystring
             parse_str($querystring, $this->query);
             $this->path = isset($this->query['k3e_route']) ? rtrim($this->query['k3e_route'], '/') : '';
@@ -83,6 +85,7 @@
                 $controllername = CONTROLLER_NS . '\\' . $controllername . 'Controller';
                 if(class_exists($controllername)){
                     $controller = new $controllername($this->params['controller'], $this->params['action']);
+                    $controller->rawbody = $this->rawbody;
                     foreach($_REQUEST as $k => $v){
                         $controller->request->$k = $v;
                     }

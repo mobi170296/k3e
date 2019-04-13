@@ -42,12 +42,12 @@
                                     echo '<a class="btnlink btnlink-del" href="DeleteDeliveryAddress?id='.$deliveryaddress->id.'">Xóa</a>';
                                 }
                                 echo '</div>';
-                                echo '<div class="dname">' . $deliveryaddress->lastname . ' ' . $deliveryaddress->firstname .  '</div>';
+                                echo '<div class="dname">' . htmlentities($deliveryaddress->lastname) . ' ' . htmlentities($deliveryaddress->firstname) .  '</div>';
                                 echo '<div class="dphone">' . $deliveryaddress->phone . '</div>';
                                 if($deliveryaddress->def){
                                     echo '<div class="ddef">Mặc định</div>';
                                 }
-                                echo '<div class="daddress">' . $deliveryaddress->address . ', ' . $deliveryaddress->ward->name . ', ' . $deliveryaddress->ward->district->name . ', ' . $deliveryaddress->ward->district->province->name . '</div>';
+                                echo '<div class="daddress">' . htmlentities($deliveryaddress->address). ', ' . $deliveryaddress->ward->name . ', ' . $deliveryaddress->ward->district->name . ', ' . $deliveryaddress->ward->district->province->name . '</div>';
                                 echo '</div>';
                             }
                         }else{

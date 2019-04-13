@@ -36,11 +36,11 @@
                         <table>
                             <tr>
                                 <td>Họ</td>
-                                <td><input type="text" size="40" name="lastname" value="<?php echo $this->Data->deliveryaddress->lastname; ?>"/></td>
+                                <td><input type="text" size="40" name="lastname" value="<?php echo htmlentities($this->Data->deliveryaddress->lastname); ?>"/></td>
                             </tr>
                             <tr>
                                 <td>Tên</td>
-                                <td><input type="text" size="40" name="firstname" value="<?php echo $this->Data->deliveryaddress->firstname; ?>"/></td>
+                                <td><input type="text" size="40" name="firstname" value="<?php echo htmlentities($this->Data->deliveryaddress->firstname); ?>"/></td>
                             </tr>
                             <tr>
                                 <td>Số điện thoại</td>
@@ -48,7 +48,7 @@
                             </tr>
                             <tr>
                                 <td>Địa chỉ</td>
-                                <td><input type="text" size="60" name="address" value="<?php echo $this->Data->deliveryaddress->address; ?>"/></td>
+                                <td><input type="text" size="60" name="address" value="<?php echo htmlentities($this->Data->deliveryaddress->address); ?>"/></td>
                             </tr>
                             <tr>
                                 <td>Tỉnh thành</td>

@@ -300,9 +300,3 @@ $.create = function (n, p = {}){
     }
     return e;
 }
-
-$(function(e){
-    $('[data-role="dropdown-btn"]').on('click', function(e){
-        
-    });
-});

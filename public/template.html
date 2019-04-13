@@ -1,0 +1,266 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>Template Builder</title>
+        <script type="text/javascript" src="/scripts/core.js"></script>
+        <script type="text/javascript" src="/scripts/ktemplate.js"></script>
+        <script type="text/javascript" src="/scripts/toast.js"></script>
+        <script type="text/javascript" src="/scripts/mj.js"></script>
+        <link rel="shortcut icon" href="/images/icons/icon.png"/>
+        <link rel="stylesheet" href="/styles/utility.css"/>
+        <link rel="stylesheet" href="/styles/main.css"/>
+        <link rel="stylesheet" href="/styles/sub.css"/>
+        <link rel="stylesheet" href="/styles/toast.css"/>
+        <link rel="stylesheet" href="/styles/form.css"/>
+        <link rel="stylesheet" href="/styles/utility.css"/>
+        <style>
+            body{
+                padding: 20px 50px;
+            }
+            p.invalid-data{
+                font-size: 9pt;
+                text-shadow: 9pt;
+                color: red;
+                display: none;
+            }
+            p.invalid-data.active{
+                margin-bottom: 5px;
+                display: block;
+            }
+            .loading-popup{
+                position: fixed;
+                width: 100vw;
+                height: 100vh;
+                top: 0px;
+                left: 0px;
+                background-color: rgba(255,255,255,0.7);
+                line-height: 100vh;
+                text-align: center;
+                z-index: 1000;
+            }
+            .loading-icon{
+                display: inline-block;
+                width: 30px;
+                height: 30px;
+                border: 5px dotted;
+                border-color: #06a24f transparent transparent transparent;
+                border-radius: 50%;
+                animation: anim-loading-icon 3s infinite;
+            }
+            #addresses{
+                transition: all 500ms;
+                overflow: hidden;
+                height: 0px;
+            }
+            
+            .confirm-popup{
+                position: fixed;
+                left: 0px;
+                top: 0px;
+                width: 100vw;
+                height: 100vh;
+                z-index: 999;
+                background-color: rgba(0,0,0,0.3);
+            }
+            .confirm-popup .messagebox{
+                position: absolute;
+                top: 50px;
+                left: 50%;
+                background-color: #fff;
+                width: 600px;
+                margin-left: -300px;
+                box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.2);
+            }
+            .confirm-popup .content{
+                font-size: 12pt;
+                font-family: segoe ui;
+                padding: 20px 30px;
+            }
+            .confirm-popup .btngroup{
+                text-align: right;
+                padding: 10px 30px;
+            }
+            .confirm-popup .activebtn{
+                background-color: #09adea;
+                padding: 5px 20px;
+                border: 1px solid #09adea;
+                margin: 5px;
+                font-family: segoe ui;
+                font-size: 12pt;
+                color: #fff;
+            }
+            .confirm-popup .inactivebtn{
+                background-color: #e00;
+                padding: 5px 20px;
+                border: 1px solid #e00;
+                margin: 5px;
+                font-family: segoe ui;
+                font-size: 12pt;
+                color: #fff;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <form name="deliveryaddress" action="" method="get" onsubmit="return false;">
+                <div>
+                    <label>Họ và tên</label>
+                    <div>
+                        <input type="text" name="name" placeholder="Họ và tên" size="40"/>
+                        <p class="invalid-data"></p>
+                    </div>
+                </div>
+                <div>
+                    <label>Số điện thoại</label>
+                    <div>
+                        <input type="text" name="phone" placeholder="Họ và tên"  size="40"/>
+                        <p class="invalid-data"></p>
+                    </div>
+                </div>
+                <div>
+                    <label>Địa chỉ</label>
+                    <div>
+                        <input type="text" name="address" placeholder="Họ và tên"  size="40"/>
+                        <p class="invalid-data"></p>
+                    </div>
+                </div>
+                <div>
+                    <label>Thiết lập mặc định <input type="checkbox" name="def" value="1" size="40"/></label>
+                </div>
+                <div>
+                    <button type="submit" name="add" class="btn btn-add btn-add-i">Thêm địa chỉ mới</button>
+                </div>
+            </form>
+        </div>
+        <div id="addresses">
+            
+        </div>
+        <script type="text/ktpl" id="dt">
+            <div class="daddress-item">
+                <div class="u-fr">
+                    <a class="btnlink btnlink-edit" href="/User/UpdateDeliveryAddress?id=@id">Chỉnh sửa</a>
+                </div>
+                <div class="dname">@name</div>
+                <div class="dphone">@phone</div>
+                <div class="ddef">@def</div>
+                <div class="daddress">@address</div>
+            </div>
+        </script>
+        <script>
+            deliveryaddresstemplate = new KTemplate(dt.innerHTML);
+            
+            datasource = {};
+            datasource.deliveryaddresslist = [];
+            function refreshData(){
+                addresses.innerHTML = '';
+                for(var i = datasource.deliveryaddresslist.length - 1; i >= 0; i--){
+                    addresses.innerHTML += deliveryaddresstemplate.render(datasource.deliveryaddresslist[i]);
+                    //delegate event here
+                }
+                addresses.style.height = addresses.scrollHeight + 'px';
+            }
+            
+            document.forms.deliveryaddress.addEventListener('submit', function(e){
+                var error = 0;
+                if(this.name.value.length === 0 || this.name.value.length > 32){
+                    $(this.name).next().addClass('active').html('Họ và tên không được để trống hoặc không quá 32 ký tự');
+                    error |= 1;
+                }else{
+                    $(this.name).next().removeClass('active');
+                }
+                if(!/^0\d{9,10}$/.test(this.phone.value)){
+                    $(this.phone).next().addClass('active').html('Số điện thoại không đúng định dạng');
+                    error |= 1;
+                }else{
+                    $(this.phone).next().removeClass('active');
+                }
+                if(this.address.value.length === 0 || this.address.value.length > 32){
+                    $(this.address).next().addClass('active').html('Địa chỉ không được để trống hoặc không quá 32 ký tự');
+                    error |= 1;
+                }else{
+                    $(this.address).next().removeClass('active');
+                }
+                if(!error){
+                    var id = Math.round(Math.random()*10000);
+                    var name = this.name.value;
+                    var phone = this.phone.value;
+                    var address = this.address.value;
+                    var def = this.def.checked ? 1 : 0;
+                    window.setTimeout(function(e){
+                        if(Math.round(Math.random()*10)%2){
+                            datasource.deliveryaddresslist.push({id: id, name: name, phone: phone, address: address, def: def});
+                            window.location = '/User/DeliveryAddresses';
+                            refreshData();
+                        }else{
+                            $Toast.makeError('Đã có lỗi trong khi thêm mới dữ liệu vui lòng thử lại!', 10e3);
+                        }
+                        $LoadingPopup.hide();
+                    }, 3e3);
+                    $LoadingPopup.show();
+                }
+            });
+        </script>
+        
+        <script>
+            $LoadingPopup = new (function(){
+                this.container = $.create('div');
+                this.icon = $.create('div');
+                this.container.append(this.icon);
+                $(this.container).addClass('loading-popup').addClass('u-hidden');
+                $(this.icon).addClass('loading-icon');
+                
+                $(document.body).addEnd(this.container);
+                
+                this.show = function(){
+                    $(this.container).removeClass('u-hidden');
+                    
+                }
+                this.hide = function(){
+                    $(this.container).addClass('u-hidden');
+                }
+            })();
+            
+            $ConfirmPopup = new (function(){
+                this.container = $.create('div');
+                this.messagebox = $.create('div');
+                this.content = $.create('div');
+                this.btngroup = $.create('div');
+                this.activebtn = $.create('button');
+                this.inactivebtn = $.create('button');
+                $(this.activebtn).attr('type', 'button').addClass('activebtn');
+                $(this.inactivebtn).attr('type', 'button').addClass('inactivebtn');
+                $(this.btngroup).addEnd(this.activebtn).addEnd(this.inactivebtn).addClass('btngroup');
+                $(this.messagebox).addEnd(this.content).addEnd(this.btngroup).addClass('messagebox');
+                $(this.messagebox).on('mousedown', function(e){
+                    window.e = e;
+                    e.stopPropagation();
+                });
+                $(this.content).addClass('content');
+                $(this.container).addEnd(this.messagebox).addClass('confirm-popup').addClass('u-hidden').data('role', 'popup').data('role-type', 'static');
+                $(document.body).addEnd(this.container);
+                
+                this.message = function(m){
+                    $(this.content).html(m);
+                    return this;
+                }
+                this.active = function(m, f){
+                    this.activebtn.innerHTML = m;
+                    this.activebtn.onclick = f;
+                    return this;
+                }
+                this.inactive = function(m, f){
+                    this.inactivebtn.innerHTML = m;
+                    this.inactivebtn.onclick = f;
+                    return this;
+                }
+                this.show = function(){
+                    $(this.container).removeClass('u-hidden');
+                }
+                this.hide = function(e){
+                    $(this.container).addClass('u-hidden');
+                }
+            })();
+        </script>
+    </body>
+</html>

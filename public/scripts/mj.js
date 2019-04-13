@@ -560,7 +560,9 @@ function RichEditor(textarea) {
  * 
  */
 
-$(document).on('click', function (e) {
-    $('[data-role="popup"][data-role-type="static"]').addClass('u-hidden');
-    $('[data-role="popup"][data-role-type="dynamic"]').remove();
+$(document).on('mousedown', function (e) {
+    if(e.which===1){
+        $('[data-role="popup"][data-role-type="static"]').addClass('u-hidden');
+        $('[data-role="popup"][data-role-type="dynamic"]').remove();
+    }
 });

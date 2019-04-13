@@ -10,6 +10,7 @@
         public $files;
         public $post;
         public $method;
+        public $rawbody;
         
         public function __construct($controller, $action){
             $this->get = new \stdClass();

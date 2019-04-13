@@ -4,7 +4,6 @@
     use App\Models\UserModel;
     class TestController extends Controller{
         public function Index(UserModel $user){
-            $this->View->Data->user = $user;
-            return $this->View->RenderTemplate();
+            return $this->View->RenderContent("" . $this->rawbody);
         }
     }
