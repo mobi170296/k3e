@@ -1,0 +1,177 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>Template Builder</title>
+        <link rel="shortcut icon" href="/images/icons/icon.png"/>
+        <link rel="stylesheet" href="/styles/utility.css"/>
+        <link rel="stylesheet" href="/styles/main.css"/>
+        <link rel="stylesheet" href="/styles/sub.css"/>
+        <link rel="stylesheet" href="/styles/toast.css"/>
+        <link rel="stylesheet" href="/styles/form.css"/>
+        <link rel="stylesheet" href="/styles/utility.css"/>
+        <script type="text/javascript" src="/scripts/core.js"></script>
+        <script type="text/javascript" src="/scripts/ktemplate.js"></script>
+        <script type="text/javascript" src="/scripts/toast.js"></script>
+        <script type="text/javascript" src="/scripts/mj.js"></script>
+        <script type="text/javascript" src="scripts/xhr.js"></script>
+        <style>
+            body{
+                padding: 20px 50px;
+            }
+            #addresses{
+                transition: all 500ms;
+                overflow: hidden;
+                height: 0px;
+            }
+            
+            
+            ul.tabbar{
+                list-style-type: none;
+                padding: 0px;
+                margin: 0px;
+            }
+            ul.tabbar li.baritem{
+                float: left;
+                padding: 10px;
+                user-select: none;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                text-transform: uppercase;
+            }
+            ul.tabbar li.baritem:hover{
+                background-color: #eee;
+            }
+            ul.tabbar li.baritem.active{
+                border-style: solid;
+                border-color: black;
+                border-width: 1px 1px 0px 1px;
+            }
+            .tabpane .tabcontent{
+                overflow-x: hidden;
+                border: 1px solid black;
+            }
+            .tabpane .tabcontent .tab{
+                display: none;
+            }
+            @keyframes anim-tab{
+                from{
+                    margin-left: -100%;
+                }
+                to{
+                    margin-left: 0px;
+                }
+            }
+            .tabpane .tabcontent .tab.active{
+                display: block;
+                animation: anim-tab;
+                animation-duration: 1s;
+                animation-iteration-count: 1;
+            }
+        </style>
+    </head>
+    <body>
+        
+        <form id="form" autocomplete="off">
+            <input id="lastname" type="text" name="lastname" placeholder="Họ"/>
+            <p class="invalid-data"></p>
+            <input id="firstname" type="text" name="firstname" placeholder="Tên"/>
+            <p class="invalid-data"></p>
+            <input id="gender1" type="radio" name="gender" value="1" checked> Nam
+            <input id="gender2" type="radio" name="gender" value="0"> Nữ
+            <input type="checkbox" name="fav[]" value="Da bong"> Da bong
+            <input type="checkbox" name="fav[]" value="Doc sach"> doc sach
+            <button id="post" type="submit" name="send" value="send">Post</button>
+        </form>
+        
+        <script>
+            Data = {
+                lastname: "", firstname: "", gender: 0, fav: []
+            };
+            
+            $('#form').on('submit', function(e){
+                e.preventDefault();
+                var err = 0;
+                Data.lastname = this.lastname.value;
+                Data.firstname = this.firstname.value;
+                Data.gender = this.gender[0].checked ? 1 : 0;
+                var favs = [];
+                for(var x of this['fav[]']){
+                    if(x.checked){
+                        favs.push(x.value);
+                    }
+                }
+                Data.fav = favs;
+                
+                if(this.lastname.value.length === 0 || this.lastname.value.length  > 32){
+                    this.lastname.nextElementSibling.innerHTML = 'Sai';
+                    this.lastname.nextElementSibling.classList.add('active');
+                    err |= 1;
+                }else{
+                    this.lastname.nextElementSibling.classList.remove('active');
+                }
+                
+                if(this.firstname.value.length === 0 || this.firstname.value.length > 20){
+                    this.firstname.nextElementSibling.innerHTML = 'Sai';
+                    this.firstname.nextElementSibling.classList.add('active');
+                    err |= 1;
+                }else{
+                    this.firstname.nextElementSibling.classList.remove('active');
+                }
+                return false;
+            });
+        </script>
+        
+        
+        
+        
+        
+        
+        
+        <script>
+            function KDataTable(table, config){
+                this.table = table;
+                
+                this.clearHeader = function(){
+                    while(this.table.tHead.rows.length){
+                        this.table.tHead.rows[0].remove();
+                    }
+                }
+                
+                this.addHeader = function(a = []){
+                    var header = this.table.tHead;
+                    var row = header.insertRow();
+                    for(var c of a){
+                        var cell = row.insertCell();
+                        cell.innerHTML = c;
+                    }
+                }
+                
+                this.addRow = function(){
+                    var body = this.table.tBodies[0];
+                    if(arguments.length === 1){
+                        var adata = arguments[0];
+                        var row = body.insertRow();
+                        for(e of adata){
+                            row.insertCell().innerHTML = e;
+                        }
+                    }
+                    if(arguments.length === 2){
+                        var tpl = arguments[0];
+                        var jdata = arguments[1];
+                        var ktpl = new KTemplate(tpl);
+                        var row = body.insertRow();
+                        row.innerHTML = ktpl.render(jdata);
+                    }
+                }
+                
+                
+            }
+        </script>
+        <script id="rtpl" type="text/ktpl">
+            <td>@name</td>
+            <td>@age</td>
+            <td><a href="#">Sửa</a><a href="#">Xóa</a></td>
+        </script>
+    </body>
+</html>

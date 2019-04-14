@@ -55,3 +55,69 @@ var $Toast = new (function(){
         this.toastbody.firstElementChild.remove();
     }
 })();
+
+$LoadingPopup = new (function(){
+    this.container = $.create('div');
+    this.icon = $.create('div');
+    this.container.append(this.icon);
+    $(this.container).addClass('loading-popup').addClass('u-hidden');
+    $(this.icon).addClass('loading-icon');
+    this.show = function(){
+        $(document.body).addBegin(this.container);
+        $(this.container).removeClass('u-hidden');
+    }
+    this.hide = function(){
+        $(this.container).addClass('u-hidden');
+    }
+})();
+
+$ConfirmPopup = new (function(){
+    this.container = $.create('div');
+    this.messagebox = $.create('div');
+    this.content = $.create('div');
+    this.btngroup = $.create('div');
+    this.activebtn = $.create('button');
+    this.inactivebtn = $.create('button');
+    $(this.activebtn).attr('type', 'button').addClass('activebtn');
+    $(this.inactivebtn).attr('type', 'button').addClass('inactivebtn');
+    $(this.btngroup).addEnd(this.activebtn).addEnd(this.inactivebtn).addClass('btngroup');
+    $(this.messagebox).addEnd(this.content).addEnd(this.btngroup).addClass('messagebox');
+    $(this.messagebox).on('mousedown', function(e){
+        window.e = e;
+        e.stopPropagation();
+    });
+    $(this.content).addClass('content');
+    $(this.container).addEnd(this.messagebox).addClass('confirm-popup').addClass('u-hidden').data('role', 'popup').data('role-type', 'static');
+    this.message = function(m){
+        $(this.content).html(m);
+        return this;
+    }
+    this.active = function(m, f){
+        this.activebtn.innerHTML = m;
+        this.activebtn.onclick = f;
+        return this;
+    }
+    this.inactive = function(m, f){
+        this.inactivebtn.innerHTML = m;
+        this.inactivebtn.onclick = f;
+        return this;
+    }
+    this.show = function(){
+        $(this.container).removeClass('u-hidden');
+    }
+    this.hide = function(e){
+        $(this.container).addClass('u-hidden');
+    }
+})();
+
+
+$(function(e){
+    $(document.body).addBegin($LoadingPopup.container).addBegin($ConfirmPopup.container);
+    $('.tabpane .baritem').on('click', function(e){
+        var p = $(this).parent('.tabpane');
+        $(p).$('.baritem').removeClass('active');
+        $(this).addClass('active');
+        $(p).$('.tabcontent .tab').removeClass('active');
+        $(p).$('.tabcontent .tab[data-tab="' + $(this).data('tab')+ '"]').addClass('active');   
+    });
+});

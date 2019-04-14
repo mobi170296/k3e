@@ -33,7 +33,9 @@
             <?php
                 if($this->Data->user){
                     echo '<div id="account-control">';
-                    echo "<div id=\"account-name\">{$this->Data->user->lastname} {$this->Data->user->firstname}</div>";
+                    echo '<div id="account-name">';
+                    echo '<span class="user-avatar small" style="background-image: url(\''.$this->Data->user->getAvatarPath().'\')"></span>';
+                    echo "{$this->Data->user->lastname} {$this->Data->user->firstname}</div>";
                     echo '<div id="account-options">';
                     echo '<a href="/User/Index">Thông tin tài khoản</a>';
                     if($this->Data->user->haveRole(UserModel::ADMIN_ROLE)){

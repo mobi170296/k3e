@@ -33,6 +33,41 @@
                             echo '</div>';
                         }
                     ?>
+                    
+                    <div class="u-text-center">
+                        <div id="user-avatar" class="user-avatar large" style="background-image: url('<?php echo $this->Data->user->getAvatarPath() ; ?>')">
+                            <label>
+                                <div class="uploadpoint"></div>
+                                <input type="file" name="avatar" class="u-hidden"/>
+                            </label>
+                        </div>
+                    </div>
+                    <script>
+                        (function(){
+                            function u(){
+                                var formdata = new FormData();
+                                formdata.append('avatar', this.files[0]);
+                                $LoadingPopup.show();
+                                $.ajax().create().url('/api/upload/avatarimage').success(function(e){
+                                    var result = JSON.parse(this.response);
+                                    if(result.header.code === 0){
+                                        $('#user-avatar').css('background-image', "url('" + result.body.data.url + "')");
+                                        $('.user-avatar.small').css('background-image', "url('" + result.body.data.url + "')");
+                                        $Toast.makeSuccess(result.header.message, 3e3);
+                                    }else{
+                                        $Toast.makeError(result.header.errors[0], 5e3);
+                                    }
+                                    $LoadingPopup.hide();
+                                }).error(function(e){
+                                    $Toast.makeError('Không thể thực hiện kết nối', 5e3);
+                                    $LoadingPopup.hide();
+                                }).post(formdata);
+                            }
+                            $('.user-avatar input[name="avatar"]').on('change', function(e){
+                                u.call(this, e);
+                            });
+                        })();
+                    </script>
                     <form action="" method="post">
                         <table>
                             <tr>

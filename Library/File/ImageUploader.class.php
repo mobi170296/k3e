@@ -3,6 +3,7 @@
     
     class ImageUploader{
         public $filename, $dir;
+        public $autopath;
         public function __construct(){
             
         }
@@ -18,16 +19,19 @@
             $day = $date['mday'];
             
             $prefixdir = $dir . DS . $year;
+            $autopath = $year;
             if(!file_exists($prefixdir)){
                 mkdir($prefixdir);
             }
             
             $prefixdir .= DS . $month;
+            $autopath .= DS . $month;
             if(!file_exists($prefixdir)){
                 mkdir($prefixdir);
             }
             
             $prefixdir .= DS . $day;
+            $autopath .= DS . $day;
             if(!file_exists($prefixdir)){
                 mkdir($prefixdir);
             }
@@ -46,13 +50,21 @@
                 throw new UploadImageException(['move' => 'Ghi tập tin thất bại vui lòng thử lại']);
             }
             
+            #test in CLI
+//            if(!rename($tempname, $prefixdir . DS . $filename)){
+//                throw new UploadImageException(['move' => 'Ghi tập tin thất bại vui lòng thử lại']);
+//            }   
             $this->dir = $prefixdir;
             $this->filename = $filename;
+            $this->autopath = $autopath;
         }
         public function getFileName(){
             return $this->filename;
         }
         public function getDir(){
             return $this->dir;
+        }
+        public function getAutoPath(){
+            return $this->autopath;
         }
     }

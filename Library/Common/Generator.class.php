@@ -18,4 +18,22 @@
             }
             return $guid;
         }
+        public static function name($mc, $l){
+            $name = [];
+            $a1 = range(ord('A'), ord('Z'));
+            $a2 = range(ord('a'), ord('z'));
+            $a = array_merge($a1, $a2);
+            for($i=0; $i<$l; $i++){
+                $p = '';
+                $pl = rand()%$mc + 1;
+                for($j=0; $j<$pl; $j++){
+                    $p .= chr($a[rand()%count($a)]);
+                }
+                $name[] = $p;
+            }
+            return implode(' ', $name);
+        }
+        public static function number(){
+            
+        }
     }

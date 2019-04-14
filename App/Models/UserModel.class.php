@@ -8,8 +8,8 @@
     
     class UserModel extends Model{
         const MALE = 1, FEMALE = 0;
-        const ADMIN_ROLE = 0, NORMAL_ROLE = 1;
-        public $id, $username, $firstname, $lastname, $password, $email, $phone, $district_id, $created_time, $locked, $birthday, $money, $role, $gender;
+        const ADMIN_ROLE = 1, NORMAL_ROLE = 0;
+        public $id, $username, $firstname, $lastname, $password, $email, $phone, $district_id, $created_time, $locked, $birthday, $money, $role, $gender, $avatar_id;
         public $shop;
         public $orders = [];
         public $assessments = [];
@@ -17,6 +17,7 @@
         public $district;
         public $deliveryaddresses = [];
         public $imagemaps = [];
+        public $avatar;
         
         public function checkValidForUserName(){
             if(isset($this->username) && is_string($this->username)){
@@ -198,6 +199,15 @@
             return $rows[0]->total;
         }
         
+        public function loadAvatar(){
+            if($this->avatar_id === null){
+                return false;
+            }
+            $this->avatar = new ImageMapModel($this->database);
+            $this->avatar->id = $this->avatar_id;
+            return $this->avatar->loadData();
+        }
+        
         public function loadData(){
             $row = $this->database->select('*')->from(DB_TABLE_USER)->where('id='.new DBNumber($this->id))->execute();
             if(count($row)){
@@ -217,6 +227,7 @@
                 $this->gender = $row->gender;
                 $this->money = $row->money;
                 $this->role = $row->role;
+                $this->avatar_id = $row->avatar_id;
                 return true;
             }else{
                 return false;
@@ -252,6 +263,7 @@
                 $this->gender = $row->gender;
                 $this->money = $row->money;
                 $this->role = $row->role;
+                $this->avatar_id = $row->avatar_id;
                 return true;
             }else{
                 return false;
@@ -266,7 +278,7 @@
             return $this->role == $privilege;
         }
         
-        public function isShop(){
+        public function isMerchant(){
             $rows = $this->database->select('count(*) as total')->from(DB_TABLE_SHOP)->where('owner_id='.(int)$this->id)->execute();
             return $rows[0]->total != 0;
         }
@@ -289,5 +301,21 @@
                     return "Nam";
                 default: return "Chưa xác định";
             }
+        }
+        public function getAvatarPath(){
+            if($this->avatar_id === null){
+                return "/images/icons/avatar-default-icon.png"; 
+            }
+            $rows = $this->database->selectall()->from(DB_TABLE_IMAGEMAP)->where('id=' . (int)$this->avatar_id)->execute();
+            if(count($rows)){
+                $row = $rows[0];
+                return $row->urlpath;
+            }else{
+                return "/images/icons/avatar-default-icon.png";
+            }
+        }
+        public function updateAvatarId($id = null){
+            $this->database->update(DB_TABLE_USER, ['avatar_id' => new DBNumber((int)$id)], 'id=' . (int)$this->id);
+            $this->database->delete(DB_TABLE_IMAGEMAP, 'id=' . (int)$this->avatar_id);
         }
     }

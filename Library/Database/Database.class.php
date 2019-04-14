@@ -164,6 +164,10 @@
             return $aresult;
         }
         
+        public function lastInsertId(){
+            return self::$connection->insert_id;
+        }
+        
         public function startTransaction(){
             self::$connection->query('start transaction read write');
             
