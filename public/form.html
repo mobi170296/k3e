@@ -129,44 +129,7 @@
         
         
         <script>
-            function KDataTable(table, config){
-                this.table = table;
-                
-                this.clearHeader = function(){
-                    while(this.table.tHead.rows.length){
-                        this.table.tHead.rows[0].remove();
-                    }
-                }
-                
-                this.addHeader = function(a = []){
-                    var header = this.table.tHead;
-                    var row = header.insertRow();
-                    for(var c of a){
-                        var cell = row.insertCell();
-                        cell.innerHTML = c;
-                    }
-                }
-                
-                this.addRow = function(){
-                    var body = this.table.tBodies[0];
-                    if(arguments.length === 1){
-                        var adata = arguments[0];
-                        var row = body.insertRow();
-                        for(e of adata){
-                            row.insertCell().innerHTML = e;
-                        }
-                    }
-                    if(arguments.length === 2){
-                        var tpl = arguments[0];
-                        var jdata = arguments[1];
-                        var ktpl = new KTemplate(tpl);
-                        var row = body.insertRow();
-                        row.innerHTML = ktpl.render(jdata);
-                    }
-                }
-                
-                
-            }
+            
         </script>
         <script id="rtpl" type="text/ktpl">
             <td>@name</td>

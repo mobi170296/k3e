@@ -37,6 +37,9 @@ function KTemplate(c){
     if(c.length){
         this.ps.push(c);
     }
-    
-    
+}
+
+function KTemplateInflater(e, d){
+    var ktpl = new KTemplate(e.innerHTML);
+    e.innerHTML = ktpl.render(d);
 }

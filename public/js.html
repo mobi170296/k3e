@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Title</title>
+        <meta charset="utf-8"/>
+        
+        <link rel="shortcut icon" href="/images/icons/icon.png"/>
+        <link rel="stylesheet" href="/styles/utility.css"/>
+        <link rel="stylesheet" href="/styles/main.css"/>
+        <link rel="stylesheet" href="/styles/sub.css"/>
+        <link rel="stylesheet" href="/styles/toast.css"/>
+        <link rel="stylesheet" href="/styles/form.css"/>
+        <link rel="stylesheet" href="/styles/utility.css"/>
+        <script type="text/javascript" src="/scripts/core.js"></script>
+        <script type="text/javascript" src="/scripts/toast.js"></script>
+        <script type="text/javascript" src="/scripts/mj.js"></script>
+        <script type="text/javascript" src="/scripts/xhr.js"></script>
+        <script type="text/javascript" src="/scripts/ktemplate.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <body>
+        <div id="renderarea">
+            Xin chào bạn @name
+            Tuổi của bạn là @age
+        </div>
+        <script>
+            new KTemplateInflater(renderarea, {name: "Trịnh Văn Linh", age: 24});
+        </script>
+        <style>
+            .select-box{
+                line-height: 30pt;
+                max-height: 180pt;
+                background-color: #fff;
+                overflow: auto;
+                cursor: pointer;
+            }
+            .select-box > div:hover{
+                background-color: #09adea;
+                color: white;
+            }
+        </style>
+        <div class="hint-select" style="display: inline-block; position: relative;">
+            <div class="label"></div>
+            <input type="text" style="position: relative" placeholder="Nhập tên tỉnh" autocomplete="off">
+            <div class="hint-select-dropdown" style="width: 100%; position: absolute" data-role="popup" data-role-type="static">
+                <div class="select-box">
+                    
+                </div>
+            </div>
+        </div>
+        
+        <form>
+            <input type="hidden" name="province_id">
+        </form>
+        
+        <script>
+            
+            (function(){
+                var hs = $('.hint-select')[0];
+                var input = $(hs).$('input')[0];
+                var sel = $(hs).$('.select-box')[0];
+                var data = [];
+                $(hs).$('.select-box').on('click', function(e){
+                    var t = e.target;
+                    if(t.dataset.type==='item'){
+                        $(hs).$('.label').html(t.innerHTML);
+                        $('input[name="province_id"]').val(t.dataset.value);
+                    }
+                });
+                $.ajax().create().url('/api/test/searchprovince').success(function(e){
+                    var result = JSON.parse(this.response);
+                    var n = result.body.data.length;
+
+                    for(var i=0; i<n; i++){
+                        var x = $.create('div');
+                            x.innerHTML = result.body.data[i].name;
+                            x.dataset.value = result.body.data[i].id;
+                            x.dataset.type = 'item';
+                            sel.append(x);
+                        data.push(result.body.data[i]);
+                    }
+                }).error(function(e){
+
+                }).post('name=');
+                
+                $(input).on('input', function(e){
+                    var filter = [];
+                    sel.innerHTML = '';
+                    for(var x of data){
+                        if(x.name.toLowerCase().indexOf(input.value) != -1){
+                            var i = $.create('div');
+                            i.innerHTML = x.name;
+                            i.dataset.value = x.id;i.dataset.type = 'item';
+                            sel.append(i);
+                        }
+                    }
+                });
+                var dd = $(hs).$('.hint-select-dropdown');
+                $(hs).on('mousedown', function(e){
+                    $(dd).removeClass('u-hidden');
+                    e.stopPropagation();
+                });
+            })();
+        </script>
+        Phần tử ở dưới
+    </body>
+</html>
