@@ -11,8 +11,48 @@
     
     use Library\File\ImageUploader;
     use Library\File\UploadImageException;
+    use Library\Image\ImageResizer;
     
     class uploadController extends Controller{
+        public function test(){
+            $result = new \stdClass();
+            $result->header = new \stdClass();
+            
+            $uploader = new ImageUploader();
+            $imageinfo = new ImageInfo($this->files->image['tmp_name']);
+            $extension = $imageinfo->getRealExtension();
+            
+            $uploader->upload($this->files->image['tmp_name'], $extension, PUBLIC_UPLOAD_IMAGE_DIR);
+            
+            $database = new Database();
+            
+            $user = (new Authenticate($database))->getUser();
+            
+            $imagemap = new ImageMapModel($database);
+            $imagemap->diskpath = $uploader->getDir() . DS . $uploader->getFileName();
+            
+            $imageresizer = new ImageResizer($imagemap->diskpath);
+            
+            $imageresizer->containResize(400, 400);
+            
+            $imagemap->linked = ImageMapModel::UNLINKED;
+            
+            $imagemap->urlpath = str_replace(DS, '/', PUBLIC_UPLOAD_IMAGE_PATH . DS . $uploader->getAutoPath() . DS . $uploader->getFileName());
+            
+            $imagemap->mimetype = $imageinfo->getMimeType();
+            
+            $imagemap->user_id = $user->id;
+            
+            $imagemap->add();
+            
+            $result->header->code = 0;
+            $result->body = new \stdClass();
+            $result->body->data = new \stdClass();
+            $result->body->data->url = $imagemap->urlpath;
+            $result->body->data->id = $database->lastInsertId();
+            
+            return $this->View->RenderJson($result);
+        }
         public function avatarimage(){
             $result = new \stdClass();
             $result->header = new \stdClass();
@@ -45,7 +85,11 @@
                         $hasAvatar = $user->loadAvatar();
                         $database->startTransaction();
                         $imagemap->add();
-                        $user->updateAvatarId($database->lastInsertId());
+                        $lastinsertid = $database->lastInsertId();
+                        $oldimagemap = new ImageMapModel($database);
+                        $oldimagemap->id = $user->avatar_id;
+                        $oldimagemap->delete();
+                        $user->updateAvatarId($lastinsertid);
                         $result->header->code = 0;
                         $result->header->message = 'Uploaded';
                         $result->body = new \stdClass();

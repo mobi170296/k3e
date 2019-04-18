@@ -45,6 +45,7 @@ function $qr(){
                     this[i].innerText = t;
                 }
             }
+            return this;
         }
     }
     $qr.prototype.html = function(t=null){

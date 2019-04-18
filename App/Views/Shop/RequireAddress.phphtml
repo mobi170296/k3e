@@ -1,0 +1,32 @@
+<?php
+    $this->Data->Title = 'Yêu cầu địa chỉ vận chuyển';
+?>
+<div id="shop-wrapper" class="clearfix u-my-5">
+    <div class="" style="margin: 20px; background-color: #fff; padding: 20px;">
+        <div>
+            <div>
+                <div><h2>Yêu cầu địa chỉ vận chuyển</h2></div>
+                <div>
+                    <?php
+                        if(isset($this->Data->ErrorMessage)){
+                            echo '<div class="message-box error">' . $this->Data->ErrorMessage . '</div>';
+                        }
+                        if(isset($this->Data->SuccessMessage)){
+                            echo '<div class="message-box success">'. $this->Data->SuccessMessage. '</div>';
+                        }
+                        if(isset($this->Data->ErrorsMap)){
+                            echo '<div class="message-box error">';
+                            foreach($this->Data->ErrorsMap as $error){
+                                echo '<div>' . $error . '</div>';
+                            }
+                            echo '</div>';
+                        }
+                    ?>
+                    
+                    <div style="font-size: 1.2em">Bạn chưa thiết lập địa chỉ vận chuyển vui lòng thực hiện thao tác thiết lập trước khi thực hiện việc đăng ký mở cửa hàng</div>
+                    <div><a class="btnlink btnlink-edit" style="font-size: 1.2em" href="/User/DeliveryAddresses">Quản lý địa chỉ vận chuyển</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

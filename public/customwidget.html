@@ -1,0 +1,176 @@
+<!doctype html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>
+            Custom Widget
+        </title>
+        <style>
+            body{
+                background-color: #fafafa;
+            }
+            [data-widget-type="select"]{
+                display: inline-block;
+                min-width: 10em;
+                position: relative;
+                cursor: pointer;
+                -moz-user-select: none;
+            }
+            
+            [data-widget-type="select"] .items{
+                position: absolute;
+                width: 100%;
+                max-height: 10em;
+                background-color: #fff;
+                overflow: auto;
+                transition: all 200ms;
+                transform-origin: top;
+                transform: rotateX(90deg);
+            }
+            
+            [data-widget-type="select"] .items.active{
+                transform: rotateX(0deg);
+            }
+            
+            [data-widget-type="select"] .items .item{
+                padding: 0.5em 10px;
+                transition: all 200ms;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            [data-widget-type="select"] .items .item:hover{
+                background-color: #9adad3;
+                color: #fff;
+            }
+            
+            [data-widget-type="select"] .current-value{
+                min-width: 10em;
+                padding: 10px 20px;
+                background-color: #9adad3;
+                display: block;
+            }
+            [data-widget-type="select"] .current-value::after{
+                content: "\25bd";
+                position: absolute;
+                top: 50%;
+                right: 1em;
+                margin-top: -0.5em;
+            }
+        </style>
+    </head>
+    
+    <body>
+        <form action="dump.php" method="post">
+            <div data-widget-type="select">
+                <span class="current-value"></span>
+                <div class="items">
+                    <div class="item active" data-value="201">Hà Nội</div>
+                    <div class="item" data-value="202">Hồ Chí Minh</div>
+                    <div class="item" data-value="203">Đà Nẵng</div>
+                    <div class="item" data-value="204">Đồng Nai</div>
+                    <div class="item" data-value="205">Bình Dương</div>
+                    <div class="item" data-value="206">Bà Rịa - Vũng Tàu</div>
+                    <div class="item" data-value="207">Gia Lai</div>
+                </div>
+                <input type="hidden" name="province_id" value=""/>
+            </div>
+
+
+            <div data-widget-type="select">
+                <span class="current-value"></span>
+                <div class="items">
+                    <div class="item active" data-value="201">Hà Nội</div>
+                    <div class="item" data-value="202">Hồ Chí Minh</div>
+                    <div class="item" data-value="203">Đà Nẵng</div>
+                    <div class="item" data-value="204">Đồng Nai</div>
+                    <div class="item" data-value="205">Bình Dương</div>
+                    <div class="item" data-value="206">Bà Rịa - Vũng Tàu</div>
+                    <div class="item" data-value="207">Gia Lai</div>
+                </div>
+                <input type="hidden" name="district_id" value=""/>
+            </div>
+
+
+            <div data-widget-type="select">
+                <span class="current-value"></span>
+                <div class="items">
+                    <div class="item active" data-value="201">Hà Nội</div>
+                    <div class="item" data-value="202">Hồ Chí Minh</div>
+                    <div class="item" data-value="203">Đà Nẵng</div>
+                    <div class="item" data-value="204">Đồng Nai</div>
+                    <div class="item" data-value="205">Bình Dương</div>
+                    <div class="item" data-value="206">Bà Rịa - Vũng Tàu</div>
+                    <div class="item" data-value="207">Gia Lai</div>
+                </div>
+                <input type="hidden" name="ward_id" value=""/>
+            </div>
+            <div>
+                <button type="submit" name="post" value="post">Post</button>
+            </div>
+        </form>
+        <script>
+            //module custom select
+            !function(){
+                var selects = document.querySelectorAll('[data-widget-type="select"]');
+                for(var i=0; i<selects.length; i++){
+                    !function(){
+                        var select = selects[i];
+                        var cvalue = select.querySelector('.current-value');
+                        var items = select.querySelector('.items');
+                        var item = select.querySelectorAll('.item');
+                        var input = select.querySelector('input');
+
+                        cvalue.addEventListener('click', function(e){
+                            items.classList.toggle('active');
+                        });
+
+                        function iss(e){
+                            var ce = null;
+                            if(e.target.classList.contains('item')){
+                                cvalue.innerHTML = e.target.innerHTML;
+                                input.value = e.target.dataset.value;
+                                for(var i=0; i<item.length; i++){
+                                    if(e.target !== item[i] && item[i].classList.contains('active')){
+                                        ce = item[i];
+                                    }
+                                    item[i].classList.remove('active');
+                                }
+                                e.target.classList.add('active');
+                            }
+                            this.classList.toggle('active');
+                            
+                            if(ce !== null){
+                                input.dispatchEvent(new Event('change'));
+                            }
+                        }
+
+                        items.addEventListener('click', function(e){
+                            iss.call(this, e);
+                        });
+                        
+                        function refresh(){
+                            
+                        }
+                        
+                        function removeAll(){
+                            console.log('ok called');
+                            var is = items.querySelectorAll('.item');
+                            for(var i=0; i< is.length; i++){
+                                is[i].remove();
+                            }
+                            input.removeAttribute('value');
+                        }
+                        
+                        function add(){
+                            
+                        }
+                        
+                        select.removeAll = removeAll;
+                    }();
+                }
+            }();
+        </script>
+    </body>
+</html>

@@ -1,0 +1,465 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>title</title>
+        <style>
+            .swiper-wrapper{
+                height: max-content;
+                overflow: hidden;
+                position: relative;
+            }
+            .swiper-holder{
+                transition: all 500ms;
+                height: 100%;
+                width: max-content;
+            }
+            .swiper-item{
+                float: left;
+                display: inline-block;
+            }
+            .swiper-previous{
+                border: 1px solid #eee;
+                width: 30px;
+                height: 30px;
+                position: absolute;
+                left: 10px;
+                top: 50%;
+                margin-top: -16px;
+                border-radius: 50%;
+                text-align: center;
+                line-height: 30px;
+                background-color: #fff;
+                cursor: pointer;
+                -moz-user-select: none;
+            }
+            .swiper-next{
+                border: 1px solid #eee;
+                width: 30px;
+                height: 30px;
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                margin-top: -16px;
+                border-radius: 50%;
+                text-align: center;
+                line-height: 30px;
+                background-color: #fff;
+                cursor: pointer;
+                -moz-user-select: none;
+            }
+            .swiper-previous:hover{
+                box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
+            }
+            .swiper-next:hover{
+                box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
+            }
+            .swiper-previous.active{
+                background-color: #09adea;
+                border: 1px solid #09adea;
+                color: #fff;
+            }
+            .swiper-next.active{
+                background-color: #09adea;
+                border: 1px solid #09adea;
+                color: #fff;
+            }
+            .product-card{
+                width: 250px;
+                height: 400px;
+                background-color: #fff;
+                border-radius: 7px;
+            }
+            .product-card:hover{
+                box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.1);
+            }
+            .product-card .product-info{
+                padding: 0px 10px;
+            }
+            .product-card .product-image{
+                height: 250px;
+                position: relative;
+            }
+            .product-card .product-name{
+                line-height: 1em;
+                height: 2em;
+                overflow: hidden;
+                font-family: tahoma;
+            }
+            .product-card .product-image .back-image{
+                height: 100%;
+                width: 100%;
+                background-repeat: no-repeat;
+                background-size: contain;
+                background-position: center center;
+            }
+            .product-card .product-image .fore-image{
+                position: absolute;
+                top: 0px;
+                left: 0px;
+                width: 100%;
+                height: 100%;
+            }
+            .product-card .product-image .add-to-card{
+                position: absolute;
+                left: 0px;
+                top: 0px;
+                height: 100%;
+                width: 100%;
+                line-height: 300px;
+                text-align: center;
+            }
+            .product-card .product-price{
+                color: #d00;
+            }
+            .product-card .product-rating{
+                color: #f00;
+            }
+            .product-card .product-image .add-to-card .btn-add-to-card{
+                border: 1px solid #26ad05;
+                background-color: #26ad05;
+                color: #fff;
+                padding: 10px 30px;
+                cursor: pointer;
+                opacity: 0;
+                transition: all 500ms;
+            }
+            .product-card:hover .product-image .add-to-card .btn-add-to-card{
+                opacity: 1;
+            }
+            .swiper-wrapper .product-card{
+                margin-right: 10px;
+            }
+        </style>
+    </head>
+    <body style="background-color: #eee">
+        <div class="product-card">
+            <div class="product-image">
+                <div class="back-image" style="background-image: url('/images/icons/iphone.png')"></div>
+                <div class="fore-image"></div>
+                <div class="add-to-card">
+                    <button class="btn-add-to-card">Thêm vào giỏ hàng</button>
+                </div>
+            </div>
+            <div class="product-info">
+                <div class="product-name">Giày Adidas thể thao</div>
+                <div class="product-rating">* * * * *</div>
+                <div class="product-price">125,000đ</div>
+            </div>
+        </div>
+        
+        
+        <div>
+            
+        </div>
+        <div class="swiper-wrapper product-swiper">
+            <div class="swiper-holder">
+                <div class="product-card swiper-item">
+                    <div class="product-image">
+                        <div class="back-image" style="background-image: url('/images/icons/iphone.png')"></div>
+                        <div class="fore-image"></div>
+                        <div class="add-to-card">
+                            <button class="btn-add-to-card">Thêm vào giỏ hàng</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Apple Iphone XS Max</div>
+                        <div class="product-rating">* * * * *</div>
+                        <div class="product-price">125,000đ</div>
+                    </div>
+                </div>
+                <div class="product-card swiper-item">
+                    <div class="product-image">
+                        <div class="back-image" style="background-image: url('/images/icons/iphone.png')"></div>
+                        <div class="fore-image"></div>
+                        <div class="add-to-card">
+                            <button class="btn-add-to-card">Thêm vào giỏ hàng</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Apple Iphone XS Max</div>
+                        <div class="product-rating">* * * * *</div>
+                        <div class="product-price">125,000đ</div>
+                    </div>
+                </div>
+                <div class="product-card swiper-item">
+                    <div class="product-image">
+                        <div class="back-image" style="background-image: url('/images/icons/iphone.png')"></div>
+                        <div class="fore-image"></div>
+                        <div class="add-to-card">
+                            <button class="btn-add-to-card">Thêm vào giỏ hàng</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Apple Iphone XS Max</div>
+                        <div class="product-rating">* * * * *</div>
+                        <div class="product-price">125,000đ</div>
+                    </div>
+                </div>
+                <div class="product-card swiper-item">
+                    <div class="product-image">
+                        <div class="back-image" style="background-image: url('/images/icons/iphone.png')"></div>
+                        <div class="fore-image"></div>
+                        <div class="add-to-card">
+                            <button class="btn-add-to-card">Thêm vào giỏ hàng</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Apple Iphone XS Max</div>
+                        <div class="product-rating">* * * * *</div>
+                        <div class="product-price">125,000đ</div>
+                    </div>
+                </div>
+                <div class="product-card swiper-item">
+                    <div class="product-image">
+                        <div class="back-image" style="background-image: url('/images/icons/iphone.png')"></div>
+                        <div class="fore-image"></div>
+                        <div class="add-to-card">
+                            <button class="btn-add-to-card">Thêm vào giỏ hàng</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Apple Iphone XS Max</div>
+                        <div class="product-rating">* * * * *</div>
+                        <div class="product-price">125,000đ</div>
+                    </div>
+                </div>
+                <div class="product-card swiper-item">
+                    <div class="product-image">
+                        <div class="back-image" style="background-image: url('/images/icons/iphone.png')"></div>
+                        <div class="fore-image"></div>
+                        <div class="add-to-card">
+                            <button class="btn-add-to-card">Thêm vào giỏ hàng</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Apple Iphone XS Max</div>
+                        <div class="product-rating">* * * * *</div>
+                        <div class="product-price">125,000đ</div>
+                    </div>
+                </div>
+                <div class="product-card swiper-item">
+                    <div class="product-image">
+                        <div class="back-image" style="background-image: url('/images/icons/iphone.png')"></div>
+                        <div class="fore-image"></div>
+                        <div class="add-to-card">
+                            <button class="btn-add-to-card">Thêm vào giỏ hàng</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Apple Iphone XS Max</div>
+                        <div class="product-rating">* * * * *</div>
+                        <div class="product-price">125,000đ</div>
+                    </div>
+                </div>
+                <div class="product-card swiper-item">
+                    <div class="product-image">
+                        <div class="back-image" style="background-image: url('/images/icons/iphone.png')"></div>
+                        <div class="fore-image"></div>
+                        <div class="add-to-card">
+                            <button class="btn-add-to-card">Thêm vào giỏ hàng</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Apple Iphone XS Max</div>
+                        <div class="product-rating">* * * * *</div>
+                        <div class="product-price">125,000đ</div>
+                    </div>
+                </div>
+                <div class="product-card swiper-item">
+                    <div class="product-image">
+                        <div class="back-image" style="background-image: url('/images/icons/iphone.png')"></div>
+                        <div class="fore-image"></div>
+                        <div class="add-to-card">
+                            <button class="btn-add-to-card">Thêm vào giỏ hàng</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Apple Iphone XS Max</div>
+                        <div class="product-rating">* * * * *</div>
+                        <div class="product-price">125,000đ</div>
+                    </div>
+                </div>
+                <div class="product-card swiper-item">
+                    <div class="product-image">
+                        <div class="back-image" style="background-image: url('/images/icons/iphone.png')"></div>
+                        <div class="fore-image"></div>
+                        <div class="add-to-card">
+                            <button class="btn-add-to-card">Thêm vào giỏ hàng</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Apple Iphone XS Max</div>
+                        <div class="product-rating">* * * * *</div>
+                        <div class="product-price">125,000đ</div>
+                    </div>
+                </div>
+                <div class="product-card swiper-item">
+                    <div class="product-image">
+                        <div class="back-image" style="background-image: url('/images/icons/iphone.png')"></div>
+                        <div class="fore-image"></div>
+                        <div class="add-to-card">
+                            <button class="btn-add-to-card">Thêm vào giỏ hàng</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Apple Iphone XS Max</div>
+                        <div class="product-rating">* * * * *</div>
+                        <div class="product-price">125,000đ</div>
+                    </div>
+                </div>
+                <div class="product-card swiper-item">
+                    <div class="product-image">
+                        <div class="back-image" style="background-image: url('/images/icons/iphone.png')"></div>
+                        <div class="fore-image"></div>
+                        <div class="add-to-card">
+                            <button class="btn-add-to-card">Thêm vào giỏ hàng</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Apple Iphone XS Max</div>
+                        <div class="product-rating">* * * * *</div>
+                        <div class="product-price">125,000đ</div>
+                    </div>
+                </div>
+                <div class="product-card swiper-item">
+                    <div class="product-image">
+                        <div class="back-image" style="background-image: url('/images/icons/iphone.png')"></div>
+                        <div class="fore-image"></div>
+                        <div class="add-to-card">
+                            <button class="btn-add-to-card">Thêm vào giỏ hàng</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Apple Iphone XS Max</div>
+                        <div class="product-rating">* * * * *</div>
+                        <div class="product-price">125,000đ</div>
+                    </div>
+                </div>
+                <div class="product-card swiper-item">
+                    <div class="product-image">
+                        <div class="back-image" style="background-image: url('/images/icons/iphone.png')"></div>
+                        <div class="fore-image"></div>
+                        <div class="add-to-card">
+                            <button class="btn-add-to-card">Thêm vào giỏ hàng</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Apple Iphone XS Max</div>
+                        <div class="product-rating">* * * * *</div>
+                        <div class="product-price">125,000đ</div>
+                    </div>
+                </div>
+                <div class="product-card swiper-item">
+                    <div class="product-image">
+                        <div class="back-image" style="background-image: url('/images/icons/iphone.png')"></div>
+                        <div class="fore-image"></div>
+                        <div class="add-to-card">
+                            <button class="btn-add-to-card">Thêm vào giỏ hàng</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Apple Iphone XS Max</div>
+                        <div class="product-rating">* * * * *</div>
+                        <div class="product-price">125,000đ</div>
+                    </div>
+                </div>
+                <div class="product-card swiper-item">
+                    <div class="product-image">
+                        <div class="back-image" style="background-image: url('/images/icons/iphone.png')"></div>
+                        <div class="fore-image"></div>
+                        <div class="add-to-card">
+                            <button class="btn-add-to-card">Thêm vào giỏ hàng</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Apple Iphone XS Max</div>
+                        <div class="product-rating">* * * * *</div>
+                        <div class="product-price">125,000đ</div>
+                    </div>
+                </div>
+                <div class="product-card swiper-item">
+                    <div class="product-image">
+                        <div class="back-image" style="background-image: url('/images/icons/iphone.png')"></div>
+                        <div class="fore-image"></div>
+                        <div class="add-to-card">
+                            <button class="btn-add-to-card">Thêm vào giỏ hàng</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Apple Iphone XS Max</div>
+                        <div class="product-rating">* * * * *</div>
+                        <div class="product-price">125,000đ</div>
+                    </div>
+                </div>
+                <div class="product-card swiper-item">
+                    <div class="product-image">
+                        <div class="back-image" style="background-image: url('/images/icons/iphone.png')"></div>
+                        <div class="fore-image"></div>
+                        <div class="add-to-card">
+                            <button class="btn-add-to-card">Thêm vào giỏ hàng</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Apple Iphone XS Max</div>
+                        <div class="product-rating">* * * * *</div>
+                        <div class="product-price">125,000đ</div>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-previous">&lt;</div>
+            <div class="swiper-next">&gt;</div>
+        </div>
+        
+        
+        <script>
+            !function(){
+                var _wrapper = document.querySelector('.swiper-wrapper');
+                var _holder = _wrapper.querySelector('.swiper-holder');
+                var _previous = _wrapper.querySelector('.swiper-previous');
+                var _next = _wrapper.querySelector('.swiper-next');
+                
+                var _sw = _wrapper.scrollWidth;
+                var _cw = _wrapper.clientWidth;
+                
+                _holder.style.marginLeft = '0px';
+                
+                function _sa(){
+                    var ml = parseInt(_holder.style.marginLeft);
+                    var w = _sw + ml;
+                    if(ml < 0){
+                        _previous.classList.add('active');
+                    }else{
+                        _previous.classList.remove('active');
+                    }
+                    
+                    if(w > _cw){
+                        _next.classList.add('active');
+                    }else{
+                        _next.classList.remove('active');
+                    }
+                }
+                
+                _sa();
+                
+                _previous.addEventListener('click', function(e){
+                    var lw = _cw/2;
+                    var ml = parseInt(_holder.style.marginLeft);
+                    var left = Math.min(ml + lw, 0);
+                    _holder.style.marginLeft = left + 'px';
+                    _sa();
+                });
+                _next.addEventListener('click', function(e){
+                    var lw = _cw/2;
+                    var ml = parseInt(_holder.style.marginLeft);
+                    var w = ml + _sw;
+                    w = Math.max(w-lw, _cw);
+                    ml = _sw - w;
+                    _holder.style.marginLeft = -ml + 'px';
+                    _sa();
+                });
+            }();
+            
+        </script>
+    </body>
+</html>

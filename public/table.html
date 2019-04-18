@@ -5,36 +5,159 @@
         <title>
             Test table
         </title>
+        <link rel="stylesheet" href="/styles/main.css"/>
+        <link rel="stylesheet" href="/styles/sub.css"/>
+        <link rel="stylesheet" href="/styles/table.css"/>
+        <link rel="stylesheet" href="/styles/toast.css"/>
+        <link rel="stylesheet" href="/styles/utility.css"/>
+        <link rel="stylesheet" href="/styles/form.css"/>
+        <script type="text/javascript" src="/scripts/core.js"></script>
         <script type="text/javascript" src="/scripts/ktemplate.js"></script>    
-        <script type="text/javascript" src="/scripts/ktable.js">
-            
-        </script>
+        <script type="text/javascript" src="/scripts/ktable.js"></script>
+        <script type="text/javascript" src="/scripts/mj.js"></script>
+        <script type="text/javascript" src="/scripts/xhr.js"></script>
+        <script type="text/javascript" src="/scripts/toast.js"></script>
         <style>
             #data{
                 border-collapse: collapse;
+                font-size: 10pt;
+            }
+            #data thead td{
+                font-size: 1.2em;
+                font-family: segoe ui;
             }
             #data td{
-                border: 1px solid #aaa;
+                border-width: 1px 0px;
+                border-style: solid;
+                border-color: #bbb;
                 padding: 5px 10px;
             }
+            
         </style>
     </head>
     <body>
         <script type="text/ktpl" id="row-tpl">
             <td>@name</td>
             <td>@age</td>
-            <td><button type="button" name="" data-field-id="@id">Sửa</button> <button type="button" data-field-id="@id">Xóa</button></td>
+            <td>@address</td>
+            <td>@phone</td>
+            <td><button class="btn btn-edit btn-edit-i" type="button" name="" data-table-button-type="edit" data-field-id="@id" data-field-name="@name">Sửa</button> <button class="btn btn-del btn-del-i" type="button" data-table-button-type="delete" data-field-id="@id" data-field-name="@name" data-table-row-id="@_id">Xóa</button></td>
         </script>
-        <table id="data">
-            <thead></thead>
-            <tbody>
+        <div class="data-table-wrapper">
+            
+            <table id="data">
+                <thead></thead>
+                <tbody>
+
+                </tbody>
+            </table>
+            
+            
+            <div class="pagination-wrapper">
                 
-            </tbody>
-        </table>
+            </div>
+        </div>
         
         
         <script>
-            
+            !function(){
+                source = [
+                    {name: 'Trịnh Văn Linh', age: 32, address: 'Đồng tháp', phone: '0795759696'},
+                    {name: 'Nguyễn Thị Thúy Hằng', age: 23, address: 'An Giang', phone: '0123456789'},
+                    {name: 'Lương Hữu Tín', age: 33, address: 'Kiên Giang', phone: '0965928981'},
+                    {name: 'Bùi Quang Dũng', age: 11, address: 'Bến Tre', phone: '077454115'},
+                    {name: 'Ngọc Ngân', age: 33, address: 'Sóc Trăng', phone: '0965985454'},
+                    {name: 'Trịnh Văn Linh', age: 32, address: 'Đồng tháp', phone: '0795759696'},
+                    {name: 'Nguyễn Thị Thúy Hằng', age: 23, address: 'An Giang', phone: '0123456789'},
+                    {name: 'Lương Hữu Tín', age: 33, address: 'Kiên Giang', phone: '0965928981'},
+                    {name: 'Bùi Quang Dũng', age: 11, address: 'Bến Tre', phone: '077454115'},
+                    {name: 'Ngọc Ngân', age: 33, address: 'Sóc Trăng', phone: '0965985454'},
+                    {name: 'Trịnh Văn Linh', age: 32, address: 'Đồng tháp', phone: '0795759696'},
+                    {name: 'Nguyễn Thị Thúy Hằng', age: 23, address: 'An Giang', phone: '0123456789'},
+                    {name: 'Lương Hữu Tín', age: 33, address: 'Kiên Giang', phone: '0965928981'},
+                    {name: 'Bùi Quang Dũng', age: 11, address: 'Bến Tre', phone: '077454115'},
+                    {name: 'Ngọc Ngân', age: 33, address: 'Sóc Trăng', phone: '0965985454'},
+                    {name: 'Trịnh Văn Linh', age: 32, address: 'Đồng tháp', phone: '0795759696'},
+                    {name: 'Nguyễn Thị Thúy Hằng', age: 23, address: 'An Giang', phone: '0123456789'},
+                    {name: 'Lương Hữu Tín', age: 33, address: 'Kiên Giang', phone: '0965928981'},
+                    {name: 'Bùi Quang Dũng', age: 11, address: 'Bến Tre', phone: '077454115'},
+                    {name: 'Ngọc Ngân', age: 33, address: 'Sóc Trăng', phone: '0965985454'}
+                ];
+
+                window._create_pagination_bar = function _create_pagination_bar(c, t){
+                    var si = (c - 2 < 1) ? 1 : (c - 2);
+                    var ei = (c + 2 > t) ? t : (c + 2);
+                    
+                    var btns = [];
+                    for(var i = 1; i <= 3 && i < si; i++){
+                        var btn = $.create('button');
+                        btn.innerHTML = i;
+                        btns.push(btn);
+                    }
+                    
+                    if(si > 4){
+                        var btn = $.create('button');
+                        btn.innerHTML = '...';
+                        btns.push(btn);
+                    }
+                    
+                    for(var i = si; i <= ei; i++){
+                        var btn = $.create('button');
+                        btn.innerHTML = i;
+                        btns.push(btn);
+                    }
+                    
+                    if(t - 3 > ei){
+                        var btn = $.create('button');
+                        btn.innerHTML = '...';
+                        btns.push(btn);
+                    }
+                    
+                    for(var i = Math.max(ei + 1, t - 2); i<=t; i++){
+                        var btn = $.create('button');
+                        btn.innerHTML = i;
+                        btns.push(btn);
+                    }
+                    
+                    
+                    var ps = $('.pagination-wrapper').html('');
+                    for(var btn of btns){
+                        ps.addEnd(btn);
+                    }
+                }
+
+                table = new KDataTable(data);
+                table.addHeader(['Họ và tên', 'Tuổi', 'Địa chỉ', 'Số điện thoại', 'Thao tác']);
+                table.setRowTemplate(window['row-tpl'].innerHTML);
+                id = 0;
+                for(person of source){
+                    person._id = id++;
+                    table.addRow(person);
+                }
+                
+                function ec(e){
+                    $ConfirmPopup.message('Bạn có muốn sửa thông tin cho người dùng ' + this.dataset.fieldName + '?').active('Sửa', null).inactive('Không', null).show();
+                }
+                
+                function dc(e){
+                    var b = this;
+                    function du(e){
+                        $(this).parent('tr').remove();
+                    }
+                    $ConfirmPopup.message('Bạn có muốn xóa người dùng ' + this.dataset.fieldName + '?').active('Xóa', function(e){
+                        $LoadingPopup.show();
+                        window.setTimeout(function(){$LoadingPopup.hide(); du.call(b,e)}, 3000);
+                        $ConfirmPopup.hide();
+                    }).inactive('Không', function(e){
+                        $ConfirmPopup.hide();
+                    }).show();
+                }
+                
+                table.setEvent('click', function(e){
+                    e.target.dataset.tableButtonType !== undefined && e.target.dataset.tableButtonType === 'edit' ? ec.call(e.target, e) : !1;
+                    e.target.dataset.tableButtonType !== undefined && e.target.dataset.tableButtonType === 'delete' ? dc.call(e.target, e) : !1;
+                });
+            }();            
         </script>
     </body>
 </html>

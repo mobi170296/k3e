@@ -40,16 +40,16 @@ DATAPRESENTATION;
             var nv=$(n).val();
             var lv=$(l).val();
             if(nv.length>200 || nv.length===0){
-                $(n).next().text('Tên danh mục không được rỗng và chỉ có nhiều nhất 200 ký tự');
+                $(n).next().text('Tên danh mục không được rỗng và chỉ có nhiều nhất 200 ký tự').addClass('active');
                 err|=1;
             }else{
-                $(n).next().text('');
+                $(n).next().text('').removeClass('active');
             }
             if(lv.length>1024){
-                $(l).next().text('Độ dài liên kết không hợp lệ');
+                $(l).next().text('Độ dài liên kết không hợp lệ').addClass('active');
                 err|=1;
             }else{
-                $(l).next().text('');
+                $(l).next().text('').removeClass('active');
             }
             return err===0;
         }

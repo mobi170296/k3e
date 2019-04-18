@@ -1,0 +1,106 @@
+<?php
+    $this->Data->Title = 'Đăng ký mở cửa hàng';
+?>
+<div id="shop-register">
+    <div class="shop-register-holder">
+        <form name="shop-register-form" action="/api/shop/open" onsubmit="return false;" autocomplete="off">
+            <div class="form-field">
+                <label>
+                    <span class="form-label">Tên cửa hàng <small>(Tên kinh doanh)</small></span>
+                    <div class="shop-form-control">
+                        <input type="text" name="name" value="" placeholder="Tên cửa hàng"/>
+                    </div>
+                    <p class="invalid-data" data-valid-for="name"></p>
+                </label>
+            </div>
+
+            <div class="form-field">
+                <label>
+                    <span class="form-label">Mô tả cửa hàng <small>(Lĩnh vực kinh doanh)</small></span>
+                    <div class="shop-form-control">
+                        <textarea rows="7" name="description" value="" placeholder="Mô tả cửa hàng"></textarea>
+                    </div>
+                    <p class="invalid-data" data-valid-for="description"></p>
+                </label>
+            </div>
+
+            <div>
+                <button type="submit" class="btn btn-add btn-add-i" name="open" value="open">
+                    Mở cửa hàng
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    !function(){
+        var _form = document.forms['shop-register-form']
+        var _namef = _form.name;
+        var _descf = _form.description;
+        
+        function _checkValid(){
+            var err = 0;
+            var nl = _namef.value.length;
+            var dl = _descf.value.length;
+            
+            if(nl===0){
+                err |= 1;
+                $(_form).$('.invalid-data[data-valid-for="name"]').addClass('active').html('Phải đặt tên cho cửa hàng');
+            }else{
+                if(nl > 40){
+                    err |= 1;
+                    $(_form).$('.invalid-data[data-valid-for="name"]').addClass('active').html('Tên cửa hàng có độ dài phải ít hơn 40 ký tự');
+                }else{
+                    $(_form).$('.invalid-data[data-valid-for="name"]').removeClass('active');
+                }
+            }
+            
+            if(dl > 512){
+                err |= 1;
+                $(_form).$('.invalid-data[data-valid-for="description"]').addClass('active').html('Độ dài mô tả không được vượt quá 512 ký tự');
+            }else{
+                $(_form).$('.invalid-data[data-valid-for="description"]').removeClass('active');
+            }
+            
+            return err === 0;
+        }
+        
+        $(_form).on('submit', function(e){
+            if(_checkValid()){
+                $LoadingPopup.show();
+                $.ajax().create().success(function(e){
+                    var result = JSON.parse(this.response);
+                    if(result.header.code===0){
+                        $Toast.makeSuccess(result.header.message);
+                        window.setTimeout(function(e){
+                            document.location.href = '/Shop/Info';
+                        }, 2e3);
+                    }else{
+                        if(result.header.errors.description !== undefined){
+                            $(_form).$('.invalid-data[data-valid-for="description"]').addClass('active').html(result.header.errors.description);
+                        }
+                        
+                        if(result.header.errors.name !== undefined){
+                            $(_form).$('.invalid-data[data-valid-for="name"]').addClass('active').html(result.header.errors.name);
+                        }
+                        
+                        $Toast.makeError(result.header.message);
+                        $LoadingPopup.hide();
+                    }
+                }).error(function(e){
+                    $Toast.makeError('Lỗi kết nối', 5e3);
+                    $LoadingPopup.hide();
+                }).postForm(_form);
+            }
+        });
+    }();
+    
+    $('.shop-register-holder').css('transition', 'all 1s');
+    $('.shop-register-holder').css('transform', 'translate(0, 200px)');
+    $(function(){
+        window.setTimeout(function(e){
+            $('.shop-register-holder').css('transform', 'none');
+        },100)
+    });
+</script>

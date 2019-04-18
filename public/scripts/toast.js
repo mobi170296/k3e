@@ -65,9 +65,11 @@ $LoadingPopup = new (function(){
     this.show = function(){
         $(document.body).addBegin(this.container);
         $(this.container).removeClass('u-hidden');
+        $(document.body).css('overflow', 'hidden');
     }
     this.hide = function(){
         $(this.container).addClass('u-hidden');
+        $(document.body).css('overflow', 'auto');
     }
 })();
 
@@ -83,7 +85,6 @@ $ConfirmPopup = new (function(){
     $(this.btngroup).addEnd(this.activebtn).addEnd(this.inactivebtn).addClass('btngroup');
     $(this.messagebox).addEnd(this.content).addEnd(this.btngroup).addClass('messagebox');
     $(this.messagebox).on('mousedown', function(e){
-        window.e = e;
         e.stopPropagation();
     });
     $(this.content).addClass('content');
@@ -110,9 +111,56 @@ $ConfirmPopup = new (function(){
     }
 })();
 
+$NotificationPopup = new (function(){
+    var container = $.create('div');
+    var messagebox = $.create('div');
+    var content = $.create('div');
+    var okbtn = $.create('button');
+    $(okbtn).attr('type', 'button').addClass('okbtn');
+    $(content).addClass('content');
+    $(messagebox).addClass('messagebox').addEnd(content).addEnd(okbtn);
+    $(container).addClass('notification-popup').addClass('u-hidden').addEnd(messagebox);
+    
+    
+    okbtn.onclick = function(e){
+        $(messagebox).css('transform', 'translate(0, -500px)');
+        window.setTimeout(function(e){
+            hide();
+        }, 200);
+    }
+    
+    message = function(message){
+        $(content).html(message);
+        return this;
+    }
+    
+    ok = function(title){
+        $(okbtn).html(title);
+        return this;
+    }
+    
+    show = function(){
+        $(messagebox).css('transform', 'translate(0, 0)');
+        $(container).removeClass('u-hidden');
+        return this;
+    }
+    
+    hide = function(){
+        $(container).addClass('u-hidden');
+        return this;
+    }
+    
+    return {
+        message: message,
+        ok: ok,
+        show: show,
+        hide: hide,
+        container: container
+    }
+});
 
 $(function(e){
-    $(document.body).addBegin($LoadingPopup.container).addBegin($ConfirmPopup.container);
+    $(document.body).addBegin($LoadingPopup.container).addBegin($ConfirmPopup.container).addBegin($NotificationPopup.container);
     $('.tabpane .baritem').on('click', function(e){
         var p = $(this).parent('.tabpane');
         $(p).$('.baritem').removeClass('active');

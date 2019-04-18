@@ -166,7 +166,14 @@
         }
         
         public function loadShop(){
-            
+            $rows = $this->database->selectall()->from(DB_TABLE_SHOP)->where('owner_id=' . $this->id)->execute();
+            if(count($rows)){
+                $this->shop = new ShopModel($this->database);
+                $this->shop->id = $rows[0]->id;
+                return $this->shop->loadData();
+            }else{
+                return false;
+            }
         }
         
         public function loadDistrict(){
@@ -316,6 +323,6 @@
         }
         public function updateAvatarId($id = null){
             $this->database->update(DB_TABLE_USER, ['avatar_id' => new DBNumber((int)$id)], 'id=' . (int)$this->id);
-            $this->database->delete(DB_TABLE_IMAGEMAP, 'id=' . (int)$this->avatar_id);
+            $this->avatar_id = $id;
         }
     }

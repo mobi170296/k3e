@@ -186,10 +186,11 @@
                 $this->View->Data->provincelist = (new ProvinceList($database))->getAll();
                 
                 if($add!=null){
-                    $this->View->Data->district_id = $input->ward_id;
                     $this->View->Data->province_id = $province_id;
                     $this->View->Data->districtlist = (new DistrictList($database))->getAllFromProvince((int)$province_id);
                     $this->View->Data->district_id = $district_id;
+                    $this->View->Data->wardlist = (new WardList($database))->getAllFromDistrict($district_id);
+                    $this->View->Data->ward_id = $input->ward_id;
                 }else{
                     $this->View->Data->districtlist = (new DistrictList($database))->getAllFromProvince($this->View->Data->provincelist[0]->id);
                     $this->View->Data->wardlist = (new WardList($database))->getAllFromDistrict($this->View->Data->districtlist[0]->id);

@@ -32,6 +32,7 @@
     
     #print_r($_SERVER);
     
+    $route->mapRoute('Shop/{id:"\d+"}', ['controller' => 'Shop', 'action' => 'ShopProfile']);
     $route->mapRoute('{controller:"api/\w+"}/{action}', []);
     $route->mapRoute('{controller:"api/\w+"}/{action}/{id}', []);
     $route->mapRoute('Layout/Header', ['controller' => 'Home', 'action' => 'Index']);

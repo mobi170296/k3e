@@ -31,6 +31,6 @@
         }
         
         public function delete(){
-            $this->database->delete(DB_TABLE_IMAGEMAP, 'id=' . $this->id);
+            $this->database->delete(DB_TABLE_IMAGEMAP, 'id=' . (int)$this->id);
         }
     }

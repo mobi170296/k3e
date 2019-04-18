@@ -41,9 +41,11 @@
                     if($this->Data->user->haveRole(UserModel::ADMIN_ROLE)){
                         echo '<a href="/Admin/Index">Quản trị hệ thống</a>';
                     }
-                    echo '<a href="/Shop/Index">Cửa hàng</a>';
+                    if($this->Data->user->isMerchant()){
+                        echo '<a href="/Shop/Index">Cửa hàng</a>';
+                    }
                     echo '<a href="/User/Orders">Đơn hàng</a>';
-                    echo '<a href="/User/Logout">Đăng xuất</a>';
+                    echo '<a href="/User/Logout">Thoát tài khoản</a>';
                     echo'</div>';
                     echo '</div>';
                 }

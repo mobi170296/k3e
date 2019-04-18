@@ -7,6 +7,13 @@ function KDataTable(table, config){
             this.table.tHead.rows[0].remove();
         }
     }
+    
+    this.clearRows = function(){
+        var body = this.table.tBodies[0];
+        while(body.rows.length){
+            body.rows[0].remove();
+        }
+    }
 
     this.addHeader = function(a = []){
         var header = this.table.tHead;
@@ -24,8 +31,9 @@ function KDataTable(table, config){
     }
 
     this.removeRow = function(i){
-        if(this.tBodies[0].rows[i] !== undefined){
-            this.tBodies[0].rows[i].remove();
+        var body = this.table.tBodies[0];
+        if(body.rows[i] !== undefined){
+            body.rows[i].remove();
         }
     }
 

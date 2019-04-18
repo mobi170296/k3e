@@ -50,7 +50,6 @@
         public function getSubCategories(){
             return $this->subcategories;
         }
-        
         public function checkValidForName(){
             if(isset($this->name) && is_string($this->name)){
                 $length = mb_strlen($this->name);
@@ -99,6 +98,13 @@
             return $this;
         }
         
+        
+        public function hasProduct(){
+            $rows = $this->database->select('count(*) as total')->from(DB_TABLE_MAINCATEGORY)->join(DB_TABLE_SUBCATEGORY)->on('maincategory.id=subcategory.maincategory_id')->join(DB_TABLE_PRODUCT)->on('subcategory.id=product.subcategory_id')->where('maincategory.id=' . (int)$this->id)->execute();
+            
+            return $rows[0]->total != 0;
+        }
+        
         public function loadData(){
             $rows = $this->database->select('*')->from(DB_TABLE_MAINCATEGORY)->where('id=' . (new DBNumber((int)$this->id))->SqlValue())->execute();
             if(count($rows)){
@@ -132,7 +138,7 @@
         }
         
         public function delete(){
-            $this->database->delete(DB_TABLE_MAINCATEGORY, 'id=' . new DBNumber($this->id));
+            $this->database->delete(DB_TABLE_MAINCATEGORY, 'id=' . (int)$this->id);
             return true;
         }
         

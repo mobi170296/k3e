@@ -93,8 +93,13 @@
             return $this;
         }
         
+        public function hasProduct(){
+            $rows = $this->database->select('count(*) total')->from(DB_TABLE_SUBCATEGORY)->join(DB_TABLE_PRODUCT)->on('subcategory.id=product.subcategory_id')->where('subcategory.id=' . (int)$this->id)->execute();
+            return $rows[0]->total != 0;
+        }
+        
         public function loadData(){
-            $rows = $this->database->select('*')->from(DB_TABLE_SUBCATEGORY)->where('id=' . new DBNumber($this->id))->execute();
+            $rows = $this->database->select('*')->from(DB_TABLE_SUBCATEGORY)->where('id=' . (int)$this->id)->execute();
             if(count($rows)){
                 $row = $rows[0];
                 $this->name = $row->name;
@@ -129,7 +134,7 @@
         }
         
         public function delete(){
-            $this->database->delete(DB_TABLE_SUBCATEGORY, 'id='.new DBNumber($this->id));
+            $this->database->delete(DB_TABLE_SUBCATEGORY, 'id='. (int)$this->id);
             return true;
         }
     }

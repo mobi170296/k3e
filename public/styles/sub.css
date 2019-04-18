@@ -1,3 +1,114 @@
+
+.shop-profile-wrapper{
+    width: 1270px;
+    margin: 10px auto;
+}
+.shop-profile-wrapper .left-menu{
+    width: 250px;
+    float: left;
+}
+
+.shop-profile-wrapper .right-content{
+    width: 1020px;
+    float: left;
+}
+.shop-profile-wrapper .left-menu .menu{
+    background-color: #fff;
+    margin: 5px;
+    box-shadow: 0px 0px 7px 0px rgba(0,0,0,0.1);
+}
+.shop-profile-wrapper .left-menu .menu .menu-item{
+    padding: 10px 0px 10px 20px;
+    color: #000;
+}
+.shop-profile-wrapper .left-menu .menu .menu-item.active{
+    background-color: #fafafa;
+    border-left: 5px solid #26ad05;
+}
+.shop-profile-wrapper .right-content .shop-profile-card{
+    margin: 5px;
+    padding: 5px;
+    background-color: #fff;
+    box-shadow: 0px 0px 7px 0px rgba(0,0,0,0.1);
+}
+.shop-profile-wrapper .right-content .shop-profile-card .shop-profile-title{
+    padding: 10px 20px;
+    border-bottom: 1px solid #eee;
+}
+.shop-profile-wrapper .right-content .shop-profile-card .shop-profile-title .header{
+    font-size: 1.5em;
+}
+.shop-profile-wrapper .right-content .shop-profile-card .shop-profile-title .desc{
+    
+}
+.shop-profile-wrapper .right-content .shop-profile-card .shop-profile-content{
+    padding: 5px 20px;
+}
+.shop-profile-update-form{
+    
+}
+.shop-profile-update-form .form-label{
+    font-size: 1.2em;
+}
+.shop-profile-update-form input[type="text"]{
+    border-radius: 2px;
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #aaa;
+}
+.shop-profile-update-form textarea{
+    border-radius: 2px;
+    border: 1px solid #aaa;
+    width: 100%;
+    box-sizing: border-box;
+    resize: vertical;
+    font-family: initial;
+    padding: 10px 20px;
+}
+
+
+
+#shop-register{
+    text-align: center;
+}
+#shop-register .shop-register-holder{
+    min-width: 480px;
+    display: inline-block;
+    margin: 20px 0px;
+    padding: 140px 50px 50px;
+    border-radius: 5px;
+    text-align: initial;
+    background-color: #fff;
+    background-image: url('/images/icons/shop-icon.png');
+    background-repeat: no-repeat;
+    background-size: 100px 100px;
+    background-position: center 20px;
+    box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.2);
+}
+#shop-register .form-label{
+    font-size: 1.2em;
+}
+#shop-register .form-field{
+    margin-bottom: 5px;
+}
+.shop-form-control input[type="text"]{
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #158a0e;
+    border-radius: 2px;
+    font-family: segoe ui;
+    font-size: 1.1em;
+}
+.shop-form-control textarea{
+    box-sizing: border-box;
+    width: 100%;
+    padding: 10px 20px;
+    border: 1px solid #158a0e;
+    border-radius: 2px;
+    font-family: segoe ui;
+    resize: vertical;
+}
+
 .user-avatar{
     display: inline-block;
     vertical-align: middle;
@@ -85,12 +196,24 @@
     padding: 20px 0px 0px 0px;
 }
 .progress-total{
+    background-color: #fff;
+
+    border-radius: 50px;
+
+    overflow: hidden;
+
     height: 20px;
-    background-color: #eee;
+
+    border: 1px solid #4cd964;
 }
 .progress-current{
+    background-color: #4cd964;
+
+    border-radius: 50px;
+
+    overflow: hidden;
     height: 100%;
-    background-color: #06a24f;
+    transition: all 700ms;
 }
 
 #scart-wrapper{
@@ -122,6 +245,16 @@ span#scart-icon{
     z-index: 3;
     overflow: auto;
 }
+@keyframes anim-modal-show{
+    from{
+        transform: scale(0) translate(0px, -300px);
+        opacity: 0;
+    }
+    to{
+        transform: scale(1) translate(0px, 0px);
+        opacity: 1;
+    }
+}
 #modal-wrapper .modal{
     display: inline-block;
     margin: 30px 0px;
@@ -132,6 +265,10 @@ span#scart-icon{
     box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.3);
     min-width: 540px;
     overflow: hidden;
+    animation-name: anim-modal-show;
+    animation-duration: 200ms;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-out;
 }
 #modal-wrapper .modal-header-button{
     display: inline-block;

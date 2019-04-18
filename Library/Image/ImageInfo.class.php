@@ -27,6 +27,9 @@
         }
         
         public function getSize(){
-            
+            $result = new \stdClass();
+            $result->width = $this->info[0];
+            $result->height = $this->info[1];
+            return $result;
         }
     }

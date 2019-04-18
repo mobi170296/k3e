@@ -119,6 +119,10 @@ function $AJAX(){
         this._xhr.onprogress = cb;
         return this;
     }
+    this.abort = function(){
+        this._xhr.abort();
+        return this;
+    }
 }
 
 

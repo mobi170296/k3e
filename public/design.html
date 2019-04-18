@@ -1,61 +1,180 @@
-
-    <script src="/scripts/mj.js">
-    </script>
-<script src="/scripts/xhr.js">
-    </script>
-    
-<meta charset="utf-8"/>
-<select data-role="data-source-select-maincategory" id="province" size="6" data-source="/maincategory.php?a=getall">
-    
-</select>
-
-<select data-role="data-source-select-subcategory" id="district" multiple size="10" data-source="/subcategory.php?a=get">
-    
-</select>
-
-
-
-<script>
-    window.onload = function(e){
-        
-        $.ajax().create().url('/maincategorylist.php').success(function(e){
-            
-        var select = $('select[data-role="data-source-select-maincategory"]')[0];
-            var maincates = JSON.parse(this.response);
-            for(var i =0;i<maincates.length;i++){
-                var option = $.create('option');
-                $(option).val(maincates[i].id);
-                $(option).html(maincates[i].name);
-                select.options.add(option);
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>title</title>
+        <script src="/scripts/core.js"></script>
+        <script src="/scripts/xhr.js"></script>
+        <script src="/scripts/toast.js"></script>
+        <script src="/scripts/editor.js"></script>
+        <link href="/styles/utility.css" rel="stylesheet"/>
+        <link href="/styles/sub.css" rel="stylesheet"/>
+        <link href="/styles/toast.css" rel="stylesheet"/>
+        <link href="/styles/editor.css" rel="stylesheet"/>
+        <style>
+            .product-image-upload-card{
+                width: 200px;
+                height: 100px;
+                border: 1px dashed #00a424;
+                border-radius: 5px;
+                position: relative;
+                overflow: hidden;
+                float: left;
+                margin: 5px;
             }
             
-            $(select).on('change', function(e){
-                var so = this.selectedOptions[0];
-                $.ajax().create().url('subcategorylist.php').success(function(e){
-                    var s = $('select[data-role="data-source-select-subcategory"]')[0];
-                    while(s.length){
-                        s.remove(0);
-                    }
-                    var subcates = JSON.parse(this.response);
-                    for(var i=0; i<subcates.length;i++){
-                        var option = $.create('option');
-                        $(option).val(subcates[i].id);
-                        $(option).html(subcates[i].name);
-                        s.options.add(option);
+            .product-image-upload .product-image-upload-progress{
+                position: absolute;
+                top: 0px;
+                left: 0px;
+                width: 100%;
+                height: 100%;
+                display: none;
+            }
+            .product-image-upload .progress-total{
+                height: 5px;
+                width: 80%;
+                margin: 80px auto;
+            }
+            .product-image-upload .product-image-upload-preview{
+                background-repeat: no-repeat;
+                background-position: center center;
+                background-size: contain;
+                height: 100%;
+                width: 100%;
+            }
+            
+            .product-image-upload .product-image-upload-progress.active{
+                background-color: rgba(255,255,255,0.7);
+                display: block;
+            }
+            
+            
+            label.product-image-upload-select{
+                width: 100px;
+                height: 100px;
+                border: 1px dashed #00a424;
+                border-radius: 5px;
+                position: relative;
+                overflow: hidden;
+                float: left;
+                margin: 5px;
+                cursor: pointer;
+                background-image: url('/images/icons/add-image.png');
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: 48px 48px;
+            }
+            label.product-image-upload-select:hover{
+                background-color: #abeab9;
+            }
+            label.product-image-upload-select input{
+                display: none;
+            }
+            
+            .product-image-upload .product-image-upload-delete{
+                position: absolute;
+                top: 5px;
+                right: 10px;
+                cursor: pointer;
+            }
+        </style>
+    </head>
+    <body style="background-color: #fff">
+        <script id="product-image-upload-card-tpl" type="text/ktpl">
+            <div class="product-image-upload-preview"></div>
+            <div class="product-image-upload-progress">
+                <div class="progress-total">
+                    <div class="progress-current"></div>
+                </div>
+            </div>
+            <div class="product-image-upload-delete">&times;</div>
+            <input type="hidden" name="product_image_chosen[]" disabled/>
+        </script>
+        <form method="post" action="/result.php">
+        <div class="product-image-upload">
+            <div class="product-image-upload-chosen">
+                
+            </div>
+            <div class="product-image-upload-temp">
+                
+            </div>
+            
+            <label class="product-image-upload-select">
+                <input id="test" type="file" name="product_image" multiple="" />
+            </label>
+        </div>
+            <button type="submit" >Post</button>
+        </form>
+        <script>
+            !function(){
+                var _product_image_upload_chosen = document.querySelector('.product-image-upload-chosen');
+                var _product_image_upload_temp = document.querySelector('.product-image-upload-temp');
+                var _input_product_image_upload_select = document.querySelector('.product-image-upload-select input');
+                var _product_image_upload_card_tpl = document.querySelector('script#product-image-upload-card-tpl');
+                
+                function _iinit(file){
+                    var _product_image_upload_card = document.createElement('div');
+                    _product_image_upload_card.classList.add('product-image-upload-card');
+                    _product_image_upload_card.innerHTML = _product_image_upload_card_tpl.innerHTML;
+                    
+                    var _product_image_upload_preview = _product_image_upload_card.querySelector('.product-image-upload-preview');
+                    var _product_image_upload_progress = _product_image_upload_card.querySelector('.product-image-upload-progress');
+                    var _progress_current = _product_image_upload_card.querySelector('.progress-current');
+                    var _product_image_upload_delete = _product_image_upload_card.querySelector('.product-image-upload-delete');
+                    var _product_image_chosen = _product_image_upload_card.querySelector('input');
+                    
+                    _product_image_upload_delete.onclick = function(e){
+                        _ajax.abort();
+                        _product_image_upload_card.remove();
                     }
                     
-                }).error(function(e){
-                    console.log("error get subcategory");
-                }).post('id=' + $(so).val());
-            });
-        }
-        ).error(function(e){
-            console.log(this.response);
-        }).get();
-        }
-        
-        
-        window.addEventListener('load', function(e){
-            console.log('EVENT ON LOAD');
-        });
-    </script>
+                    _product_image_upload_preview.style.backgroundImage = "url('" + URL.createObjectURL(file) + "')";
+                    _product_image_upload_progress.classList.add('active');
+                    
+                    _progress_current.style.width = '0%';
+                    
+                    var data = new FormData();
+                    data.append('image', file);
+                    //Phan gui anh
+                    var _ajax = $.ajax().create();
+                    _ajax.url('/api/upload/test').success(function(e){
+                        var result = JSON.parse(this.response);
+                        if(result.header.code===0){
+                            _product_image_chosen.value = result.body.data.id;
+                            _product_image_chosen.disabled = false;
+                            _product_image_upload_progress.classList.remove('active');
+                            
+                            
+                            //them phan id anh tong ket
+                            var input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = 'product_image_temp[]';
+                            input.value = result.body.data.id;
+                            _product_image_upload_temp.appendChild(input);
+                        }else{
+                            _product_image_upload_card.remove();
+                        }
+                    }).error(function(e){
+                        _product_image_upload_card.remove();
+                    }).upprogress(function(e){
+                        var percent = e.loaded / e.total * 100;
+                        _progress_current.style.width = percent + '%';
+                    }).post(data);
+                    
+                    _product_image_upload_chosen.appendChild(_product_image_upload_card);
+                }
+                
+                function _iadd(e){
+                    for(var i=0; i<this.files.length; i++){
+                        _iinit.call(null, this.files[i]);
+                    }
+                }
+                
+                _input_product_image_upload_select.addEventListener('change', function(e){
+                    _iadd.call(this, e);
+                });
+            }();
+        </script>
+    </body>
+</html>
