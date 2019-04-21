@@ -1,0 +1,183 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>X</title>
+        <style>
+            .product-attribute{
+                
+            }
+            .product-attribute::after{
+                content: '';
+                display: block;
+                clear: both;
+            }
+            .product-attribute .product-attribute-delete{
+                cursor: pointer;
+                vertical-align: middle;
+                padding: 0px 5px;
+                font-size: 14pt;
+            }
+            .product-attribute .product-attribute-delete:hover{
+                color: #f00;
+            }
+            .product-attribute input{
+                border: 1px solid #aaa;
+                padding: 5px 20px;
+            }
+            .product-attribute .product-attribute-key{
+                float:left;
+            }
+            .product-attribute .product-attribute-value{
+                float: left;
+            }
+            
+            
+            .container{
+                
+            }
+            
+            .header-mainmenu{
+                height: 40px;
+                background: #26ad05;
+            }
+            
+            .header-mainmenu a{
+                text-decoration: none;
+            }
+            
+            .header-mainmenu .logo{
+                text-align: center;
+                text-decoration: none;
+                line-height: 40px;
+                font-size: 40px;
+                color: #fff;
+                font-family: segoe ui;
+                font-weight: bold;
+                text-shadow: 0px 0px 5px #fff;
+            }
+            
+            .main-wrapper{
+                
+            }
+            .main-wrapper::after{
+                content: '';
+                display: block;
+                clear: both;
+            }
+            
+            .main-wrapper .left-menu{
+                width: 15%;
+                background-color: #fff;
+                float: left;
+                width: 200px;
+                min-height: 100vh;
+                border-width: 2px;
+                border-style: dashed;
+                border-color: transparent #26ad05 transparent transparent;
+                -moz-user-select: none;
+                cursor: pointer;
+                
+            }
+            .main-wrapper .left-menu a{
+                text-decoration: none;
+                color: #000;
+                padding-left: 15px;
+                white-space: nowrap;
+                display: block;
+            }
+            .main-wrapper .left-menu .menu .menu-label{
+                line-height: 2;
+            }
+            .main-wrapper .left-menu .menu .menu-items{
+                line-height: 2;
+                height: 0px;
+                overflow: hidden;
+                transition: all 500ms;
+            }
+            .main-wrapper .left-menu .menu .menu-items .menu-item:hover{
+                background-color: #eee;
+            }
+            .main-wrapper .right-content{
+                width: 85%;
+                height: 600px;
+                background-color: #fff;
+                padding-left: 200px;
+            }
+        </style>
+    </head>
+    <body style="margin: 0px;">
+        <script type="text/ktpl">
+            <div class="product-attribute">
+                <input class="product-attribute-key" name="attribute_key[]" type="text" size="20" placeholder="Thuộc tính sản phẩm"/>
+                <input class="product-attribute-value" name="attribute_value[]" type="text" size="50" placeholder="Mô tả thuộc tính"/>
+                <span class="product-attribute-delete" onclick="this.parentElement.remove()">&times;</span>
+            </div>
+        </script>
+        
+        
+        <div class="container">
+            <div class="header-mainmenu">
+                <a href="/"><div class="logo">KAKAKA</div></a>
+            </div>
+            <div class="main-wrapper">
+                <div class="left-menu">
+                    <div class="menu">
+                        <div class="menu-label">Đơn hàng</div>
+                        <div class="menu-items">
+                            <div class="menu-item"><a href="">Danh sách đơn hàng</a></div>
+                            <div class="menu-item"><a href="">Tạo đơn hàng</a></div>
+                        </div>
+                    </div>
+                    <div class="menu">
+                        <div class="menu-label">Sản phẩm</div>
+                        <div class="menu-items">
+                            <div class="menu-item"><a href="">Danh sách sản phẩm</a></div>
+                            <div class="menu-item"><a href="">Đăng sản phẩm</a></div>
+                        </div>
+                    </div>
+                    <div class="menu">
+                        <div class="menu-label">Chương trình khuyến mãi</div>
+                        <div class="menu-items">
+                            <div class="menu-item"><a href="">Mã giảm giá</a></div>
+                            <div class="menu-item"><a href="">Tủ hàng</a></div>
+                            <div class="menu-item"><a href="">Flash sale</a></div>
+                        </div>
+                    </div>
+                    <div class="menu">
+                        <div class="menu-label">Khách hàng</div>
+                        <div class="menu-items">
+                            <div class="menu-item"><a href="">Lịch sử quan tâm</a></div>
+                            <div class="menu-item"><a href="">Danh sách khách hàng</a></div>
+                            <div class="menu-item"><a href="">Danh sách chặn người mua</a></div>
+                        </div>
+                    </div>
+                    <div class="menu">
+                        <div class="menu-label">Khách hàng</div>
+                        <div class="menu-items">
+                            <div class="menu-item"><a href="">Lịch sử quan tâm</a></div>
+                            <div class="menu-item"><a href="">Danh sách khách hàng</a></div>
+                            <div class="menu-item"><a href="">Danh sách chặn người mua</a></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="right-content">
+                    
+                </div>
+            </div>
+        </div>
+        
+        <script>
+            !function(){
+                var menu_labels = document.querySelectorAll('.left-menu .menu .menu-label');
+                for(var i=0; i<menu_labels.length; i++){
+                    menu_labels[i].addEventListener('click', function(e){
+                        var height = parseInt(this.nextElementSibling.style.height);
+                        height = !height ? this.nextElementSibling.scrollHeight : 0;
+                        this.nextElementSibling.style.height = height + 'px';
+                    });
+                }
+            }();
+        </script>
+    </body>
+</html>

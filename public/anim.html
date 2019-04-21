@@ -1,0 +1,51 @@
+<!doctype html>
+
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>
+            ok
+        </title>
+        <style>
+            @keyframes anim-show{
+                from{
+                    transform: scale(0);
+                }
+                to{
+                    transform: scale(1);
+                }
+            }
+            
+            @keyframes anim-hidden{
+                from{
+                    transform: scale(1);
+                }
+                to{
+                    transform: scale(0);
+                }
+            }
+            .card{
+                background-color: blue;
+                width: 300px;
+                height: 300px;
+                border-radius: 30px;
+                display: none;
+                animation-duration: 2s;
+                animation-delay: 0s;
+                animation-iteration-count: 1;
+                animation-name: anim-hidden;
+            }
+            
+            .card.active{
+                display: block;
+                animation-name: anim-show;
+            }
+        </style>
+    </head>
+    
+    <body>
+        <div class="card">
+            
+        </div>
+    </body>
+</html>

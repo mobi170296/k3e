@@ -27,7 +27,11 @@
         }
         
         public function execute(){
-            return curl_exec($this->curl);
+            $result = curl_exec($this->curl);
+            if(curl_errno($this->curl)){
+                throw new ClientRequestException(curl_error($this->curl), curl_errno($this->curl));
+            }
+            return $result;
         }
         
         public function getOption($opt){
