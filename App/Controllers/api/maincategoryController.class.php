@@ -8,6 +8,7 @@
     use App\Exception\AuthenticateException;
     use App\Models\MainCategoryModel;
     use App\Exception\InputException;
+    use App\Models\MainCategoryList;
     
     class maincategoryController extends Controller{
         public function add(MainCategoryModel $maincategory){
@@ -261,6 +262,31 @@
                 $database->close();
             }
             
+            return $this->View->RenderJson($result);
+        }
+        
+        public function getall(){
+            $result = new \stdClass();
+            $result->header = new \stdClass();
+            
+            try{
+                $database = new Database();
+                $list = (new MainCategoryList($database))->getAll();
+                $result->header->code = 0;
+                $result->header->message = 'OK';
+                $result->body = new \stdClass();
+                foreach($list as $maincategory){
+                    $m = new \stdClass();
+                    $m->name = $maincategory->name;
+                    $m->id = $maincategory->id;
+                    $m->link = $maincategory->link;
+                    $result->body->data[] = $m;
+                }
+            } catch (DBException $ex) {
+                $result->header->code = 1;
+                $result->header->message = '';
+                $result->header->errors = [$ex->getMessage()];
+            }
             return $this->View->RenderJson($result);
         }
     }

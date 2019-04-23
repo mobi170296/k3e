@@ -247,11 +247,11 @@ span#scart-icon{
 }
 @keyframes anim-modal-show{
     from{
-        transform: scale(0) translate(0px, -300px);
+        transform: scale(0) rotateX(360deg);
         opacity: 0;
     }
     to{
-        transform: scale(1) translate(0px, 0px);
+        transform: scale(1) rotateX(0deg);
         opacity: 1;
     }
 }
@@ -266,7 +266,7 @@ span#scart-icon{
     min-width: 540px;
     overflow: hidden;
     animation-name: anim-modal-show;
-    animation-duration: 200ms;
+    animation-duration: 500ms;
     animation-iteration-count: 1;
     animation-timing-function: ease-out;
 }

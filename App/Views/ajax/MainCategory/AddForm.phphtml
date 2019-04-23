@@ -4,7 +4,7 @@
             <tr>
                 <td>Tên danh mục</td>
                 <td>
-                    <input type="text" size="60" name="name" placeholder="Tên danh mục chính" value=""/>
+                    <input type="text" size="60" name="name" autofocus="autofocus" placeholder="Tên danh mục chính" value=""/>
                     <p class="invalid-data"></p>
                 </td>
             </tr>

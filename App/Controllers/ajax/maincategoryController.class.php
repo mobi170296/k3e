@@ -5,7 +5,6 @@
     use App\Exception\AuthenticateException;
     use Library\Database\Database;
     use Library\Database\DBException;
-    use App\Exception\InputException;
     use App\Models\Authenticate;
     use App\Models\UserModel;
     use App\Models\MainCategoryList;

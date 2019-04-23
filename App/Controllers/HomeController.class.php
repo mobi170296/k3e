@@ -4,7 +4,7 @@
     
     class HomeController extends Controller{
         public function Index($p = 1){
-            $this->View->TemplateData->pagination = new \App\Models\Pagination($p, 5, ['query' => 'linh']);
+            $this->View->TemplateData->pagination = new \App\Models\Pagination($p, 10, ['query' => 'linh'], 5);
             return $this->View->RenderTemplate();
         }
         public function About(){

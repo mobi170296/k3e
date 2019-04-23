@@ -124,4 +124,46 @@
         public function delete(){
             
         }
+        
+        public function bymaincategory($id){
+            $result = new \stdClass();
+            $result->header = new \stdClass();
+            if(!is_numeric($id)){
+                $result->header->code = 1;
+                $result->header->errors = ['invalid'];
+                $result->header->message = 'not a number';
+                return $this->View->RenderJson($result);
+            }
+            
+            try{
+                $database = new Database;
+                $maincategory = new MainCategoryModel($database);
+                $maincategory->id = $id;
+                if($maincategory->loadData()){
+                    $result->header->code = 0;
+                    $result->header->message = 'OK';
+                    $result->body = new \stdClass();
+                    $result->body->data = [];
+                    $maincategory->loadSubCategories();
+                    $subcategories = $maincategory->subcategories;
+                    foreach($subcategories as $subcategory){
+                        $s = new \stdClass();
+                        $s->name = $subcategory->name;
+                        $s->id = $subcategory->id;
+                        $s->link = $subcategory->link;
+                        $result->body->data[] = $s;
+                    }
+                }else{
+                    $result->header->code = 1;
+                    $result->header->message = 'MainCategory not exists';
+                    $result->header->errors = ['invalid'];
+                }
+            } catch (DBException $ex) {
+                $result->header->code = 1;
+                $result->header->message = 'DBException';
+                $result->header->errors = [$ex->getMessage()];
+            }
+            
+            return $this->View->RenderJson($result);
+        }
     }

@@ -49,7 +49,6 @@
                 display: block;
             }
             
-            
             label.product-image-upload-select{
                 width: 100px;
                 height: 100px;
@@ -107,6 +106,7 @@
             <button type="submit" >Post</button>
         </form>
         <script>
+            //module product image upload
             !function(){
                 var _product_image_upload_chosen = document.querySelector('.product-image-upload-chosen');
                 var _product_image_upload_temp = document.querySelector('.product-image-upload-temp');
@@ -143,8 +143,15 @@
                         if(result.header.code===0){
                             _product_image_chosen.value = result.body.data.id;
                             _product_image_chosen.disabled = false;
-                            _product_image_upload_progress.classList.remove('active');
+                            //_product_image_upload_progress.classList.remove('active');
                             
+                            //them phan tu image load anh > inflate den product_image_upload_preview
+                            var img = new Image();
+                            img.src = result.body.data.url;
+                            img.onload = function(){
+                                _product_image_upload_preview.style.backgroundImage = "url('" + this.src + "')";
+                                _product_image_upload_progress.classList.remove('active');
+                            }
                             
                             //them phan id anh tong ket
                             var input = document.createElement('input');
@@ -167,7 +174,7 @@
                 
                 function _iadd(e){
                     for(var i=0; i<this.files.length; i++){
-                        _iinit.call(null, this.files[i]);
+                        _iinit(this.files[i]);
                     }
                 }
                 

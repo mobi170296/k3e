@@ -157,15 +157,15 @@ function $qr(){
             return this;
         }
     }
-	$qr.prototype.next = function(){
-		if(this.length){
-			return $(this[0].nextElementSibling);
-		}
-	}
-	$qr.prototype.previous = function(){
-		if(this.length){
-			return $(this[0].previousElementSibling);
-		}
+    $qr.prototype.next = function(){
+            if(this.length){
+                    return $(this[0].nextElementSibling);
+            }
+    }
+    $qr.prototype.previous = function(){
+            if(this.length){
+                    return $(this[0].previousElementSibling);
+            }
     }
     $qr.prototype.parent = function (s=null) {
         if(s===null){
@@ -204,10 +204,10 @@ function $qr(){
         }
         return r;
     }
-	$qr.prototype.remove = function(){
-		for(var i=0;i<this.length;i++){
-			this[i].remove();
-		}
+    $qr.prototype.remove = function(){
+        for(var i=0;i<this.length;i++){
+                this[i].remove();
+        }
     }
     $qr.prototype.append = function (o) {
         if (this.length && typeof this[0].appendChild === "function") {
@@ -237,6 +237,12 @@ function $qr(){
             this[0].insertAdjacentElement('beforebegin', e);
         }
         return this;
+    }
+    $qr.prototype.is = function(s){
+        if(this.length && this[0] instanceof HTMLElement){
+            return this[0].matches(s);
+        }
+        return false;
     }
     $qr.prototype.$ = function (s) {
         if (this.length) {

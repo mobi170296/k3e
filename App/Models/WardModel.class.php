@@ -3,7 +3,7 @@
     use Core\Model;
     
     class WardModel extends Model{
-        public $id, $code, $district_id, $name;
+        public $id, $code, $district_id, $name, $ghn_ward_code;
         public $district;
         
         
@@ -15,6 +15,7 @@
                 $this->code = $row->code;
                 $this->district_id = $row->district_id;
                 $this->name = $row->name;
+                $this->ghn_ward_code = $row->ghn_ward_code;
                 return true;
             }else{
                 return false;

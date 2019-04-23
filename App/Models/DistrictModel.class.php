@@ -3,7 +3,7 @@
     use Core\Model;
     
     class DistrictModel extends Model{
-        public $id, $province_id, $name;
+        public $id, $province_id, $name, $ghn_district_id;
         
         public $province;
         public $products = [];
@@ -17,6 +17,7 @@
                 $this->id = $rows[0]->id;
                 $this->province_id = $rows[0]->province_id;
                 $this->name = $rows[0]->name;
+                $this->ghn_district_id = $rows[0]->ghn_district_id;
                 return true;
             }else{
                 return false;
