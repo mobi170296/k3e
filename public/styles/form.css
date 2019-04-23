@@ -77,6 +77,11 @@ input[type="text"], input[type="password"]{
     font-size: 12pt;
 }
 
+.btn.medium{
+    padding: 10px 20px;
+    font-size: 11pt;
+}
+
 .btn-login{
     border: 2px solid #06a24f;
     color: #06a24f;

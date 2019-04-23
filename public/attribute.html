@@ -32,7 +32,7 @@
             }
             .product-attribute input{
                 border: 1px solid #aaa;
-                padding: 5px 20px;
+                padding: 10px 20px;
             }
             .product-attribute .product-attribute-key{
                 
@@ -40,7 +40,6 @@
             .product-attribute .product-attribute-value{
                 
             }
-            
             
             .container{
                 
@@ -57,8 +56,8 @@
             .header-mainmenu .logo{
                 text-align: center;
                 text-decoration: none;
-                line-height: 40px;
-                font-size: 40px;
+                line-height: 1em;
+                font-size: 30px;
                 color: #fff;
                 font-family: segoe ui;
                 font-weight: bold;
@@ -96,7 +95,7 @@
                 line-height: 2;
                 height: 0px;
                 overflow: hidden;
-                transition: all 500ms;
+                transition: all 200ms;
                 background-color: #fff;
             }
             .main-wrapper .left-menu .menu .menu-items .menu-item:hover{
@@ -114,11 +113,13 @@
             }
             .product-form .product-form-title{
                 font-size: 1.5em;
+                font-weight: bold;
                 margin-bottom: 1em;
-                background-image: linear-gradient(90deg, #3fb079, #fff);
+                background-color: #fff;
                 padding: 10px 0px 10px 30px;
-                color: #fff;
-                border-radius: 50px 0px 0px 50px;
+                color: #000;
+                border-radius: 1000px;
+                box-shadow: 0px 10px 10px 0px rgba(0,0,0,0.05);
             }
             .product-form .product-section{
                 background-color: #fff;
@@ -130,7 +131,9 @@
             .product-form .product-section-title{
                 font-size: 1.2em;
                 font-weight: bold;
-                padding: 30px 0px;
+                padding: 20px 0px 5px;
+                border-bottom: 1px solid #ccc;
+                margin-bottom: 30px;
             }
             
             /*phan 2 pane select cho maincategory*/
@@ -138,7 +141,7 @@
             .two-pane-select{
                 display: flex;
                 height: 20em;
-                border: 1px dotted #eee;
+                border: 1px solid #ccc;
             }
             .two-pane-select .left-pane{
                 overflow-y: scroll;
@@ -174,7 +177,6 @@
                 font-weight: 600;
             }
             
-            
             .product-image-upload-card{
                 width: 200px;
                 height: 100px;
@@ -185,7 +187,7 @@
                 margin: 5px;
             }
             
-            .product-image-upload .product-image-upload-progress{
+            .product-image-upload-card .product-image-upload-progress{
                 position: absolute;
                 top: 0px;
                 left: 0px;
@@ -193,12 +195,12 @@
                 height: 100%;
                 display: none;
             }
-            .product-image-upload .progress-total{
+            .product-image-upload-card .progress-total{
                 height: 5px;
                 width: 80%;
                 margin: 80px auto;
             }
-            .product-image-upload .product-image-upload-preview{
+            .product-image-upload-card .product-image-upload-preview{
                 background-repeat: no-repeat;
                 background-position: center center;
                 background-size: contain;
@@ -206,7 +208,7 @@
                 width: 100%;
             }
             
-            .product-image-upload .product-image-upload-progress.active{
+            .product-image-upload-card .product-image-upload-progress.active{
                 background-color: rgba(255,255,255,0.7);
                 display: block;
             }
@@ -237,7 +239,7 @@
                 display: none;
             }
             
-            .product-image-upload .product-image-upload-delete{
+            .product-image-upload-card .product-image-upload-delete{
                 position: absolute;
                 top: 5px;
                 right: 10px;
@@ -263,16 +265,32 @@
             }
             
             .product-form .product-field-row.vertical .field-label{
-                
+                margin-bottom: 10px;
+            }
+            
+            .product-form .product-field-row.vertical .field-label::after{
+                content: ':';
             }
             
             .product-form .product-field-row.vertical .field-control{
                 
             }
             
+            .product-attribute-add-btn{
+                padding: 2px 20px;
+                border: 0px;
+                background-color: #09adea;
+                border-radius: 50px;
+                color: #fff;
+                font-size: 0.9em;
+                cursor: pointer;
+                -moz-user-select: none;
+            }
+            
             .form-btn-group{
                 background-color: #fff;
                 padding: 20px;
+                box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);
             }
             .form-btn-group.fixed{
                 position: fixed;
@@ -281,12 +299,11 @@
                 width: 100%;
                 padding: 20px;
                 background-color: #fff;
-                box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);
             }
         </style>
     </head>
     <body style="margin: 0px; font-family: segoe ui">
-        <script type="text/ktpl">
+        <script id="product-attribute-tpl" type="text/ktpl">
             <div class="product-attribute">
                 <input class="product-attribute-key" name="attribute_key[]" type="text" size="20" placeholder="Thuộc tính sản phẩm"/>
                 <input class="product-attribute-value" name="attribute_value[]" type="text" size="50" placeholder="Mô tả thuộc tính"/>
@@ -303,7 +320,16 @@
             <div class="product-image-upload-delete">&times;</div>
             <input type="hidden" name="product_image_chosen[]" disabled/>
         </script>
-        
+        <script id="main-product-image-upload-card-tpl" type="text/ktpl">
+            <div class="product-image-upload-preview"></div>
+            <div class="product-image-upload-progress">
+                <div class="progress-total">
+                    <div class="progress-current"></div>
+                </div>
+            </div>
+            <div class="product-image-upload-delete">&times;</div>
+            <input type="hidden" name="main_product_image_chosen[]" disabled/>
+        </script>
         <div class="container">
             <div class="header-mainmenu">
                 <a href="/"><div class="logo">KAKAKA</div></a>
@@ -342,7 +368,7 @@
                     </div>
                 </div>
                 <div class="right-content">
-                    <form autocomplete="off">
+                    <form id="add-product" autocomplete="off" onsubmit="return false">
                         <div class="product-form">
                             <div class="product-form-title">
                                 Thêm sản phẩm mới
@@ -358,7 +384,7 @@
                                             </div>
                                         </div>
                                         <div class="product-field-row vertical">
-                                            <div class="field-label" style="font-weight: bold; margin-bottom: 10px">Chọn danh mục cho sản phẩm</div>
+                                            <div class="field-label">Chọn danh mục cho sản phẩm</div>
                                             <div class="field-control">
                                                 <div class="two-pane-select subcategory" data-widget-type="two-pane-select">
                                                     <div class="left-pane">
@@ -372,31 +398,41 @@
                                             </div>
                                         </div>
                                         <div class="product-field-row vertical">
-                                            <div class="field-label" style="font-weight: bold; margin-bottom: 10px">Hình ảnh sản phẩm</div>
+                                            <div class="field-label">Ảnh bìa sản phẩm <small>(là ảnh chính cho sản phẩm)</small></div>
                                             <div class="field-control">
-                                                <div class="product-image-upload">
+                                                <div class="main-product-image-upload">
                                                     <div class="product-image-upload-chosen"></div>
                                                     <div class="product-image-upload-temp"></div>
                                                     <label class="product-image-upload-select">
-                                                        <input id="test" type="file" multiple="" />
+                                                        <input type="file" multiple="" />
                                                     </label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="product-field-row vertical">
-                                            <div class="field-label" style="font-weight: bold; margin-bottom: 10px">Mô tả sản phẩm</div>
+                                            <div class="field-label">Hình ảnh sản phẩm</div>
+                                            <div class="field-control">
+                                                <div class="product-image-upload">
+                                                    <div class="product-image-upload-chosen"></div>
+                                                    <div class="product-image-upload-temp"></div>
+                                                    <label class="product-image-upload-select">
+                                                        <input type="file" multiple="" />
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="product-field-row vertical">
+                                            <div class="field-label">Mô tả sản phẩm</div>
                                             <div class="field-control">
                                                 <textarea id="product-description" name="description"></textarea>
                                             </div>
                                         </div>
                                         <div class="product-field-row vertical">
-                                            <div class="field-label" style="font-weight: bold; margin-bottom: 10px">Thuộc tính sản phẩm</div>
+                                            <div class="field-label">Thuộc tính sản phẩm</div>
                                             <div class="field-control">
-                                                <div class="product-attribute">
-                                                    <input class="product-attribute-key" name="attribute_key[]" type="text" size="20" placeholder="Thuộc tính sản phẩm"/>
-                                                    <input class="product-attribute-value" name="attribute_value[]" type="text" size="50" placeholder="Mô tả thuộc tính"/>
-                                                    <span class="product-attribute-delete" onclick="this.parentElement.remove()">&times;</span>
+                                                <div class="product-attributes">
                                                 </div>
+                                                <span class="product-attribute-add-btn">Thêm dòng thuộc tính</span>
                                             </div>
                                         </div>
                                     </div>
@@ -420,6 +456,15 @@
                                             <div class="field-label">Giá bán sản phẩm</div>
                                             <div class="field-control">
                                                 <input type="text" data-widget-type="positive-integer-number" name="price" value="" placeholder="Giá bán sản phẩm"/>
+                                            </div>
+                                        </div>
+                                        <div class="product-field-row horizontal">
+                                            <div class="field-label">Thời hạn bảo hành <small>(tính theo tháng, nếu không có điền 0)</small></div>
+                                            <div class="field-control">
+                                                <div style="border: 1px solid #eee; display: inline-block">
+                                                    <input type="text" data-widget-type="positive-integer-number" style="border: 0px" name="warranty_months_number" value="" placeholder="Thời hạn bảo hành"/>
+                                                    <span style="color: #777; font-size: 0.7em; padding-right: 10px;">tháng</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -456,7 +501,7 @@
                                     </div>
                                 </div>
                                 
-                                <div class="form-btn-group"><button type="submit">Thêm sản phẩm</button></div>
+                                <div class="form-btn-group"><button class="btn btn-del medium" style="border-radius: 3px" type="button">Hủy bỏ</button><button style="margin-left: 10px; border-radius: 3px;" class="btn btn-add btn-add-i medium" type="submit">Thêm sản phẩm</button></div>
                             </div>
                         </div>
                     </form>
@@ -465,11 +510,99 @@
         </div>
         
         <script>
+            //module thuoc tinh san pham
+            !function(){
+                var _product_attributes = document.querySelector('.product-attributes');
+                var _product_attribute_add_btn = document.querySelector('.product-attribute-add-btn');
+                _product_attribute_add_btn.addEventListener('click', function(e){
+                    var attribute_tpl = window['product-attribute-tpl'].innerHTML;
+                    var ele = document.createElement('div');
+                    ele.innerHTML = attribute_tpl;
+                    _product_attributes.appendChild(ele);
+                });
+            }();
+            //module main product image upload
+            !function(){
+                var _main_product_image_upload_chosen = document.querySelector('.main-product-image-upload .product-image-upload-chosen');
+                var _main_product_image_upload_temp = document.querySelector('.main-product-image-upload .product-image-upload-temp');
+                var _input_product_image_upload_select = document.querySelector('.main-product-image-upload .product-image-upload-select input');
+                var _product_image_upload_card_tpl = document.querySelector('script#main-product-image-upload-card-tpl');
+                
+                function _iinit(file){
+                    var _product_image_upload_card = document.createElement('div');
+                    _product_image_upload_card.classList.add('product-image-upload-card');
+                    _product_image_upload_card.innerHTML = _product_image_upload_card_tpl.innerHTML;
+                    
+                    var _product_image_upload_preview = _product_image_upload_card.querySelector('.product-image-upload-preview');
+                    var _product_image_upload_progress = _product_image_upload_card.querySelector('.product-image-upload-progress');
+                    var _progress_current = _product_image_upload_card.querySelector('.progress-current');
+                    var _product_image_upload_delete = _product_image_upload_card.querySelector('.product-image-upload-delete');
+                    var _product_image_chosen = _product_image_upload_card.querySelector('input');
+                    
+                    _product_image_upload_delete.onclick = function(e){
+                        _ajax.abort();
+                        _product_image_upload_card.remove();
+                    }
+                    
+                    _product_image_upload_preview.style.backgroundImage = "url('" + URL.createObjectURL(file) + "')";
+                    _product_image_upload_progress.classList.add('active');
+                    
+                    _progress_current.style.width = '0%';
+                    
+                    var data = new FormData();
+                    data.append('image', file);
+                    
+                    var _ajax = $.ajax().create();
+                    _ajax.url('/api/upload/test').success(function(e){
+                        var result = JSON.parse(this.response);
+                        if(result.header.code === 0){
+                            _product_image_chosen.value = result.body.data.id;
+                            _product_image_chosen.disabled = false;
+                            
+                            var img = new Image();
+                            img.onload = function(e){
+                                _product_image_upload_preview.style.backgroundImage = "url('" + this.src + "')";
+                                _product_image_upload_progress.classList.remove('active');
+                            }
+                            img.src = result.body.data.url;
+                            
+                            
+                            var input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = 'main_product_image_temp[]';
+                            input.value = result.body.data.id;
+                            
+                            _main_product_image_upload_temp.appendChild(input);
+                        }else{
+                            _product_image_upload_card.remove();
+                        }
+                    }).error(function(e){
+                        _product_image_upload_card.remove();
+                    }).upprogress(function(e){
+                        var percent = e.loaded / e.total * 100;
+                        _progress_current.style.width = percent + '%';
+                    }).post(data);
+                    
+                    _main_product_image_upload_chosen.appendChild(_product_image_upload_card);
+                }
+                
+                function _iadd(e){
+                    _iinit(this.files[0]);
+                }
+                
+                _input_product_image_upload_select.addEventListener('change', function(e){
+                    if(_main_product_image_upload_chosen.children.length + this.files.length > 1){
+                        $NotificationPopup.message('Ảnh bìa chỉ có thể upload duy nhất 1 ảnh').ok('Đã hiểu rồi!').show();
+                    }else{
+                        _iadd.call(this, e);
+                    }
+                });
+            }();
             //module product image upload
             !function(){
-                var _product_image_upload_chosen = document.querySelector('.product-image-upload-chosen');
-                var _product_image_upload_temp = document.querySelector('.product-image-upload-temp');
-                var _input_product_image_upload_select = document.querySelector('.product-image-upload-select input');
+                var _product_image_upload_chosen = document.querySelector('.product-image-upload .product-image-upload-chosen');
+                var _product_image_upload_temp = document.querySelector('.product-image-upload .product-image-upload-temp');
+                var _input_product_image_upload_select = document.querySelector('.product-image-upload .product-image-upload-select input');
                 var _product_image_upload_card_tpl = document.querySelector('script#product-image-upload-card-tpl');
                 
                 function _iinit(file){
@@ -506,11 +639,11 @@
                             
                             //them phan tu image load anh > inflate den product_image_upload_preview
                             var img = new Image();
-                            img.src = result.body.data.url;
                             img.onload = function(){
                                 _product_image_upload_preview.style.backgroundImage = "url('" + this.src + "')";
                                 _product_image_upload_progress.classList.remove('active');
                             }
+                            img.src = result.body.data.url;
                             
                             //them phan id anh tong ket
                             var input = document.createElement('input');
@@ -538,7 +671,11 @@
                 }
                 
                 _input_product_image_upload_select.addEventListener('change', function(e){
-                    _iadd.call(this, e);
+                    if(_product_image_upload_chosen.children.length + this.files.length > 30){
+                        $NotificationPopup.ok('Đã hiểu rồi!').message('Bạn không thể chọn nhiều hơn 30 ảnh trong một sản phẩm được nha!').show();
+                    }else{
+                        _iadd.call(this, e);
+                    }
                 });
             }();
             //module richeditor
@@ -552,6 +689,7 @@
                 
                 window.addEventListener('scroll', function(e){
                     if(this.innerHeight + this.scrollY >= top){
+                        top = group.offsetTop;
                         group.classList.remove('fixed');
                     }else{
                         group.classList.add('fixed');
@@ -581,6 +719,7 @@
                 }).get();
                 
                 function main_click(e){
+                    $LoadingPopup.show();
                     _input_subcategory_id.value = '';
                     $(this).addClass('active');
                     $.ajax().create().url('/api/subcategory/bymaincategory?id=' + $(this).data('id')).success(function(e){
@@ -594,9 +733,13 @@
                             }
                         }else{
                             //show err message
+                            $Toast.makeError(result.header.message);
                         }
+                        $LoadingPopup.hide();
                     }).error(function(e){
                         //show err message
+                        $Toast.makeError('Không thể truy vấn danh mục phụ vui lòng kiểm tra kết nối mạng');
+                        $LoadingPopup.hide();
                     }).get();
                 }
                 
@@ -634,6 +777,181 @@
                         this.nextElementSibling.style.height = height + 'px';
                     });
                 }
+            }();
+            
+            //module check form + send data request
+            !function(){
+                function checkValid(form){
+                    var name = form.name;
+                    var description = form.description;
+                    var quantity = form.quantity;
+                    var original_price = form.original_price;
+                    var price = form.price;
+                    var subcategory_id = form.subcategory_id;
+                    var weight = form.weight;
+                    var length = form.length;
+                    var width = form.width;
+                    var height = form.height;
+                    var warranty_months_number = form.warranty_months_number;
+                    var main_product_image_chosens = form['main_product_image_chosen[]'];
+                    if(main_product_image_chosens === undefined){
+                        main_product_image_chosens = null;
+                    }else{
+                        if(main_product_image_chosens.length === undefined){
+                            main_product_image_chosens = [main_product_image_chosens];
+                        }
+                    }
+                    var product_image_chosens = form['product_image_chosen[]'];
+                    if(product_image_chosens === undefined){
+                        product_image_chosens = null;
+                    }else{
+                        if(product_image_chosens.length === undefined){
+                            product_image_chosens = [main_product_image_chosens];
+                        }
+                    }
+                    if(name.value.length === 0){
+                        $Toast.makeError('Tên sản phẩm không được để trống');
+                        name.scrollIntoView();
+                        return false;
+                    }
+                    if(name.value.length > 200){
+                        $Toast.makeError('Tên sản phẩm không được vượt quá 200 ký tự');
+                        name.scrollIntoView();
+                        return false;
+                    }
+                    if(isNaN(parseInt(subcategory_id.value))){
+                        $Toast.makeError('Chưa chọn danh mục ngành hàng cho sản phẩm này');
+                        $('.two-pane-select.subcategory')[0].scrollIntoView();
+                        return false;
+                    }
+                    if(main_product_image_chosens === null){
+                        $Toast.makeError('Ảnh bìa sản phẩm không được để trống');
+                        $('.main-product-image-upload')[0].scrollIntoView();
+                        return false;
+                    }
+                    if(main_product_image_chosens[0].disabled){
+                        $Toast.makeWarning('Ảnh bìa sản phẩm chưa upload xong xin hãy đợi!');
+                        $('.main-product-image-upload')[0].scrollIntoView();
+                        return false;
+                    }
+                    if(product_image_chosens === null){
+                        $Toast.makeError('Ảnh mô tả sản phẩm không phải có ít nhất 5 ảnh');
+                        $('.product-image-upload')[0].scrollIntoView();
+                        return false;
+                    }
+                    if(product_image_chosens.length < 5){
+                        $Toast.makeError('Ảnh mô tả sản phẩm không phải có ít nhất 5 ảnh');
+                        $('.product-image-upload')[0].scrollIntoView();
+                        return false;
+                    }
+                    for(var i=0; i<product_image_chosens.length; i++){
+                        if(product_image_chosens[i].disabled){
+                            $Toast.makeWarning('Ảnh mô tả sản phẩm chưa upload xong xin hãy đợi');
+                            $('.product-image-upload')[0].scrollIntoView();
+                            return false;
+                        }
+                    }
+                    var descriptioneditor = document.querySelector('.richeditor .editor');
+                    if(descriptioneditor.innerText.length < 100){
+                        $Toast.makeError('Mô tả cho sản phẩm không được đầy đủ, ít nhất phải 100 ký tự');
+                        $('.richeditor')[0].scrollIntoView();
+                        return false;
+                    }
+                    var attribute_keys = form['attribute_key[]'];
+                    if(attribute_keys === undefined){
+                        attribute_keys = null;
+                    }else{
+                        if(attribute_keys.length === undefined){
+                            attribute_keys = [attribute_keys];
+                        }
+                    }
+                    var attribute_values = form['attribute_value[]'];
+                    if(attribute_values === undefined){
+                        attribute_values = null;
+                    }else{
+                        if(attribute_values.length === undefined){
+                            attribute_values = [attribute_values];
+                        }
+                    }
+                    
+                    if(attribute_keys !== null){
+                        for(var i=0; i<attribute_keys.length; i++){
+                            var attr_key = attribute_keys[i].value;
+                            var attr_value = attribute_values[i].value;
+                            if(attr_key.length === 0 || attr_key.length > 100){
+                                $Toast.makeError('Độ dài của tên thuộc tính phải không được rỗng và ít hơn 100 ký tự');
+                                attribute_keys[i].scrollIntoView();
+                                return false;
+                            }
+                            if(attr_value.length === 0 || attr_value.length > 1024){
+                                $Toast.makeError('Độ dài của mô tả thuộc tính phải không được rỗng và ít hơn 1024 ký tự');
+                                attribute_keys[i].scrollIntoView();
+                                return false;
+                            }
+                        }
+                    }
+                    
+                    var quantity_value = parseInt(quantity.value);
+                    if(isNaN(quantity_value) || quantity_value > 999999){
+                        $Toast.makeError('Số lượng sản phẩm có trong kho phải là số và không được quá 999,999 đơn vị');
+                        quantity.scrollIntoView();
+                        return false;
+                    }
+                    
+                    var original_price_value = parseInt(original_price.value);
+                    if(isNaN(original_price_value) || original_price_value === 0 || original_price_value > 100e6){
+                        $Toast.makeError('Giá gốc sản phẩm không là 0vnđ hay nhiều hơn 100 triệu vnđ');
+                        original_price.scrollIntoView();
+                        return false;
+                    }
+                    
+                    var price_value = parseInt(price.value);
+                    if(isNaN(price_value) || price_value < 10e3 || price_value > 100e6){
+                        $Toast.makeError('Giá bán của sản phẩm được ít hơn 10 ngàn vnđ hay nhiều hơn 100 triệu vnđ');
+                        price.scrollIntoView();
+                        return false;
+                    }
+                    
+                    if(isNaN(parseInt(warranty_months_number.value))){
+                        $Toast.makeError('Thời gian bảo hành phải là số');
+                        warranty_months_number.scrollIntoView();
+                        return false;
+                    }
+                    
+                    var weight_value = parseInt(weight.value);
+                    if(isNaN(weight_value) || weight_value < 10 || weight_value > 100e3){
+                        $Toast.makeError('Cân nặng sau khi đóng gói không hợp lệ ít nhất phải là 10g và ít hơn 100Kg');
+                        weight.scrollIntoView();
+                        return false;
+                    }
+                    
+                    var length_value = parseInt(length.value);
+                    if(isNaN(length_value) || length_value < 1){
+                        $Toast.makeError('Chiều dài không hợp lệ ít nhất phải là 1cm');
+                        length.scrollIntoView();
+                        return false;
+                    }
+                    var width_value = parseInt(width.value);
+                    if(isNaN(width_value) || width_value < 1){
+                        $Toast.makeError('Chiều rộng không hợp lệ ít nhất phải là 1cm');
+                        width.scrollIntoView();
+                        return false;
+                    }
+                    var height_value = parseInt(height.value);
+                    if(isNaN(height_value) || height_value < 1){
+                        $Toast.makeError('Chiều cao không hợp lệ ít nhất phải là 1cm');
+                        height.scrollIntoView();
+                        return false;
+                    }
+                    
+                    return true;
+                }
+                
+                window['add-product'].addEventListener('submit', function(e){
+                    if(checkValid(this)){
+                        
+                    }
+                });
             }();
         </script>
     </body>

@@ -206,7 +206,7 @@
 
     border: 1px solid #4cd964;
 }
-.progress-current{
+.progress-total .progress-current{
     background-color: #4cd964;
 
     border-radius: 50px;

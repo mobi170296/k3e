@@ -108,4 +108,8 @@
             
             return $this->View->RenderJson($result);
         }
+        
+        public function addproduct(){
+            
+        }
     }
