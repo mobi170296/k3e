@@ -169,3 +169,11 @@ $(function(e){
         $(p).$('.tabcontent .tab[data-tab="' + $(this).data('tab')+ '"]').addClass('active');   
     });
 });
+
+
+$(document).on('mousedown', function (e) {
+    if(e.which===1){
+        $('[data-role="popup"][data-role-type="static"]').addClass('u-hidden');
+        $('[data-role="popup"][data-role-type="dynamic"]').remove();
+    }
+});

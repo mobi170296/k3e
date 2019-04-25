@@ -12,6 +12,8 @@
     use Library\File\ImageUploader;
     use Library\File\UploadImageException;
     use Library\Image\ImageResizer;
+    use App\Exception\InputException;
+    use Library\Image\ImageResizerException;
     
     class uploadController extends Controller{
         public function test(){
@@ -137,21 +139,41 @@
             try{
                 $database = new Database();
                 $user = (new Authenticate($database))->getUser();
-                
-                
-                $uploader = new ImageUploader();
-                $uploader->upload($this->files->image['tmp_name'], 'jpg', PUBLIC_UPLOAD_IMAGE_DIR);
-                
-                $result->header->code = 0;
-                $result->header->message = 'OK You are success upload image to ' . $uploader->getDir() . DS . $uploader->getFileName();
-                
-                
-//                if($user->isMerchant()){
-//                    
-//                }else{
-//                    $result->header->code = 1;
-//                    $result->header->errors = ['You must be merchant to upload ProductImage'];
-//                }
+                if($user->loadShop()){
+                    if($this->files->image['error'] != UPLOAD_ERR_OK){
+                        throw new InputException(['Tập tin upload không thành công']);
+                    }
+                    $imageinfo = new ImageInfo($this->files->image['tmp_name']);
+                    $ext = $imageinfo->getRealExtension();
+                    $width = $imageinfo->getSize()->width;
+                    $height = $imageinfo->getSize()->height;
+                    
+                    $width = min($width, $height);
+                    
+                    $uploader = new ImageUploader();
+                    $uploader->upload($this->files->image['tmp_name'], $ext, PUBLIC_UPLOAD_IMAGE_DIR);
+                    
+                    $imageresizer = new ImageResizer($uploader->getDir() . DS . $uploader->getFileName());
+                    $imageresizer->coverResize($width, $width);
+                    
+                    $imagemap = new ImageMapModel($database);
+                    $imagemap->diskpath = PUBLIC_UPLOAD_IMAGE_DIR . DS . $uploader->getAutoPath() . DS . $uploader->getFileName();
+                    $imagemap->linked = ImageMapModel::UNLINKED;
+                    $imagemap->mimetype = $imageinfo->getMimeType();
+                    $imagemap->user_id = $user->id;
+                    $imagemap->urlpath = PUBLIC_UPLOAD_IMAGE_PATH . DS . $uploader->getAutoPath() . DS . $uploader->getFileName();
+                    $imagemap->add();
+                    $result->header->code = 0;
+                    $result->header->message = 'Đã upload thành công ảnh';
+                    $result->body = new \stdClass();
+                    $result->body->data = new \stdClass();
+                    $result->body->data->url = $imagemap->urlpath;
+                    $result->body->data->id = $database->lastInsertId();
+                }else{
+                    $result->header->code = 1;
+                    $result->header->errors = ['Bạn không có cửa hàng'];
+                    $result->header->errors = ['Bạn không có cửa hàng'];
+                }
             } catch (DBException $ex) {
                 $result->header->code = 1;
                 $result->header->errors = ['invalid'];
@@ -161,6 +183,15 @@
             } catch(UploadImageException $e){
                 $result->header->code = 1;
                 $result->header->errors = $e->getErrorsArray();
+            } catch(InputException $e){
+                $result->header->code = 1;
+                $result->header->errors = $e->getErrorsMap();
+            } catch(ImageInfoException $e){
+                $result->header->code = 1;
+                $result->header->errors = [$e->getMessage()];
+            } catch(ImageResizerException $e){
+                $result->header->code = 1;
+                $result->header->errors = [$e->getMessage()];
             }
             
             return $this->View->RenderJson($result);

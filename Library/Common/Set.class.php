@@ -54,10 +54,20 @@
         }
         public function isInteger(){
             foreach($this->a as $e){
-                if(!is_int($e)){
+                if(!is_numeric($e) || (int)$e != (float)$e){
                     return false;
                 }
             }
             return true;
+        }
+        public function toArray(){
+            $a = [];
+            foreach($this->a as $e){
+                $a[] = $e;
+            }
+            return $a;
+        }
+        public function count(){
+            return count($this->a);
         }
     }

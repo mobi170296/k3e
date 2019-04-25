@@ -1,3 +1,5 @@
+<?php /*
+
 <?php
     $this->Data->Title = 'Thông tin cửa hàng';
 ?>
@@ -130,3 +132,171 @@
         });
     }();
 </script>
+
+*/
+?>
+
+
+
+<?php
+    $this->layout = DS . 'App' . DS . 'Template' . DS . 'Common' . DS . 'shop_layout.phphtml';
+    $this->Data->Title = 'Thông tin cửa hàng';
+?>
+            <div class="main-wrapper shop-profile-wrapper">
+                <div class="left-menu">
+                    <div class="menu">
+                        <div class="menu-label">Đơn hàng</div>
+                        <div class="menu-items">
+                            <div class="menu-item"><a href="">Danh sách đơn hàng</a></div>
+                            <div class="menu-item"><a href="">Tạo đơn hàng</a></div>
+                        </div>
+                    </div>
+                    <div class="menu">
+                        <div class="menu-label">Sản phẩm</div>
+                        <div class="menu-items">
+                            <div class="menu-item"><a href="">Danh sách sản phẩm</a></div>
+                            <div class="menu-item"><a href="/Shop/AddProduct">Đăng sản phẩm</a></div>
+                        </div>
+                    </div>
+                    <div class="menu open">
+                        <div class="menu-label">Thông tin cửa hàng</div>
+                        <div class="menu-items">
+                            <div class="menu-item active"><a href="">Thông tin cơ bản</a></div>
+                        </div>
+                    </div>
+                    <div class="menu">
+                        <div class="menu-label">Chương trình khuyến mãi</div>
+                        <div class="menu-items">
+                            <div class="menu-item"><a href="">Mã giảm giá</a></div>
+                            <div class="menu-item"><a href="">Tủ hàng</a></div>
+                            <div class="menu-item"><a href="">Flash sale</a></div>
+                        </div>
+                    </div>
+                    <div class="menu">
+                        <div class="menu-label">Khách hàng</div>
+                        <div class="menu-items">
+                            <div class="menu-item"><a href="">Lịch sử quan tâm</a></div>
+                            <div class="menu-item"><a href="">Danh sách khách hàng</a></div>
+                            <div class="menu-item"><a href="">Danh sách chặn người mua</a></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <script type="text/javascript">
+                    //module cho left menu
+                    !function(){
+                        var menu_labels = document.querySelectorAll('.left-menu .menu .menu-label');
+                        for(var i=0; i<menu_labels.length; i++){
+                            menu_labels[i].addEventListener('click', function(e){
+                                var height = parseInt(this.nextElementSibling.style.height);
+                                height = !height ? this.nextElementSibling.scrollHeight : 0;
+                                this.nextElementSibling.style.height = height + 'px';
+                            });
+                        }
+                    }();
+                </script>
+                <div class="right-content">
+                    <div class="shop-profile-card">
+                        <div class="shop-profile-title">
+                            <div class="header">Thông tin cửa hàng</div>
+                            <div class="desc">Thông tin mô tả cửa hàng giúp cho người mua biết rõ hơn về bạn</div>
+                        </div>
+                        <div class="shop-profile-content">
+                            <div class="shop-profile-update-form">
+                                <form name="shop-update-form" action="/api/shop/update" onsubmit="return false;" autocomplete="off">
+                                    <div class="form-field">
+                                        <label>
+                                            <span class="form-label">Tên cửa hàng <small>(Tên kinh doanh)</small></span>
+                                            <div class="form-control">
+                                                <input type="text" name="name" value="<?php echo $this->Data->shop->name; ?>" placeholder="Tên cửa hàng" size="40" />
+                                            </div>
+                                            <p class="invalid-data" data-valid-for="name"></p>
+                                        </label>
+                                    </div>
+
+                                    <div class="form-field">
+                                        <label>
+                                            <span class="form-label">Mô tả cửa hàng <small>(Lĩnh vực kinh doanh)</small></span>
+                                            <div class="form-control">
+                                                <textarea rows="7" name="description" value="" placeholder="Mô tả cửa hàng"><?php echo $this->Data->shop->description; ?></textarea>
+                                            </div>
+                                            <p class="invalid-data" data-valid-for="description"></p>
+                                        </label>
+                                    </div>
+
+                                    <div>
+                                        <button type="submit" class="btn btn-edit btn-edit-i" name="open" value="open">
+                                            Lưu thay đổi
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="shop-profile-logo-update">
+                                <logo here=""></logo>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <script type="text/javascript">
+                        //module shop info form
+                        !function(){
+                            var _form = document.forms['shop-update-form']
+                            var _namef = _form.name;
+                            var _descf = _form.description;
+
+                            function _checkValid(){
+                                var err = 0;
+                                var nl = _namef.value.length;
+                                var dl = _descf.value.length;
+
+                                if(nl===0){
+                                    err |= 1;
+                                    $(_form).$('.invalid-data[data-valid-for="name"]').addClass('active').html('Phải đặt tên cho cửa hàng');
+                                }else{
+                                    if(nl > 40){
+                                        err |= 1;
+                                        $(_form).$('.invalid-data[data-valid-for="name"]').addClass('active').html('Tên cửa hàng có độ dài phải ít hơn 40 ký tự');
+                                    }else{
+                                        $(_form).$('.invalid-data[data-valid-for="name"]').removeClass('active');
+                                    }
+                                }
+
+                                if(dl > 512){
+                                    err |= 1;
+                                    $(_form).$('.invalid-data[data-valid-for="description"]').addClass('active').html('Độ dài mô tả không được vượt quá 512 ký tự');
+                                }else{
+                                    $(_form).$('.invalid-data[data-valid-for="description"]').removeClass('active');
+                                }
+
+                                return err === 0;
+                            }
+
+                            $(_form).on('submit', function(e){
+                                if(_checkValid()){
+                                    $LoadingPopup.show();
+                                    $.ajax().create().success(function(e){
+                                        var result = JSON.parse(this.response);
+                                        if(result.header.code===0){
+                                            $Toast.makeSuccess(result.header.message);
+                                        }else{
+                                            if(result.header.errors.description !== undefined){
+                                                $(_form).$('.invalid-data[data-valid-for="description"]').addClass('active').html(result.header.errors.description);
+                                            }
+
+                                            if(result.header.errors.name !== undefined){
+                                                $(_form).$('.invalid-data[data-valid-for="name"]').addClass('active').html(result.header.errors.name);
+                                            }
+
+                                            $Toast.makeError(result.header.message);
+                                        }
+                                        $LoadingPopup.hide();
+                                    }).error(function(e){
+                                        $Toast.makeError('Lỗi kết nối', 5e3);
+                                        $LoadingPopup.hide();
+                                    }).postForm(_form);
+                                }
+                            });
+                        }();
+                    </script>
+                </div>
+            </div>

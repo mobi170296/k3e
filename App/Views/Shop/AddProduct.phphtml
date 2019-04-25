@@ -1,309 +1,8 @@
-<!doctype html>
-<html>
-    <head>
-        <meta charset="utf-8"/>
-        <title>Đăng bán sản phẩm</title>
-        <link rel="stylesheet" href="/styles/utility.css"/>
-        <link rel="stylesheet" href="/styles/main.css"/>
-        <link rel="stylesheet" href="/styles/sub.css"/>
-        <link rel="stylesheet" href="/styles/toast.css"/>
-        <link rel="stylesheet" href="/styles/form.css"/>
-        <link rel="stylesheet" href="/styles/utility.css"/>
-        <link rel="stylesheet" href="/styles/editor.css"/>
-        <script type="text/javascript" src="/scripts/core.js"></script>
-        <script type="text/javascript" src="/scripts/toast.js"></script>
-        <script type="text/javascript" src="/scripts/editor.js"></script>
-        <script type="text/javascript" src="/scripts/xhr.js"></script>
-        <script type="text/javascript" src="/scripts/ktemplate.js"></script>
-        <style>
-            .product-attribute{
-                display: flex;
-                align-items: center;
-                padding: 5px 0px;
-            }
-            .product-attribute .product-attribute-delete{
-                cursor: pointer;
-                vertical-align: middle;
-                padding: 0px 5px;
-                font-size: 14pt;
-            }
-            .product-attribute .product-attribute-delete:hover{
-                color: #f00;
-            }
-            .product-attribute input{
-                border: 1px solid #aaa;
-                padding: 10px 20px;
-            }
-            .product-attribute .product-attribute-key{
-                
-            }
-            .product-attribute .product-attribute-value{
-                
-            }
-            
-            .container{
-                
-            }
-            
-            .header-mainmenu{
-                background: #44b27c;
-            }
-            
-            .header-mainmenu a{
-                text-decoration: none;
-            }
-            
-            .header-mainmenu .logo{
-                text-align: center;
-                text-decoration: none;
-                line-height: 1em;
-                font-size: 30px;
-                color: #fff;
-                font-family: segoe ui;
-                font-weight: bold;
-                text-shadow: 0px 0px 5px #fff;
-                padding: 10px 0px;
-            }
-            
-            .main-wrapper{
-                display: flex;
-                background-color: #fafafa;
-            }
-            
-            .main-wrapper .left-menu{
-                width: 15%;
-                background-color: #fff;
-                width: 200px;
-                min-height: 100vh;
-                -moz-user-select: none;
-                user-select: none;
-                cursor: pointer;
-                color: #000;
-                
-            }
-            .main-wrapper .left-menu a{
-                text-decoration: none;
-                padding-left: 15px;
-                white-space: nowrap;
-                display: block;
-                color: inherit;
-            }
-            .main-wrapper .left-menu .menu .menu-label{
-                line-height: 2;
-            }
-            .main-wrapper .left-menu .menu .menu-items{
-                line-height: 2;
-                height: 0px;
-                overflow: hidden;
-                transition: all 200ms;
-                background-color: #fff;
-            }
-            .main-wrapper .left-menu .menu .menu-items .menu-item:hover{
-                border-left: 5px solid #26ad05;
-            }
-            .main-wrapper .right-content{
-                flex-basis: 100%;
-                border-top: 1px solid transparent;
-            }
-            
-            .product-form{
-                margin: 10px;
-                padding: 10px;
-                border-radius: 3px;
-            }
-            .product-form .product-form-title{
-                font-size: 1.5em;
-                font-weight: bold;
-                margin-bottom: 1em;
-                background-color: #fff;
-                padding: 10px 0px 10px 30px;
-                color: #000;
-                border-radius: 1000px;
-                box-shadow: 0px 10px 10px 0px rgba(0,0,0,0.05);
-            }
-            .product-form .product-section{
-                background-color: #fff;
-                padding: 0px 30px 30px;
-                margin-bottom: 2em;
-                border-radius: 5px;
-                box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);
-            }
-            .product-form .product-section-title{
-                font-size: 1.2em;
-                font-weight: bold;
-                padding: 20px 0px 5px;
-                border-bottom: 1px solid #ccc;
-                margin-bottom: 30px;
-            }
-            
-            /*phan 2 pane select cho maincategory*/
-            
-            .two-pane-select{
-                display: flex;
-                height: 20em;
-                border: 1px solid #ccc;
-            }
-            .two-pane-select .left-pane{
-                overflow-y: scroll;
-                width: 50%;
-                height: 100%;
-                line-height: 2;
-                user-select: none;
-                -webkit-user-select: none;
-                -moz-user-select: none;
-            }
-            .two-pane-select .right-pane{
-                overflow-y: scroll;
-                width: 50%;
-                height: 100%;
-                line-height: 2;
-                user-select: none;
-                -webkit-user-select: none;
-                -moz-user-select: none;
-            }
-            .two-pane-select .select-item{
-                padding: 0px 5px;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-            .two-pane-select .select-item:hover{
-                background-color: #ddd;
-                cursor: pointer;
-            }
-            .two-pane-select .select-item.active{
-                background-color: #ddd;
-                color: #3fb079;
-                font-weight: 600;
-            }
-            
-            .product-image-upload-card{
-                width: 200px;
-                height: 100px;
-                border: 1px dashed #00a424;
-                border-radius: 5px;
-                position: relative;
-                overflow: hidden;
-                margin: 5px;
-            }
-            
-            .product-image-upload-card .product-image-upload-progress{
-                position: absolute;
-                top: 0px;
-                left: 0px;
-                width: 100%;
-                height: 100%;
-                display: none;
-            }
-            .product-image-upload-card .progress-total{
-                height: 5px;
-                width: 80%;
-                margin: 80px auto;
-            }
-            .product-image-upload-card .product-image-upload-preview{
-                background-repeat: no-repeat;
-                background-position: center center;
-                background-size: contain;
-                height: 100%;
-                width: 100%;
-            }
-            
-            .product-image-upload-card .product-image-upload-progress.active{
-                background-color: rgba(255,255,255,0.7);
-                display: block;
-            }
-            .product-image-upload-chosen{
-                display: flex;
-                flex-direction: row;
-                flex-wrap: wrap;
-            }
-            label.product-image-upload-select{
-                width: 100px;
-                height: 100px;
-                border: 1px dashed #00a424;
-                border-radius: 5px;
-                position: relative;
-                overflow: hidden;
-                margin: 5px;
-                cursor: pointer;
-                background-image: url('/images/icons/add-image.png');
-                background-repeat: no-repeat;
-                background-position: center;
-                background-size: 48px 48px;
-                display: block;
-            }
-            label.product-image-upload-select:hover{
-                background-color: #abeab9;
-            }
-            label.product-image-upload-select input{
-                display: none;
-            }
-            
-            .product-image-upload-card .product-image-upload-delete{
-                position: absolute;
-                top: 5px;
-                right: 10px;
-                cursor: pointer;
-            }
-            
-            .product-form .product-field-row{
-                margin-bottom: 1em;
-            }
-            
-            .product-form .product-field-row.horizontal{
-                display: flex;
-            }
-            
-            .product-form .product-field-row.horizontal .field-label{
-                flex-basis: 200px;
-                text-align: right;
-                padding-right: 20px;
-            }
-            
-            .product-form .product-field-row.horizontal .field-control{
-                flex-basis: 100%;
-            }
-            
-            .product-form .product-field-row.vertical .field-label{
-                margin-bottom: 10px;
-            }
-            
-            .product-form .product-field-row.vertical .field-label::after{
-                content: ':';
-            }
-            
-            .product-form .product-field-row.vertical .field-control{
-                
-            }
-            
-            .product-attribute-add-btn{
-                padding: 2px 20px;
-                border: 0px;
-                background-color: #09adea;
-                border-radius: 50px;
-                color: #fff;
-                font-size: 0.9em;
-                cursor: pointer;
-                -moz-user-select: none;
-            }
-            
-            .form-btn-group{
-                background-color: #fff;
-                padding: 20px;
-                box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);
-            }
-            .form-btn-group.fixed{
-                position: fixed;
-                bottom: 0px;
-                left: 0px;
-                width: 100%;
-                padding: 20px;
-                background-color: #fff;
-            }
-        </style>
-    </head>
-    <body style="margin: 0px; font-family: segoe ui">
-        <script id="product-attribute-tpl" type="text/ktpl">
+<?php
+    $this->layout = DS . 'App' . DS . 'Template' . DS . 'Common' . DS . 'shop_layout.phphtml';
+    $this->Data->Title = 'Thêm sản phẩm mới';
+?>
+<script id="product-attribute-tpl" type="text/ktpl">
             <div class="product-attribute">
                 <input class="product-attribute-key" name="attribute_key[]" type="text" size="20" placeholder="Thuộc tính sản phẩm"/>
                 <input class="product-attribute-value" name="attribute_value[]" type="text" size="50" placeholder="Mô tả thuộc tính"/>
@@ -330,10 +29,8 @@
             <div class="product-image-upload-delete">&times;</div>
             <input type="hidden" name="mainimage_id" disabled/>
         </script>
-        <div class="container">
-            <div class="header-mainmenu">
-                <a href="/"><div class="logo">KAKAKA</div></a>
-            </div>
+        <link rel="stylesheet" href="/styles/editor.css"/>
+        <script src="/scripts/editor.js"></script>
             <div class="main-wrapper">
                 <div class="left-menu">
                     <div class="menu">
@@ -343,11 +40,17 @@
                             <div class="menu-item"><a href="">Tạo đơn hàng</a></div>
                         </div>
                     </div>
-                    <div class="menu">
+                    <div class="menu open">
                         <div class="menu-label">Sản phẩm</div>
                         <div class="menu-items">
                             <div class="menu-item"><a href="">Danh sách sản phẩm</a></div>
-                            <div class="menu-item"><a href="">Đăng sản phẩm</a></div>
+                            <div class="menu-item active"><a href="">Đăng sản phẩm</a></div>
+                        </div>
+                    </div>
+                    <div class="menu">
+                        <div class="menu-label">Thông tin cửa hàng</div>
+                        <div class="menu-items">
+                            <div class="menu-item"><a href="/Shop/Info">Thông tin cơ bản</a></div>
                         </div>
                     </div>
                     <div class="menu">
@@ -367,6 +70,19 @@
                         </div>
                     </div>
                 </div>
+                <script type="text/javascript">
+                    //module cho left menu
+                    !function(){
+                        var menu_labels = document.querySelectorAll('.left-menu .menu .menu-label');
+                        for(var i=0; i<menu_labels.length; i++){
+                            menu_labels[i].addEventListener('click', function(e){
+                                var height = parseInt(this.nextElementSibling.style.height);
+                                height = !height ? this.nextElementSibling.scrollHeight : 0;
+                                this.nextElementSibling.style.height = height + 'px';
+                            });
+                        }
+                    }();
+                </script>
                 <div class="right-content">
                     <form id="add-product" autocomplete="off" onsubmit="return false">
                         <div class="product-form">
@@ -507,7 +223,6 @@
                     </form>
                 </div>
             </div>
-        </div>
         
         <script>
             //module thuoc tinh san pham
@@ -767,17 +482,7 @@
                 }
             }();
             
-            //module cho left menu
-            !function(){
-                var menu_labels = document.querySelectorAll('.left-menu .menu .menu-label');
-                for(var i=0; i<menu_labels.length; i++){
-                    menu_labels[i].addEventListener('click', function(e){
-                        var height = parseInt(this.nextElementSibling.style.height);
-                        height = !height ? this.nextElementSibling.scrollHeight : 0;
-                        this.nextElementSibling.style.height = height + 'px';
-                    });
-                }
-            }();
+            
             
             //module check form + send data request
             !function(){
@@ -979,5 +684,3 @@
                 });
             }();
         </script>
-    </body>
-</html>

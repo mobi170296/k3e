@@ -54,4 +54,21 @@
         public function ShopProfile($id){
             return $this->View->RenderContent('ID Shop: ' . $id);
         }
+        
+        public function AddProduct(){
+            try{
+                $database = new Database();
+                $user = (new Authenticate($database))->getUser();
+                
+                if($user->loadShop()){
+                    return $this->View->RenderTemplate();
+                }else{
+                    return $this->redirectToAction('Open', 'Shop');
+                }
+            } catch (DBException $ex) {
+                return $this->View->RenderTemplate('_error');
+            } catch (AuthenticateException $e){
+                return $this->redirectToAction('Login', 'User');
+            }
+        }
     }

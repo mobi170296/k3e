@@ -70,7 +70,7 @@ function RichEditorSelect(t='') {
     this.container = $.create('div');
     $(this.container).addClass('richeditor-custom-select');
     $(this.container).addEnd(this.selected).addEnd(this.selectItems);
-    $(this.container).on('click', function (e) {
+    $(this.container).on('mousedown', function (e) {
         e.stopPropagation();
     });
 }
@@ -85,7 +85,7 @@ function RichEditorColorPicker() {
         $(cn).cssData('background-color', 'color');
         $(this.colorTable).addEnd(cn);
         cn.richEditorColorPicker = this;
-        $(cn).on('click', function (e) {
+        $(cn).on('mousedown', function (e) {
             this.richEditorColorPicker.hideColorTable();
             this.richEditorColorPicker.setColor($(this).data('color'));
         });
@@ -145,16 +145,12 @@ function RichEditorColorPicker() {
     $(this.colorTable).data('role', 'popup').data('role-type', 'static');
     $(this.colorTable).addClass('color-table').addClass('u-hidden');
     this.colorTable.richEditorColorPicker = this;
-    $(this.colorTable).on('click', function (e) {
+    $(this.colorTable).on('mousedown', function (e) {
         e.stopPropagation();
     });
 
     $(this.container).addEnd(this.currentColor).addEnd(this.colorDropdown).addEnd(this.colorTable);
 
-    //close picker when click out
-    $(document).on('click', function (e) {
-        $('.color-control .color-table').addClass('u-hidden');
-    });
 }
 
 function ImagePropertyPopup(img) {
@@ -201,7 +197,7 @@ function ImagePropertyPopup(img) {
     $(this.container).on('contextmenu', function (e) {
         e.stopPropagation();
     });
-    $(this.container).on('click', function (e) {
+    $(this.container).on('mousedown', function (e) {
         e.stopPropagation();
     });
     this.show = function (x, y) {
@@ -611,17 +607,3 @@ function RichEditor(textarea) {
     document.execCommand('fontName', false, 'Arial');
     document.execCommand('formatBlock', false, 'div');
 }
-
-
-/*
- * 
- * 
- * Document click to remove all popup
- * 
- * 
- */
-
-$(document).on('click', function (e) {
-    $('[data-role="popup"][data-role-type="static"]').addClass('u-hidden');
-    $('[data-role="popup"][data-role-type="dynamic"]').remove();
-});

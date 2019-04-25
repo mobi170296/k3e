@@ -8,8 +8,8 @@
     class ProductModel extends Model{
         const LOCKED = 1, UNLOCKED = 0;
         const VERIFIED = 1, UNVERIFIED = 0;
-        public $id, $name, $description, $quantity, $shop_id, $original_price, $price, $subcategory_id, $weight, $length, $width, $height, $main_image_id;
-        public $created_time, $locked, $verified, $verified_time, $warranty_months_number;
+        public $id, $name, $description, $quantity, $shop_id, $original_price, $price, $subcategory_id, $weight, $length, $width, $height, $mainimage_id, $warranty_months_number;
+        public $created_time, $locked, $verified, $verified_time;
         
         public $productimages = [];
         public $productattributes = [];
@@ -17,6 +17,7 @@
         public $assessments = [];
         public $orderitems = [];
         
+        public $mainimage;
         public $shop, $subcategory;
         
         public function checkName(){
@@ -83,7 +84,7 @@
             if(!is_numeric($this->original_price)){
                 $this->addErrorMessage('original_price', 'Giá gốc của sản phẩm không hợp lệ');
             }else{
-                if($this->original_price < 0 || $this->original_price > 100e6){
+                if($this->original_price <= 0 || $this->original_price > 100e6){
                     $this->addErrorMessage('original_price', 'Giá gốc của sản phẩm không được vượt quá giới hạn phải từ 0 đến 100 triệu vnđ');
                 }
             }
@@ -95,7 +96,7 @@
                 $this->addErrorMessage('price', 'Giá bán của sản phẩm không hợp lệ');
             }else{
                 if($this->price < 10e3 || $this->price > 100e6){
-                    $this->addErrorMessage('price', 'Giá bán của sản phẩm không được vượt quá giới hạn phải từ 0 đến 100 triệu vnđ');
+                    $this->addErrorMessage('price', 'Giá bán của sản phẩm không được vượt quá giới hạn phải từ 10 ngàn vnđ đến 100 triệu vnđ');
                 }
             }
             return $this;
@@ -107,7 +108,7 @@
                 $this->addErrorMessage('weight', 'Cân nặng không hợp lệ!');
             }else{
                 #PHP auto convert string to number when context require number
-                if($this->weight <= 10){
+                if($this->weight < 10){
                     $this->addErrorMessage('weight', 'Cân nặng không thể nhỏ hơn 10g');
                 }elseif($this->weight > 1e5){
                     $this->addErrorMessage('weight', 'Trọng lượng không thể vượt quá 100Kg');
@@ -161,6 +162,12 @@
             }
         }
         
+        public function loadMainImage(){
+            $this->mainimage = new ImageMapModel($this->database);
+            $this->mainimage->id = $this->mainimage_id;
+            return $this->mainimage->loadData();
+        }
+        
         public function loadShop(){
             $this->shop = new ShopModel($this->database);
             $this->shop->id = $this->shop_id;
@@ -200,7 +207,7 @@
         }
         
         public function add(){
-            $this->database->insert(DB_TABLE_PRODUCT, ['name' => new DBString($this->database->escape($this->name)), 'description' => new DBString($this->database->escape($this->description)), 'quantity' => new DBNumber($this->quantity), 'shop_id' => new DBNumber($this->shop_id), 'original_price' => new DBNumber($this->original_price), 'price' => new DBNumber($this->price), 'subcategory_id' => new DBNumber($this->subcategory_id), 'weight' => new DBNumber($this->weight), 'length' => new DBNumber($this->length), 'width' => new DBNumber($this->width), 'height' => new DBNumber($this->height), 'created_time' => new DBRaw('now()'), 'locked' => new DBNumber(self::UNLOCKED), 'verified' => new DBNumber(self::VERIFIED), 'verified_time' => new DBRaw('now()'), 'warranty_months_number' => new DBNumber($this->warranty_months_number), 'main_image_id' => new DBNumber($this->main_image_id)]);
+            $this->database->insert(DB_TABLE_PRODUCT, ['name' => new DBString($this->database->escape($this->name)), 'description' => new DBString($this->database->escape($this->description)), 'quantity' => new DBNumber($this->quantity), 'shop_id' => new DBNumber($this->shop_id), 'original_price' => new DBNumber($this->original_price), 'price' => new DBNumber($this->price), 'subcategory_id' => new DBNumber($this->subcategory_id), 'weight' => new DBNumber($this->weight), 'length' => new DBNumber($this->length), 'width' => new DBNumber($this->width), 'height' => new DBNumber($this->height), 'created_time' => new DBRaw('now()'), 'locked' => new DBNumber(self::UNLOCKED), 'verified' => new DBNumber(self::VERIFIED), 'verified_time' => new DBRaw('now()'), 'warranty_months_number' => new DBNumber($this->warranty_months_number), 'mainimage_id' => new DBNumber($this->mainimage_id)]);
             return true;
         }
         

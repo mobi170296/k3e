@@ -1,6 +1,7 @@
 <?php
     namespace App\Models;
     use Core\Model;
+    use Library\Database\DBNumber;
     
     class ProductImageModel extends Model{
         public $product_id, $norder, $imagemap_id;

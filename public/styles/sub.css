@@ -1,30 +1,300 @@
+/*Them san pham*/
+.product-attribute{
+                display: flex;
+                align-items: center;
+                padding: 5px 0px;
+            }
+            .product-attribute .product-attribute-delete{
+                cursor: pointer;
+                vertical-align: middle;
+                padding: 0px 5px;
+                font-size: 14pt;
+            }
+            .product-attribute .product-attribute-delete:hover{
+                color: #f00;
+            }
+            .product-attribute input{
+                border: 1px solid #aaa;
+                padding: 10px 20px;
+            }
+            .product-attribute .product-attribute-key{
+                
+            }
+            .product-attribute .product-attribute-value{
+                
+            }
+            
+            .container{
+                
+            }
+            
+            .header-mainmenu{
+                background: #44b27c;
+            }
+            
+            .header-mainmenu a{
+                text-decoration: none;
+            }
+            
+            .header-mainmenu .logo{
+                text-align: center;
+                text-decoration: none;
+                line-height: 1em;
+                font-size: 30px;
+                color: #fff;
+                font-family: segoe ui;
+                font-weight: bold;
+                text-shadow: 0px 0px 5px #fff;
+                padding: 10px 0px;
+            }
+            
+            .main-wrapper{
+                display: flex;
+                background-color: #fafafa;
+            }
+            
+            .main-wrapper .left-menu{
+                width: 15%;
+                background-color: #fff;
+                width: 200px;
+                min-height: 100vh;
+                -moz-user-select: none;
+                user-select: none;
+                cursor: pointer;
+                color: #000;
+                border-left: 5px solid #ebf4fc;
+                border-right: 1px solid #ebf4fc;
+            }
+            .main-wrapper .left-menu .menu-item{
+                font-size: 0.85em;
+            }
+            .main-wrapper .left-menu a{
+                text-decoration: none;
+                padding-left: 15px;
+                white-space: nowrap;
+                display: block;
+                color: inherit;
+            }
+            .main-wrapper .left-menu .menu .menu-label{
+                line-height: 2;
+            }
+            .main-wrapper .left-menu .menu .menu-items{
+                line-height: 2;
+                height: 0px;
+                overflow: hidden;
+                transition: all 200ms;
+                background-color: #fff;
+            }
+            .main-wrapper .left-menu .menu.open .menu-items{
+                height: max-content;
+            }
+            .main-wrapper .left-menu .menu .menu-items .menu-item:hover{
+                background-color: #eee;
+            }
+            .main-wrapper .left-menu .menu .menu-items .menu-item.active{
+                background-color: #eee;
+            }
+            .main-wrapper .right-content{
+                flex-basis: 100%;
+                border-top: 1px solid transparent;
+            }
+            
+            .product-form{
+                margin: 10px;
+                padding: 10px;
+                border-radius: 3px;
+            }
+            .product-form .product-form-title{
+                font-size: 1.5em;
+                font-weight: bold;
+                margin-bottom: 1em;
+                background-color: #fff;
+                padding: 10px 0px 10px 30px;
+                color: #000;
+                border-radius: 1000px;
+                box-shadow: 0px 10px 10px 0px rgba(0,0,0,0.05);
+            }
+            .product-form .product-section{
+                background-color: #fff;
+                padding: 0px 30px 30px;
+                margin-bottom: 2em;
+                border-radius: 5px;
+                box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);
+            }
+            .product-form .product-section-title{
+                font-size: 1.2em;
+                font-weight: bold;
+                padding: 20px 0px 5px;
+                border-bottom: 1px solid #ccc;
+                margin-bottom: 30px;
+            }
+            
+            /*phan 2 pane select cho maincategory*/
+            
+            .two-pane-select{
+                display: flex;
+                height: 20em;
+                border: 1px solid #ccc;
+            }
+            .two-pane-select .left-pane{
+                overflow-y: scroll;
+                width: 50%;
+                height: 100%;
+                line-height: 2;
+                user-select: none;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+            }
+            .two-pane-select .right-pane{
+                overflow-y: scroll;
+                width: 50%;
+                height: 100%;
+                line-height: 2;
+                user-select: none;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+            }
+            .two-pane-select .select-item{
+                padding: 0px 5px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .two-pane-select .select-item:hover{
+                background-color: #ddd;
+                cursor: pointer;
+            }
+            .two-pane-select .select-item.active{
+                background-color: #ddd;
+                color: #3fb079;
+                font-weight: 600;
+            }
+            
+            .product-image-upload-card{
+                width: 200px;
+                height: 100px;
+                border: 1px dashed #00a424;
+                border-radius: 5px;
+                position: relative;
+                overflow: hidden;
+                margin: 5px;
+            }
+            
+            .product-image-upload-card .product-image-upload-progress{
+                position: absolute;
+                top: 0px;
+                left: 0px;
+                width: 100%;
+                height: 100%;
+                display: none;
+            }
+            .product-image-upload-card .progress-total{
+                height: 5px;
+                width: 80%;
+                margin: 80px auto;
+            }
+            .product-image-upload-card .product-image-upload-preview{
+                background-repeat: no-repeat;
+                background-position: center center;
+                background-size: contain;
+                height: 100%;
+                width: 100%;
+            }
+            
+            .product-image-upload-card .product-image-upload-progress.active{
+                background-color: rgba(255,255,255,0.7);
+                display: block;
+            }
+            .product-image-upload-chosen{
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            label.product-image-upload-select{
+                width: 100px;
+                height: 100px;
+                border: 1px dashed #00a424;
+                border-radius: 5px;
+                position: relative;
+                overflow: hidden;
+                margin: 5px;
+                cursor: pointer;
+                background-image: url('/images/icons/add-image.png');
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: 48px 48px;
+                display: block;
+            }
+            label.product-image-upload-select:hover{
+                background-color: #abeab9;
+            }
+            label.product-image-upload-select input{
+                display: none;
+            }
+            
+            .product-image-upload-card .product-image-upload-delete{
+                position: absolute;
+                top: 5px;
+                right: 10px;
+                cursor: pointer;
+            }
+            
+            .product-form .product-field-row{
+                margin-bottom: 1em;
+            }
+            
+            .product-form .product-field-row.horizontal{
+                display: flex;
+            }
+            
+            .product-form .product-field-row.horizontal .field-label{
+                flex-basis: 200px;
+                text-align: right;
+                padding-right: 20px;
+            }
+            
+            .product-form .product-field-row.horizontal .field-control{
+                flex-basis: 100%;
+            }
+            
+            .product-form .product-field-row.vertical .field-label{
+                margin-bottom: 10px;
+            }
+            
+            .product-form .product-field-row.vertical .field-label::after{
+                content: ':';
+            }
+            
+            .product-form .product-field-row.vertical .field-control{
+                
+            }
+            
+            .product-attribute-add-btn{
+                padding: 2px 20px;
+                border: 0px;
+                background-color: #09adea;
+                border-radius: 50px;
+                color: #fff;
+                font-size: 0.9em;
+                cursor: pointer;
+                -moz-user-select: none;
+            }
+            
+            .form-btn-group{
+                background-color: #fff;
+                padding: 20px;
+                box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);
+            }
+            .form-btn-group.fixed{
+                position: fixed;
+                bottom: 0px;
+                left: 0px;
+                width: 100%;
+                padding: 20px;
+                background-color: #fff;
+            }
+            /*ket thuc them san pham*/
 
-.shop-profile-wrapper{
-    width: 1270px;
-    margin: 10px auto;
-}
-.shop-profile-wrapper .left-menu{
-    width: 250px;
-    float: left;
-}
-
-.shop-profile-wrapper .right-content{
-    width: 1020px;
-    float: left;
-}
-.shop-profile-wrapper .left-menu .menu{
-    background-color: #fff;
-    margin: 5px;
-    box-shadow: 0px 0px 7px 0px rgba(0,0,0,0.1);
-}
-.shop-profile-wrapper .left-menu .menu .menu-item{
-    padding: 10px 0px 10px 20px;
-    color: #000;
-}
-.shop-profile-wrapper .left-menu .menu .menu-item.active{
-    background-color: #fafafa;
-    border-left: 5px solid #26ad05;
-}
 .shop-profile-wrapper .right-content .shop-profile-card{
     margin: 5px;
     padding: 5px;

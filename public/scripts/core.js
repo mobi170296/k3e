@@ -307,3 +307,50 @@ $.create = function (n, p = {}){
     }
     return e;
 }
+
+
+$COMMON = {
+    moneyFormat: function(m, d, p, dp, pp){
+        var n = parseFloat(m);
+        n *= Math.pow(10, p);
+        n = Math.round(n);
+        n /= Math.pow(10, p);
+        m = '' + n;
+        var result = '';
+        if(p === 0){
+            var l=m.split('.')[0];
+            while(l.length!==0){
+                result = l.slice(-d) + result;
+                l = l.substr(0, l.length - d);
+                if(l.length!==0 && l!='-'){
+                    result = dp + result;
+                }
+            }
+            return result;
+        }else{
+            var a = m.split('.');
+            var l = a[0];
+            if(a.length !== 1){
+                var r = a[1];
+                result = pp + r.substr(0, p);
+                var z = p - r.length;
+                if(z > 0){
+                    result += '00000000000000000000000000000000000000'.substr(0,z);
+                }
+            }else{
+                result = pp + '000000000000000000000000000000000000000'.substr(0, p);
+            }
+            if(l.length === 0){
+                return 0 + result;
+            }
+            while(l.length){
+                result = l.slice(-d) + result;
+                l = l.substr(0, l.length - d);
+                if(l.length!==0 && l!='-'){
+                    result = dp + result;
+                }
+            }
+            return result;
+        }
+    }
+};

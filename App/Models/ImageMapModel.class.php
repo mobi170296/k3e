@@ -30,6 +30,14 @@
             $this->database->insert(DB_TABLE_IMAGEMAP, ['diskpath' => new DBString($this->database->escape($this->diskpath)), 'urlpath' => new DBString($this->database->escape($this->urlpath)), 'user_id' => new DBNumber((int)$this->user_id), 'mimetype' => new DBString($this->database->escape($this->mimetype)), 'linked' => new DBNumber((int)$this->linked)]);
         }
         
+        public function setLinked(){
+            $this->database->update(DB_TABLE_IMAGEMAP, ['linked' => new DBNumber(self::LINKED)], 'id=' . (int)$this->id);
+        }
+        
+        public function unLink(){
+            $this->database->update(DB_TABLE_IMAGEMAP, ['linked' => new DBNumber(self::UNLINKED)], 'id=' . (int)$this->id);
+        }
+        
         public function delete(){
             $this->database->delete(DB_TABLE_IMAGEMAP, 'id=' . (int)$this->id);
         }
