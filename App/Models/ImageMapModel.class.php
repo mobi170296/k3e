@@ -41,4 +41,20 @@
         public function delete(){
             $this->database->delete(DB_TABLE_IMAGEMAP, 'id=' . (int)$this->id);
         }
+        
+        public function update(ImageMapModel $imagemap){
+            $this->database->update(DB_TABLE_IMAGEMAP, [
+                'diskpath' => new DBString($this->database->escape($imagemap->diskpath)),
+                'urlpath' => new DBString($this->database->escape($imagemap->urlpath)),
+                'user_id' => new DBNumber(($imagemap->user_id)),
+                'linked' => new DBNumber($imagemap->linked),
+                'mime_type' => new DBString($this->database->escape($imagemap->mimetype))
+            ], 'id=' . (int)$this->id);
+        }
+        
+        public function getThumbnailLink($w = 300, $h = 300){
+            $params = ['w' => $w , 'h' => $h, 'url' => $this->urlpath];
+            //return '/img/thumbnail?' . http_build_query($params);
+            return $this->urlpath;
+        }
     }

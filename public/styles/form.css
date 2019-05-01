@@ -47,7 +47,11 @@ label{
 }
 select{
     padding: 7px 15px;
-    border: 1px solid #aaa;
+    border: 2px solid #eee;
+}
+select:focus{
+    border-color: #aaa;
+    outline: none;
 }
 select[size]{
     padding: 0px;
@@ -58,10 +62,12 @@ select:focus{
 
 input[type="text"], input[type="password"]{
     padding: 10px 20px;
-    border: 1px solid #aaa;
+    border: 2px solid #eee;
 }
-
-
+input[type="text"]:focus, input[type="password"]:focus{
+    border-color: #aaa;
+	outline: none;
+}
 
 .btn{
     display: inline-block;

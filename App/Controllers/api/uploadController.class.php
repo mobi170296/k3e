@@ -83,6 +83,10 @@
                     $imagemap->user_id = $user->id;
                     $imagemap->linked = ImageMapModel::LINKED;
                     
+                    #resize image 
+                    $resizer = new ImageResizer($imagemap->diskpath);
+                    $resizer->coverResize(300, 300);
+                    
                     try{
                         $hasAvatar = $user->loadAvatar();
                         $database->startTransaction();
@@ -123,6 +127,9 @@
             } catch(ImageInfoException $e){
                 $result->header->code = 1;
                 $result->header->errors = [$e->getMessage()];
+            } catch(ImageResizerException $e){
+                $result->header->code = 1;
+                $result->header->errors = [$e->getMessage()];
             }
             
             return $this->View->RenderJson($result);
@@ -161,7 +168,7 @@
                     $imagemap->linked = ImageMapModel::UNLINKED;
                     $imagemap->mimetype = $imageinfo->getMimeType();
                     $imagemap->user_id = $user->id;
-                    $imagemap->urlpath = PUBLIC_UPLOAD_IMAGE_PATH . DS . $uploader->getAutoPath() . DS . $uploader->getFileName();
+                    $imagemap->urlpath = str_replace(DS, '/', PUBLIC_UPLOAD_IMAGE_PATH . DS . $uploader->getAutoPath() . DS . $uploader->getFileName());
                     $imagemap->add();
                     $result->header->code = 0;
                     $result->header->message = 'Đã upload thành công ảnh';

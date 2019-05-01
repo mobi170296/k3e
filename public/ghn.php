@@ -1,13 +1,11 @@
 <?php
     require 'utest.php';
-    
     use Library\VanChuyen\GHN\GHNRequest;
     use Library\VanChuyen\GHN\GHNCreateOrderParameter;
     use Library\VanChuyen\GHN\GHNServiceParameter;
     use Library\VanChuyen\GHN\GHNFeeParameter;
     
     $ghn = new GHNRequest();
-    
     $ghnservices = new GHNServiceParameter(1572, 2011, 10000, 1, 1, 1);
     
     $services = $ghn->getServices($ghnservices);

@@ -34,21 +34,21 @@
             <div class="main-wrapper">
                 <div class="left-menu">
                     <div class="menu">
-                        <div class="menu-label">Đơn hàng</div>
+                        <div class="menu-label"><i class="mi order"></i>Đơn hàng</div>
                         <div class="menu-items">
                             <div class="menu-item"><a href="">Danh sách đơn hàng</a></div>
                             <div class="menu-item"><a href="">Tạo đơn hàng</a></div>
                         </div>
                     </div>
                     <div class="menu open">
-                        <div class="menu-label">Sản phẩm</div>
+                        <div class="menu-label"><i class="mi product"></i>Sản phẩm</div>
                         <div class="menu-items">
-                            <div class="menu-item"><a href="">Danh sách sản phẩm</a></div>
-                            <div class="menu-item active"><a href="">Đăng sản phẩm</a></div>
+                            <div class="menu-item"><a href="/Shop/ProductList">Danh sách sản phẩm</a></div>
+                            <div class="menu-item active"><a href="/Shop/AddProduct">Đăng sản phẩm</a></div>
                         </div>
                     </div>
                     <div class="menu">
-                        <div class="menu-label">Thông tin cửa hàng</div>
+                        <div class="menu-label"><i class="mi shop"></i>Thông tin cửa hàng</div>
                         <div class="menu-items">
                             <div class="menu-item"><a href="/Shop/Info">Thông tin cơ bản</a></div>
                         </div>
@@ -104,7 +104,13 @@
                                             <div class="field-control">
                                                 <div class="two-pane-select subcategory" data-widget-type="two-pane-select">
                                                     <div class="left-pane">
-
+                                                        <?php
+                                                        foreach($this->Data->maincategories as $maincategory){
+                                                            echo <<<ITEM
+                                                            <div class="select-item" data-id="{$maincategory->id}">{$maincategory->name}</div>
+ITEM;
+                                                        }
+                                                        ?>
                                                     </div>
                                                     <div class="right-pane">
 
@@ -292,6 +298,7 @@
                             _product_image_upload_card.remove();
                         }
                     }).error(function(e){
+                        $Toast.makeError('Lỗi mạng');
                         _product_image_upload_card.remove();
                     }).upprogress(function(e){
                         var percent = e.loaded / e.total * 100;
@@ -370,6 +377,7 @@
                             _product_image_upload_card.remove();
                         }
                     }).error(function(e){
+                        $Toast.makeError('Lỗi mạng');
                         _product_image_upload_card.remove();
                     }).upprogress(function(e){
                         var percent = e.loaded / e.total * 100;
@@ -418,20 +426,20 @@
                 var _right_pane = document.querySelector('.subcategory.two-pane-select .right-pane');
                 
                 //init data for left pane maincategory
-                $.ajax().create().url('/api/maincategory/getall').success(function(){
-                    var result = JSON.parse(this.response);
-                    if(result.header.code===0){
-                        for(var i=0; i<result.body.data.length; i++){
-                            var item = $.create('div');
-                            $(item).data('id', result.body.data[i].id).addClass('select-item').html(result.body.data[i].name);
-                            $(_left_pane).addEnd(item);
-                        }
-                    }else{
-                        console.log('Loi truy van' + result.header.message);
-                    }
-                }).error(function(e){
-                    
-                }).get();
+//                $.ajax().create().url('/api/maincategory/getall').success(function(){
+//                    var result = JSON.parse(this.response);
+//                    if(result.header.code===0){
+//                        for(var i=0; i<result.body.data.length; i++){
+//                            var item = $.create('div');
+//                            $(item).data('id', result.body.data[i].id).addClass('select-item').html(result.body.data[i].name);
+//                            $(_left_pane).addEnd(item);
+//                        }
+//                    }else{
+//                        console.log('Loi truy van' + result.header.message);
+//                    }
+//                }).error(function(e){
+//                    
+//                }).get();
                 
                 function main_click(e){
                     $LoadingPopup.show();
@@ -477,7 +485,7 @@
                 var pins = document.querySelectorAll('[data-widget-type="positive-integer-number"]');
                 for(var i=0; i<pins.length; i++){
                     pins[i].addEventListener('keydown', function(e){
-                        !(e.keyCode === e.DOM_VK_A && e.ctrlKey) && isNaN(parseInt(e.key)) && e.keyCode !== e.DOM_VK_BACK_SPACE && e.preventDefault();
+                        !(e.keyCode === 65 && e.ctrlKey) && isNaN(parseInt(e.key)) && e.keyCode !== 8 && e.keyCode !== 37 && e.keyCode !== 39 && e.preventDefault();
                     });
                 }
             }();
@@ -629,20 +637,20 @@
                     }
                     
                     var length_value = parseInt(length.value);
-                    if(isNaN(length_value) || length_value < 1){
-                        $Toast.makeError('Chiều dài không hợp lệ ít nhất phải là 1cm');
+                    if(isNaN(length_value) || length_value < 1 || length_value > 200){
+                        $Toast.makeError('Chiều dài không hợp lệ phải từ 1cm đến 200cm');
                         length.scrollIntoView();
                         return false;
                     }
                     var width_value = parseInt(width.value);
-                    if(isNaN(width_value) || width_value < 1){
-                        $Toast.makeError('Chiều rộng không hợp lệ ít nhất phải là 1cm');
+                    if(isNaN(width_value) || width_value < 1 || width_value > 200){
+                        $Toast.makeError('Chiều rộng không hợp lệ phải từ 1cm đến 200cm');
                         width.scrollIntoView();
                         return false;
                     }
                     var height_value = parseInt(height.value);
-                    if(isNaN(height_value) || height_value < 1){
-                        $Toast.makeError('Chiều cao không hợp lệ ít nhất phải là 1cm');
+                    if(isNaN(height_value) || height_value < 1 || height_value > 200){
+                        $Toast.makeError('Chiều cao không hợp lệ phải từ 1cm đến 200cm');
                         height.scrollIntoView();
                         return false;
                     }
@@ -664,7 +672,7 @@
                             }else{
                                 $LoadingPopup.hide();
                                 for(var msg in result.header.errors){
-                                    $Toast.makeError(msg);
+                                    $Toast.makeError(result.header.errors[msg]);
                                 }
                             }
                         }).error(function(e){
@@ -679,7 +687,7 @@
                     $ConfirmPopup.message('Bạn có muốn ngừng việc thêm sản phẩm này không?').active('Không', function(e){
                         $ConfirmPopup.hide();
                     }).inactive('Ngừng', function(e){
-                        location.href = '/Shop/Info';
+                        location.href = '/Shop/ProductList';
                     }).show();
                 });
             }();

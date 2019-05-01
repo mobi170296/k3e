@@ -3,7 +3,7 @@
 function $AJAX(){
     this._xhr = null;
     this._url = null;
-    this._method = null;
+    this._method = 'get';
     this._cb = null;
     this._sync = true;
     this.create = function(){
@@ -48,10 +48,12 @@ function $AJAX(){
                 if(this.readyState===4 && this.status===200){
                     this._onsuccess(e);
                 }
-                if(this.readyState===4 && this.status!==200){
-                    this._onerror(e);
-                }
+//                if(this.readyState===4 && this.status!==200){
+//                    this._onerror(e);
+//                }
             }
+            
+            this._xhr.onerror = this._xhr._onerror;
         }
         this._xhr.send(data);
     }
@@ -71,12 +73,14 @@ function $AJAX(){
                         this._onsuccess(e);
                     }
                 }
-                if(this.readyState===4 && this.status!==200){
-                    if(this._onerror != undefined){
-                        this._onerror(e);
-                    }
-                }
+//                if(this.readyState===4 && this.status!==200){
+//                    if(this._onerror != undefined){
+//                        this._onerror(e);
+//                    }
+//                }
             }
+            
+            this._xhr.onerror = this._xhr._onerror;
         }
         this._xhr.send(data);
     }
@@ -99,12 +103,15 @@ function $AJAX(){
                         this._onsuccess(e);
                     }
                 }
-                if(this.readyState===4 && this.status!==200){
-                    if(this._onerror != undefined){
-                        this._onerror(e);
-                    }
-                }
+//                if(this.readyState===4 && this.status!==200){
+//                    if(this._onerror != undefined){
+//                        this._onerror(e);
+//                    }
+//                }
             }
+            
+            
+            this._xhr.onerror = this._xhr._onerror;
         }
         this._xhr.send(data);
     }

@@ -88,7 +88,7 @@ $ConfirmPopup = new (function(){
         e.stopPropagation();
     });
     $(this.content).addClass('content');
-    $(this.container).addEnd(this.messagebox).addClass('confirm-popup').addClass('u-hidden').data('role', 'popup').data('role-type', 'static');
+    $(this.container).addEnd(this.messagebox).addClass('confirm-popup').addClass('u-hidden');//.data('role', 'popup').data('role-type', 'static');
     this.message = function(m){
         $(this.content).html(m);
         return this;

@@ -54,6 +54,11 @@
             
             $desthandle = imagecreatetruecolor($w, $h);
             
+            if($this->imageinfo->getMimeType() === 'image/png'){
+                imagealphablending($desthandle, false);
+                imagesavealpha($desthandle, true);
+            }
+            
             if(!imagecopyresampled($desthandle, $this->sourcehandle, $dx, $dy, $sx, $sy, $dw, $dh, $sw, $sh)){
                 throw new ImageResizerException('Cannot Resize', -1);
             }
@@ -100,6 +105,11 @@
             
             $desthandle = imagecreatetruecolor($w, $h);
             
+            if($this->imageinfo->getMimeType() === 'image/png'){
+                imagealphablending($desthandle, false);
+                imagesavealpha($desthandle, true);
+            }
+            
             #allocate white color
             $background = imagecolorallocatealpha($desthandle, 0xff, 0xff, 0xff, 0);
             
@@ -131,6 +141,44 @@
                     break;
                 default: throw new ImageResizerException('Format not supported', -1);
             }
+        }
+        
+        public function containResizeBuffer($w, $h){
+            $dw = $w;
+            $dh = $h;
+            $sx = $sy = 0;
+            $sw = $this->sw;
+            $sh = $this->sh;
+            
+            $sratio = $sw / $sh;
+            $dratio = $dw / $dh;
+            
+            if($sratio >= $dratio){
+                $dh = $w / $sratio;
+                $dx = 0;
+                $dy = ($h - $dh) / 2;
+            }else{
+                $dw = $sratio * $h;
+                $dx = ($w - $dw) / 2;
+                $dy = 0;
+            }
+            
+            $desthandle = imagecreatetruecolor($w, $h);
+            
+            #allocate white color
+            $background = imagecolorallocatealpha($desthandle, 0xff, 0xff, 0xff, 0);
+            
+            if($background === false){
+                throw new ImageResizerException('Cannot allocate color', -1); 
+            }
+            
+            imagefill($desthandle, 0, 0, $background);
+            
+            if(!imagecopyresampled($desthandle, $this->sourcehandle, $dx, $dy, $sx, $sy, $dw, $dh, $sw, $sh)){
+                throw new ImageResizerException('Cannot Resize', -1);
+            }
+            
+            imagepng($desthandle);
         }
         
         public function free(){

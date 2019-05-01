@@ -14,6 +14,8 @@
     use Library\Common\Set;
     use App\Models\ProductImageModel;
     
+    use Library\Common\Text;
+    
     class shopController extends Controller{
         public function open($name, $description){
             $result = new \stdClass();
@@ -268,6 +270,406 @@
                 $result->header->message = 'Invalid input';
                 $result->header->errors = $e->getErrorsMap();
                 $database->rollback();
+            }
+            
+            return $this->View->RenderJSON($result);
+        }
+        
+        public function editproduct($id, ProductModel $product, $product_image_chosen = [], $attribute_key = [], $attribute_value = []){
+            $result = new \stdClass();
+            $result->header = new \stdClass();
+            if(!$this->isPOST() || !is_numeric($id)){
+                $result->header->code = 1;
+                $result->errors = [$result->header->message = 'invalid'];
+                return $this->View->RenderJSON($result);
+            }
+            try{
+                $database = new Database;
+                $user = (new Authenticate($database))->getUser();
+                
+                if($user->loadShop()){
+                    $shop = $user->shop;
+                    
+                    $oldproduct = new ProductModel($database);
+                    $oldproduct->id = $id;
+                    if($oldproduct->loadData()){
+                        if($oldproduct->shop_id == $shop->id){
+                            $oldproduct->loadMainImage();
+                            $oldproduct->loadProductAttributes();
+                            $oldproduct->loadProductImages();
+                            $oldproductimagesset = new Set();
+                            
+                            foreach($oldproduct->productimages as $productimage){
+                                $productimage->loadImageMap();
+                                $oldproductimagesset->add($productimage->imagemap_id);
+                            }
+                            
+                            if($oldproduct->hasBought()){
+                                #chỉ được cập nhật một số thông tin có thể biến động do thị trường những thông tin thuộc về đặc tính sản phẩm thì không thể thay đổi
+                                $product->checkOriginalPrice()->checkPrice()->checkQuantity()->checkWarrantyMonthsNumber();
+                                if($product->isValid()){
+                                    $oldproduct->update($product);
+                                }else{
+                                    throw new InputException($product->getErrorsMap());
+                                }
+                            }else{
+                                #được cập nhật tất cả các thông tin vì có thể do người dùng sai dữ liệu lúc tạo không muốn tốn thời gian để xóa và tạo lại
+                                #bắt đầu kiểm tra thông tin người dùng nhập
+                                #Kiem tra attribute key value
+                                if(!is_array($attribute_key) || !is_array($attribute_value) || count($attribute_key) != count($attribute_value)){
+                                    $product->addErrorMessage('productattribute', 'Thuộc tính sản phẩm không hợp lệ');
+                                }else{
+                                    $productattributes = [];
+                                    $length = count($attribute_key);
+
+                                    for($i = 0; $i<$length; $i++){
+                                        $productattribute = new ProductAttributeModel($database);
+                                        if(isset($attribute_key[$i]) && isset($attribute_value[$i])){
+                                            $productattribute->attributename = $attribute_key[$i];
+                                            $productattribute->attributevalue = $attribute_value[$i];
+                                            $productattribute->norder = $i+1;
+                                            $productattribute->product_id = $id;
+                                            $productattribute->checkKey()->checkValue();
+                                            if(!$productattribute->isValid()){
+                                                $product->addErrorMessage("productattribute[$i]", "Cặp thuộc tính $i không hợp lệ");
+                                            }
+                                            $productattributes[] = $productattribute;
+                                        }else{
+                                            $product->addErrorMessage('productattribute', 'Thuộc tính sản phẩm không hợp lệ');
+                                            break;
+                                        }
+                                    }
+                                }
+
+
+                                #Kiem tra Anh dai dien cho san pham
+                                if(is_numeric($product->mainimage_id)){
+                                    $mainimage = new ImageMapModel($database);
+                                    $mainimage->id = $product->mainimage_id;
+                                    if($mainimage->loadData()){
+                                        #kiem tra quyen so huu
+                                        #kiem tra anh co hop le khong, hop le la chua duoc lien ket, da duoc lien ket thi phai la cua san pham hien tai
+                                        if($mainimage->user_id != $user->id || ($mainimage->linked == ImageMapModel::LINKED && $oldproduct->mainimage_id != $mainimage->id)){
+                                            $product->addErrorMessage('mainimage_id', 'Ảnh đại diện cho sản phẩm không hợp lệ');
+                                        }
+                                    }else{
+                                        $product->addErrorMessage('mainimage_id', 'Ảnh đại diện cho sản phẩm không tồn tại');
+                                    }
+                                }else{
+                                    $product->addErrorMessage('mainimage_id', 'Ảnh đại diện cho sản phẩm không hợp lệ');
+                                }
+
+                                #Kiem tra Anh mo ta san pham, ít nhất 5 ảnh nhiều nhất 30 ảnh
+                                if(is_array($product_image_chosen)){
+                                    $productimagesset = new Set($product_image_chosen);
+                                    if($productimagesset->isInteger()){
+                                        if($productimagesset->count() >= 3 && $productimagesset->count() <= 30){
+                                            $productimages = [];
+                                            $productimageidsarray = $productimagesset->toArray();
+                                            $norder = 1;
+                                            foreach($productimageidsarray as $productimageid){
+                                                $imagemap = new ImageMapModel($database);
+                                                $imagemap->id = $productimageid;
+                                                if($imagemap->loadData()){
+                                                    if($imagemap->user_id != $user->id || ($imagemap->linked == ImageMapModel::LINKED && !$oldproductimagesset->contain($imagemap->id))){
+                                                        $product->addErrorMessage('productimages', 'Ảnh mô tả sản phẩm không hợp lệ');
+                                                        break;
+                                                    }
+                                                    $productimage = new ProductImageModel($database);
+                                                    $productimage->product_id = $oldproduct->id;
+                                                    $productimage->imagemap_id = $imagemap->id;
+                                                    $productimage->norder = $norder++;
+                                                    $productimages[] = $productimage;
+                                                }else{
+                                                    $product->addErrorMessage('productimages', 'Ảnh mô tả sản phẩm không hợp lệ');
+                                                    break;
+                                                }
+                                            }
+                                        }else{
+                                            $product->addErrorMessage('productimages', 'Số ảnh của mô tả sản phẩm phải từ 3 đến 30 ảnh');
+                                        }
+                                    }else{
+                                        $product->addErrorMessage('productimages', 'Ảnh mô tả sản phẩm không hợp lệ');
+                                    }
+                                }else{
+                                    $product->addErrorMessage('productimages', 'Ảnh mô tả sản phẩm không hợp lệ');
+                                }
+
+                                #Kiem tra thong tin co ban ve san pham
+                                $product->database = $database;
+                                $product->checkName()->checkDescription()->checkOriginalPrice()->checkPrice()->checkQuantity()->checkWeight()->checkLength()->checkWidth()->checkHeight()->checkWarrantyMonthsNumber()->checkSubcategoryId();
+                                
+                                if($product->isValid()){
+                                    $database->startTransaction();
+                                    
+                                    #<PHAN XU LY THUOC TINH SAN PHAM>
+                                    #xoa di cac thuong tinh cu
+                                    foreach($oldproduct->productattributes as $productattribute){
+                                        $productattribute->delete();
+                                    }
+                                    #insert lai thuoc tinh moi
+                                    foreach($productattributes as $attribute){
+                                        $attribute->add();
+                                    }
+                                    
+                                    #<PHAN XU LY ANH MO TA>
+                                    $dbimagesset = new Set();
+                                    foreach($oldproduct->productimages as $productimage){
+                                        $productimage->loadImageMap();
+                                        $dbimagesset->add($productimage->imagemap_id);
+                                    }
+                                    
+                                    $keepimagesset = $dbimagesset->intersect($productimagesset);
+                                    
+                                    $delimagesset = $dbimagesset->minus($keepimagesset);
+                                    
+                                    #Set unlink cho những ảnh đã được xóa trong tập cũ
+                                    foreach($oldproduct->productimages as $productimage){
+                                        #unlink di nhung image can xoa
+                                        if($delimagesset->contain($productimage->imagemap_id)){
+                                            $productimage->imagemap->unLink();
+                                        }
+                                        #xoa het tat ca product image, van giu imagemap, anh nao khong con ton tai da duoc unlink o delimagesset
+                                        $productimage->delete();
+                                    }
+                                    
+                                    #them lai vao productimage tu input nguoi dung
+                                    foreach($productimages as $productimage){
+                                        $productimage->add();
+                                        $productimage->loadImageMap();
+                                        $productimage->imagemap->setLinked();
+                                    }
+                                    
+                                    #<PHAN XU LY ANH DAI DIEN CHO SAN PHAM>
+                                    if($mainimage->linked == ImageMapModel::UNLINKED){
+                                        #go lien ket anh cu
+                                        $oldproduct->mainimage->unLink();
+                                        #dat lien ket anh moi
+                                        $mainimage->setLinked();
+                                        $product->mainimage_id = $mainimage->id;
+                                    }
+                                    
+                                    $oldproduct->update($product);
+                                    
+                                    $database->commit();
+                                    $result->header->code = 0;
+                                    $result->header->message = 'Sản phẩm ' . $product->name . ' đã được cập nhật!';
+                                }else{
+                                    throw new InputException($product->getErrorsMap());
+                                }
+                            }
+                        }else{
+                            $result->header->code = 1;
+                            $result->header->message = 'invalid';
+                            $result->header->errors = ['invalid'];
+                        }
+                    } else {
+                        $result->header->code = 1;
+                        $result->errors = [$result->header->message = 'Sản phẩm không tồn tại'];
+                    }
+                }else{
+                    $result->header->code = 1;
+                    $result->errors = [$result->header->message = 'Chưa có cửa hàng'];
+                }
+            } catch (DBException $ex) {
+                $result->header->code = 1;
+                $result->header->message = $ex->getMessage();
+                $result->header->errors = [$ex->getMessage()];
+            } catch (AuthenticateException $e){
+                $result->header->code = 1;
+                $result->header->message = 'invalid';
+                $result->header->errors = ['invalid'];
+            } catch (InputException $e){
+                $result->header->code = 1;
+                $result->header->message = 'invalid';
+                $result->header->errors = $e->getErrorsMap();
+            }
+            
+            return $this->View->RenderJSON($result);
+        }
+        
+        public function soldout($id){
+            $result = new \stdClass();
+            $result->header = new \stdClass();
+            if(!$this->isPOST() || !is_numeric($id)){
+                $result->header->code = 1;
+                $result->errors = [$result->header->message = 'invalid'];
+                return $this->View->RenderJSON($result);
+            }
+            try{
+                $database = new Database();
+                $user = (new Authenticate($database))->getUser();
+                
+                if($user->loadShop()){
+                    $shop = $user->shop;
+                    
+                    $product = new ProductModel($database);
+                    $product->id = $id;
+                    if($product->loadData()){
+                        if($product->shop_id == $shop->id){
+                            $product->setSoldOut();
+                            $result->header->code = 0;
+                            $result->header->message = 'Đã cập nhật tình trang hết hàng thành công cho sản phẩm ' . $product->name . '!';
+                        }else{
+                            $result->header->code = 1;
+                            $result->errors = [$result->header->message = 'invalid'];
+                        }
+                    } else {
+                        $result->header->code = 1;
+                        $result->errors = [$result->header->message = 'Sản phẩm không tồn tại'];
+                    }
+                }else{
+                    $result->header->code = 1;
+                    $result->errors = [$result->header->message = 'Chưa có cửa hàng'];
+                }
+            } catch (DBException $ex) {
+                $result->header->code = 1;
+                $result->header->message = $ex->getMessage();
+                $result->header->errors = [$ex->getMessage()];
+            } catch (AuthenticateException $e){
+                $result->header->code = 1;
+                $result->header->message = 'invalid';
+                $result->header->errors = ['invalid'];
+            }
+            
+            return $this->View->RenderJSON($result);
+        }
+        
+        public function deleteproduct($id){
+            $result = new \stdClass();
+            $result->header = new \stdClass();
+            if(!$this->isPOST() || !is_numeric($id)){
+                $result->header->code = 1;
+                $result->errors = [$result->header->message = 'invalid'];
+                return $this->View->RenderJSON($result);
+            }
+            try{
+                $database = new Database;
+                $user = (new Authenticate($database))->getUser();
+                
+                if($user->loadShop()){
+                    $shop = $user->shop;
+                    
+                    $product = new ProductModel($database);
+                    $product->id = $id;
+                    if($product->loadData()){
+                        if($product->shop_id == $shop->id){
+                            if($product->hasBought()){
+                                $result->header->code = 1;
+                                $result->header->message = 'Sản phẩm này đã có người mua bạn không thể xóa nó (gợi ý: bạn có thể đặt tình trạng hết hàng cho sản phẩm này)';
+                                $result->header->errors = ['Sản phẩm này không thể xóa vì đã có người mua nó'];
+                            }else{
+                                $database->startTransaction();
+                                $product->loadMainImage();
+                                $product->loadProductImages();
+                                foreach($product->productimages as $productimage){
+                                    $productimage->loadImageMap();
+                                    $productimage->delete();
+                                    $productimage->imagemap->delete();
+                                }
+                                $product->delete();
+                                $product->mainimage->delete();
+                                $database->commit();
+                                foreach($product->productimages as $productimage){
+                                    unlink($productimage->imagemap->diskpath);
+                                }
+                                unlink($product->mainimage->diskpath);
+                                $result->header->code = 0;
+                                $result->header->message = 'Đã xóa thành công sản phẩm ' . $product->name;
+                            }
+                        }else{
+                            $result->header->code = 1;
+                            $result->errors = [$result->header->message = 'invalid'];
+                        }
+                    } else {
+                        $result->header->code = 1;
+                        $result->errors = [$result->header->message = 'Sản phẩm không tồn tại'];
+                    }
+                }else{
+                    $result->header->code = 1;
+                    $result->errors = [$result->header->message = 'Chưa có cửa hàng'];
+                }
+            } catch (DBException $ex) {
+                $result->header->code = 1;
+                $result->header->message = $ex->getMessage();
+                $result->header->errors = [$ex->getMessage()];
+            } catch (AuthenticateException $e){
+                $result->header->code = 1;
+                $result->header->message = 'invalid';
+                $result->header->errors = ['invalid'];
+            }
+            
+            return $this->View->RenderJSON($result);
+        }
+        public function productlist($name = '', $page = 1, $itemsperpage = 10){
+            $result = new \stdClass();
+            $result->header = new \stdClass();
+            
+            if(!is_string($name) || !is_numeric($page) || !is_numeric($itemsperpage)){
+                $result->header->code = 1;
+                $result->header->errors = ['invalid'];
+                $result->header->message = 'invalid';
+                return $this->View->RenderJson($result);
+            }
+            
+            try{
+                $database = new Database;
+                $user = (new Authenticate($database))->getUser();
+                
+                if($user->loadShop()){
+                    $shop = $user->shop;
+                    #build chuoi query theo tu
+                    $names = Text::getWords($name);
+                    for($i=0;$i<count($names);$i++){
+                        $names[$i] = "name like '%" . $database->escape($names[$i]) . "%'"; 
+                    }
+                    $query = implode(' and ', $names);
+                    
+                    $result->header->code =0;
+                    $result->header->message = 'OK';
+                    $result->body = new \stdClass();
+                    $result->body->data = [];
+                    
+                    $rows = $database->select('count(*) as count')->from(DB_TABLE_PRODUCT)->where('shop_id=' . (int)$shop->id . ' and (' . $query . ')')->execute();
+                    
+                    $result->body->total = $rows[0]->count;
+                    
+                    $rows = $database->select('id')->from(DB_TABLE_PRODUCT)->where('shop_id=' . (int)$shop->id . ' and (' . $query . ')')->limit(($page-1) * $itemsperpage, $itemsperpage)->orderby('created_time')->desc()->execute();
+                    
+                    
+                    
+                    foreach($rows as $row){
+                        $product = new ProductModel($database);
+                        $product->id = $row->id;
+                        $product->loadData();
+                        $product->loadMainImage();
+                        
+                        $p = new \stdClass();
+                        $p->name = $product->name;
+                        $p->link = $product->getProductLink();
+                        $p->id = (int)$product->id;
+                        $p->quantity = (int)$product->quantity;
+                        $p->price = (int)$product->price;
+                        $p->original_price = (int)$product->original_price;
+                        $p->soldquantity = (int)$product->getSoldQuantity();
+                        $p->warranty_months_number = (int)$product->warranty_months_number;
+                        $p->mainimage_url = $product->mainimage->urlpath;
+                        $result->body->data[] = $p;
+                    }
+                }else{
+                    $result->header->code = 1;
+                    $result->header->message = 'invalid';
+                    $result->header->errors = ['invalid'];
+                }
+            } catch (DBException $ex) {
+                $result->header->code = 1;
+                $result->header->message = 'DBE';
+                $result->header->errors = [$ex->getMessage()];
+                
+            } catch (AuthenticateException $e){
+                $result->header->code = 1;
+                $result->header->message = 'invalid';
+                $result->header->errors = ['invalid'];
             }
             
             return $this->View->RenderJSON($result);

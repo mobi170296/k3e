@@ -48,14 +48,29 @@
             $this->request->setOption(CURLOPT_POSTFIELDS, $requestjson);
             try{
                 $result = json_decode($this->request->execute());
+                
                 if(json_last_error()){
                     throw new GHNException(json_last_error_msg(), json_last_error());
                 }
-                if($result->code===0){
+                if($result->code == 0){
                     throw new GHNException($result->msg, $result->code);
                 }
                 
-                return $result->data;
+                $datas = $result->data;
+                
+                $arrayresult = [];
+                
+                foreach($datas as $data){
+                    $expecteddeliverytime = isset($data->ExpectedDeliveryTime) ? $data->ExpectedDeliveryTime : null;
+                    $extras = isset($data->Extras) ? $data->Extras : null;
+                    $name = isset($data->Name) ? $data->Name : null;
+                    $servicefee = isset($data->ServiceFee) ? $data->ServiceFee : null;
+                    $serviceid = isset($data->ServiceID) ? $data->ServiceID : null;
+
+                    $arrayresult[] = new GHNServiceResult($expecteddeliverytime, $extras, $name, $servicefee, $serviceid);
+                }
+                
+                return $arrayresult;
             } catch (ClientRequestException $ex) {
                 throw GHNException($ex->getMessage(), $ex->getCode());
             }
@@ -72,11 +87,20 @@
                 if(json_last_error()){
                     throw new GHNException(json_last_error_msg(), json_last_error());
                 }
-                if($result->code===0){
+                if($result->code == 0){
                     throw new GHNException($result->msg, $result->code);
                 }
                 
-                return $result->data;
+                $data = $result->data;
+                
+                $calculatedfee = isset($data->CalculatedFee) ? $data->CalculatedFee : null;
+                $servicefee = isset($data->ServiceFee) ? $data->ServiceFee : null;
+                $codfee = isset($data->CoDFee) ? $data->CoDFee : null;
+                $ordercosts =  isset($data->OrderCosts) ? $data->OrderCosts : null;
+                $discountfee = isset($data->DiscountFee) ? $data->DiscountFee : null;
+                $weightdimension = isset($data->WeightDimension) ? $data->WeightDimension : null;
+                
+                return new GHNFeeResult($calculatedfee, $servicefee, $codfee, $ordercosts, $discountfee, $weightdimension);
             } catch (ClientRequestException $ex) {
                 throw GHNException($ex->getMessage(), $ex->getCode());
             }
@@ -97,12 +121,56 @@
                 if(json_last_error()){
                     throw new GHNException(json_last_error_msg(), json_last_error());
                 }else{
-                    if($result->code === 0){
+                    if($result->code == 0){
+                        throw new GHNException($result->msg, $result->code);
+                    }
+                }
+                $data = $result->data;
+                
+                $orderid = isset($data->OrderID) ? $data->OrderID : null;
+                $paymenttypeid = isset($data->PaymentTypeID) ? $data->PaymentTypeID : null;
+                $ordercode = isset($data->OrderCode) ? $data->OrderCode : null;
+                $currentstatus =  isset($data->CurrentStatus) ? $data->CurrentStatus : null;
+                $totalservicefee = isset($data->TotalServiceFee) ? $data->TotalServiceFee : null;
+                $extrafee = isset($data->ExtraFee) ? $data->ExtraFee : null;
+                $expecteddeliverytime = isset($data->ExpectedDeliveryTime) ? $data->ExpectedDeliveryTime : null;
+                $clienthubid = isset($data->ClientHubID) ? $data->ClientHubID : null;
+                $sortcode = isset($data->SortCode) ? $data->SortCode : null;
+                
+                return new GHNCreateOrderResult($orderid, $paymenttypeid, $ordercode, $currentstatus, $extrafee, $totalservicefee, $expecteddeliverytime, $clienthubid, $sortcode);
+            } catch (ClientRequestException $ex) {
+                throw new GHNException($ex->getMessage(), $ex->getCode());
+            }
+        }
+        
+        public function getOrderInfo($orderinfoparamater){
+            $orderinfoparamater->token = self::token;
+            
+            $requestjson = json_encode($orderinfoparamater);
+            
+            $this->request->setOption(CURLOPT_URL, 'https://apiv3-test.ghn.vn/api/v1/apiv3/OrderInfo');
+            $this->request->setOption(CURLOPT_POSTFIELDS, $requestjson);
+            
+            try{
+                $result = json_decode($this->request->execute());
+                
+                if(json_last_error()){
+                    throw new GHNException(json_last_error_msg(), json_last_error());
+                }else{
+                    if($result->code == 0){
                         throw new GHNException($result->msg, $result->code);
                     }
                 }
                 
-                return $result->data;
+                $data = $result->data;
+                
+                $orderinfo = new GHNOrderInfoResult();
+                
+                foreach($data as $key => $value){
+                    $orderinfo->$key = $value;
+                }
+                
+                return $orderinfo;
             } catch (ClientRequestException $ex) {
                 throw new GHNException($ex->getMessage(), $ex->getCode());
             }

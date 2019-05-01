@@ -12,6 +12,7 @@
         public $owner;
         public $logo;
         
+        public $orders, $products;
         
         public function getLink(){
             return "/Shop/" . $this->id;
@@ -56,10 +57,40 @@
             return $this;
         }
         
-        public function LoadOwner(){
+        public function loadOrders(){
+            $this->orders = [];
+            $rows = $this->database->select('id')->from(DB_TABLE_ORDER)->where('shop_id=' . (int)$this->id)->execute();
+            foreach($rows as $row){
+                $order = new OrderModel($this->database);
+                $order->id = $row->id;
+                if($order->loadData()){
+                    $this->orders[] = $order;
+                }
+            }
+        }
+        
+        public function loadProducts(){
+            $this->products = [];
+            $rows = $this->database->select('id')->from(DB_TABLE_PRODUCT)->where('shop_id=' . (int)$this->id)->execute();
+            foreach($rows as $row){
+                $product = new ProductModel($this->database);
+                $product->id = $row->id;
+                if($product->loadData()){
+                    $this->products[] = $product;
+                }
+            }
+        }
+        
+        public function loadOwner(){
             $this->owner = new UserModel($this->database);
             $this->owner->id = $this->owner_id;
             return $this->owner->loadData();
+        }
+        
+        public function loadLogo(){
+            $this->logo = new ImageMapModel($this->database);
+            $this->logo->id = $this->logo_id;
+            return $this->logo->loadData();
         }
         
         public function loadData(){
@@ -87,7 +118,7 @@
         }
         
         
-        public function Update(ShopModel $shop){
+        public function update(ShopModel $shop){
             $id = (int)$this->id;
             $name = $this->database->escape($shop->name);
             $description = $this->database->escape($shop->description);
@@ -97,11 +128,11 @@
         }
         
         #@@@
-        public function Delete(){
+        public function delete(){
             #@@@
         }
         
-        public function Lock(){
+        public function lock(){
             $this->database->update(DB_TABLE_SHOP, ['lock' => new DBNumber(ShopModel::LOCK)], 'id='.(int)$this->id);
         }
         
@@ -128,5 +159,11 @@
             $id = (int)$id;
             $this->database->update(DB_TABLE_SHOP, ['logo_id' => new DBNumber($id)], '');
             $this->logo_id = $id;
+        }
+        
+        public function getProductTotal(){
+            $rows = $this->database->select('count(*) as count ')->from(DB_TABLE_PRODUCT)->where('shop_id=' . (int)$this->id)->execute();
+            $row = $rows[0];
+            return $row->count;
         }
     }

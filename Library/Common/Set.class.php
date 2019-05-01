@@ -21,6 +21,11 @@
                 }
             }
         }
+        
+        public function contain($e){
+            return in_array($e, $this->a);
+        }
+        
         public function contains($a){
             foreach($a as $e){
                 if(!in_array($e, $this->a)){

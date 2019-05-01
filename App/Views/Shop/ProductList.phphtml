@@ -1,0 +1,359 @@
+<?php
+    $this->layout = DS . 'App' . DS . 'Template' . DS . 'Common' . DS . 'shop_layout.phphtml';
+    $this->Data->Title = 'Danh sách sản phẩm';
+?>
+    <div class="main-wrapper">
+        <div class="left-menu">
+            <div class="menu">
+                <div class="menu-label"><i class="mi order"></i>Đơn hàng</div>
+                <div class="menu-items">
+                    <div class="menu-item"><a href="">Danh sách đơn hàng</a></div>
+                    <div class="menu-item"><a href="">Tạo đơn hàng</a></div>
+                </div>
+            </div>
+            <div class="menu open">
+                <div class="menu-label"><i class="mi product"></i>Sản phẩm</div>
+                <div class="menu-items">
+                    <div class="menu-item active"><a href="/Shop/ProductList">Danh sách sản phẩm</a></div>
+                    <div class="menu-item"><a href="/Shop/AddProduct">Đăng sản phẩm</a></div>
+                </div>
+            </div>
+            <div class="menu">
+                <div class="menu-label"><i class="mi shop"></i>Thông tin cửa hàng</div>
+                <div class="menu-items">
+                    <div class="menu-item"><a href="/Shop/Info">Thông tin cơ bản</a></div>
+                </div>
+            </div>
+            <div class="menu">
+                <div class="menu-label">Chương trình khuyến mãi</div>
+                <div class="menu-items">
+                    <div class="menu-item"><a href="">Mã giảm giá</a></div>
+                    <div class="menu-item"><a href="">Tủ hàng</a></div>
+                    <div class="menu-item"><a href="">Flash sale</a></div>
+                </div>
+            </div>
+            <div class="menu">
+                <div class="menu-label">Khách hàng</div>
+                <div class="menu-items">
+                    <div class="menu-item"><a href="">Lịch sử quan tâm</a></div>
+                    <div class="menu-item"><a href="">Danh sách khách hàng</a></div>
+                    <div class="menu-item"><a href="">Danh sách chặn người mua</a></div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            //module cho left menu
+            !function(){
+                var menu_labels = document.querySelectorAll('.left-menu .menu .menu-label');
+                for(var i=0; i<menu_labels.length; i++){
+                    menu_labels[i].addEventListener('click', function(e){
+                        var height = parseInt(this.nextElementSibling.style.height);
+                        height = !height ? this.nextElementSibling.scrollHeight : 0;
+                        this.nextElementSibling.style.height = height + 'px';
+                    });
+                }
+            }();
+        </script>
+        <div class="right-content">
+            <div class="product-list">
+                <div class="product-list-title">
+                    Danh sách sản phẩm
+                </div>
+                <div class="product-list-sections">
+                    <div class="search-section">
+                        <input id="tb-query" type="text" name="qname" placeholder="Tên sản phẩm cần tìm" size="50" />
+                        <button class="btn btn-search btn-search-i">Tìm</button>
+                    </div>
+                    <div class="product-table-section">
+                        <table id="product-list">
+                            <thead>
+
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="product-pagination-section">
+                        <div id="pagination-bar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script type="text/ktpl" id="product-row">
+    <td><a target="_blank" href="@link">@name</a></td><td><div style="width:100px; height: 100px; background-image: url('@mainimage_url'); background-size: contain; background-repeat: no-repeat;"></div></td><td>@quantity</td><td>@price_string</td><td>@original_price_string</td><td>@soldquantity</td><td>@warranty_months_number</td><td><button type="button" class="btn btn-edit" data-control-type="soldout" data-field-id="@id" data-field-name="@name">Hết hàng</button> <a href="/Shop/EditProduct/@id"><button type="button" data-control-type="edit" data-field-id="@id" class="btn btn-edit btn-edit-i">Sửa</button></a> <button type="button" data-control-type="del" data-field-id="@id" data-field-name="@name" class="btn btn-del btn-del-i">Xóa</button></td>
+</script>
+<script src="/scripts/ktemplate.js"></script>
+<script src="/scripts/ktable.js"></script>
+
+
+<style>
+    table#product-list{
+        border-collapse: collapse;
+        font-family: segoe ui;
+        width: 100%;
+        background-color: #fff;
+    }
+    table#product-list td{
+        border: 2px solid #eee;
+        padding: 5px 10px;
+    }
+    
+    .product-list{
+        margin: 0px 20px;
+    }
+    
+    .product-list-title{
+        margin: 20px 0px;
+        font-size: 1.5em;
+        background-color: #fff;
+        padding: 10px 30px;
+        border-radius: 1000px;
+        font-weight: bold;
+        font-family: segoe ui;
+        box-shadow: 0px 10px 10px 0px rgba(0,0,0,0.1);
+        border-left: 10px solid #44b27c;
+    }
+    
+    .product-list-sections{
+        border-top: 1px solid transparent;
+    }
+    
+    .search-section{
+        margin: 10px 0px;
+    }
+    
+    button.btn-page{
+        background-color: #06a24f;
+        color: #fff;
+        display: inline-block;
+        border: 1px solid #06a24f;
+        cursor: pointer;
+        padding: 5px 10px;
+        margin: 0px 5px;
+    }
+    
+    button.btn-page.active{
+        background-color: red;
+    }
+    
+    #pagination-bar{
+        margin: 20px 0px;
+        text-align: center;
+    }
+</style>
+
+<script>
+    //module for product list table
+    !function(){
+        //Khoi tao gia tri filter hien tai o day
+        var _filter = {
+            name: '',
+            page: 1,
+            itemsperpage: 1
+        };
+        
+        var _paginationbar = window['pagination-bar'];
+        
+        var _createPaginationBar = function (c, t){
+            c = parseInt(c);
+            t = parseInt(t);
+            var si = c - 2, ei = c + 2;
+            
+            var btns = [];
+            
+            var ci = 0;
+            
+            for(var i = 1; i <= 3 && i <= t; i++){
+                if(i > ci){
+                    ci = i;
+                    var btn = $.create('button');
+                    btn.dataset.page = ci;
+                    btn.innerHTML = ci;
+                    btn.classList.add('btn-page');
+                    if(ci === c){
+                        btn.classList.add('active');
+                    }
+                    btns.push(btn);
+                }
+            }
+            
+            if(si > 4){
+                var btn = $.create('button');
+                btn.innerHTML = '...';
+                btn.disabled = true;
+                btn.classList.add('btn-page');
+                btns.push(btn);
+            }
+            
+            for(var i = si; i<=ei && i<=t; i++){
+                if(i > ci){
+                    ci = i;
+                    var btn = $.create('button');
+                    btn.dataset.page = ci;
+                    btn.innerHTML = ci;
+                    btn.classList.add('btn-page');
+                    if(ci === c){
+                        btn.classList.add('active');
+                    }
+                    btns.push(btn);
+                }
+            }
+            
+            if(ei < t-3){
+                var btn = $.create('button');
+                btn.innerHTML = '...';
+                btn.disabled = true;
+                btn.classList.add('btn-page');
+                btns.push(btn);
+            }
+            
+            for(var i=t - 2; i<=t; i++){
+                if(i > ci){
+                    ci = i;
+                    var btn = $.create('button');
+                    btn.dataset.page = ci;
+                    btn.innerHTML = ci;
+                    btn.classList.add('btn-page');
+                    
+                    if(ci === c){
+                        btn.classList.add('active');
+                    }
+                    btns.push(btn);
+                }
+            }
+            
+            _paginationbar.innerHTML = '';
+            
+            for(var i=0; i<btns.length; i++){
+                _paginationbar.appendChild(btns[i]);
+            }
+        }
+        
+        function _refreshTable(){
+            $LoadingPopup.show();
+            $.ajax().create().url('/api/shop/productlist').success(function(e){
+                var result = JSON.parse(this.response);
+                if(result.header.code === 0){
+                    _ktable.clearRows();
+                    var products = result.body.data;
+                    var producttotal = result.body.total;
+                    var pagetotal = Math.ceil(producttotal / _filter.itemsperpage);
+                    if(_filter.page > pagetotal){
+                        _filter.page = 1;
+                    }
+                    _createPaginationBar(_filter.page, pagetotal);
+                    if(products.length){
+                        for(var i=0; i< products.length; i++){
+                            products[i].price_string = $COMMON.moneyFormat(products[i].price, 3, 0, ',', '.') + 'đ';
+                            products[i].original_price_string = $COMMON.moneyFormat(products[i].original_price, 3, 0, ',', '.') + 'đ';
+                            _ktable.addRow(products[i]);
+                        }
+                    }else{
+                        _ktable.setMessage('Không có sản phẩm');
+                    }
+                }else{
+                    $Toast.makeError($result.header.message);
+                }
+                $LoadingPopup.hide();
+            }).error(function(e){
+                $Toast.makeError('Lỗi kết nối không thể tải bảng sản phẩm');
+                $LoadingPopup.hide();
+            }).post($DOMAIN.buildQueryString(_filter));
+        }
+        
+        var _product_list_table = window['product-list'];
+        _ktable = new KDataTable(_product_list_table);
+        _ktable.addHeader(['Tên sản phẩm', 'Hình ảnh', 'Số lượng', 'Giá', 'Giá gốc', 'Sl.đã bán', 'Thời hạn bảo hành', 'Thao tác']);
+        _ktable.setRowTemplate(window['product-row'].innerHTML);
+            
+        _refreshTable();
+        
+        
+        
+        //hop tim kiem ten san pham
+        var _tb_query = window['tb-query'];
+        //gan thu inputtoid = 0
+        var _inputtoid = 0;
+        _tb_query.addEventListener('input', function(e){
+            _filter.name = this.value;
+            window.clearTimeout(_inputtoid);
+            _inputtoid = window.setTimeout(function(e){
+                _filter.page = 1;
+                _refreshTable();
+            }, 1000);
+        });
+        
+        
+        function pagebtn_click(e){
+            _filter.page = this.dataset.page;
+            _refreshTable();
+        }
+        
+        _paginationbar.addEventListener('click', function(e){
+            e.target.classList.contains('btn-page') && !e.target.classList.contains('active') && pagebtn_click.call(e.target, e);
+        });
+        
+        function _edit_product_click(e){
+            console.log(this);
+        }
+        
+        function _del_product_click(e){
+            var _id = this.dataset.fieldId;
+            var _name = this.dataset.fieldName;
+            $ConfirmPopup.message('Bạn có muốn xóa sản phẩm ' + _name.bold() + '?').active('Xóa', function(e){
+                $ConfirmPopup.hide();
+                $LoadingPopup.show();
+                $.ajax().create().url('/api/shop/deleteproduct').success(function(e){
+                    var result = JSON.parse(this.response);
+                    if(result.header.code === 0){
+                        $Toast.makeSuccess(result.header.message);
+                        _refreshTable();
+                    }else{
+                        $Toast.makeError(result.header.message);
+                    }
+                    
+                    $LoadingPopup.hide();
+                }).error(function(e){
+                    $Toast.makeError('Lỗi kết nối');
+                    $LoadingPopup.hide();
+                }).post('id=' + _id);
+            }).inactive('Không', function(e){
+                $ConfirmPopup.hide();
+            }).show();
+        }
+        
+        function _sold_out_click(e){
+            var _id = this.dataset.fieldId;
+            var _name = this.dataset.fieldName;
+            
+            $ConfirmPopup.message('Sản phẩm ' + _name.bold() + ' sẽ có số lượng trong kho bằng 0 sau khi thiết lập này bắt đầu, và người mua khác sẽ không thể đặt hàng từ cửa hàng của bạn nữa, cũng như bạn không thể xác nhận các đơn hàng hiện có bạn có muốn bắt đầu không?').active('Bắt đầu', function(e){
+                $LoadingPopup.show();
+                $.ajax().create().url('/api/shop/soldout').success(function(e){
+                    var result = JSON.parse(this.response);
+                    if(result.header.code === 0){
+                        $Toast.makeSuccess(result.header.message);
+                        _refreshTable();
+                    }else{
+                        $Toast.makeError(result.header.message);
+                    }
+                    $LoadingPopup.hide();
+                }).error(function(e){
+                    $Toast.makeError('Lỗi kết nối');
+                    $LoadingPopup.hide();
+                }).post('id=' + _id);
+                $ConfirmPopup.hide();
+            }).inactive('Không', function(e){
+                $ConfirmPopup.hide();
+            }).show();
+        }
+        
+        _ktable.setEvent('click', function(e){
+            e.target.dataset.controlType === 'del' && _del_product_click.call(e.target, e);
+            e.target.dataset.controlType === 'edit' && _edit_product_click.call(e.target, e);
+            e.target.dataset.controlType === 'soldout' && _sold_out_click.call(e.target, e);
+        });
+    }();
+</script>

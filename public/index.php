@@ -32,14 +32,20 @@
     
     #print_r($_SERVER);
     
-    $route->mapRoute('Shop/{id:"\d+"}', ['controller' => 'Shop', 'action' => 'ShopProfile']);
+    $route->mapRoute('Shop/{id:"\d+"}', ['controller' => 'Shop', 'action' => 'View']);
+    $route->mapRoute('Product/{id:"\d+"}', ['controller' => 'Product', 'action' => 'View']);
+    #chuyen huong cho api
     $route->mapRoute('{controller:"api/\w+"}/{action}', []);
     $route->mapRoute('{controller:"api/\w+"}/{action}/{id}', []);
+    #chuyen huong cho yeu cau ajax
+    $route->mapRoute('{controller:"ajax/\w+"}/{action}');
+    #chuyen huong khi truy cap vao controller layout
     $route->mapRoute('Layout/Header', ['controller' => 'Home', 'action' => 'Index']);
     $route->mapRoute('Layout/ControlBar', ['controller' => 'Home', 'action' => 'Index']);
+    #chuyen huong khi mac dinh
     $route->mapRoute('', ['controller' => 'Home', 'action' => 'Index']);
-    $route->mapRoute('{controller:"\w+/\w+"}/{action}', []);
-    $route->mapRoute('{controller:"\w+/\w+"}/{action}/{id:"\d+"}', []);
+//    $route->mapRoute('{controller:"\w+/\w+"}/{action}', []);
+//    $route->mapRoute('{controller:"\w+/\w+"}/{action}/{id:"\d+"}', []);
     $route->mapRoute('{controller}', ['controller' => 'Home', 'action' => 'Index']);
     $route->mapRoute('{controller}/{action}', ['controller' => 'Home', 'action' => 'Index']);
     $route->mapRoute('{controller}/{action}/{id}', ['controller' => 'Home', 'action' => 'Index', 'id' => '']);

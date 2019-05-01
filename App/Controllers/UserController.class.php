@@ -60,7 +60,7 @@
                 return $this->View->RenderTemplate();
             }
         }
-        public function Login($login, $username, $password){
+        public function Login($login, $username, $password, $backurl){
             try{
                 $database = new Database();
                 new Authenticate($database);
@@ -91,7 +91,12 @@
                         }else{
                             $_SESSION['username'] = $username;
                             $_SESSION['password'] = $password;
-                            return $this->redirectToAction('Index', 'Home');
+                            if(is_string($backurl)){
+                                header('location: ' . $backurl);
+                            }else{
+                                
+                                return $this->redirectToAction('Index', 'Home');
+                            }
                         }
                     }else{
                         $this->View->Data->ErrorMessage = 'Tên đăng nhập hoặc tài khoản không đúng';

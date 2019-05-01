@@ -54,9 +54,10 @@
             }
             
             .main-wrapper .left-menu{
+                font-family: segoe ui;
                 width: 15%;
                 background-color: #fff;
-                width: 200px;
+                width: 250px;
                 min-height: 100vh;
                 -moz-user-select: none;
                 user-select: none;
@@ -65,12 +66,30 @@
                 border-left: 5px solid #ebf4fc;
                 border-right: 1px solid #ebf4fc;
             }
+            .mi{
+                margin-right: 5px;
+                display: inline-block;
+                vertical-align: middle;
+                background-size: 20px;
+                background-repeat: no-repeat;
+                width: 20px;
+                height: 20px;
+            }
+            .mi.shop{
+                background-image: url('/images/icons/shop-menu-icon.png');
+            }
+            .mi.order{
+                background-image: url('/images/icons/order-menu-icon.png');
+            }
+            .mi.product{
+                background-image: url('/images/icons/product-menu-icon.png');
+            }
             .main-wrapper .left-menu .menu-item{
                 font-size: 0.85em;
             }
             .main-wrapper .left-menu a{
                 text-decoration: none;
-                padding-left: 15px;
+                padding-left: 25px;
                 white-space: nowrap;
                 display: block;
                 color: inherit;
@@ -112,7 +131,9 @@
                 padding: 10px 0px 10px 30px;
                 color: #000;
                 border-radius: 1000px;
-                box-shadow: 0px 10px 10px 0px rgba(0,0,0,0.05);
+                box-shadow: 0px 10px 10px 0px rgba(0,0,0,0.1);
+                font-family: segoe ui;
+                border-left: 10px solid #44b27c;
             }
             .product-form .product-section{
                 background-color: #fff;
@@ -173,7 +194,7 @@
             .product-image-upload-card{
                 width: 200px;
                 height: 100px;
-                border: 1px dashed #00a424;
+                border: 2px dashed #ccc;
                 border-radius: 5px;
                 position: relative;
                 overflow: hidden;
@@ -213,7 +234,7 @@
             label.product-image-upload-select{
                 width: 100px;
                 height: 100px;
-                border: 1px dashed #00a424;
+                border: 2px dashed #777;
                 border-radius: 5px;
                 position: relative;
                 overflow: hidden;
@@ -226,7 +247,7 @@
                 display: block;
             }
             label.product-image-upload-select:hover{
-                background-color: #abeab9;
+                background-color: #eee;
             }
             label.product-image-upload-select input{
                 display: none;
@@ -245,6 +266,7 @@
             
             .product-form .product-field-row.horizontal{
                 display: flex;
+                align-items: center;
             }
             
             .product-form .product-field-row.horizontal .field-label{

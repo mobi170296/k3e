@@ -354,3 +354,33 @@ $COMMON = {
         }
     }
 };
+
+$DOMAIN = new (function(){
+    this.uri = location.href;
+    this.host = location.host;
+    this.port = location.port;
+    this.querystring = location.search;
+    this.protocol = location.protocol;
+
+    this.getQueryParams = function(){
+        var querystring = location.search.substr(1);
+        var query = {};
+        var kvp = querystring.split('&');
+        for(var i=0; i<kvp.length; i++){
+            var akvp = kvp[i].split('=');
+            query[akvp[0]] = decodeURIComponent(akvp[1]);
+        }
+
+        return query;
+    }
+
+    this.buildQueryString = function(params){
+        var querystring = '';
+
+        for(var k in params){
+            querystring += k + '=' + encodeURIComponent(params[k]) + '&';
+        }
+
+        return querystring.substr(0, querystring.length - 1);
+    }
+})();

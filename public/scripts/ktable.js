@@ -36,6 +36,17 @@ function KDataTable(table, config){
             body.rows[i].remove();
         }
     }
+    
+    this.setMessage = function(msg){
+        this.clearRows();
+        var body = this.table.tBodies[0];
+        var row = body.insertRow();
+        var cell = row.insertCell();
+        var colsnum = this.table.tHead.rows[0].children.length;
+        cell.colSpan = colsnum;
+        cell.align = 'center';
+        cell.innerHTML = msg;
+    }
 
     this.setRowTemplate = function(tpl){
         this.rowTemplate = new KTemplate(tpl);

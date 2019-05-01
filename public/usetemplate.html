@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>Template</title>
+        <style>
+            .inactive{
+                color: red;
+            }
+            
+            .active{
+                color: green;
+            }
+        </style>
+        <script src="/scripts/iktemplate.js"></script>
+    </head>
+    <body>
+        <script id="tpl" type="text/ktpl">
+            
+        </script>
+        
+        <div id="render">
+        </div>
+        
+        
+        <script>
+            data = [
+                {name: 'Trịnh Văn Linh', locked: true, age: 23},
+                {name: 'Bùi Minh Tuấn', locked: false, age: 11},
+                {name: 'Nguyễn Thị Thúy Hằng', locked: true, age: 52},
+                {name: 'Nguyễn Hồng Nhung', locked: false, age: 77},
+                {name: 'Trương Công Hiển', locked: true, age: 97},
+                {name: 'Bùi Minh Hiển', locked: true, age: 36},
+                {name: 'Châu Ngọc Tiên', locked: true, age: 67}
+            ];
+            
+            data2 = [];
+            
+            console.log(new IKTemplate(tpl.innerHTML).render(data));
+        </script>
+    </body>
+</html>

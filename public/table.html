@@ -91,6 +91,7 @@
                     var btns = [];
                     for(var i = 1; i <= 3 && i < si; i++){
                         var btn = $.create('button');
+                        btn.dataset.page = i;
                         btn.innerHTML = i;
                         btns.push(btn);
                     }
@@ -103,6 +104,7 @@
                     
                     for(var i = si; i <= ei; i++){
                         var btn = $.create('button');
+                        btn.dataset.page = i;
                         btn.innerHTML = i;
                         btns.push(btn);
                     }
@@ -115,6 +117,7 @@
                     
                     for(var i = Math.max(ei + 1, t - 2); i<=t; i++){
                         var btn = $.create('button');
+                        btn.dataset.page = i;
                         btn.innerHTML = i;
                         btns.push(btn);
                     }

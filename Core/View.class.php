@@ -160,7 +160,7 @@
             return $this;
         }
         
-        public function RenderJson($obj){
+        public function RenderJSON($obj){
             header('content-type: application/json');
             $this->layout = null;
             $this->bodyContent = json_encode($obj, JSON_UNESCAPED_UNICODE);

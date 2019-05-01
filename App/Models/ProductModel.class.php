@@ -35,6 +35,10 @@
         }
         
         public function checkDescription(){
+            if(!is_string($this->description)){
+                $this->addErrorMessage('description', 'Mô tả sản phẩm không hợp lệ!');
+                return $this;
+            }
             $doc = new \DOMDocument();
             $doc->loadHTML($this->description);
             $length = mb_strlen($doc->documentElement->textContent);
@@ -119,24 +123,24 @@
         
         public function checkLength(){
             #centimet
-            if(!is_numeric($this->length) || $this->length > 200 || $this->length <= 0){
-                $this->addErrorMessage('length', 'Chiều dài không hợp lệ');
+            if(!is_numeric($this->length) || $this->length > 200 || $this->length < 1){
+                $this->addErrorMessage('length', 'Chiều dài không hợp lệ phải từ 1 đến 200cm');
             }
             return $this;
         }
         
         public function checkWidth(){
             #centimet
-            if(!is_numeric($this->width) || $this->width > 200 || $this->width <= 0){
-                $this->addErrorMessage('width', 'Chiều dài không hợp lệ');
+            if(!is_numeric($this->width) || $this->width > 200 || $this->width < 1){
+                $this->addErrorMessage('width', 'Chiều rộng không hợp lệ phải từ 1 đến 200cm');
             }
             return $this;
         }
         
         public function checkHeight(){
             #centimet
-            if(!is_numeric($this->height) || $this->height > 200 || $this->height <= 0){
-                $this->addErrorMessage('height', 'Chiều dài không hợp lệ');
+            if(!is_numeric($this->height) || $this->height > 200 || $this->height < 1){
+                $this->addErrorMessage('height', 'Chiều cao không hợp lệ phải từ 1 đến 200cm');
             }
             return $this;
         }
@@ -181,8 +185,8 @@
         }
         
         public function loadProductImages(){
-            $rows = $this->database->selectall()->from(DB_TABLE_PRODUCTIMAGE)->where('product_id=' . (int)$this->id)->execute();
             $this->productimages = [];
+            $rows = $this->database->selectall()->from(DB_TABLE_PRODUCTIMAGE)->where('product_id=' . (int)$this->id)->execute();
             foreach($rows as $row){
                 $productimage = new ProductImageModel($this->database);
                 $productimage->product_id = $row->product_id;
@@ -211,10 +215,24 @@
             return true;
         }
         
-        public function update(){
+        public function update(ProductModel $product){
             #Khong duoc cap nhat mot so truong khi san pham da duoc mua
             #Duoc cap nhat tat ca khi san pham chua duoc mua
             
+            if($this->hasBought()){
+                #Chỉ cập nhật một số thông tin
+                
+                $this->database->update(DB_TABLE_PRODUCT, [
+                    'quantity' => new DBNumber($product->quantity),
+                    'original_price' => new DBNumber($product->original_price),
+                    'price' => new DBNumber($product->price),
+                    'warranty_months_number' => new DBNumber($product->warranty_months_number)
+                ], 'id=' . (int)$this->id);
+            }else{
+                #Được cập nhật hết tất cả thông tin
+                
+                $this->database->update(DB_TABLE_PRODUCT, ['name' => new DBString($this->database->escape($product->name)), 'description' => new DBString($product->database->escape($product->description)), 'quantity' => new DBNumber($product->quantity), 'original_price' => new DBNumber($product->original_price), 'price' => new DBNumber($product->price), 'subcategory_id' => new DBNumber($product->subcategory_id), 'weight' => new DBNumber($product->weight), 'width'=> new DBNumber($product->width), 'length' => new DBNumber($product->length), 'height' => new DBNumber($product->height), 'warranty_months_number' => new DBNumber($product->warranty_months_number), 'mainimage_id' => new DBNumber($product->mainimage_id)], 'id=' . (int)$this->id);
+            }
         }
         
         public function delete(){
@@ -224,8 +242,22 @@
             }
         }
         
+        public function setSoldOut(){
+            $this->database->update(DB_TABLE_PRODUCT, ['quantity' => new DBNumber(0)], 'id=' . (int)$this->id);
+        }
+        
         public function hasBought(){
             $rows = $this->database->select('count(*) as count')->from(DB_TABLE_ORDERITEM)->where('product_id=' . (int)$this->id)->execute();
             return $rows[0]->count != 0;
+        }
+        
+        public function getProductLink(){
+            return '/Product/' . $this->id;
+        }
+        
+        public function getSoldQuantity(){
+            $rows = $this->database->select('count(quantity) as quantity')->from(DB_TABLE_ORDERITEM)->where('product_id=' . (int)$this->id)->execute();
+            $row = $rows[0];
+            return $row->quantity;
         }
     }

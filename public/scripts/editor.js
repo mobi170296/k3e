@@ -208,6 +208,7 @@ function ImagePropertyPopup(img) {
 
 function RichEditor(textarea) {
     "use strict"
+    var _disabled = textarea.disabled;
     if (textarea.nodeName !== "TEXTAREA") {
         return null;
     }
@@ -233,7 +234,7 @@ function RichEditor(textarea) {
     });
 
     this.editor = $.create('div');
-    //$(this.editor).attr('contenteditable', true);
+//    $(this.editor).attr('contenteditable', true);
     //$(this.editor).attr('tabindex', 0);
     //references objects
     this.editor.textarea = textarea;
@@ -247,7 +248,7 @@ function RichEditor(textarea) {
     });
     $(this.editor).html($(textarea).val());
     $(this.editor).on('click', function (e) {
-        this.contentEditable = true;
+        this.contentEditable = !_disabled;
         this.tabindex = 0;
         this.richeditor.updateToolBox();
     });

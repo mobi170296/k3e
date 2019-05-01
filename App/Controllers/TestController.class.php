@@ -9,6 +9,7 @@
         }
         
         public function Test(){
-            return $this->View->RenderContent('' . session_id());
+            print_r($_SERVER);
+            exit;
         }
     }

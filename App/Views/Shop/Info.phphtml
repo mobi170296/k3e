@@ -145,21 +145,21 @@
             <div class="main-wrapper shop-profile-wrapper">
                 <div class="left-menu">
                     <div class="menu">
-                        <div class="menu-label">Đơn hàng</div>
+                        <div class="menu-label"><i class="mi order"></i>Đơn hàng</div>
                         <div class="menu-items">
                             <div class="menu-item"><a href="">Danh sách đơn hàng</a></div>
                             <div class="menu-item"><a href="">Tạo đơn hàng</a></div>
                         </div>
                     </div>
                     <div class="menu">
-                        <div class="menu-label">Sản phẩm</div>
+                        <div class="menu-label"><i class="mi product"></i>Sản phẩm</div>
                         <div class="menu-items">
-                            <div class="menu-item"><a href="">Danh sách sản phẩm</a></div>
+                            <div class="menu-item"><a href="/Shop/ProductList">Danh sách sản phẩm</a></div>
                             <div class="menu-item"><a href="/Shop/AddProduct">Đăng sản phẩm</a></div>
                         </div>
                     </div>
                     <div class="menu open">
-                        <div class="menu-label">Thông tin cửa hàng</div>
+                        <div class="menu-label"><i class="mi shop"></i>Thông tin cửa hàng</div>
                         <div class="menu-items">
                             <div class="menu-item active"><a href="">Thông tin cơ bản</a></div>
                         </div>

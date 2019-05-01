@@ -36,4 +36,13 @@
         public static function number(){
             
         }
+        
+        public static function orderCode(){
+            #Format: {random(6) - paddingright}{microtime(14) - paddingleft}
+            return str_pad(rand()%1e6, 6, '0', STR_PAD_RIGHT) . str_pad(round(microtime(true)*1e3), 14, '0', STR_PAD_LEFT);
+        }
+        
+        public static function transactionReference(){
+            return 'K' . round(microtime(true) * 1e3) . str_pad((rand()%1e6), 6, '0', STR_PAD_LEFT);
+        }
     }
