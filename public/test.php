@@ -1,4 +1,17 @@
-<form action="/api/upload/productimage" method="post" enctype="multipart/form-data">
-    <input type="file" name="image"/>
+<form action="/api/upload/shopavatar" method="post" enctype="multipart/form-data">
+    <input type="file" name="shopavatar"/>
     <button type="submit" name="upload" value="upload">Upload</button>
 </form>
+
+<form action="" method="post">
+    <input type="text" name="input"/>
+    <button type="submit" name="send" value="send">OK</button>
+</form>
+<?php
+
+    if(isset($_POST['input'])){
+        $_POST['input'] = 'ẫ';
+        for($i=0; $i<strlen($_POST['input']); $i++){
+            echo dechex(ord($_POST['input'][$i])) . ' ' ;
+        }
+    }

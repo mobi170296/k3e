@@ -202,6 +202,21 @@
                             <div class="desc">Thông tin mô tả cửa hàng giúp cho người mua biết rõ hơn về bạn</div>
                         </div>
                         <div class="shop-profile-content">
+                            <div class="shop-profile-meta">
+                                <div class="shop-profile-background" style="background-image: url('<?php echo $this->Data->shop->getBackgroundPath(); ?>')">
+                                    <div class="loading-i-wrapper u-hidden"><div class="loading-i"></div></div>
+                                </div>
+                                <div class="shop-profile-avatar-holder">
+                                    <div class="shop-profile-avatar" style="background-image: url('<?php echo $this->Data->shop->getAvatarPath(); ?>')">
+                                        <div class="loading-i-wrapper u-hidden"><div class="loading-i"></div></div>
+                                        <label class="shop-profile-avatar-btn">Sửa<input type="file" name="shopavatar" id="shopavatar" /></label>
+                                    </div>
+                                </div>
+                                <label class="shop-profile-background-btn">Sửa ảnh nền<input type="file" name="shopbackground" id="shopbackground"/></label>
+                                <div class="background-update-modal">
+                                </div>
+                                <div class="avatar-update-model"></div>
+                            </div>
                             <div class="shop-profile-update-form">
                                 <form name="shop-update-form" action="/api/shop/update" onsubmit="return false;" autocomplete="off">
                                     <div class="form-field">
@@ -231,13 +246,70 @@
                                     </div>
                                 </form>
                             </div>
-                            <div class="shop-profile-logo-update">
-                                <logo here=""></logo>
-                            </div>
                         </div>
                     </div>
                     
                     <script type="text/javascript">
+                        //module shop update image meta
+                        !function(){
+                            var _shop_profile_background = $('.shop-profile-background')[0];
+                            var _shop_profile_avatar = $('.shop-profile-avatar')[0];
+                            var $loading_background_icon = $('.shop-profile-background .loading-i-wrapper');
+                            var $loading_avatar_icon = $('.shop-profile-avatar .loading-i-wrapper');
+                            $('#shopavatar').on('change', function(e){
+                                $LoadingPopup.show();
+                                var fd = new FormData();
+                                fd.append('shopavatar', this.files[0]);
+                                $.ajax().create().url('/api/upload/shopavatar').success(function(e){
+                                    var result = JSON.parse(this.response);
+                                    if(result.header.code == 0){
+                                        $loading_avatar_icon.removeClass('u-hidden');
+                                        var image = new Image();
+                                        image.src = result.body.data.urlpath;
+                                        image.onload = function(e){
+                                            $loading_avatar_icon.addClass('u-hidden');
+                                        }
+                                        _shop_profile_avatar.style.backgroundImage = "url('" + result.body.data.urlpath +"')";
+                                        $Toast.makeSuccess(result.header.message);
+                                    }else{
+                                        for(var p in result.header.errors){
+                                            $Toast.makeError(result.header.errors[p]);
+                                        }
+                                    }
+                                    $LoadingPopup.hide();
+                                }).error(function(e){
+                                    $Toast.makeError('Lỗi kết nối');
+                                    $LoadingPopup.hide();
+                                }).post(fd);
+                            });
+                            $('#shopbackground').on('change', function(e){
+                                $LoadingPopup.show();
+                                var fd = new FormData();
+                                fd.append('shopbackground', this.files[0]);
+                                $.ajax().create().url('/api/upload/shopbackground').success(function(e){
+                                    var result = JSON.parse(this.response);
+                                    if(result.header.code == 0){
+                                        $loading_background_icon.removeClass('u-hidden');
+                                        var image = new Image();
+                                        image.src = result.body.data.urlpath;
+                                        image.onload = function(e){
+                                            $loading_background_icon.addClass('u-hidden');
+                                        }
+                                        _shop_profile_background.style.backgroundImage = "url('" + result.body.data.urlpath +"')";
+                                        $Toast.makeSuccess(result.header.message);
+                                    }else{
+                                        
+                                        for(var p in result.header.errors){
+                                            $Toast.makeError(result.header.errors[p]);
+                                        }
+                                    }
+                                    $LoadingPopup.hide();
+                                }).error(function(e){
+                                    $Toast.makeError('Lỗi kết nối');
+                                    $LoadingPopup.hide();
+                                }).post(fd);
+                            });
+                        }();
                         //module shop info form
                         !function(){
                             var _form = document.forms['shop-update-form']

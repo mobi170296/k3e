@@ -8,7 +8,9 @@
     class ProductModel extends Model{
         const LOCKED = 1, UNLOCKED = 0;
         const VERIFIED = 1, UNVERIFIED = 0;
-        public $id, $name, $description, $quantity, $shop_id, $original_price, $price, $subcategory_id, $weight, $length, $width, $height, $mainimage_id, $warranty_months_number;
+        
+        public $id, $name, $description, $quantity, $shop_id, $original_price, $price, $subcategory_id, $weight, $length, $width, $height, $mainimage_id, $warranty_months_number, $view_count;
+        
         public $created_time, $locked, $verified, $verified_time;
         
         public $productimages = [];
@@ -17,8 +19,12 @@
         public $assessments = [];
         public $orderitems = [];
         
+        
         public $mainimage;
         public $shop, $subcategory;
+        
+        #jump relationship objects
+        public $ward;
         
         public function checkName(){
             if(!is_string($this->name)){
@@ -210,6 +216,18 @@
             return true;
         }
         
+        public function loadWard(){
+            $this->ward = new WardModel($this->database);
+            $rows = $this->database->select('deliveryaddress.ward_id as id')->from(DB_TABLE_PRODUCT)->join(DB_TABLE_SHOP)->on('product.shop_id=shop.id')->join(DB_TABLE_USER)->on('shop.owner_id=user.id')->join(DB_TABLE_DELIVERYADDRESS)->on('deliveryaddress.user_id=user.id')->where('product.id=' .(int)$this->id)->execute();
+            
+            if(count($rows)){
+                $this->ward->id = $rows[0]->id;
+                return $this->ward->loadData();
+            }else{
+                return false;
+            }
+        }
+        
         public function add(){
             $this->database->insert(DB_TABLE_PRODUCT, ['name' => new DBString($this->database->escape($this->name)), 'description' => new DBString($this->database->escape($this->description)), 'quantity' => new DBNumber($this->quantity), 'shop_id' => new DBNumber($this->shop_id), 'original_price' => new DBNumber($this->original_price), 'price' => new DBNumber($this->price), 'subcategory_id' => new DBNumber($this->subcategory_id), 'weight' => new DBNumber($this->weight), 'length' => new DBNumber($this->length), 'width' => new DBNumber($this->width), 'height' => new DBNumber($this->height), 'created_time' => new DBRaw('now()'), 'locked' => new DBNumber(self::UNLOCKED), 'verified' => new DBNumber(self::VERIFIED), 'verified_time' => new DBRaw('now()'), 'warranty_months_number' => new DBNumber($this->warranty_months_number), 'mainimage_id' => new DBNumber($this->mainimage_id)]);
             return true;
@@ -253,6 +271,18 @@
         
         public function getProductLink(){
             return '/Product/' . $this->id;
+        }
+        
+        public function getMainImageThumbnail(){
+            return $this->mainimage->urlpath;
+        }
+        
+        public function getPriceString(){
+            return number_format($this->price);
+        }
+        
+        public function getStarRatingPoint(){
+            return rand() % 11 / 10;
         }
         
         public function getSoldQuantity(){

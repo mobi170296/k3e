@@ -219,31 +219,21 @@
             $row = $this->database->select('*')->from(DB_TABLE_USER)->where('id='.new DBNumber($this->id))->execute();
             if(count($row)){
                 $row = $row[0];
-                $this->id = $row->id;
-                $this->username = $row->username;
-                $this->firstname = $row->firstname;
-                $this->lastname = $row->lastname;
-                $this->password = $row->password;
-                $this->email = $row->email;
-                $this->phone = $row->phone;
-                $this->district_id = $row->district_id;
-                $this->birthday = DBDateTime::parse($row->birthday);
-                $this->created_time = DBDateTime::parse($row->created_time);
-                $this->locked = $row->locked;
-                $this->birthday = DBDateTime::parse($row->birthday);
-                $this->gender = $row->gender;
-                $this->money = $row->money;
-                $this->role = $row->role;
-                $this->avatar_id = $row->avatar_id;
+                #lazy load
+                foreach($row as $key => $value){
+                    $this->$key = $value;
+                }
                 return true;
             }else{
                 return false;
             }
         }
+        
         public function register(){
             $this->database->insert(DB_TABLE_USER, ['username' => new DBString($this->username), 'firstname' => new DBString($this->firstname), 'lastname' => new DBString($this->lastname), 'password' => new DBRaw("md5('{$this->password}')"), 'email' => new DBString($this->email), 'phone' => new DBString($this->phone), 'district_id' => new DBRaw('null'), 'locked' => new DBNumber(0), 'birthday' => new DBDateTime($this->birthday->day, $this->birthday->month, $this->birthday->year), 'gender' => new DBNumber($this->gender), 'money' => new DBNumber(0), 'role' => new DBNumber(UserModel::NORMAL_ROLE)]);
             return true;
         }
+        
         public function update($user){
             $this->database->update(DB_TABLE_USER, ['lastname' => new DBString($user->lastname),'firstname'=>new DBString($user->firstname),'birthday'=>new DBDateTime($user->birthday->day, $user->birthday->month, $user->birthday->year),'gender'=>new DBNumber($user->gender)], 'id='. (int)$this->id);
             $this->lastname = $this->database->unescape($user->lastname);
@@ -251,31 +241,24 @@
             $this->birthday = $user->birthday;
             return true;
         }
+        
         public function login(){
             $row = $this->database->select('*')->from(DB_TABLE_USER)->where("username='{$this->username}' and password=md5('{$this->password}')")->execute();
             if(count($row)){
                 $row = $row[0];
-                $this->id = $row->id;
-                $this->username = $row->username;
-                $this->firstname = $row->firstname;
-                $this->lastname = $row->lastname;
-                $this->password = $row->password;
-                $this->email = $row->email;
-                $this->phone = $row->phone;
-                $this->district_id = $row->district_id;
+                foreach($row as $key => $value){
+                    $this->$key = $value;
+                }
+                
                 $this->birthday = DBDateTime::parse($row->birthday);
                 $this->created_time = DBDateTime::parse($row->created_time);
-                $this->locked = $row->locked;
                 $this->birthday = DBDateTime::parse($row->birthday);
-                $this->gender = $row->gender;
-                $this->money = $row->money;
-                $this->role = $row->role;
-                $this->avatar_id = $row->avatar_id;
                 return true;
             }else{
                 return false;
             }
         }
+        
         public function changePassword($newpassword){
             $newpassword = $this->database->escape($newpassword);
             $this->database->update(DB_TABLE_USER, ['password' => new DBRaw("md5('$newpassword')")], 'id='.(int)$this->id);
@@ -300,6 +283,7 @@
                     return "";
             }
         }
+        
         public function getGenderString($g){
             switch($g){
                 case UserModel::FEMALE:
@@ -309,6 +293,7 @@
                 default: return "Chưa xác định";
             }
         }
+        
         public function getAvatarPath(){
             if($this->avatar_id === null){
                 return "/images/icons/avatar-default-icon.png"; 
@@ -321,6 +306,7 @@
                 return "/images/icons/avatar-default-icon.png";
             }
         }
+        
         public function updateAvatarId($id = null){
             $this->database->update(DB_TABLE_USER, ['avatar_id' => new DBNumber((int)$id)], 'id=' . (int)$this->id);
             $this->avatar_id = $id;

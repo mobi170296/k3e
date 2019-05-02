@@ -123,6 +123,12 @@ function $qr(){
         }
         return this;
     }
+    $qr.prototype.toggleClass = function(c){
+        for(var i=0; i<this.length;i++){
+            this[i].classList.toggle(c);
+        }
+        return this;
+    }
     $qr.prototype.data = function (f, v = undefined) {
         if (v === undefined) {
             if (this.length) {

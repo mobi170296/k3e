@@ -1,0 +1,3 @@
+<?php
+    $subcategory = $this->Data->subcategory;
+    $this->Data->Title = 'Tất cả sản phẩm danh mục - ' . $subcategory->name;

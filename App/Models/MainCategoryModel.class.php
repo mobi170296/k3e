@@ -6,6 +6,9 @@
     class MainCategoryModel extends \Core\Model{
         public $id, $name, $link, $norder, $subcategories = [];
         
+        #tat ca san pham thuoc danh muc
+        public $products;
+        
         public function setId($id) {
             $this->id = $id;
             return $this;
@@ -109,9 +112,9 @@
             $rows = $this->database->select('*')->from(DB_TABLE_MAINCATEGORY)->where('id=' . (new DBNumber((int)$this->id))->SqlValue())->execute();
             if(count($rows)){
                 $row = $rows[0];
-                $this->name = $row->name;
-                $this->link = $row->link;
-                $this->norder = $row->norder;
+                foreach($row as $k => $v){
+                    $this->$k = $v;
+                }
                 return true;
             }else{
                 return false;
@@ -127,6 +130,21 @@
                     $this->subcategories[] = $subcategory;
                 }
             }
+        }
+        
+        public function loadProducts($from, $total){
+            $this->products = [];
+            $rows = $this->database->select('product.id as id')->from(DB_TABLE_MAINCATEGORY)->join(DB_TABLE_SUBCATEGORY)->on('maincategory.id=subcategory.maincategory_id')->join(DB_TABLE_PRODUCT)->on('subcategory.id=product.subcategory_id')->where('maincategory.id=' . (int)$this->id)->limit($from, $total)->execute();
+            foreach($rows as $row){
+                $product = new ProductModel($this->database);
+                $product->id = $row->id;
+                if($product->loadData()){
+                    $this->products[] = $product;
+                }else{
+                    return false;
+                }
+            }
+            return true;
         }
         
         public function add(){

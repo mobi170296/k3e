@@ -44,7 +44,10 @@
                 $user = (new Authenticate($database))->getUser();
                 
                 if($user->loadShop()){
-                    $this->View->Data->shop = $user->shop;
+                    $shop = $user->shop;
+                    $shop->loadAvatar();
+                    $shop->loadBackground();
+                    $this->View->Data->shop = $shop;
                     return $this->View->RenderTemplate();
                 } else {
                     return $this->redirectToAction('Open', 'Shop');

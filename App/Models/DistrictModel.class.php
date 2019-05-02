@@ -27,7 +27,7 @@
         public function loadProvince(){
             $this->province = new ProvinceModel($this->database);
             $this->province->id = $this->province_id;
-            $this->province->loadData();
+            return $this->province->loadData();
         }
         
         public function loadWards(){

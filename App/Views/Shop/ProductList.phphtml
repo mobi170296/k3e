@@ -83,7 +83,7 @@
     </div>
 
 <script type="text/ktpl" id="product-row">
-    <td><a target="_blank" href="@link">@name</a></td><td><div style="width:100px; height: 100px; background-image: url('@mainimage_url'); background-size: contain; background-repeat: no-repeat;"></div></td><td>@quantity</td><td>@price_string</td><td>@original_price_string</td><td>@soldquantity</td><td>@warranty_months_number</td><td><button type="button" class="btn btn-edit" data-control-type="soldout" data-field-id="@id" data-field-name="@name">Hết hàng</button> <a href="/Shop/EditProduct/@id"><button type="button" data-control-type="edit" data-field-id="@id" class="btn btn-edit btn-edit-i">Sửa</button></a> <button type="button" data-control-type="del" data-field-id="@id" data-field-name="@name" class="btn btn-del btn-del-i">Xóa</button></td>
+    <td><a target="_blank" href="@link">@name</a></td><td><div style="width:100px; height: 100px; background-image: url('@mainimage_url'); background-size: contain; background-repeat: no-repeat;"></div></td><td>@quantity</td><td>@price_string</td><td>@original_price_string</td><td>@soldquantity</td><td>@warranty_months_number <small>tháng</small></td><td><button type="button" class="btn btn-edit" data-control-type="soldout" data-field-id="@id" data-field-name="@name">Hết hàng</button> <a href="/Shop/EditProduct/@id"><button type="button" data-control-type="edit" data-field-id="@id" class="btn btn-edit btn-edit-i">Sửa</button></a> <button type="button" data-control-type="del" data-field-id="@id" data-field-name="@name" class="btn btn-del btn-del-i">Xóa</button></td>
 </script>
 <script src="/scripts/ktemplate.js"></script>
 <script src="/scripts/ktable.js"></script>
@@ -96,6 +96,11 @@
         width: 100%;
         background-color: #fff;
     }
+    table#product-list thead tr:first-child{
+        background-color: #eee;
+        font-size: .9rem;
+        font-weight: lighter;
+    }
     table#product-list td{
         border: 2px solid #eee;
         padding: 5px 10px;
@@ -107,11 +112,10 @@
     
     .product-list-title{
         margin: 20px 0px;
-        font-size: 1.5em;
+        font-size: 1.6em;
         background-color: #fff;
         padding: 10px 30px;
-        border-radius: 1000px;
-        font-weight: bold;
+        font-weight: lighter;
         font-family: segoe ui;
         box-shadow: 0px 10px 10px 0px rgba(0,0,0,0.1);
         border-left: 10px solid #44b27c;

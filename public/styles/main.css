@@ -59,6 +59,7 @@ a{
 #user-wrapper .left-panel{
     width: 250px;
     float: left;
+    font-weight: lighter;
 }
 #user-wrapper .right-panel{
     width: 1020px;
@@ -71,7 +72,12 @@ a{
 #user-wrapper .user-profile-card .header{
     font-weight: bold;
     font-size: 1.2em;
-    padding-bottom: 20px;
+    margin-bottom: 10px;
+    background-color: #fff;
+    font-family: segoe ui;
+    padding: 20px;
+    font-weight: lighter;
+    border-radius: 3px;
 }
 #user-wrapper .user-profile-card .content{
     background-color: #fff;
@@ -218,19 +224,21 @@ a{
 
 #top-bar{
     padding: 5px 20px;
-    background-color: #1FBE80;
+    background-color: #46BD8E;
     text-align: right;
     font-family: segoe ui;
+    font-weight: lighter;
+    font-size: 1.2em;
 }
 #top-bar > a{
-    color: white;
+    color: #fff;
     user-select: none;
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
 }
 #control-bar-wrapper{
-    background-color: #26AD05;
+    background-color: #44b27c;
     position: sticky;
     top: 0px;
     z-index: 2;
@@ -338,7 +346,7 @@ a{
     color: #000;
 }
 #account-options > a:hover{
-    background-color: #26ad05;
+    background-color: #44b27c;
     color: #fff;
 }
 #account-options::before{
@@ -520,13 +528,14 @@ a{
     box-sizing: content-box;
     float: left;
     cursor: pointer;
+    color: #000;
 }
 #megamenu .menu.l2 > a:hover{
-    background-color: #26ad05;
+    background-color: #44b27c;
     color: #fff;
 }
 #megamenu .menu.l1:hover > a{
-    background-color: #26ad05;
+    background-color: #44b27c;
     color: #fff;
 }
 #megamenu .menu.l1:hover .menu.l2{

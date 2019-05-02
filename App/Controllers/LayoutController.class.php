@@ -24,13 +24,13 @@
         public function ControlBar(){
             try{
                 $database = new Database();
-                $authenticate = new Authenticate($database);
-                $user = $authenticate->getUser();
-                $this->View->Data->user = $user;
                 $this->View->Data->maincategorylist = (new MainCategoryList($database))->getAll();
                 foreach($this->View->Data->maincategorylist as $maincategory){
                     $maincategory->loadSubCategories();
                 }
+                $authenticate = new Authenticate($database);
+                $user = $authenticate->getUser();
+                $this->View->Data->user = $user;
             } catch (AuthenticateException $ex) {
                 $this->View->Data->user = null;
             } catch(DBException $e){

@@ -33,7 +33,7 @@
                         }
                     ?>
                     <form action="" method="post" autocomplete="off">
-                        <table>
+                        <table class="form-table">
                             <tr>
                                 <td>Họ</td>
                                 <td><input type="text" name="lastname" size="40" value="<?php echo (isset($this->Data->input) ? $this->Data->input->lastname : "") ?>"/></td>

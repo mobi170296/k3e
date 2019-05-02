@@ -8,10 +8,12 @@
     class ShopModel extends Model{
         const LOCK = 1, UNLOCK = 0;
         
-        public $id, $name, $owner_id, $description, $logo_id, $locked, $created_time;
-        public $owner;
-        public $logo;
+        public $id, $name, $owner_id, $description, $avatar_id, $background_id, $locked, $created_time;
         
+        #foreign key objects
+        public $owner, $avatar, $background;
+        
+        #contains objects
         public $orders, $products;
         
         public function getLink(){
@@ -87,23 +89,27 @@
             return $this->owner->loadData();
         }
         
-        public function loadLogo(){
-            $this->logo = new ImageMapModel($this->database);
-            $this->logo->id = $this->logo_id;
-            return $this->logo->loadData();
+        public function loadAvatar(){
+            $this->avatar = new ImageMapModel($this->database);
+            $this->avatar->id = $this->avatar_id;
+            return $this->avatar->loadData();
+        }
+        
+        public function loadBackground(){
+            $this->background = new ImageMapModel($this->database);
+            $this->background->id = $this->background_id;
+            return $this->background->loadData();
         }
         
         public function loadData(){
             $rows = $this->database->selectall()->from(DB_TABLE_SHOP)->where('id=' . $this->id)->execute();
             if(count($rows)){
                 $row = $rows[0];
-                $this->id = $row->id;
-                $this->name = $row->name;
-                $this->owner_id = $row->owner_id;
-                $this->description = $row->description;
-                $this->locked = $row->locked;
-                $this->logo_id = $row->logo_id;
-                $this->created_time = DBDateTime::parse($row->created_time);
+                #lazy load
+                
+                foreach($row as $key => $value){
+                    $this->$key = $value;
+                }
                 return true;
             }else{
                 return false;
@@ -136,29 +142,48 @@
             $this->database->update(DB_TABLE_SHOP, ['lock' => new DBNumber(ShopModel::LOCK)], 'id='.(int)$this->id);
         }
         
-        public function getLogoPath(){
-            if($this->logo_id === null){
+        public function getAvatarPath(){
+            if($this->avatar_id === null){
                 #default logo
                 return "";
             }else{
-                if($this->logo!=null){
-                    return $this->logo->urlpath;
+                if($this->avatar!=null){
+                    return $this->avatar->urlpath;
                 }else{
-                    $rows = $this->database->selectall()->from(DB_TABLE_IMAGEMAP)->from('id=' . (int)$this->logo_id)->execute();
-                    if(count($rows)){
-                        $row = $rows[0];
-                        return $row->urlpath;
-                    }else{
-                        return "";
-                    }
+                    $this->avatar = new ImageMapModel($this->database);
+                    $this->avatar->id = $this->avatar_id;
+                    $this->avatar->loadData();
+                    return $this->avatar->urlpath;
                 }
             }
         }
         
-        public function updateLogoId($id){
+        public function getBackgroundPath(){
+            if($this->background_id === null){
+                #default logo
+                return "";
+            }else{
+                if($this->background!=null){
+                    return $this->background->urlpath;
+                }else{
+                    $this->background = new ImageMapModel($this->database);
+                    $this->background->id = $this->background_id;
+                    $this->background->loadData();
+                    return $this->background->urlpath;
+                }
+            }
+        }
+        
+        public function updateAvatarId($id){
             $id = (int)$id;
-            $this->database->update(DB_TABLE_SHOP, ['logo_id' => new DBNumber($id)], '');
-            $this->logo_id = $id;
+            $this->database->update(DB_TABLE_SHOP, ['avatar_id' => new DBNumber($id)], 'id=' . (int)$this->id);
+            $this->avatar_id = $id;
+        }
+        
+        public function updateBackgroundId($id){
+            $id = (int)$id;
+            $this->database->update(DB_TABLE_SHOP, ['background_id' => new DBNumber($id)], 'id=' . (int)$this->id);
+            $this->background_id = $id;
         }
         
         public function getProductTotal(){

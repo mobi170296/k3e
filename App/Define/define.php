@@ -9,7 +9,7 @@
     define('DB_TABLE_ORDER', '`order`');
     define('DB_TABLE_ORDERIMAGE', 'orderimage');
     define('DB_TABLE_ORDERITEM', 'orderitem');
-    define('DB_TABLE_PAYMETHOD', 'paymethod');
+    define('DB_TABLE_PAYMENTTYPE', 'paymenttype');
     define('DB_TABLE_PRODUCT', 'product');
     define('DB_TABLE_PRODUCTATTRIBUTE', 'productattribute');
     define('DB_TABLE_PRODUCTIMAGE', 'productimage');
@@ -20,6 +20,10 @@
     define('DB_TABLE_USER', 'user');
     define('DB_TABLE_IMAGEMAP', 'imagemap');
     define('DB_TABLE_WARD', 'ward');
+    define('DB_TABLE_ORDERLOG', 'orderlog');
+    define('DB_TABLE_GHNTRANSPORTER', 'ghntransporter');
+    define('DB_TABLE_ONEPAYORDER', 'onepayorder');
+    
     #define upload image location
     define('PUBLIC_UPLOAD_IMAGE_DIR', k3_ROOT . DS . 'public' . DS . 'upload' . DS . 'images');
     define('PUBLIC_UPLOAD_IMAGE_PATH', '/upload/images');

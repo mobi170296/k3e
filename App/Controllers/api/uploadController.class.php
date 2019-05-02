@@ -16,7 +16,7 @@
     use Library\Image\ImageResizerException;
     
     class uploadController extends Controller{
-        public function test(){
+        private function test(){
             $result = new \stdClass();
             $result->header = new \stdClass();
             
@@ -202,5 +202,179 @@
             }
             
             return $this->View->RenderJson($result);
+        }
+        
+        public function shopavatar(){
+            $result = new \stdClass();
+            $result->header = new \stdClass();
+            
+            if(!$this->isPOST()){
+                $result->header->code = 1;
+                $result->header->errors[] = 'INVALID';
+                return $this->View->RenderJSON($result);
+            }
+            
+            if(!isset($this->files->shopavatar) || !is_string($this->files->shopavatar['tmp_name']) || $this->files->shopavatar['error'] != 0){
+                $result->header->code = 1;
+                $result->header->errors[] = 'Ảnh không hợp lệ';
+                return $this->View->RenderJSON($result);
+            }
+            
+            try{
+                $database = new Database;
+                $user = (new Authenticate($database))->getUser();
+                
+                if($user->loadShop()){
+                    $shop = $user->shop;
+                    #start transaction
+                    $database->startTransaction();
+                    
+                    $imageinfo = new ImageInfo($this->files->shopavatar['tmp_name']);
+                    
+                    $supportedformats = ['png', 'gif', 'jpeg'];
+                    
+                    if(!in_array($imageinfo->getRealExtension(), $supportedformats)){
+                        throw new \Exception('Hiện tại chỉ hỗ trợ định dạng .png, .gif, .jpeg');
+                    }
+                    
+                    $uploader = new ImageUploader();
+                    $uploader->upload($this->files->shopavatar['tmp_name'], $imageinfo->getRealExtension(), PUBLIC_UPLOAD_IMAGE_DIR);
+                    
+                    $imagemap = new ImageMapModel($database);
+                    $imagemap->diskpath = PUBLIC_UPLOAD_IMAGE_DIR . DS . $uploader->getAutoPath() . DS . $uploader->getFileName();
+                    $imagemap->linked = ImageMapModel::LINKED;
+                    $imagemap->mimetype = $imageinfo->getMimeType();
+                    $imagemap->urlpath = str_replace(DS, '/', PUBLIC_UPLOAD_IMAGE_PATH . DS . $uploader->getAutoPath() . DS . $uploader->getFileName());
+                    $imagemap->user_id = $user->id;
+                    
+                    $imagemap->add();
+                    
+                    $imageresizer = new ImageResizer($imagemap->diskpath);
+                    $imageresizer->coverResize(300, 300);
+                    
+                    $imagemapid = $database->lastInsertId();
+                    
+                    if($shop->avatar_id !== null){
+                        $oldavatar = new ImageMapModel($database);
+                        $oldavatar->id = $shop->avatar_id;
+                        $oldavatar->unLink();
+                    }
+                    
+                    $shop->updateAvatarId($imagemapid);
+                    
+                    #commit transaction
+                    $database->commit();
+                    
+                    $result->header->code = 0;
+                    $result->header->message = 'Đã cập nhật thành công ảnh đại diện cho cửa hàng';
+                    $result->body = new \stdClass();
+                    $result->body->data = new \stdClass();
+                    $result->body->data->urlpath = $imagemap->urlpath;
+                }else{
+                    $result->header->code = 1;
+                    $result->header->errors[] = 'Bạn không có cửa hàng';
+                }
+            } catch (DBException $ex) {
+                $result->header->code = 1;
+                $result->header->errors[] = 'DBERR';
+            } catch (AuthenticateException $e){
+                $result->header->code = 1;
+                $result->header->errors[] = 'Chưa đăng nhập';
+            } catch (ImageInfoException $e){
+                $result->header->code = 1;
+                $result->header->errors[] = $e->getMessage();
+            } catch (\Exception $e){
+                $result->header->code = 1;
+                $result->header->errors[] = $e->getMessage();
+            }
+            
+            return $this->View->RenderJSON($result);
+        }
+        
+        public function shopbackground(){
+            $result = new \stdClass();
+            $result->header = new \stdClass();
+            
+            if(!$this->isPOST()){
+                $result->header->code = 1;
+                $result->header->errors[] = 'INVALID';
+                return $this->View->RenderJSON($result);
+            }
+            
+            if(!isset($this->files->shopbackground) || !is_string($this->files->shopbackground['tmp_name']) || $this->files->shopbackground['error'] != 0){
+                $result->header->code = 1;
+                $result->header->errors[] = 'Ảnh không hợp lệ';
+                return $this->View->RenderJSON($result);
+            }
+            
+            try{
+                $database = new Database;
+                $user = (new Authenticate($database))->getUser();
+                
+                if($user->loadShop()){
+                    $shop = $user->shop;
+                    #start transaction
+                    $database->startTransaction();
+                    
+                    $imageinfo = new ImageInfo($this->files->shopbackground['tmp_name']);
+                    
+                    $supportedformats = ['png', 'gif', 'jpeg'];
+                    
+                    if(!in_array($imageinfo->getRealExtension(), $supportedformats)){
+                        throw new \Exception('Hiện tại chỉ hỗ trợ định dạng .png, .gif, .jpeg');
+                    }
+                    
+                    $uploader = new ImageUploader();
+                    $uploader->upload($this->files->shopbackground['tmp_name'], $imageinfo->getRealExtension(), PUBLIC_UPLOAD_IMAGE_DIR);
+                    
+                    $imagemap = new ImageMapModel($database);
+                    $imagemap->diskpath = PUBLIC_UPLOAD_IMAGE_DIR . DS . $uploader->getAutoPath() . DS . $uploader->getFileName();
+                    $imagemap->linked = ImageMapModel::LINKED;
+                    $imagemap->mimetype = $imageinfo->getMimeType();
+                    $imagemap->urlpath = str_replace(DS, '/', PUBLIC_UPLOAD_IMAGE_PATH . DS . $uploader->getAutoPath() . DS . $uploader->getFileName());
+                    $imagemap->user_id = $user->id;
+                    
+                    $imagemap->add();
+                    
+                    $imageresizer = new ImageResizer($imagemap->diskpath);
+                    $imageresizer->coverResize(1200, 300);
+                    
+                    $imagemapid = $database->lastInsertId();
+                    
+                    if($shop->background_id !== null){
+                        $oldavatar = new ImageMapModel($database);
+                        $oldavatar->id = $shop->background_id;
+                        $oldavatar->unLink();
+                    }
+                    
+                    $shop->updateBackgroundId($imagemapid);
+                    
+                    #commit transaction
+                    $database->commit();
+                    
+                    $result->header->code = 0;
+                    $result->header->message = 'Đã cập nhật thành công ảnh nền cho cửa hàng';
+                    $result->body = new \stdClass();
+                    $result->body->data = new \stdClass();
+                    $result->body->data->urlpath = $imagemap->urlpath;
+                }else{
+                    $result->header->code = 1;
+                    $result->header->errors[] = 'Bạn không có cửa hàng';
+                }
+            } catch (DBException $ex) {
+                $result->header->code = 1;
+                $result->header->errors[] = 'DBERR';
+            } catch (AuthenticateException $e){
+                $result->header->code = 1;
+                $result->header->errors[] = 'Chưa đăng nhập';
+            } catch (ImageInfoException $e){
+                $result->header->code = 1;
+                $result->header->errors[] = $e->getMessage();
+            } catch (\Exception $e){
+                $result->header->code = 1;
+                $result->header->errors[] = $e->getMessage();
+            }
+            
+            return $this->View->RenderJSON($result);
         }
     }

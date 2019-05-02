@@ -8,6 +8,8 @@
         #name:
         public $id, $name, $link, $norder, $maincategory_id, $maincategory;
         #danh mục phụ bao gồm nhiều sản phẩm
+        
+
         #sản phẩm thuộc vào một danh mục phụ
         public $products;
         
@@ -102,10 +104,9 @@
             $rows = $this->database->select('*')->from(DB_TABLE_SUBCATEGORY)->where('id=' . (int)$this->id)->execute();
             if(count($rows)){
                 $row = $rows[0];
-                $this->name = $row->name;
-                $this->link = $row->link;
-                $this->norder = $row->norder;
-                $this->maincategory_id = $row->maincategory_id;
+                foreach($row as $k => $v){
+                    $this->$k = $v;
+                }
                 return true;
             }else{
                 return false;
@@ -116,6 +117,22 @@
             $this->maincategory = new MainCategoryModel($this->database);
             $this->maincategory->id = $this->maincategory_id;
             return $this->maincategory->loadData();
+        }
+        
+        #load nhung san pham thuoc danh muc nay
+        public function loadProducts($from, $total){
+            $this->products = [];
+            $rows = $this->database->select('product.id as id')->from(DB_TABLE_SUBCATEGORY)->join(DB_TABLE_PRODUCT)->on('subcategory.id=product.subcategory_id')->limit($from, $total)->where('subcategory.id='. (int)$this->id)->execute();
+            foreach($rows as $row){
+                $product = new ProductModel($this->database);
+                $product->id = $row->id;
+                if($product->loadData()){
+                    $this->products[] = $product;
+                }else{
+                    return false;
+                }
+            }
+            return true;
         }
         
         public function add(){

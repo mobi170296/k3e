@@ -34,7 +34,7 @@
                         }
                     ?>
                     
-                    <div class="u-text-center">
+                    <div class="u-text-center u-mb-x4">
                         <div id="user-avatar" class="user-avatar large" style="background-image: url('<?php echo $this->Data->user->getAvatarPath() ; ?>')">
                             <label>
                                 <div class="uploadpoint"></div>
@@ -69,7 +69,7 @@
                         })();
                     </script>
                     <form action="" method="post">
-                        <table>
+                        <table class="form-table">
                             <tr>
                                 <td>Tên tài khoản</td>
                                 <td><input type="text" name="username" size="30" value="<?php echo $this->Data->user->username; ?>" disabled="disabled"/></td>
