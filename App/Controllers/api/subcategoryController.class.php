@@ -121,8 +121,63 @@
             
             return $this->View->RenderJson($result);
         }
-        public function delete(){
+        public function delete($id){
+            if($id === null || !is_numeric($id) || !$this->isPOST()){
+                $result = new \stdClass();
+                $result->header = new \stdClass();
+                $result->header->code = 1;
+                $result->header->message = 'Invalid REQUEST';
+                $result->header->errors = ['Request không hợp lệ!'];
+                $result->body = new \stdClass();
+                return $this->View->RenderJSON($result);
+            }
             
+            $result = new \stdClass();
+            
+            try{
+                $database = new Database();
+                $authenticate = new Authenticate($database);
+                
+                $user = $authenticate->getUser();
+                
+                if($user->haveRole(UserModel::ADMIN_ROLE)){
+                    $subcategory = new SubCategoryModel($database);
+                    $subcategory->id = $id;
+                    
+                    if($subcategory->loadData()){
+                        if(!$subcategory->hasProduct()){
+                            $subcategory->delete();
+                            $result->header = new \stdClass();
+                            $result->header->code = 0;
+                            $result->header->message = 'Đã xóa danh mục ' . $subcategory->name . ' thành công!';
+                        }else{
+                            $result->header = new \stdClass();
+                            $result->header->code = 1;
+                            $result->header->errors = ['Danh mục ' . $subcategory->name . ' đã có sản phẩm không thể xóa được!'];
+                        }
+                    }else{
+                        throw new InputException(['Danh mục không tồn tại']);
+                    }
+                }else{
+                    throw new AuthenticateException('Invalid Privileges', -1);
+                }
+            } catch (DBException $ex) {
+                $result->header = new \stdClass();
+                $result->header->code = 1;
+                $result->header->errors = [$ex->getMessage()];
+            } catch(InputException $e){
+                $result->header = new \stdClass();
+                $result->header->code = 1;
+                $result->header->errors = $e->getErrorsMap();
+            }catch(AuthenticateException $e){
+                $result->header = new \stdClass();
+                $result->header->code = 1;
+                $result->header->errors = ['Lỗi xác thực'];
+            }finally{
+                $database->close();
+            }
+            
+            return $this->View->RenderJSON($result);
         }
         
         public function bymaincategory($id){

@@ -20,7 +20,7 @@
                 $result->header->message = 'Invalid REQUEST';
                 $result->header->errors = ['Request không hợp lệ!'];
                 $result->body = new \stdClass();
-                return $this->View->RenderJson($result);
+                return $this->View->RenderJSON($result);
             }
             try{
                 $database = new Database();
@@ -38,7 +38,7 @@
                             $result->header->errors[] = $v;
                         }
                         $result->body = new \stdClass();
-                        return $this->View->RenderJson($result);
+                        return $this->View->RenderJSON($result);
                     }else{
                         $maincategory->standardization();
                         $database->startTransaction();
@@ -50,7 +50,7 @@
                         $result->header->code = 0;
                         $result->header->message = 'Thêm danh mục chính ' . $maincategory->name . ' thành công!';
                         $result->body = new \stdClass();
-                        return $this->View->RenderJson($result);
+                        return $this->View->RenderJSON($result);
                     }
                 }else{
                     $result = new \stdClass();
@@ -58,7 +58,7 @@
                     $result->header->code = 1;
                     $result->header->message = 'Bạn không có quyền thực hiện thao tác này';
                     $result->body = new \stdClass();
-                    return $this->View->RenderJson($result);
+                    return $this->View->RenderJSON($result);
                 }
             } catch (DBException $ex) {
                 $result = new \stdClass();
@@ -66,21 +66,21 @@
                 $result->header->code = 1;
                 $result->header->message = $ex->getMessage();
                 $result->header->errors = [$ex->getMessage()];
-                return $this->View->RenderJson($result);
+                return $this->View->RenderJSON($result);
             } catch(AuthenticateException $e){
                 $result = new \stdClass();
                 $result->header = new \stdClass();
                 $result->header->code = 1;
                 $result->header->message = 'Bạn không có quyền thực hiện thao tác này';
                 $result->header->errors = [$result->header->message];
-                return $this->View->RenderJson($result);
+                return $this->View->RenderJSON($result);
             } catch(Exception $e){
                 $result = new \stdClass();
                 $result->header = new \stdClass();
                 $result->header->code = 1;
                 $result->header->message = 'Error: ' . $e->getMessage();
                 $result->header->errors = [$result->header->message];
-                return $this->View->RenderJson($result);
+                return $this->View->RenderJSON($result);
             } finally{
                 $database->rollback();
                 $database->close();
@@ -95,7 +95,7 @@
                 $result->header->message = 'Invalid REQUEST';
                 $result->header->errors = ['Request không hợp lệ!'];
                 $result->body = new \stdClass();
-                return $this->View->RenderJson($result);
+                return $this->View->RenderJSON($result);
             }
             
             $result = new \stdClass();
@@ -143,7 +143,7 @@
                 $result->header->errors = $e->getErrorsMap();
             }
             
-            return $this->View->RenderJson($result);
+            return $this->View->RenderJSON($result);
         }
         public function up($id){
             header('content-type: application/json');
@@ -154,7 +154,7 @@
                 $result->header->message = 'Invalid REQUEST';
                 $result->header->errors = ['Request không hợp lệ!'];
                 $result->body = new \stdClass();
-                return $this->View->RenderJson($result);
+                return $this->View->RenderJSON($result);
             }
             
             $result = new \stdClass();
@@ -201,7 +201,7 @@
                 $database->close();
             }
             
-            return $this->View->RenderJson($result);
+            return $this->View->RenderJSON($result);
         }
         public function down($id){
             header('content-type: application/json');
@@ -212,7 +212,7 @@
                 $result->header->message = 'Invalid REQUEST';
                 $result->header->errors = ['Request không hợp lệ!'];
                 $result->body = new \stdClass();
-                return $this->View->RenderJson($result);
+                return $this->View->RenderJSON($result);
             }
             
             $result = new \stdClass();
@@ -262,7 +262,66 @@
                 $database->close();
             }
             
-            return $this->View->RenderJson($result);
+            return $this->View->RenderJSON($result);
+        }
+        
+        public function delete($id){
+            if($id === null || !is_numeric($id) || !$this->isPOST()){
+                $result = new \stdClass();
+                $result->header = new \stdClass();
+                $result->header->code = 1;
+                $result->header->message = 'Invalid REQUEST';
+                $result->header->errors = ['Request không hợp lệ!'];
+                $result->body = new \stdClass();
+                return $this->View->RenderJSON($result);
+            }
+            
+            $result = new \stdClass();
+            
+            try{
+                $database = new Database();
+                $authenticate = new Authenticate($database);
+                
+                $user = $authenticate->getUser();
+                
+                if($user->haveRole(UserModel::ADMIN_ROLE)){
+                    $maincategory = new MainCategoryModel($database);
+                    $maincategory->id = $id;
+                    
+                    if($maincategory->loadData()){
+                        if(!$maincategory->hasProduct()){
+                            $maincategory->delete();
+                            $result->header = new \stdClass();
+                            $result->header->code = 0;
+                            $result->header->message = 'Đã xóa danh mục ' . $maincategory->name . ' thành công!';
+                        }else{
+                            $result->header = new \stdClass();
+                            $result->header->code = 1;
+                            $result->header->errors = ['Danh mục ' . $maincategory->name . ' đã có sản phẩm không thể xóa được!'];
+                        }
+                    }else{
+                        throw new InputException(['Danh mục không tồn tại']);
+                    }
+                }else{
+                    throw new AuthenticateException('Invalid Privileges', -1);
+                }
+            } catch (DBException $ex) {
+                $result->header = new \stdClass();
+                $result->header->code = 1;
+                $result->header->errors = [$ex->getMessage()];
+            } catch(InputException $e){
+                $result->header = new \stdClass();
+                $result->header->code = 1;
+                $result->header->errors = $e->getErrorsMap();
+            }catch(AuthenticateException $e){
+                $result->header = new \stdClass();
+                $result->header->code = 1;
+                $result->header->errors = ['Lỗi xác thực'];
+            }finally{
+                $database->close();
+            }
+            
+            return $this->View->RenderJSON($result);
         }
         
         public function getall(){
@@ -287,6 +346,6 @@
                 $result->header->message = '';
                 $result->header->errors = [$ex->getMessage()];
             }
-            return $this->View->RenderJson($result);
+            return $this->View->RenderJSON($result);
         }
     }

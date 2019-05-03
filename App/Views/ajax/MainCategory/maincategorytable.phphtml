@@ -14,7 +14,7 @@
             <td>{$maincategory->norder}</td>
             <td>{$maincategory->name}</td>
             <td>{$maincategory->link}</td>
-            <td><button type="button" class="btn btn-edit btn-edit-i u-mx-x1" data-action="update" data-field-id="{$maincategory->id}">Sửa</button><button type="button" class="btn btn-edit btn-up-i u-mx-x1" data-action="up" data-field-id="{$maincategory->id}">Lên</button><button type="button" class="btn btn-edit btn-down-i u-mx-x1" data-action="down" data-field-id="{$maincategory->id}">Xuống</button></td>
+            <td style="white-space: nowrap"><button type="button" class="btn btn-edit btn-edit-i u-mx-x1" data-action="update" data-field-id="{$maincategory->id}">Sửa</button><button type="button" class="btn btn-edit btn-up-i u-mx-x1" data-action="up" data-field-id="{$maincategory->id}">Lên</button><button type="button" class="btn btn-edit btn-down-i u-mx-x1" data-action="down" data-field-id="{$maincategory->id}">Xuống</button><button type="button" class="btn btn-del btn-del-i u-mx-x1" data-action="delete" data-field-id="{$maincategory->id}">Xóa</button></td>
             </tr>
 ROW;
         }

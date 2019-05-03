@@ -24,6 +24,7 @@
                 <td>{$subcategory->link}</td>
                 <td>
                     <button class="btn btn-edit btn-edit-i" data-action="edit" data-field-id="{$subcategory->id}">Sửa</button>
+                    <button class="btn btn-del btn-del-i" data-action="delete" data-field-id="{$subcategory->id}">Xóa</button>
                 </td>
             </tr>
 ROW;

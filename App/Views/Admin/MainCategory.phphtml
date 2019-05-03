@@ -81,6 +81,26 @@
                     $Toast.makeError('Tải giao diện thất bại. Vui lòng thử lại!', 10000);
                 }).post('id='+$(this).data('field-id'));
             });
+            presentation.$('[data-action="delete"]').on('click', function(e){
+                var _id = $(this).data('field-id');
+                $LoadingPopup.show();
+                
+                $.ajax().create().url('/api/maincategory/delete').success(function(e){
+                    var result = JSON.parse(this.response);
+                    if(result.header.code == 0){
+                        $Toast.makeSuccess(result.header.message);
+                        loadtable();
+                    }else{
+                        for(var x in result.header.errors){
+                            $Toast.makeError(result.header.errors[x]);
+                        }
+                    }
+                    $LoadingPopup.hide();
+                }).error(function(e){
+                    $LoadingPopup.hide();
+                    $Toast.makeError('Lỗi kết nối');
+                }).post('id=' + _id);
+            });
             presentation.$('[data-action="up"]').on('click', function(e){
                 presentation.html('<div class="loading-i-wrapper"><div class="loading-i"></div></div>');
                 $.ajax().create().url('/api/maincategory/up').success(function(e){
@@ -96,7 +116,7 @@
                     }
                     loadtable();
                 }).error(function(e){
-                    $Toast.makeError('');
+                    $Toast.makeError('Lỗi kết nối');
                     loadtable();
                 }).post('id='+$(this).data('field-id'));
             });

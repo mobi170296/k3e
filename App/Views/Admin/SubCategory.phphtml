@@ -114,6 +114,26 @@ DATAPRESENTATION;
                     $Toast.makeError('Tải giao diện thất bại!', 10e3);
                 }).post('id='+$(this).data('field-id'));
             });
+            presentation.$('[data-action="delete"]').on('click', function(e){
+                var _id = $(this).data('field-id');
+                $LoadingPopup.show();
+                
+                $.ajax().create().url('/api/subcategory/delete').success(function(e){
+                    var result = JSON.parse(this.response);
+                    if(result.header.code == 0){
+                        $Toast.makeSuccess(result.header.message);
+                        loadtable(mid);
+                    }else{
+                        for(var x in result.header.errors){
+                            $Toast.makeError(result.header.errors[x]);
+                        }
+                    }
+                    $LoadingPopup.hide();
+                }).error(function(e){
+                    $LoadingPopup.hide();
+                    $Toast.makeError('Lỗi kết nối');
+                }).post('id=' + _id);
+            });
         }
         var loadtable = function(mid){
             presentation.html('<div class="loading-i-wrapper"><div class="loading-i"></div></div>');
