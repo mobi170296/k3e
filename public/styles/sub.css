@@ -55,6 +55,12 @@ div.star-foregound{
     cursor: pointer;
     -moz-user-select: none;
 }
+.swiper-previous::after{
+    content: '\2190';
+}
+.swiper-next::after{
+    content: '\2192';
+}
 .swiper-previous:hover{
     box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
 }
@@ -70,6 +76,10 @@ div.star-foregound{
     background-color: #09adea;
     border: 1px solid #09adea;
     color: #fff;
+}
+a.product-link{
+    text-decoration: none;
+    color: unset;
 }
 .product-card{
     width: 200px;
@@ -128,6 +138,9 @@ div.star-foregound{
 .product-card .product-rating{
     color: #f00;
 }
+.product-card .product-warehouse{
+    text-align: right;
+}
 .product-card .product-image .add-to-card .btn-add-to-card{
     border: 1px solid #26ad05;
     background-color: #44b27c;
@@ -176,28 +189,24 @@ div.star-foregound{
     flex-wrap: wrap;
 }
 /*Them san pham*/
-.product-attribute{
+.product-form .product-attribute{
     display: flex;
     align-items: center;
     padding: 5px 0px;
 }
-.product-attribute .product-attribute-delete{
+.product-form .product-attribute .product-attribute-delete{
     cursor: pointer;
     vertical-align: middle;
     padding: 0px 5px;
     font-size: 14pt;
 }
-.product-attribute .product-attribute-delete:hover{
+.product-form .product-attribute .product-attribute-delete:hover{
     color: #f00;
 }
-.product-attribute input{
-    border: 1px solid #aaa;
-    padding: 10px 20px;
-}
-.product-attribute .product-attribute-key{
+.product-form .product-attribute .product-attribute-key{
 
 }
-.product-attribute .product-attribute-value{
+.product-form .product-attribute .product-attribute-value{
 
 }
 

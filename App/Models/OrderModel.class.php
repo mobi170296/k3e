@@ -4,7 +4,7 @@
     
     class OrderModel extends Model{
         #Trang thai don hang
-        const NGUOI_MUA_DANG_THANH_TOAN = 1, NGUOI_MUA_THANH_TOAN_THAT_BAI = 2, CHO_NGUOI_BAN_XAC_NHAN = 3, HUY_DON_HANG = 4, KHONG_CON_HANG = 5, HUY_DO_HE_THONG = 6, DANG_GIAO = 7, GIAO_THAT_BAI = 8, DA_GIAO =9, HOAN_TAT = 10;
+        const NGUOI_MUA_DANG_THANH_TOAN = 1, NGUOI_MUA_THANH_TOAN_THAT_BAI = 2, CHO_NGUOI_BAN_XAC_NHAN = 3, HUY_DON_HANG = 4, KHONG_CON_HANG = 5, HUY_DO_HE_THONG = 6, DANG_GIAO = 7, GIAO_THAT_BAI = 8, DA_GIAO =9, HOAN_TAT = 10, CHO_LAY_HANG = 11, HUY_DO_KHONG_LAY_DUOC_HANG = 12;
         
         
         public $id, $shop_id, $client_id, $status, $note, $created_time, $total_price, $ship_fee, $paid, $paycomplete, $clientname, $clientphone, $clientaddress, $clientwardname, $clientdistrictname, $clientprovincename, $shopname, $shopphone, $shopaddress, $shopwardname, $shopdistrictname, $shopprovincename, $paymenttype_id, $transporter_id;

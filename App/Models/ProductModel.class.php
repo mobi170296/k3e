@@ -19,6 +19,8 @@
         public $assessments = [];
         public $orderitems = [];
         
+        #jump relationship object
+        public $productimagemaps = [];
         
         public $mainimage;
         public $shop, $subcategory;
@@ -203,6 +205,18 @@
             return true;
         }
         
+        public function loadProductImageMaps(){
+            $this->productimagemaps = [];
+            $rows = $this->database->select('imagemap.id id')->from(DB_TABLE_PRODUCTIMAGE)->join(DB_TABLE_IMAGEMAP)->on('productimage.imagemap_id=imagemap.id')->where('productimage.product_id=' . (int)$this->id)->execute();
+            foreach($rows as $row){
+                $imagemap = new ImageMapModel($this->database);
+                $imagemap->id = $row->id;
+                $imagemap->loadData();
+                $this->productimagemaps[] = $imagemap;
+            }
+            return true;
+        }
+        
         public function loadProductAttributes(){
             $this->productattributes = [];
             $rows = $this->database->selectall()->from(DB_TABLE_PRODUCTATTRIBUTE)->where('product_id=' . (int)$this->id)->execute();
@@ -218,7 +232,7 @@
         
         public function loadWard(){
             $this->ward = new WardModel($this->database);
-            $rows = $this->database->select('deliveryaddress.ward_id as id')->from(DB_TABLE_PRODUCT)->join(DB_TABLE_SHOP)->on('product.shop_id=shop.id')->join(DB_TABLE_USER)->on('shop.owner_id=user.id')->join(DB_TABLE_DELIVERYADDRESS)->on('deliveryaddress.user_id=user.id')->where('product.id=' .(int)$this->id)->execute();
+            $rows = $this->database->select('deliveryaddress.ward_id as id')->from(DB_TABLE_PRODUCT)->join(DB_TABLE_SHOP)->on('product.shop_id=shop.id')->join(DB_TABLE_USER)->on('shop.owner_id=user.id')->join(DB_TABLE_DELIVERYADDRESS)->on('deliveryaddress.user_id=user.id')->where('product.id=' .(int)$this->id . ' and deliveryaddress.def=' . DeliveryAddressModel::DEF)->execute();
             
             if(count($rows)){
                 $this->ward->id = $rows[0]->id;

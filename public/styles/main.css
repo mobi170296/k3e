@@ -4,7 +4,7 @@
 }
 body{
     margin: 0px;
-    background-color: #fafafa;
+    background-color: #f0f0f0;
 }
 
 a{
@@ -505,7 +505,7 @@ a{
     white-space: nowrap;
     padding: 7px 20px;
     font-size: 10pt;
-    font-weight: 600;
+    font-weight: 300;
     min-width: 160px;
     color: #000;
 }

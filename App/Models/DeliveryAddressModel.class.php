@@ -6,6 +6,8 @@
     use Library\Database\DBDateTime;
     
     class DeliveryAddressModel extends Model{
+        const DEF = 1, NOTDEF = 0;
+        
         public $id, $firstname, $lastname, $user_id, $def = 0, $address, $ward_id, $phone, $created;
         public $ward;
         
