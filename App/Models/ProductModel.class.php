@@ -251,7 +251,7 @@
             #Khong duoc cap nhat mot so truong khi san pham da duoc mua
             #Duoc cap nhat tat ca khi san pham chua duoc mua
             
-            if($this->hasBought()){
+            if($this->hasSold()){
                 #Chỉ cập nhật một số thông tin
                 
                 $this->database->update(DB_TABLE_PRODUCT, [
@@ -269,7 +269,7 @@
         
         public function delete(){
             #cho phep xoa khi san pham chua duoc mua
-            if(!$this->hasBought()){
+            if(!$this->hasSold()){
                 $this->database->delete(DB_TABLE_PRODUCT, 'id=' . (int)$this->id);
             }
         }
@@ -278,7 +278,7 @@
             $this->database->update(DB_TABLE_PRODUCT, ['quantity' => new DBNumber(0)], 'id=' . (int)$this->id);
         }
         
-        public function hasBought(){
+        public function hasSold(){
             $rows = $this->database->select('count(*) as count')->from(DB_TABLE_ORDERITEM)->where('product_id=' . (int)$this->id)->execute();
             return $rows[0]->count != 0;
         }
@@ -289,6 +289,10 @@
         
         public function getMainImageThumbnail(){
             return $this->mainimage->urlpath;
+        }
+        
+        public function getSalePrice(){
+            return $this->price;
         }
         
         public function getPriceString(){

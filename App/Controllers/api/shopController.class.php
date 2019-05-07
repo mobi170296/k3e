@@ -304,7 +304,7 @@
                                 $oldproductimagesset->add($productimage->imagemap_id);
                             }
                             
-                            if($oldproduct->hasBought()){
+                            if($oldproduct->hasSold()){
                                 #chỉ được cập nhật một số thông tin có thể biến động do thị trường những thông tin thuộc về đặc tính sản phẩm thì không thể thay đổi
                                 $product->checkOriginalPrice()->checkPrice()->checkQuantity()->checkWarrantyMonthsNumber();
                                 if($product->isValid()){
@@ -554,7 +554,7 @@
                     $product->id = $id;
                     if($product->loadData()){
                         if($product->shop_id == $shop->id){
-                            if($product->hasBought()){
+                            if($product->hasSold()){
                                 $result->header->code = 1;
                                 $result->header->message = 'Sản phẩm này đã có người mua bạn không thể xóa nó (gợi ý: bạn có thể đặt tình trạng hết hàng cho sản phẩm này)';
                                 $result->header->errors = ['Sản phẩm này không thể xóa vì đã có người mua nó'];

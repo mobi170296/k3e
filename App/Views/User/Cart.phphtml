@@ -1,0 +1,275 @@
+<?php
+    $this->Data->Title = 'Giỏ hàng';
+    $cart = $this->Data->cart;
+?>
+
+<style>
+    .cart-wrapper{
+        width: 1200px;
+        margin: 0px auto;
+    }
+    
+    .cart-wrapper .cart-header{
+        padding: 20px 30px;
+        background-color: #fff;
+        margin-bottom: 10px;
+        font-size: 1.3em;
+        font-weight: lighter;
+        font-family: segoe ui;
+        border-radius: 0px 0px 5px 5px;
+    }
+    
+    .cart-wrapper .cart-body{
+        
+    }
+    .cart-wrapper .cart-group{
+        display: flex;
+        width: 100%;
+        margin: 10px 0px;
+        padding: 20px;
+        background-color: #fff;
+        box-sizing: border-box;
+        border-radius: 7px;
+    }
+    .cart-wrapper .cart-item-list{
+        display: flex;
+        background-color: #fff;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+    .cart-wrapper .cart-checkout-info{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        flex-shrink: 0;
+        width: 300px;
+        background-color: #fff;
+        border-left: 1px solid #ccc;
+        padding: 0px 20px;
+    }
+    .cart-wrapper .product-item{
+        display: flex;
+        width: 100%;
+        padding: 20px 30px;
+    }
+    .cart-wrapper .product-image{
+        flex-shrink: 0;
+        margin-right: 30px;
+        width: 100px;
+        height: 100px;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    .cart-wrapper .cartitem-info{
+        width: 100%;
+        display: flex;
+    }
+    .cart-wrapper .product-info{
+        width: 100%;
+    }
+    
+    .cart-wrapper .subtotal{
+        width: 10em;
+    }
+    .cart-wrapper .product-name a{
+        font-size: 1.2em;
+        font-family: arial;
+        color: #000;
+    }
+    
+    .cart-wrapper .product-price{
+        font-family: arial;
+        font-size: 1.2em;
+        color: #44b27c;
+    }
+    .cart-wrapper .subtotal{
+        font-family: arial;
+        font-size: 1.2em;
+        color: #44b27c;
+    }
+    .cart-wrapper .total-price{
+        font-family: arial;
+        font-size: 1.5em;
+        color: red;
+    }
+    .cart-wrapper .shop-name{
+        font-family: arial;
+        font-size: 1.2em;
+        font-weight: bold;
+    }
+    [data-widget-type="qtyspinner"]{
+        display: inline-flex;
+    }
+    [data-widget-type="qtyspinner"] .minus{
+        background-color: #fff;
+        border: 1px solid #ccc;
+        padding: 0px 10px;
+        display: inline-block;
+        width: 1em;
+        text-align: center;
+        border-radius: 5px 0px 0px 5px;
+        line-height: 2;
+        cursor: pointer;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+    }
+    [data-widget-type="qtyspinner"] .plus{
+        border: 1px solid #ccc;
+        padding: 0px 10px;
+        display: inline-block;
+        width: 1em;
+        text-align: center;
+        border-radius: 0px 5px 5px 0px;
+        line-height: 2;
+        cursor: pointer;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+    }
+    [data-widget-type="qtyspinner"] .disabled{
+        background-color: #ccc;
+    }
+    [data-widget-type="qtyspinner"] .qtybox{
+        text-align: right;
+        padding: 5px;
+        width: 3em;
+        border-style: solid;
+        border-color: #ccc;
+        border-width: 1px 0px;
+    }
+    .btn-checkout{
+        background-color: #44b27c;
+        margin: 0px auto;
+        padding: 10px 30px;
+        text-align: center;
+        display: block;
+        border: 1px solid #44b27c;
+        color: #fff;
+        border-radius: 3px;
+        font-family: segoe ui;
+        font-weight: 300;
+    }
+</style>
+
+<div class="cart-wrapper">
+    <div class="cart-header">Giỏ hàng của bạn</div>
+    <div class="cart-body">
+        <?php
+            foreach($cart as $cartgroup){
+                #bat dau card group
+                $total = 0;
+                echo '<div class="cart-group">';
+                
+                echo '<div class="cart-item-list">';
+                foreach($cartgroup->items as $item){
+                    #dieu chinh mot so thong so truoc khi render
+                    $itemprice = number_format($item->product->getSalePrice());
+                    $itemsubtotal = number_format($item->product->getSalePrice() * $item->quantity);
+                    $total += $item->product->getSalePrice() * $item->quantity;
+                    echo <<<ROW
+                        <div class="product-item">
+                            <div class="product-image" style="background-image: url('{$item->product->getMainImageThumbnail()}')">
+
+                            </div>
+                            <div class="cartitem-info">
+                                <div class="product-info">
+                                    <div class="product-name"><a href="{$item->product->getProductLink()}" target="_blank">{$item->product->name}</a></div>
+                                    <div class="product-price">{$itemprice}đ</div>
+                                </div>
+                                <div class="subtotal-info">
+                                    <div>
+                                        <div data-widget-type="qtyspinner">
+                                            <span class="minus">-</span><input class="qtybox" type="text" data-value="{$item->quantity}" data-max="12" data-min="1"/><span class="plus">+</span>
+                                        </div>
+                                    </div>
+                                    <div class="subtotal">{$itemsubtotal}đ</div>
+                                    <div class="scart-product-bin" type="button" data-control-type="cart-item-del"></div>
+                                </div>
+                            </div>
+                        </div>
+ROW;
+                }
+                
+                echo '</div>';
+                
+                $totalstring = number_format($total);
+                
+                echo '<div class="cart-checkout-info">';
+                echo <<<SHOP
+                <div class="orderinfo">
+                    <div class="ordertotal">Tổng: <span class="total-price">{$totalstring}đ</span></div>
+                    <div>Tên cửa hàng: <span class="shop-name">{$cartgroup->shop->name}</span></div>
+                </div>
+                <div>
+                    <a href="/User/Checkout?shop_id={$cartgroup->shop->id}" class="btn-checkout">Tiến hành thanh toán</a>
+                </div>
+SHOP;
+                echo '</div>';
+                
+                #ket thuc card group
+                echo '</div>';
+            }
+        ?>
+    </div>
+</div>
+
+<script>
+    //module quantity spinner
+    !function(){
+        var _ps = document.querySelectorAll('[data-widget-type="qtyspinner"] .plus');
+        var _ms = document.querySelectorAll('[data-widget-type="qtyspinner"] .minus');
+        var _bs = document.querySelectorAll('[data-widget-type="qtyspinner"] input');
+        
+        function qsi(_box, _minus, _plus){
+            _box.value = _box.dataset.value;
+            
+            _box.onkeydown = function(e){
+                !(e.keyCode>=48 && e.keyCode<=57) && !(e.ctrlKey && e.keyCode===65) && !(e.keyCode === 8) && e.preventDefault();
+            }
+//            _box.onchange = function(e){
+//                var v = parseInt(this.value), mxv = parseInt(this.dataset.max), mnv = parseInt(this.dataset.min);
+//                if(this.value.length===0 || v > mxv){
+//                    this.value = 1;
+//                }
+//            }
+            function _cs(){
+                var v = parseInt(_box.value), mxv = parseInt(_box.dataset.max), mnv = parseInt(_box.dataset.min);
+                if(v===mxv){
+                    _plus.classList.add('disabled');
+                }else{
+                    _plus.classList.remove('disabled');
+                }
+                if(v===mnv){
+                    _minus.classList.add('disabled');
+                }else{
+                    _minus.classList.remove('disabled');
+                }
+            }
+            _cs();
+            _plus.onclick = function(e){
+                var v = parseInt(_box.value), mxv = parseInt(_box.dataset.max);
+
+                if(v < mxv){
+                    _box.value = ++v;
+                    _box.onchange && _box.onchange();
+                }
+                _cs();
+            }
+            _minus.onclick = function(e){
+                var v = parseInt(_box.value), mnv = parseInt(_box.dataset.min);
+
+                if(v > mnv){
+                    _box.value = --v;
+                    _box.onchange && _box.onchange();
+                }
+                _cs();
+            }
+        }
+        
+        for(var i=0; i<_bs.length; i++){
+            qsi(_bs[i], _ms[i], _ps[i]);
+        }
+    }();
+    
+</script>

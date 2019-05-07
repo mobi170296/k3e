@@ -62,7 +62,6 @@
                 <div class="product-list-sections">
                     <div class="search-section">
                         <input id="tb-query" type="text" name="qname" placeholder="Tên sản phẩm cần tìm" size="50" />
-                        <button class="btn btn-search btn-search-i">Tìm</button>
                     </div>
                     <div class="product-table-section">
                         <table id="product-list">
@@ -83,8 +82,22 @@
     </div>
 
 <script type="text/ktpl" id="product-row">
-    <td><a target="_blank" href="@link">@name</a></td><td><div style="width:100px; height: 100px; background-image: url('@mainimage_url'); background-size: contain; background-repeat: no-repeat;"></div></td><td>@quantity</td><td>@price_string</td><td>@original_price_string</td><td>@soldquantity</td><td>@warranty_months_number <small>tháng</small></td><td><button type="button" class="btn btn-edit" data-control-type="soldout" data-field-id="@id" data-field-name="@name">Hết hàng</button> <a href="/Shop/EditProduct/@id"><button type="button" data-control-type="edit" data-field-id="@id" class="btn btn-edit btn-edit-i">Sửa</button></a> <button type="button" data-control-type="del" data-field-id="@id" data-field-name="@name" class="btn btn-del btn-del-i">Xóa</button></td>
+    <td class="product-name-col">
+        <a target="_blank" href="@link">@name</a>
+    </td>
+    <td class="product-image-col">
+        <div style="width:100px; height: 100px; background-image: url('@mainimage_url'); background-size: contain; background-repeat: no-repeat;"></div>
+    </td>
+    <td class="product-quantity-col">@quantity</td>
+    <td class="product-price-col">@price_string</td>
+    <td class="product-original-price-col">@original_price_string</td>
+    <td class="product-soldquantity-col">@soldquantity</td>
+    <td class="product-warranty-col">@warranty_months_number <small>tháng</small></td>
+    <td class="product-action-btn-col">
+        <button type="button" class="btn btn-edit" data-control-type="soldout" data-field-id="@id" data-field-name="@name">Hết hàng</button> <a href="/Shop/EditProduct/@id"><button type="button" data-control-type="edit" data-field-id="@id" class="btn btn-edit btn-edit-i">Sửa</button></a> <button type="button" data-control-type="del" data-field-id="@id" data-field-name="@name" class="btn btn-del btn-del-i">Xóa</button>
+    </td>
 </script>
+
 <script src="/scripts/ktemplate.js"></script>
 <script src="/scripts/ktable.js"></script>
 
@@ -105,7 +118,15 @@
         border: 2px solid #eee;
         padding: 5px 10px;
     }
-    
+    table#product-list .product-name-col{
+        width: 10em;
+    }
+    table#product-list .product-image-col{
+        width: 100px;
+    }
+    table#product-list .product-quantity-col, table#product-list .product-soldquantity-col{
+        text-align: center;
+    }
     .product-list{
         margin: 0px 20px;
     }
@@ -156,7 +177,7 @@
         var _filter = {
             name: '',
             page: 1,
-            itemsperpage: 1
+            itemsperpage: 10
         };
         
         var _paginationbar = window['pagination-bar'];

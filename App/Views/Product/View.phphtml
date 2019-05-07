@@ -1,11 +1,8 @@
 <?php
     $user = $this->Data->user;
     $product = $this->Data->product;
-    $productpriceformated = number_format($product->price);
     $productattributes = $product->productattributes;
     $shop = $product->shop;
-    $shopbackground = $shop->background;
-    $shopavatar = $shop->avatar;
     $ward = $product->ward;
     $mainimage = $product->mainimage;
     $productimages = $product->productimagemaps;
@@ -13,9 +10,7 @@
 ?>
 
 <style>
-    [data-widget-type="qtyspinner"]{
-        display: inline-flex;
-    }
+    
     .product-view .btn-product-addtocart{
         background-color: #44b27c;
         border: 0px;
@@ -26,32 +21,35 @@
         font-weight: lighter;
         margin-top: 20px;
     }
+    [data-widget-type="qtyspinner"]{
+        display: inline-flex;
+    }
     [data-widget-type="qtyspinner"] .minus{
         background-color: #fff;
-border: 1px solid #ccc;
-padding: 0px 10px;
-display: inline-block;
-width: 1em;
-text-align: center;
-border-radius: 5px 0px 0px 5px;
-line-height: 2;
-cursor: pointer;
-user-select: none;
--webkit-user-select: none;
--moz-user-select: none;
+        border: 1px solid #ccc;
+        padding: 0px 10px;
+        display: inline-block;
+        width: 1em;
+        text-align: center;
+        border-radius: 5px 0px 0px 5px;
+        line-height: 2;
+        cursor: pointer;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
     }
     [data-widget-type="qtyspinner"] .plus{
         border: 1px solid #ccc;
-padding: 0px 10px;
-display: inline-block;
-width: 1em;
-text-align: center;
-border-radius: 0px 5px 5px 0px;
-line-height: 2;
-cursor: pointer;
-user-select: none;
--webkit-user-select: none;
--moz-user-select: none;
+        padding: 0px 10px;
+        display: inline-block;
+        width: 1em;
+        text-align: center;
+        border-radius: 0px 5px 5px 0px;
+        line-height: 2;
+        cursor: pointer;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
     }
     [data-widget-type="qtyspinner"] .disabled{
         background-color: #ccc;
@@ -59,10 +57,10 @@ user-select: none;
     [data-widget-type="qtyspinner"] .qtybox{
         text-align: right;
         padding: 5px;
-width: 3em;
-border-style: solid;
-border-color: #ccc;
-border-width: 1px 0px;
+        width: 3em;
+        border-style: solid;
+        border-color: #ccc;
+        border-width: 1px 0px;
     }
     .product-container{
         width: 1200px;
@@ -311,25 +309,34 @@ PI;
                 <div class="product-info-top">
                     <div class="product-name">{$product->name}</div>
                     <div class="product-soldout">Đã bán 659</div>
-                    <div class="product-price">{$productpriceformated}đ</div>
+                    <div class="product-price">{$product->getPriceString()}đ</div>
                 </div>
-                <div>
+                <div class="product-info-bottom">
                     <div>
                         <div data-widget-type="qtyspinner">
                             <span class="minus">-</span><input class="qtybox" type="text" data-value="1" data-max="{$product->quantity}" data-min="1"/><span class="plus">+</span>
                         </div> (có sẵn {$product->quantity} sản phẩm)
                     </div>
-                    <div><button class="btn-product-addtocart" type="button">Thêm vào giỏ hàng</button></div>
-                </div>
+                    <div>
 ROW;
+?>
+                <?php
+                    if($user != null && $user->id != $shop->owner_id){
+                        echo '<button class="btn-product-addtocart" type="button" data-field-id="' . $product->id . '">Thêm vào giỏ hàng</button>';
+                    }
+                ?>
+                
+                <?php
+                    echo '</div>';
+                    echo '</div>';
                 ?>
             </div>
         </div>
         <div class="product-shop-info">
             <div class="product-shop-left">
-                <div class="product-shop-background" style="background-image: url('<?php echo $shopbackground->urlpath; ?>')">
+                <div class="product-shop-background" style="background-image: url('<?php echo $shop->getBackgroundPath(); ?>')">
                     <div class="product-shop-foreground">
-                        <div class="product-shop-avatar" style="background-image: url('<?php echo $shopavatar->urlpath; ?>')"></div>
+                        <div class="product-shop-avatar" style="background-image: url('<?php echo $shop->getAvatarPath(); ?>')"></div>
                         <div class="product-shop-name">
                             <div class="shop-name"><?php echo $shop->name; ?></div>
                             <div class="shop-warehouse">Kho hàng: <?php echo $ward->district->province->name; ?></div>
@@ -385,6 +392,31 @@ ROW;
 
 
 <script>
+    //module add to cart
+    !function(){
+        var _qty = document.querySelector('[data-widget-type="qtyspinner"] input');
+        var _btn = document.querySelector('.btn-product-addtocart');
+        if(_btn === null){
+            return;
+        }
+        _btn.addEventListener('click', function(e){
+            var _id = this.dataset.fieldId;
+            var _quantity = _qty.value;
+            
+            $.ajax().create().url('/api/cartitem/add?product_id=' + _id + '&quantity=' + _quantity).success(function(e){
+                var result = JSON.parse(this.response);
+                if(result.header.code === 0){
+                    $Toast.makeSuccess(result.header.message);
+                    App.SCart.load_cart();
+                }else{
+                    $Toast.makeError(result.header.message);
+                }
+            }).error(function(e){
+                $Toast.makeError('Lỗi kết nối');
+            }).get();
+        });
+    }();
+    
     //module quantity spinner
     !function(){
         var _minus = document.querySelector('[data-widget-type="qtyspinner"] .minus');
@@ -393,7 +425,7 @@ ROW;
         
         _box.value = _box.dataset.value;
         _box.onkeydown = function(e){
-            !(e.keyCode>=48 && e.keyCode<=57) && !(e.ctrlKey && e.keyCode===65) && !(e.keyCode = 8) && e.preventDefault();
+            !(e.keyCode>=48 && e.keyCode<=57) && !(e.ctrlKey && e.keyCode===65) && !(e.keyCode === 8) && e.preventDefault();
         }
         _box.oninput = function(e){
             var v = parseInt(this.value), mxv = parseInt(this.dataset.max), mnv = parseInt(this.dataset.min);

@@ -725,7 +725,8 @@ label.product-image-upload-select input{
 .daddress-item{
     margin: 20px 0px;
     padding: 20px;
-    border: 1px solid #eee;
+    border: 1px solid #ddd;
+    border-radius: 7px;
 }
 
 .daddress-item:hover{
@@ -765,24 +766,6 @@ label.product-image-upload-select input{
     height: 100%;
     transition: all 700ms;
 }
-
-#scart-wrapper{
-    display: inline-block;
-    width: 32px;
-    height: 32px;
-    margin: 0px 30px;
-}
-span#scart-icon{
-    display: inline-block;
-    width: 100%;
-    height: 100%;
-    background-image: url('/images/icons/shopping-cart.png');
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    filter: invert(100%);
-}
-
-
 #modal-wrapper{
     display: block;
     width: 100vw;

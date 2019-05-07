@@ -97,7 +97,7 @@
                     
                     if($product->loadData()){
                         if($product->shop_id == $shop->id){
-                            $this->View->Data->hasBought = $product->hasBought();
+                            $this->View->Data->hasSold = $product->hasSold();
                             $product->loadSubcategory();
                             $product->loadMainImage();
                             $product->loadProductImages();

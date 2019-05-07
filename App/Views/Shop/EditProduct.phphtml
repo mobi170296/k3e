@@ -100,7 +100,7 @@
                                         <div class="product-field-row horizontal">
                                             <div class="field-label">Tên sản phẩm</div>
                                             <div class="field-control">
-                                                <input style="width: 100%; box-sizing: border-box" type="text" name="name" placeholder="Tên sản phẩm" value="<?php echo $this->Data->product->name; ?>" <?php echo $this->Data->hasBought ? 'disabled=""' : ''; ?>/>
+                                                <input style="width: 100%; box-sizing: border-box" type="text" name="name" placeholder="Tên sản phẩm" value="<?php echo $this->Data->product->name; ?>" <?php echo $this->Data->hasSold ? 'disabled=""' : ''; ?>/>
                                             </div>
                                         </div>
                                         <div class="product-field-row vertical">
@@ -137,13 +137,13 @@
                     <div class="progress-current" style="width: 100%;"></div>
                 </div>
             </div>
-            <?php echo  '<div class="product-image-upload-delete '.($this->Data->hasBought ? 'u-hidden' : '').'">&times</div>'; ?>
+            <?php echo  '<div class="product-image-upload-delete '.($this->Data->hasSold ? 'u-hidden' : '').'">&times</div>'; ?>
             <input type="hidden" name="mainimage_id" value="<?php echo $this->Data->product->mainimage->id ;?>">
         </div>
                                                     </div>
                                                     <div class="product-image-upload-temp"></div>
                                                     <label class="product-image-upload-select">
-                                                        <input type="file" multiple="" <?php echo $this->Data->hasBought ? 'disabled=""' : ''; ?> />
+                                                        <input type="file" multiple="" <?php echo $this->Data->hasSold ? 'disabled=""' : ''; ?> />
                                                     </label>
                                                 </div>
                                             </div>
@@ -165,7 +165,7 @@
                     echo '<div class="progress-current" style="width: 100%;"></div>';
                 echo '</div>';
             echo '</div>';
-            echo  '<div class="product-image-upload-delete '.($this->Data->hasBought ? 'u-hidden' : '').'">&times</div>';
+            echo  '<div class="product-image-upload-delete '.($this->Data->hasSold ? 'u-hidden' : '').'">&times</div>';
             echo '<input type="hidden" name="product_image_chosen[]" value="'.$imagemap->id.'">';
         echo '</div>';
                                                             }
@@ -173,7 +173,7 @@
                                                     </div>
                                                     <div class="product-image-upload-temp"></div>
                                                     <label class="product-image-upload-select">
-                                                        <input type="file" multiple="" <?php echo $this->Data->hasBought ? 'disabled=""' : '' ?> />
+                                                        <input type="file" multiple="" <?php echo $this->Data->hasSold ? 'disabled=""' : '' ?> />
                                                     </label>
                                                 </div>
                                             </div>
@@ -181,7 +181,7 @@
                                         <div class="product-field-row vertical">
                                             <div class="field-label">Mô tả sản phẩm</div>
                                             <div class="field-control">
-                                                <textarea id="product-description" name="description" <?php echo $this->Data->hasBought ? 'disabled' : '' ?>><?php echo $this->Data->product->description; ?></textarea>
+                                                <textarea id="product-description" name="description" <?php echo $this->Data->hasSold ? 'disabled' : '' ?>><?php echo $this->Data->product->description; ?></textarea>
                                             </div>
                                         </div>
                                         <div class="product-field-row vertical">
@@ -192,8 +192,8 @@
                                                         foreach($this->Data->product->productattributes as $productattribute){
                                                             echo '<div>';
             echo '<div class="product-attribute">';
-                echo '<input class="product-attribute-key" name="attribute_key[]" type="text" size="20" placeholder="Thuộc tính sản phẩm" '.($this->Data->hasBought ? 'disabled' : '').' value="'. $productattribute->attributename .'">';
-                echo '<input class="product-attribute-value" name="attribute_value[]" type="text" size="50" placeholder="Mô tả thuộc tính" '.($this->Data->hasBought ? 'disabled' : '' ).' value="'.$productattribute->attributevalue .'">';
+                echo '<input class="product-attribute-key" name="attribute_key[]" type="text" size="20" placeholder="Thuộc tính sản phẩm" '.($this->Data->hasSold ? 'disabled' : '').' value="'. $productattribute->attributename .'">';
+                echo '<input class="product-attribute-value" name="attribute_value[]" type="text" size="50" placeholder="Mô tả thuộc tính" '.($this->Data->hasSold ? 'disabled' : '' ).' value="'.$productattribute->attributevalue .'">';
                 echo '<span class="product-attribute-delete" onclick="this.parentElement.remove()">×</span>';
             echo '</div>';
         echo '</div>';
@@ -244,7 +244,7 @@
                                             <div class="field-label">Cân nặng (đã đóng gói)</div>
                                             <div class="field-control">
                                                 <div style="border: 1px solid #eee; display: inline-block">
-                                                    <input type="text" data-widget-type="positive-integer-number" style="border: 0px" name="weight" value="<?php echo $this->Data->product->weight; ?>" placeholder="Cân nặng" <?php echo $this->Data->hasBought ? 'disabled' : '' ?>/>
+                                                    <input type="text" data-widget-type="positive-integer-number" style="border: 0px" name="weight" value="<?php echo $this->Data->product->weight; ?>" placeholder="Cân nặng" <?php echo $this->Data->hasSold ? 'disabled' : '' ?>/>
                                                     <span style="color: #777; font-size: 0.7em; padding-right: 10px;">gram</span>
                                                 </div>
                                             </div>
@@ -253,15 +253,15 @@
                                             <div class="field-label">Kích thước các chiều (đã đóng gói)</div>
                                             <div class="field-control">
                                                 <div style="border: 1px solid #eee; display: inline-block">
-                                                    <input type="text" data-widget-type="positive-integer-number" style="border: 0px" name="length" value="<?php echo $this->Data->product->length; ?>" placeholder="Chiều dài" <?php echo $this->Data->hasBought ? 'disabled' : '' ?>/>
+                                                    <input type="text" data-widget-type="positive-integer-number" style="border: 0px" name="length" value="<?php echo $this->Data->product->length; ?>" placeholder="Chiều dài" <?php echo $this->Data->hasSold ? 'disabled' : '' ?>/>
                                                     <span style="color: #777; font-size: 0.7em; padding-right: 10px;">cm</span>
                                                 </div>
                                                 <div style="border: 1px solid #eee; display: inline-block">
-                                                    <input type="text" data-widget-type="positive-integer-number" style="border: 0px" name="width" value="<?php echo $this->Data->product->width; ?>" placeholder="Chiều rộng" <?php echo $this->Data->hasBought ? 'disabled' : '' ?>/>
+                                                    <input type="text" data-widget-type="positive-integer-number" style="border: 0px" name="width" value="<?php echo $this->Data->product->width; ?>" placeholder="Chiều rộng" <?php echo $this->Data->hasSold ? 'disabled' : '' ?>/>
                                                     <span style="color: #777; font-size: 0.7em; padding-right: 10px;">cm</span>
                                                 </div>
                                                 <div style="border: 1px solid #eee; display: inline-block">
-                                                    <input type="text" data-widget-type="positive-integer-number" style="border: 0px" name="height" value="<?php echo $this->Data->product->height; ?>" placeholder="Chiều cao" <?php echo $this->Data->hasBought ? 'disabled' : '' ?>/>
+                                                    <input type="text" data-widget-type="positive-integer-number" style="border: 0px" name="height" value="<?php echo $this->Data->product->height; ?>" placeholder="Chiều cao" <?php echo $this->Data->hasSold ? 'disabled' : '' ?>/>
                                                     <span style="color: #777; font-size: 0.7em; padding-right: 10px;">cm</span>
                                                 </div>
                                             </div>

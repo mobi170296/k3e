@@ -181,7 +181,30 @@
         }
         
         public function loadCartItems(){
+            $this->cartitems = [];
             
+            $rows = $this->database->selectall()->from(DB_TABLE_CARTITEM)->where('client_id=' . (int)$this->id)->execute();
+            
+            if(count($rows)){
+                foreach($rows as $row){
+                    $cartitem = new CartItemModel($this->database);
+                    $cartitem->client_id = $row->client_id;
+                    $cartitem->product_id = $row->product_id;
+                    
+                    $cartitem->loadData();
+                    $this->cartitems[] = $cartitem;
+                }
+                return true;
+            }else{
+                return false;
+            }
+        }
+        
+        public function getCartItemTotal(){
+            $rows = $this->database->select('sum(quantity) as total')->from(DB_TABLE_CARTITEM)->where('client_id=' . (int)$this->id)->execute();
+            
+            $row = $rows[0];
+            return $row->total === null ? 0 : $row->total;
         }
         
         public function loadOrders(){
@@ -239,6 +262,7 @@
             $this->lastname = $this->database->unescape($user->lastname);
             $this->firstname = $this->database->unescape($user->firstname);
             $this->birthday = $user->birthday;
+            $this->gender = $user->gender;
             return true;
         }
         
@@ -293,6 +317,7 @@
                 default: return "Chưa xác định";
             }
         }
+        
         
         public function getAvatarPath(){
             if($this->avatar_id === null){

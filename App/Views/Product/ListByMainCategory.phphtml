@@ -11,7 +11,7 @@
         </div>
         <div class="product-list-container">
             <div class="product-list-category">
-                Danh mục: <?php echo $maincategory->name; ?>
+                <span style="font-weight: 400;">Danh mục:</span> <?php echo $maincategory->name; ?>
             </div>
             <div class="product-list">
                 <?php
@@ -19,8 +19,8 @@
                         $starratingpoint = $product->getStarRatingPoint() * 100;
                         
                         echo <<<PRODUCT
-                        <a class="product-link" href="{$product->getProductLink()}">
-                            <div class="product-card" style="margin: 12.5px">
+                        <a class="product-link" href="{$product->getProductLink()}"  style="margin: 12.5px">
+                            <div class="product-card">
                                 <div class="product-image">
                                     <div class="back-image" style="background-image: url('{$product->getMainImageThumbnail()}')"></div>
                                     <div class="fore-image"></div>

@@ -16,6 +16,9 @@
         #contains objects
         public $orders, $products;
         
+        #address object
+        public $ward;
+        
         public function getLink(){
             return "/Shop/" . $this->id;
         }
@@ -116,6 +119,19 @@
             }
         }
         
+        public function loadWard(){
+            $rows = $this->database->select('ward.id as id')->from(DB_TABLE_SHOP)->join(DB_TABLE_USER)->on('shop.owner_id=user.id')->join(DB_TABLE_DELIVERYADDRESS)->on('deliveryaddress.user_id=user.id')->join(DB_TABLE_WARD)->on('deliveryaddress.ward_id=ward.id')->where('deliveryaddress.def=' . DeliveryAddressModel::DEF . ' and shop.id=' . (int)$this->id)->execute();
+            
+            if(count($rows)){
+                $row = $rows[0];
+                $this->ward = new WardModel($this->database);
+                $this->ward->id = $row->id;
+                return $this->ward->loadData();
+            }else{
+                return false;
+            }
+        }
+        
         public function open(){
             $name = $this->database->escape($this->name);
             $owner_id = (int)$this->owner_id;
@@ -145,7 +161,8 @@
         public function getAvatarPath(){
             if($this->avatar_id === null){
                 #default logo
-                return "";
+                $this->loadOwner();
+                return $this->owner->gender == UserModel::FEMALE ? '/images/shops/girlavatar.png' : '/images/shops/menavatar.png';
             }else{
                 if($this->avatar!=null){
                     return $this->avatar->urlpath;
@@ -161,7 +178,7 @@
         public function getBackgroundPath(){
             if($this->background_id === null){
                 #default logo
-                return "";
+                return '/images/shops/defwallpaper.jpg';
             }else{
                 if($this->background!=null){
                     return $this->background->urlpath;

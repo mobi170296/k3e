@@ -23,7 +23,7 @@ function $AJAX(){
         this._xhr._cb();
         return this;
     }
-    this.sync = function(b){
+    this.async = function(b){
         this._sync = b;
         return this;
     }

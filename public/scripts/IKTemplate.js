@@ -1,6 +1,5 @@
 function IKTemplate(tmpl){
     var code = 'var __ktpl__r = [];\n';
-                
     var left = '', right = '';
     var match;
     while((match = /@.+/.exec(tmpl))){
@@ -47,9 +46,15 @@ function IKTemplate(tmpl){
 
     code += 'return __ktpl__r.join("");\n';
     
+//    console.log(code);
+    
     this.renderfn = new Function(code);
     
-    this.render = function(data){
-        return this.renderfn.call(data);
+    this.render = function(data, holder){
+        var h = document.createElement('div');
+        h.innerHTML = this.renderfn.call(data);
+        while(h.children.length){
+            holder.appendChild(h.children[0]);
+        }
     }
 }

@@ -51,10 +51,270 @@
                     echo '</div>';
                 }
             ?>
-            <div id="scart-wrapper">
-                <span id="scart-icon"></span>
-                <div id="scart-list">
-                    <div class="scart-item"></div>
+    <style>
+        #scart-wrapper.active{
+            background-color: #fff;
+            box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.3);
+            border-radius: 5px 5px 0px 0px;
+        }
+        #scart-wrapper{
+            display: flex !important;
+            margin: 0px 10px;
+            height: 100%;
+            width: 32px;
+            padding: 0px 30px;
+            align-items: center;
+            position: relative;
+        }
+        #scart-wrapper .scart-icon{
+            background-image: url('/images/icons/shopping-cart.png');
+            background-size: 32px 32px;
+            width: 32px;
+            height: 32px;
+        }
+        #scart-quantity{
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            color: #fff;
+            font-weight: bold;
+            background-color: red;
+            border-radius: 100px;
+            padding: 2px 7px;
+            font-size: 0.9rem;
+        }
+        #scart-icon{
+            background-image: url('/images/icons/shopping-cart.png');
+            background-size: 32px 32px;
+            width: 32px;
+            height: 32px;
+            position: relative;
+        }
+        #scart-wrapper.active #scart-list{
+            display: block;
+        }
+        #scart-list{
+            display: none;
+            background-color: #fff;
+            position: absolute;
+            top: 100%;
+            right: 0px;
+            max-height: 300px;
+            box-shadow: 0px 30px 30px 0px rgba(0,0,0,0.15);
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        .scart-item .scart-product{
+            width: 500px;
+            height: 100px;
+            background-color: #fff;
+            display: flex;
+            background-size: cover;
+            border-bottom: 1px solid #eee;
+        }
+        .scart-product-image{
+            width: 100px;
+            flex-shrink: 0;
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+        .scart-product-info{
+            flex-shrink: 0;
+            width: 300px;
+            padding: 10px;
+        }
+        .scart-product-name{
+            font-size: 1.2em;
+            font-weight: bold;
+            height: 2.4em;
+            overflow: hidden;
+        }
+        .scart-product-control{
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+        .scart-product-quantity{
+            font-family: arial;
+            font-size: .7em;
+        }
+        .scart-product-bin{
+            background-image: url('/images/icons/bin-icon.png');
+            background-size: cover;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
+        .scart-product-price{
+            color: #44b27c;
+            font-weight: bold;
+            font-family: arial;
+        }
+        .scart-bottom{
+            
+        }
+        .scart-bottom-total{
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 10px;
+        }
+        .btn-scart-bottom{
+            display: block;
+            margin: 5px 20px;
+            padding: 20px;
+            background-color: #44b27c;
+            color: #fff;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            font-family: arial;
+        }
+        .scart-total-price{
+            color: red;
+            font-size: 1.2em;
+            font-weight: bold;
+            font-family: arial;
+        }
+        .scart-empty{
+            background-image: url('/images/icons/emptycart.png');
+            width: 400px;
+            height: 300px;
+            background-size: cover;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            font-size: 1.2em;
+            color: red;
+        }
+    </style>
+            <?php
+                if($this->Data->user){
+                    echo <<<CART
+                    <div id="scart-wrapper">
+                        <span id="scart-icon">
+                            <span id="scart-quantity">{$this->Data->user->getCartItemTotal()}</span>
+                        </span>
+                        <div id="scart-list">
+                        </div>
+                    </div>
+                    
+                    
+                    <script>
+                        //module cho scart
+                        !function(){
+                            
+                        }
+                    </script>
+CART;
+                }
+            ?>
                 </div>
-            </div>
-        </div>
+
+                    <script id="scart-list-tpl" type="text/ktpl">
+                        @if(this.length){
+                            @{
+                                var totalprice = 0;
+                            @}
+                            @for(var i=0; i<this.length; i++){
+                                <div class="scart-item">
+                                    <div class="scart-product">
+                                        <div class="scart-product-image" style="background-image: url('@this[i].product.mainimageurl')"></div>
+                                        <div class="scart-product-info">
+                                            <div class="scart-product-name">@this[i].product.name</div>
+                                            <div class="scart-product-price">@($COMMON.moneyFormat(this[i].product.price, 3, 0, ',', '.'))đ</div>
+                                        </div>
+                                        <div class="scart-product-control">
+                                            <div class="scart-product-quantity">x@this[i].quantity</div>
+                                            <div class="scart-product-bin" data-control-type="scart-item-del" data-field-id="@this[i].product.id"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @{
+                                    totalprice += this[i].quantity * this[i].product.price;
+                                @}
+                            @}
+                            <div class="scart-bottom">
+                                <div class="scart-bottom-total"><span>Tổng giá trị</span><span class="scart-total-price">@($COMMON.moneyFormat(totalprice, 3, 0, ',', '.'))đ</span></div>
+                                <a class="btn-scart-bottom" href="/User/Cart">Xem giỏ hàng</a>
+                            </div>
+                        @}else{
+                            <div class="scart-empty">Giỏ hàng đang trống hãy thêm vào đi nào!</div>
+                        @}
+                    
+                    </script>
+                    <script>
+                        //module cho scart
+                        !function(){
+                            function scartmodule(){
+                                var _scart_wrapper = document.querySelector('#scart-wrapper');
+                                var _scart_list = document.querySelector('#scart-list');
+                                var _scart_quantity = document.querySelector('#scart-quantity');
+                                var _scart_list_tpl = window['scart-list-tpl'].innerHTML;
+                                //khai bao de phan tich chung khong can phan tich lai
+                                var _scart_list_ktemplate = new IKTemplate(_scart_list_tpl);
+
+                                function _load_scart(){
+                                    $.ajax().create().url('/api/cartitem/products').success(function(e){
+                                        var result = JSON.parse(this.response);
+                                        if(result.header.code===0){
+                                            $(_scart_list).html('');
+                                            _scart_list_ktemplate.render(result.body.data, _scart_list);
+                                            var sum = 0;
+                                            for(var i=0; i<result.body.data.length; i++){
+                                                sum += result.body.data[i].quantity;
+                                            }
+                                            _scart_quantity.innerHTML = sum;
+                                        }else{
+                                            $Toast.makeError(result.header.message);
+                                        }
+                                    }).error(function(e){
+                                        $Toast.makeError('Lỗi kết nối');
+                                    }).get();
+                                }
+
+                                function _scart_enter(e){
+                                    this.classList.add('active');
+                                    _load_scart();
+                                }
+
+                                function _scart_leave(e){
+                                    this.classList.remove('active');
+                                }
+
+                                function _scart_item_del(e){
+                                    var _id = this.dataset.fieldId;
+                                    $.ajax().create().url('/api/cartitem/delete?product_id=' + _id).success(function(e){
+                                        var result = JSON.parse(this.response);
+                                        if(result.header.code === 0){
+                                            $Toast.makeSuccess(result.header.message);
+                                            _load_scart();
+                                        }else{
+                                            $Toast.makeError(result.header.message);
+                                        }
+                                    }).error(function(e){
+                                        $Toast.makeError('Lỗi kết nối');
+                                    }).get();
+                                }
+
+                                _scart_wrapper.addEventListener('mouseenter', function(e){
+                                    _scart_enter.call(this, e);
+                                });
+
+                                _scart_wrapper.addEventListener('mouseleave', function(e){
+                                    _scart_leave.call(this, e);
+                                });
+
+                                _scart_list.addEventListener('click', function(e){
+                                    e.target.dataset.controlType === 'scart-item-del' && _scart_item_del.call(e.target, e);
+                                });
+                                
+                                
+                                return {
+                                    load_cart: _load_scart
+                                }
+                            }
+                            
+                            //export module App.Scart dung chung
+                            modules.define('App.SCart', scartmodule);
+                        }();
+                    </script>

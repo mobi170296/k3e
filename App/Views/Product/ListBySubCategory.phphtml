@@ -1,3 +1,67 @@
 <?php
     $subcategory = $this->Data->subcategory;
-    $this->Data->Title = 'Tất cả sản phẩm danh mục - ' . $subcategory->name;
+    $products = $subcategory->products;
+    $this->Data->Title = 'Tìm kiếm theo danh mục ' . $subcategory->name;
+?>
+
+<div class="filter-product-list-wrapper">
+    <div class="filter-product-list">
+        <div class="product-filter">
+            <div>Filter box</div>
+        </div>
+        <div class="product-list-container">
+            <div class="product-list-category">
+                <span style="font-weight: 400;">Danh mục:</span> <?php echo $subcategory->maincategory->name; ?> > <?php echo $subcategory->name; ?>
+            </div>
+            <div class="product-list">
+                <?php
+                    foreach($products as $product){
+                        $starratingpoint = $product->getStarRatingPoint() * 100;
+                        
+                        echo <<<PRODUCT
+                        <a class="product-link" href="{$product->getProductLink()}" style="margin: 12.5px">
+                            <div class="product-card">
+                                <div class="product-image">
+                                    <div class="back-image" style="background-image: url('{$product->getMainImageThumbnail()}')"></div>
+                                    <div class="fore-image"></div>
+                                </div>
+                                <div class="product-info">
+                                    <div class="product-name">{$product->name}</div>
+                                    <div class="product-rating">
+                                        <div class="star-rank">
+                                            <div class="star-background">
+                                                <svg height="15" width="87">
+                                                    <g fill="#ccc" class="star-background">
+                                                        <path d="M7 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                        <path d="M25 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                        <path d="M43 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                        <path d="M61 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                        <path d="M79 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                    </g>
+                                                </svg>
+                                            </div>
+                                            <div class="star-foregound" style="width: {$starratingpoint}%">
+                                                <svg height="15" width="87">
+                                                    <g fill="#44b27c" class="star-background">
+                                                        <path d="M7 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                        <path d="M25 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                        <path d="M43 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                        <path d="M61 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                        <path d="M79 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                    </g>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="product-price">{$product->getPriceString()}</div>
+                                    <div class="product-warehouse">{$product->ward->district->province->name}</div>
+                                </div>
+                            </div>
+                        </a>
+PRODUCT;
+                    }
+                ?>
+            </div>
+        </div>
+    </div>
+</div>

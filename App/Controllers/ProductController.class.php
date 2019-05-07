@@ -47,7 +47,7 @@
             }
         }
         
-        public function ListBySubCategory($id){
+        public function ListBySubCategory($id, $page = 1){
             try{
                 if(!isset($id) || !is_numeric($id)){
                     throw new \Exception('Trang này không tìm thấy');
@@ -57,7 +57,15 @@
                 $subcategory = new SubCategoryModel($database);
                 $subcategory->id = (int)$id;
                 if($subcategory->loadData()){
+                    $subcategory->loadMainCategory();
                     $this->View->Data->subcategory = $subcategory;
+                    $subcategory->loadProducts(($page - 1) * 10, 10);
+                    foreach($subcategory->products as $product){
+                        $product->loadMainImage();
+                        $product->loadWard();
+                        $product->ward->loadDistrict();
+                        $product->ward->district->loadProvince();
+                    }
                     return $this->View->RenderTemplate();
                 }else{
                     throw new \Exception('Trang này không tìm thấy');

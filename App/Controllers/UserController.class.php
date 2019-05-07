@@ -338,4 +338,50 @@
                 return $this->View->RenderTemplate();
             }
         }
+        
+        public function Cart(){
+            try{
+                $database = new Database();
+                $user = (new Authenticate($database))->getUser();
+                
+                $this->View->Data->cart = [];
+                
+                $cartgroup = [];
+                
+                if($user->loadCartItems()){
+                    foreach($user->cartitems as $cartitem){
+                        $cartitem->loadProduct();
+                        $cartitem->product->loadMainImage();
+                        
+                        if(!isset($cartgroup[$cartitem->product->shop_id])){
+                            $cartgroup[$cartitem->product->shop_id] = new \stdClass();
+                            $cartitem->product->loadShop();
+                            $cartgroup[$cartitem->product->shop_id]->shop = $cartitem->product->shop;
+                            $cartitem->product->shop->loadWard();
+                            $cartitem->product->shop->ward->loadDistrict();
+                            $cartitem->product->shop->ward->district->loadProvince();
+                            $cartgroup[$cartitem->product->shop_id]->items = [];
+                        }
+                        
+                        $item = new \stdClass();
+                        $item->product = $cartitem->product;
+                        $item->quantity = $cartitem->quantity;
+                        $item->subtotal = $item->product->getSalePrice() * $item->quantity;
+                        
+                        $cartgroup[$cartitem->product->shop_id]->items[] = $item;
+                    }
+                }
+                
+                foreach($cartgroup as $group){
+                    $this->View->Data->cart[] = $group;
+                }
+                
+                return $this->View->RenderTemplate();
+            } catch (DBException $ex) {
+                $this->View->Data->ErrorMessage = 'DB_ERROR';
+                return $this->View->RenderTemplate('_error');
+            } catch (AuthenticateException $e){
+                return $this->redirectToAction('Login', 'User', ['backurl' => '/User/Cart']);
+            }
+        }
     }

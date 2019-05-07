@@ -7,12 +7,13 @@ div#toast-wrapper{
     z-index: 1001;
 }
 div#toast-wrapper div.toast-box{
-    margin: 10px 30px;
+    margin: 10px 10px;
     padding: 15px 30px;
+    width: 400px;
     color: #fff;
-    font-size: 12pt;
-    font-family: Tahoma, sans-serif;
-    border-radius: 3px;
+    font-family: segoe ui;
+    font-weight: 400;
+    border-radius: 10000px;
     clear: both;
     float: right;
     transition-property: all;
@@ -21,16 +22,15 @@ div#toast-wrapper div.toast-box{
     box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.3);
 }
 div#toast-wrapper div.success{
-    border: 1px solid #7eb62e;
-    background-color: #7eb62e;
+    background-image: linear-gradient(90deg, #9cdc78, #7edca5);
 }
 div#toast-wrapper div.error{
-    border: 1px solid #f64b2f;
     background-color: #f64b2f;
+    background-image: linear-gradient(90deg, #ff8e9e, #ffba9e);
 }
 div#toast-wrapper div.warning{
-    border: 1px solid #f6ca2f;
     background-color: #f6ca2f;
+    background-image: linear-gradient(90deg, #f6ca2f, #ffeaa9);
 }
 .fadeout{
     opacity: 0 !important;
