@@ -2,11 +2,20 @@
     namespace App\Models;
     use Core\Model;
     
+    use Library\Database\DBNumber;
+    use Library\Database\DBString;
+    
     class OrderModel extends Model{
-        #Trang thai don hang
-        const NGUOI_MUA_DANG_THANH_TOAN = 1, NGUOI_MUA_THANH_TOAN_THAT_BAI = 2, CHO_NGUOI_BAN_XAC_NHAN = 3, HUY_DON_HANG = 4, KHONG_CON_HANG = 5, HUY_DO_HE_THONG = 6, DANG_GIAO = 7, GIAO_THAT_BAI = 8, DA_GIAO =9, HOAN_TAT = 10, CHO_LAY_HANG = 11, HUY_DO_KHONG_LAY_DUOC_HANG = 12;
+        const PAID = 1, UNPAID = 0;
+        const CODPAY = 1, ONEPAYPAY = 2;
+        const GHNTRANSPORTER = 1, GHTKTRANSPORTER = 2;
         
-        public $id, $shop_id, $client_id, $status, $note, $created_time, $total_price, $ship_fee, $paid, $paycomplete, $clientname, $clientphone, $clientaddress, $clientwardname, $clientdistrictname, $clientprovincename, $shopname, $shopphone, $shopaddress, $shopwardname, $shopdistrictname, $shopprovincename, $paymenttype_id, $transporter_id;
+        const PAYCOMPLETE = 1, PAYINCOMPLETE = 0;
+        
+        #Trang thai don hang
+        const NGUOI_MUA_DANG_THANH_TOAN = 1, NGUOI_MUA_THANH_TOAN_THAT_BAI = 2, CHO_NGUOI_BAN_XAC_NHAN = 3, HUY_DON_HANG = 4, KHONG_CON_HANG = 5, HUY_DO_HE_THONG = 6, DANG_GIAO = 7, GIAO_THAT_BAI = 8, DA_GIAO =9, HOAN_TAT = 10, CHO_LAY_HANG = 11, HUY_DO_KHONG_LAY_DUOC_HANG = 12, DON_HANG_DUOC_TAO = 13;
+        
+        public $id, $ordercode, $shop_id, $client_id, $status, $note, $created_time, $total_price, $ship_fee, $paid, $paycomplete, $clientname, $clientphone, $clientaddress, $clientwardname, $clientdistrictname, $clientprovincename, $shopname, $shopphone, $shopaddress, $shopwardname, $shopdistrictname, $shopprovincename, $paymenttype_id, $transporter_id;
         
         #objects
         public $shop, $client, $paymenttype, $transporter;
@@ -14,8 +23,30 @@
         #contains objects
         public $orderitems, $orderimages, $orderlogs, $assessments, $onepayorder, $ghntransporter;
         
+        
+        public function checkNote(){
+            if(!is_string($this->note) || mb_strlen($this->note) > 1024){
+                $this->addErrorMessage('note', 'Ghi chú không hợp lệ, phải có chiều dài tối đa 1024 ký tự');
+            }
+            return $this;
+        }
+        
         public function loadData(){
             $rows = $this->database->selectall()->from(DB_TABLE_ORDER)->where('id=' . (int)$this->id)->execute();
+            if(count($rows)){
+                $row = $rows[0];
+                #lazy load data via key and value map
+                foreach($row as $col => $value){
+                    $this->$col = $value;
+                }
+                return true;
+            }else{
+                return false;
+            }
+        }
+        
+        public function loadFromOrderCode(){
+            $rows = $this->database->selectall()->from(DB_TABLE_ORDER)->where('ordercode=' . (int)$this->ordercode)->execute();
             if(count($rows)){
                 $row = $rows[0];
                 #lazy load data via key and value map
@@ -47,6 +78,46 @@
             return $this->paymenttype->loadData();
         }
         
+        public function loadTransporter(){
+            $this->transporter = new TransporterModel($this->database);
+            $this->transporter->id = $this->transporter_id;
+            
+            return $this->transporter->loadData();
+        }
+        
+        public function loadGHNTransporter(){
+            $this->ghntransporter = new GHNTransporterModel($this->database);
+            $this->ghntransporter->order_id = $this->id;
+            
+            return $this->ghntransporter->loadFromOrderId();
+        }
+        
+        
+        public function loadOnePayOrder(){
+            $this->onepayorder = new OnePayOrderModel($this->database);
+            $this->onepayorder->order_id = $this->id;
+            
+            return $this->onepayorder->loadFromOrderId();
+        }
+        
+        public function loadOrderLogs(){
+            $this->orderlogs = [];
+            $rows = $this->database->select('id')->from(DB_TABLE_ORDERLOG)->where('order_id=' . (int)$this->id)->orderby('created_time asc, id asc')->execute();
+            
+            foreach($rows as $row){
+                $orderlog = new OrderLogModel($database);
+                $orderlog->id = $row->id;
+                
+                if(!$orderlog->loadData()){
+                    return false;
+                }
+                
+                $this->orderlogs[] = $orderlog;
+            }
+            
+            return true;
+        }
+        
         public function getStatusString(){
             $name = [
                 self::NGUOI_MUA_DANG_THANH_TOAN => 'Người mua đang thanh toán',
@@ -60,45 +131,52 @@
                 self::DA_GIAO => 'Đã giao',
                 self::HOAN_TAT => 'Hoàn tất',
                 self::CHO_LAY_HANG => 'Chờ lấy hàng',
-                self::HUY_DO_KHONG_LAY_DUOC_HANG => 'Hủy do không lấy được hàng'
+                self::HUY_DO_KHONG_LAY_DUOC_HANG => 'Hủy do không lấy được hàng',
+                self::DON_HANG_DUOC_TAO => 'Đơn hàng được tạo'
             ];
             
             return isset($name[$this->status]) ? $name[$this->status] : 'trạng thái không xác định';
-            
-            
-//            switch($this->status){
-//                case self::NGUOI_MUA_DANG_THANH_TOAN:
-//                    return "Người mua đang thanh toán";
-//                case self::NGUOI_MUA_THANH_TOAN_THAT_BAI:
-//                    return "Người mua chưa thanh toán";
-//                case self::CHO_NGUOI_BAN_XAC_NHAN:
-//                    return "Chờ người bán xác nhận";
-//                case self::HUY_DON_HANG:
-//                    return "Hủy đơn hàng";
-//                case self::KHONG_CON_HANG:
-//                    return "Không còn hàng";
-//                case self::HUY_DO_HE_THONG:
-//                    return "Hủy do hệ thống";
-//                case self::DANG_GIAO:
-//                    return "Đang giao";
-//                case self::GIAO_THAT_BAI:
-//                    return "Giao hàng thất bại";
-//                case self::DA_GIAO:
-//                    return "Đã giao";
-//                case self::HOAN_TAT:
-//                    return "Hoàn tất";
-//                case self::CHO_LAY_HANG:
-//                    return "Chờ lấy hàng";
-//                case self::HUY_DO_KHONG_LAY_DUOC_HANG:
-//                    return "Hủy do không lấy được hàng";
-//                default:
-//                    return "Trạng thái không xác định";
-//            }
         }
         
-        public function getOrderLink(){
-            return "";
+        public function getUserOrderLink(){
+            return "/User/Order/" . $this->id;
         }
         
+        public function add(){
+            $this->database->insert(DB_TABLE_ORDER, [
+                'ordercode' => new DBString($this->ordercode),
+                'shop_id' => new DBNumber($this->shop_id),
+                'client_id' => new DBNumber($this->client_id),
+                'status' => new DBNumber($this->status),
+                'note' => new DBString($this->database->escape($this->note)),
+                'total_price' => new DBNumber($this->total_price),
+                'ship_fee' => new DBNumber($this->ship_fee),
+                'paid' => new DBNumber($this->paid),
+                'paycomplete' => new DBNumber($this->paycomplete),
+                'clientname' => new DBString($this->clientname),
+                'clientphone' => new DBString($this->clientphone),
+                'clientaddress' => new DBString($this->clientaddress),
+                'clientwardname' => new DBString($this->clientwardname),
+                'clientdistrictname' => new DBString($this->clientdistrictname),
+                'clientprovincename' => new DBString($this->clientprovincename),
+                'shopname' => new DBString($this->shopname),
+                'shopphone' => new DBString($this->shopphone),
+                'shopaddress' => new DBString($this->shopaddress),
+                'shopwardname' => new DBString($this->shopwardname),
+                'shopdistrictname' => new DBString($this->shopdistrictname),
+                'shopprovincename' => new DBString($this->shopprovincename),
+                'paymenttype_id' => new DBNumber($this->paymenttype_id),
+                'transporter_id' => new DBNumber($this->transporter_id)
+            ]);
+            
+            return true;
+        }
         
+        public function updateStatus($status){
+            $this->database->update(DB_TABLE_ORDER, [
+                'status' => new DBNumber($status)
+            ], 'id=' . (int)$this->id);
+            
+            return true;
+        }
     }

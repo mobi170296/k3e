@@ -27,6 +27,21 @@
             }
         }
         
+        public function loadFromOrderId(){
+            $rows = $this->database->selectall()->from(DB_TABLE_ONEPAYORDER)->where('order_id=' . (int)$this->id)->execute();
+            
+            if(count($rows)){
+                $row = $rows[0];
+                
+                foreach($row as $key => $value){
+                    $this->$key = $value;
+                }
+                return true;
+            }else{
+                return false;
+            }
+        }
+        
         public function loadOrder(){
             $this->order = new OrderModel($this->database);
             $this->order->id = $this->order_id;

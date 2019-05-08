@@ -384,4 +384,22 @@
                 return $this->redirectToAction('Login', 'User', ['backurl' => '/User/Cart']);
             }
         }
+        
+        public function Checkout($shop_id){
+            try{
+                if(!is_numeric($shop_id)){
+                    return $this->redirectToAction('Index', 'Home');
+                }
+                
+                $database = new Database;
+                $user = (new Authenticate($database))->getUser();
+                
+                
+            } catch (DBException $ex) {
+                $this->View->Data->ErrorMessage = 'DB_ERROR';
+                return $this->View->RenderTemplate('_error');
+            } catch (AuthenticateException $e){
+                return $this->redirectToAction('Login', 'User', ['backurl' => '/User/Checkout']);
+            }
+        }
     }

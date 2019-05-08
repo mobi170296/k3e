@@ -53,8 +53,19 @@
         
         public function update($cartitem){
             $this->database->update(DB_TABLE_CARTITEM, [
-                'quantity' => $cartitem->quantity
+                'quantity' => new DBNumber($cartitem->quantity)
             ], 'client_id=' . (int)$this->client_id . ' and product_id=' . (int)$this->product_id);
+            $this->quantity = $cartitem->quantity;
+            
+            return true;
+        }
+        
+        public function updateQuantity($newquantity){
+            $this->database->update(DB_TABLE_CARTITEM, [
+                'quantity' => new DBNumber($newquantity)
+            ], 'client_id=' . (int)$this->client_id . ' and product_id=' . (int)$this->product_id);
+            
+            $this->quantity = $newquantity;
             return true;
         }
     }

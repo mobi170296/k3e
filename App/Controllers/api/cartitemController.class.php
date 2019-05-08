@@ -204,7 +204,7 @@
                     $result->header->code = 0;
                     $result->header->message = 'Đã bỏ ' . $cartitem->product->name . ' khỏi giỏ hàng!';
                 }else{
-                    $result->header->code = 1;
+                    $result->header->code = 2;
                     $result->header->message = 'Sản phẩm không tồn tại';
                     $result->header->errors = ['product_id' => 'Sản phẩm không tồn tại'];
                 }
@@ -221,7 +221,69 @@
             return $this->View->RenderJSON($result);
         }
         
-        public function updateQuantity(){
+        public function updatequantity($product_id, $quantity){
+            $result = new \stdClass();
+            $result->header = new \stdClass();
             
+            
+            $quantity = (int)$quantity;
+            
+            if(!is_numeric($product_id) || !is_numeric($quantity) || $quantity <= 0){
+                $result->header->code = 1;
+                $result->header->message = 'invalid';
+                $result->header->errors = ['product_id' => 'invalid'];
+                
+                return $this->View->RenderJSON($result);
+            }
+            
+            try{
+                $database = new Database();
+                $user = (new Authenticate($database))->getUser();
+                
+                $cartitem = new CartItemModel($database);
+                $cartitem->product_id = $product_id;
+                $cartitem->client_id = $user->id;
+                
+                if($cartitem->loadData()){
+                    $cartitem->loadProduct();
+                    
+                    $result->body = new \stdClass();
+                    $result->body->data = new \stdClass();
+                    
+                    if($cartitem->product->getAvailableQuantity() == 0){
+                        $result->header->code = 3;
+                        $result->header->message = 'Sản phẩm đã hết hàng';
+                        $result->body->data->quantity = 0;
+                        $result->body->data->price = (int)$cartitem->product->getSalePrice();
+                    }else{
+                        if($quantity > $cartitem->product->getAvailableQuantity()){
+                            $quantity = $cartitem->product->getAvailableQuantity();
+                            $cartitem->updateQuantity($quantity);
+                            $result->header->code = 4;
+                            $result->header->message = 'Số lượng bạn đã chọn vượt quá số lượng cửa hàng cung ứng';
+                        }else{
+                            $cartitem->updateQuantity($quantity);
+                            $result->header->code = 0;
+                            $result->header->message = 'Đã cập nhật giỏ hàng thành công';
+                        }
+                        $result->body->data->quantity = (int)$quantity;
+                        $result->body->data->price = (int)$cartitem->product->getSalePrice();
+                    }
+                    
+                }else{
+                    $result->header->code = 2;
+                    $result->header->message = 'Sản phẩm không tồn tại';
+                }
+            } catch (DBException $ex) {
+                $result->header->code = 1;
+                $result->header->message = 'DBERR';
+                $result->header->errors = ['database' => 'ERROR'];
+            } catch (AuthenticateException $e){
+                $result->header->code = 1;
+                $result->header->message = 'invalid user';
+                $result->header->errors = ['authenticate' => 'invalid'];
+            }
+            
+            return $this->View->RenderJSON($result);
         }
     }

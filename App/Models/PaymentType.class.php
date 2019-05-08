@@ -3,6 +3,7 @@
     use Core\Model;
     
     class PaymentTypeModel extends Model{
+        const COD = 1, ONEPAY = 2;
         public $id, $code, $name;
         
         public function loadData(){

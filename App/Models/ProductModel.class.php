@@ -303,6 +303,10 @@
             return rand() % 11 / 10;
         }
         
+        public function getAvailableQuantity(){
+            return $this->quantity;
+        }
+        
         public function getSoldQuantity(){
             $rows = $this->database->select('count(quantity) as quantity')->from(DB_TABLE_ORDERITEM)->where('product_id=' . (int)$this->id)->execute();
             $row = $rows[0];

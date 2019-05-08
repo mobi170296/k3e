@@ -19,6 +19,8 @@
         public $imagemaps = [];
         public $avatar;
         
+        public $defaultdeliveryaddress;
+        
         public function checkValidForUserName(){
             if(isset($this->username) && is_string($this->username)){
                 if(!preg_match('/^[A-z0-9]{6,32}$/', $this->username)){
@@ -227,6 +229,23 @@
         public function getDeliveryAddressesTotal(){
             $rows = $this->database->select('count(*) total')->from(DB_TABLE_DELIVERYADDRESS)->where('user_id=' . (int)$this->id)->execute();
             return $rows[0]->total;
+        }
+        
+        public function loadDefaultDeliveryAddress(){
+            $rows = $this->database->select('*')->from(DB_TABLE_DELIVERYADDRESS)->where('user_id=' . (int)$this->id . ' and deliveryaddress.def=' . DeliveryAddressModel::DEF)->execute();
+            if(count($rows)){
+                $row = $rows[0];
+                $d = new DeliveryAddressModel($this->database);
+                $d->id = $row->id;
+                $d->loadData();
+                $d->loadWard();
+                $d->ward->loadDistrict();
+                $d->ward->district->loadProvince();
+                $this->defaultdeliveryaddress = $d;
+                return true;
+            }else{
+                return false;
+            }
         }
         
         public function loadAvatar(){

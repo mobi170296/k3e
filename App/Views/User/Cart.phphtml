@@ -8,7 +8,6 @@
         width: 1200px;
         margin: 0px auto;
     }
-    
     .cart-wrapper .cart-header{
         padding: 20px 30px;
         background-color: #fff;
@@ -18,7 +17,6 @@
         font-family: segoe ui;
         border-radius: 0px 0px 5px 5px;
     }
-    
     .cart-wrapper .cart-body{
         
     }
@@ -30,6 +28,7 @@
         background-color: #fff;
         box-sizing: border-box;
         border-radius: 7px;
+        box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.1);
     }
     .cart-wrapper .cart-item-list{
         display: flex;
@@ -44,7 +43,7 @@
         flex-shrink: 0;
         width: 300px;
         background-color: #fff;
-        border-left: 1px solid #ccc;
+        border-left: 5px solid #ccc;
         padding: 0px 20px;
     }
     .cart-wrapper .product-item{
@@ -67,7 +66,6 @@
     .cart-wrapper .product-info{
         width: 100%;
     }
-    
     .cart-wrapper .subtotal{
         width: 10em;
     }
@@ -76,20 +74,22 @@
         font-family: arial;
         color: #000;
     }
-    
     .cart-wrapper .product-price{
         font-family: arial;
         font-size: 1.2em;
+        font-weight: bold;
         color: #44b27c;
     }
     .cart-wrapper .subtotal{
         font-family: arial;
         font-size: 1.2em;
+        font-weight: bold;
         color: #44b27c;
     }
     .cart-wrapper .total-price{
         font-family: arial;
-        font-size: 1.5em;
+        font-size: 1.4em;
+        font-weight: bold;
         color: red;
     }
     .cart-wrapper .shop-name{
@@ -164,9 +164,12 @@
                 echo '<div class="cart-item-list">';
                 foreach($cartgroup->items as $item){
                     #dieu chinh mot so thong so truoc khi render
-                    $itemprice = number_format($item->product->getSalePrice());
-                    $itemsubtotal = number_format($item->product->getSalePrice() * $item->quantity);
+                    $itemprice = $item->product->getSalePrice();
+                    $itempricestring = number_format($itemprice);
+                    $itemsubtotal = ($item->product->getSalePrice() * $item->quantity);
+                    $itemsubtotalstring = number_format($itemsubtotal);
                     $total += $item->product->getSalePrice() * $item->quantity;
+                    $totalstring = number_format($total);
                     echo <<<ROW
                         <div class="product-item">
                             <div class="product-image" style="background-image: url('{$item->product->getMainImageThumbnail()}')">
@@ -175,16 +178,16 @@
                             <div class="cartitem-info">
                                 <div class="product-info">
                                     <div class="product-name"><a href="{$item->product->getProductLink()}" target="_blank">{$item->product->name}</a></div>
-                                    <div class="product-price">{$itemprice}đ</div>
+                                    <div class="product-price" data-value="{$itemprice}" data-control-type="product-price">{$itempricestring}đ</div>
                                 </div>
                                 <div class="subtotal-info">
                                     <div>
                                         <div data-widget-type="qtyspinner">
-                                            <span class="minus">-</span><input class="qtybox" type="text" data-value="{$item->quantity}" data-max="12" data-min="1"/><span class="plus">+</span>
+                                            <span class="minus">-</span><input data-control-type="cart-item-quantity" class="qtybox" type="text" data-value="{$item->quantity}" data-product-id={$item->product->id} data-max="{$item->product->getAvailableQuantity()}" data-min="1"/><span class="plus">+</span>
                                         </div>
                                     </div>
-                                    <div class="subtotal">{$itemsubtotal}đ</div>
-                                    <div class="scart-product-bin" type="button" data-control-type="cart-item-del"></div>
+                                    <div class="subtotal" data-control-type="subtotal" data-value={$itemsubtotal}>{$itemsubtotalstring}đ</div>
+                                    <div class="scart-product-bin" type="button" data-control-type="cart-item-del" data-product-id="{$item->product->id}"></div>
                                 </div>
                             </div>
                         </div>
@@ -193,13 +196,11 @@ ROW;
                 
                 echo '</div>';
                 
-                $totalstring = number_format($total);
-                
                 echo '<div class="cart-checkout-info">';
                 echo <<<SHOP
                 <div class="orderinfo">
-                    <div class="ordertotal">Tổng: <span class="total-price">{$totalstring}đ</span></div>
-                    <div>Tên cửa hàng: <span class="shop-name">{$cartgroup->shop->name}</span></div>
+                    <div class="ordertotal"><b>Tổng:</b> <span data-control-type="total-price" data-value="{$total}" class="total-price">{$totalstring}đ</span></div>
+                    <div><b>Tên cửa hàng:</b> <span class="shop-name">{$cartgroup->shop->name}</span></div>
                 </div>
                 <div>
                     <a href="/User/Checkout?shop_id={$cartgroup->shop->id}" class="btn-checkout">Tiến hành thanh toán</a>
@@ -215,6 +216,98 @@ SHOP;
 </div>
 
 <script>
+    //module cho cap nhat gio hang
+    !function(){
+        var _refresh_cart = function (){
+            var cartgroup = document.querySelectorAll('.cart-group');
+            for(var i=0; i<cartgroup.length;i++){
+                var total = cartgroup[i].querySelector('[data-control-type="total-price"]');
+                var totalvalue = 0;
+                var items = cartgroup[i].querySelectorAll('.product-item');
+                
+                if(items.length > 0){
+                    for(var j=0; j<items.length; j++){
+                        var productprice = items[j].querySelector('[data-control-type="product-price"]');
+                        var quantity = items[j].querySelector('[data-control-type="cart-item-quantity"]');
+                        var subtotal = items[j].querySelector('[data-control-type="subtotal"]');
+
+                        $(subtotal).data('value', $(productprice).data('value') * $(quantity).val());
+                        $(subtotal).html($COMMON.moneyFormat($(subtotal).data('value'), 3, 0, ',' ,'.') + 'đ');
+                        totalvalue += parseInt($(subtotal).data('value'));
+                    }
+
+                    $(total).data('value', totalvalue);
+                    $(total).html($COMMON.moneyFormat(totalvalue, 3, 0, ',', '.') + 'đ');
+                }else{
+                    cartgroup[i].remove();
+                }
+            }
+        }
+        
+        function _cart_item_del_click(e){
+            var $this = $(this);
+            var product_item = $this.parent('.product-item')[0];
+            $LoadingPopup.show();
+            
+            $.ajax().create().url('/api/cartitem/delete?product_id=' + $this.data('product-id')).success(function(e){
+                var result = JSON.parse(this.response);
+                if(result.header.code === 0 || result.header.code === 2){
+                    $Toast.makeSuccess(result.header.message);
+                    product_item.remove();
+                    App.SCart.load_cart();
+                    _refresh_cart();
+                }else{
+                    $Toast.makeError(result.header.message);
+                }
+                $LoadingPopup.hide();
+            }).error(function(e){
+                $Toast.makeError('Lỗi kết nối');
+                $LoadingPopup.hide();
+            }).get();
+        }
+        
+        function _cart_item_quantity_change(e){
+            var $this = $(this);
+            var $productitem = $this.parent('.product-item');
+            
+            var _productprice = $productitem.$('[data-control-type="product-price"]')[0];
+            var _itemquantity = $productitem.$('[data-control-type="cart-item-quantity"]')[0];
+            
+            $LoadingPopup.show();
+            $.ajax().create().url('/api/cartitem/updatequantity?product_id=' + $this.data('product-id') + '&quantity=' + $this.val()).success(function(e){
+                var result = JSON.parse(this.response);
+                if(result.header.code === 4 || result.header.code === 0){
+                    // cap nhat thanh cong
+                    _itemquantity.value = result.body.data.quantity;
+                    $(_productprice).data('value', result.body.data.price);
+                    $(_productprice).html($COMMON.moneyFormat(result.body.data.price, 3, 0, ',', '.'));
+                    $Toast.makeSuccess(result.header.message);
+                }else if(result.header.code === 3 || result.header.code === 2){
+                    // san pham het hang || khong ton tai
+                    $productitem.remove();
+                    $Toast.makeWarning(result.header.message);
+                }else{
+                    //ngoai le khac
+                    $Toast.makeError(result.header.message);
+                }
+                _refresh_cart();
+                App.SCart.load_cart();
+                $LoadingPopup.hide();
+            }).error(function(e){
+                $Toast.makeError('Lỗi kết nối');
+                $LoadingPopup.hide();
+            }).get();
+        }
+        
+        $('.cart-wrapper [data-control-type="cart-item-quantity"]').on('change', function(e){
+            _cart_item_quantity_change.call(this, e);
+        });
+        
+        $('.cart-wrapper [data-control-type="cart-item-del"]').on('click', function(e){
+            _cart_item_del_click.call(this, e);
+        });
+    }();
+    
     //module quantity spinner
     !function(){
         var _ps = document.querySelectorAll('[data-widget-type="qtyspinner"] .plus');
@@ -223,16 +316,6 @@ SHOP;
         
         function qsi(_box, _minus, _plus){
             _box.value = _box.dataset.value;
-            
-            _box.onkeydown = function(e){
-                !(e.keyCode>=48 && e.keyCode<=57) && !(e.ctrlKey && e.keyCode===65) && !(e.keyCode === 8) && e.preventDefault();
-            }
-//            _box.onchange = function(e){
-//                var v = parseInt(this.value), mxv = parseInt(this.dataset.max), mnv = parseInt(this.dataset.min);
-//                if(this.value.length===0 || v > mxv){
-//                    this.value = 1;
-//                }
-//            }
             function _cs(){
                 var v = parseInt(_box.value), mxv = parseInt(_box.dataset.max), mnv = parseInt(_box.dataset.min);
                 if(v===mxv){
@@ -247,12 +330,23 @@ SHOP;
                 }
             }
             _cs();
+            _box.onkeydown = function(e){
+                !(e.keyCode>=48 && e.keyCode<=57) && !(e.keyCode>=96 && e.keyCode<=105) && !(e.ctrlKey && e.keyCode===65) && !(e.keyCode === 8) && e.preventDefault();
+            }
+            _box.addEventListener('change',function(e){
+                var v = parseInt(this.value), mxv = parseInt(this.dataset.max), mnv = parseInt(this.dataset.min);
+                if(this.value.length===0 || v > mxv){
+                    this.value = 1;
+                }
+                _cs();
+            });
+            
             _plus.onclick = function(e){
                 var v = parseInt(_box.value), mxv = parseInt(_box.dataset.max);
 
                 if(v < mxv){
                     _box.value = ++v;
-                    _box.onchange && _box.onchange();
+                    _box.dispatchEvent(new Event('change'));
                 }
                 _cs();
             }
@@ -262,6 +356,7 @@ SHOP;
                 if(v > mnv){
                     _box.value = --v;
                     _box.onchange && _box.onchange();
+                    _box.dispatchEvent(new Event('change'));
                 }
                 _cs();
             }

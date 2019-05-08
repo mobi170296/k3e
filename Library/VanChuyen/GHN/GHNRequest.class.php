@@ -6,7 +6,6 @@
     class GHNRequest{
         const token = 'TokenStaging';
         const email = 'linh17021996@gmail.com';
-        const password = 'Mg01669334569@';
         
         public $clientId, $clientName, $token;
         public $request;
