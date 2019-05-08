@@ -13,6 +13,13 @@
     use App\Models\DistrictList;
     use App\Models\WardList;
     
+    use Library\VanChuyen\GHN\GHNRequest;
+    use Library\VanChuyen\GHN\GHNServiceParameter;
+    use Library\VanChuyen\GHN\GHNServiceResult;
+    use Library\VanChuyen\GHN\GHNFeeParameter;
+    use Library\VanChuyen\GHN\GHNFeeResult;
+    use Library\VanChuyen\GHN\GHNException;
+    
     class UserController extends Controller{
         public function Index(){
             return $this->redirectToAction('Info', 'User');
@@ -163,7 +170,7 @@
                 return $this->redirectToAction('Index', 'Home');
             }
         }
-        public function Orders(){
+        public function Order(){
             
         }
         public function DeliveryAddresses(){
@@ -394,12 +401,81 @@
                 $database = new Database;
                 $user = (new Authenticate($database))->getUser();
                 
+                $user->loadCartItems();
                 
+                $items = [];
+                
+                if(count($user->cartitems)){
+                    //load product vao cartitem de check shop
+                    foreach($user->cartitems as $cartitem){
+                        $cartitem->loadProduct();
+                        $cartitem->product->loadMainImage();
+                        if($cartitem->product->shop_id == $shop_id){
+                            $items[] = $cartitem;
+                        }
+                    }
+                    
+                    #ton tai items o cua hang duoc chi dinh thanh toan
+                    if(count($items)){
+                        //load thong tin van chuyen cua shop
+                        $items[0]->product->loadShop();
+                        $shop = $items[0]->product->shop;
+                        $items[0]->product->shop->loadWard();
+                        $items[0]->product->shop->ward->loadDistrict();
+                        
+                        //ton tai san pham thuoc ve cua hang bay gio kiem tra tinh hop le cua tung san pham
+                        //load deliveryaddress cua user
+                        //tinh phi van chuyen cho don hang
+                        //hien thi thong tin thanh toan cho don hang
+                        $user->loadDeliveryAddresses();
+                        $user->loadDefaultDeliveryAddress();
+                        
+                        #tinh tong weight, width, length, height
+                        #chi phi van chuyen
+                        $totalweight = $totalvolume = 0;
+                        foreach($items as $item){
+                            $totalweight += $item->product->weight * $item->quantity;
+                            $totalvolume += $item->product->width * $item->product->height * $item->product->length * $item->quantity;
+                        }
+                        
+                        $avglength = (int)\pow($totalvolume, 1/3);
+                        
+                        $ghn = new GHNRequest();
+                        
+                        $ghnservices = $ghn->getServices(new GHNServiceParameter((int)$shop->ward->district->ghn_district_id, (int)$user->defaultdeliveryaddress->ward->district->ghn_district_id, $totalweight, $avglength, $avglength, $avglength));
+                        
+                        $ghnfee = null;
+                        
+                        if(count($ghnservices)){
+                            $ghnfee = $ghn->calculateFee(new GHNFeeParameter((int)$shop->ward->district->ghn_district_id, (int)$user->defaultdeliveryaddress->ward->district->ghn_district_id, $ghnservices[0]->ServiceID, $totalweight, $avglength, $avglength, $avglength, 0));
+                        }
+                        
+                        #gan du lieu render view
+                        $this->View->Data->ghnservices = $ghnservices;
+                        $this->View->Data->ghnfee = $ghnfee;
+                        $this->View->Data->shop = $shop;
+                        $this->View->Data->deliveryaddresses = $user->deliveryaddresses;
+                        $this->View->Data->orderitems = $items;
+                        
+                        return $this->View->RenderTemplate();
+                    }else{
+                        $this->View->Data->ErrorMessage = 'Trong giỏ hàng không có mặt hàng nào của cửa hàng này';
+                        return $this->View->RenderTemplate('_error');
+                    }
+                }else{
+                    //khong co bat ky san pham nao trong gio hang
+                    $this->View->Data->ErrorMessage = 'Trang này không tồn tại';
+                    return $this->View->RenderTemplate('_error');
+                }
             } catch (DBException $ex) {
                 $this->View->Data->ErrorMessage = 'DB_ERROR';
                 return $this->View->RenderTemplate('_error');
             } catch (AuthenticateException $e){
                 return $this->redirectToAction('Login', 'User', ['backurl' => '/User/Checkout']);
             }
+        }
+        
+        public function CheckoutResult(){
+            return $this->View->RenderContent('OK');
         }
     }

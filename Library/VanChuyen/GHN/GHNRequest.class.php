@@ -71,8 +71,52 @@
                 
                 return $arrayresult;
             } catch (ClientRequestException $ex) {
-                throw GHNException($ex->getMessage(), $ex->getCode());
+                throw new GHNException($ex->getMessage(), $ex->getCode());
             }
+        }
+        
+        public function getMinService(GHNServiceParameter $param){
+            $services = $this->getServices($param);
+            
+            $minservice = null;
+            
+            if(count($services)){
+                $minservice = $services[0];
+                
+                foreach($services as $service){
+                    if($service->ServiceFee < $minservice->ServiceFee){
+                        $minservice = $service;
+                    }
+                }
+                
+                return $minservice;
+            }else{
+                return null;
+            }
+        }
+        
+        public function hasServiceId(GHNServiceParameter $param, $serviceid){
+            $services = $this->getServices($param);
+            
+            foreach($services as $service){
+                if($service->ServiceID == $serviceid){
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+        
+        public function getService(GHNServiceParameter $param, $serviceid){
+            $services = $this->getServices($param);
+            
+            foreach($services as $service){
+                if($service->ServiceID == $serviceid){
+                    return $service;
+                }
+            }
+            
+            return null;
         }
         
         public function calculateFee(GHNFeeParameter $feeparameter){

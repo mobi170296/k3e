@@ -1,0 +1,404 @@
+<?php
+    use Library\Database\DBDateTime;
+    use App\Models\PaymentTypeModel;
+    
+    $this->Data->Title = 'Thanh toán';
+    $shop = $this->Data->shop;
+    $deliveryaddresses = $this->Data->deliveryaddresses;
+    $orderitems = $this->Data->orderitems;
+    $ghnservices = $this->Data->ghnservices;
+    $ghnfee = $this->Data->ghnfee;
+    $totalprice = 0;
+    $totalcheckout = $ghnfee == null ? 0 : $ghnfee->CalculatedFee;;
+?>
+
+<style>
+    
+    .checkout-wrapper{
+        width: 1200px;
+        margin: 0px auto;
+    }
+    .checkout-wrapper .checkout-header{
+        padding: 20px 30px;
+        background-color: #fff;
+        margin-bottom: 10px;
+        font-size: 1.3em;
+        font-weight: lighter;
+        font-family: segoe ui;
+        border-radius: 0px 0px 5px 5px;
+    }
+    .checkout-wrapper .checkout-body{
+        display: flex;
+    }
+    
+    .checkout-wrapper .checkout-group-box{
+        flex-basis: 100%;
+        flex-direction: column;
+        background-color: #fff;
+        box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.1);
+        overflow: hidden;
+        border-radius: 3px;
+        margin-bottom: 10px;
+    }
+    
+    .checkout-wrapper .checkout-group-box .checkout-group-header{
+        background-image: linear-gradient(90deg, #c2d3e6, #fff 90%);
+    }
+    
+    .checkout-wrapper .checkout-group-title{
+        padding: 10px 20px;
+        color: #000;
+        font-family: segoe ui;
+        font-weight: 500;
+    }
+    
+    .checkout-wrapper .checkout-group-box .checkout-group-body{
+        padding: 10px;
+        font-family: arial;
+    }
+    
+    .checkout-wrapper .checkout-left{
+        flex-basis: 800px;
+        flex-shrink: 0;
+        padding-right: 10px;
+    }
+    .checkout-wrapper .checkout-right{
+        flex-basis: 100%;
+    }
+    .checkout-wrapper textarea[name="note"]{
+        width: 100%;
+        resize: vertical;
+        box-sizing: border-box;
+    }
+    .checkout-wrapper .btn-checkout{
+        width: 100%;
+        box-sizing: border-box;
+        padding: 10px 0;
+        text-align: center;
+        border: 1px solid #44b27c;
+        background-color: #44b27c;
+        color: #fff;
+        font-weight: lighter;
+        font-size: 1.2em;
+        font-family: segoe ui;
+        margin: 20px 0px 0px;
+        border-radius: 3px;
+    }
+    .checkout-wrapper .total-price{
+        display: flex;
+        justify-content: space-between;
+    }
+    .checkout-wrapper .total-price .total-price-label{
+        
+    }
+    .checkout-wrapper .total-price .total-price-string{
+        flex-shrink: 0;
+        flex-basis: 7em;
+        color: red;
+        font-weight: bold;
+        text-align: right;
+    }
+    .checkout-wrapper .ship-fee{
+        display: flex;
+        justify-content: space-between;
+    }
+    .checkout-wrapper .ship-fee-label{
+        
+    }
+    .checkout-wrapper .ship-fee-string{
+        flex-shrink: 0;
+        flex-basis: 7em;
+        color: red;
+        font-weight: bold;
+        text-align: right;
+    }
+    .checkout-wrapper .orderitem{
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid #eee;
+        margin-bottom: 10px;
+    }
+    .checkout-wrapper .orderitems .orderitem-info{
+        font-size: 0.79em;
+    }
+    .checkout-wrapper .orderitems .orderitem-price{
+        flex-shrink: 0;
+        flex-basis: 7em;
+        color: red;
+        font-weight: bold;
+        text-align: right;
+    }
+    .checkout-wrapper .checkout-total{
+        display: flex;
+        justify-content: space-between;
+    }
+    .checkout-wrapper .checkout-total-label{
+        
+    }
+    .checkout-wrapper .checkout-total-string{
+        flex-shrink: 0;
+        flex-basis: 7em;
+        color: red;
+        font-weight: bold;
+        text-align: right;
+    }
+</style>
+<form>
+<div class="checkout-wrapper">
+    <div class="checkout-header">Thanh toán đơn hàng</div>
+    <div class="checkout-body">
+        <div class="checkout-left">
+            <div class="message-box error u-hidden">
+                Đơn hàng đã có sản phẩm không đủ số lượng vui lòng kiểm tra lại
+            </div>
+            <div class="checkout-group-box">
+                <div class="checkout-group-header">
+                    <div class="checkout-group-title">Địa chỉ vận chuyển</div>
+                </div>
+                <div class="checkout-group-body">
+                    <div class="checkout-group-content">
+                        <?php
+                            foreach($deliveryaddresses as $deliveryaddress){
+                                $default = $deliveryaddress->def ? 'checked' : '';
+                                echo <<<DELIVERYADDRESS
+                                <div><label><input type="radio" name="deliveryaddress_id" value="{$deliveryaddress->id}" {$default} />{$deliveryaddress->lastname} {$deliveryaddress->firstname}, {$deliveryaddress->phone}, {$deliveryaddress->address}, {$deliveryaddress->ward->name}, {$deliveryaddress->ward->district->name}, {$deliveryaddress->ward->district->province->name}</label></div>
+DELIVERYADDRESS;
+                            }
+                        ?>
+                        
+                        <script>
+                            
+                        </script>
+                    </div>
+                </div>
+            </div>
+            <div class="checkout-group-box">
+                <div class="checkout-group-header">
+                    <div class="checkout-group-title">Phương thức vận chuyển</div>
+                </div>
+                <div class="checkout-group-body">
+                    <div data-control-type="servicelist">
+                    <?php
+                        if(count($ghnservices)){
+                            $default = 'checked';
+                            foreach($ghnservices as $service){
+                                $expecteddeliverytime = DBDateTime::parseGHNDateTime($service->ExpectedDeliveryTime)->toLocalDateTime();
+                                echo <<<SERVICE
+                                <div><label><input type="radio" name="ghnservice_id" value="{$service->ServiceID}" {$default}/> {$service->Name} (thời gian dự kiến: {$expecteddeliverytime})</label></div>
+SERVICE;
+                                $default = '';
+                            }
+                        }else{
+                            echo '<div>Không có hình thức vận chuyển phù hợp cho đơn hàng này</div>';
+                        }
+                    ?>
+                    </div>
+                </div>
+            </div>
+            <div class="checkout-group-box">
+                <div class="checkout-group-header">
+                    <div class="checkout-group-title">Hình thức thanh toán</div>
+                </div>
+                <div class="checkout-group-body">
+                    <div>
+                        <label><input type="radio" name="paymenttype_id" value="<?php echo PaymentTypeModel::COD; ?>" checked=""/> Thanh toán khi nhận hàng (CoD)</label>
+                    </div>
+                    <div>
+                        <label><input type="radio" name="paymenttype_id" value="<?php echo PaymentTypeModel::ONEPAY; ?>"/> Thanh toán trực tuyến qua cổng OnePay</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="checkout-right">
+            <div class="checkout-group-box">
+                <div class="checkout-group-header">
+                    <div class="checkout-group-title">Thông tin đơn hàng</div>
+                </div>
+                <div class="checkout-group-body">
+                    <div style="margin-bottom: 20px;">Được bán bởi: <?php echo $shop->name; ?><input type="hidden" name="shop_id" value="<?php echo $shop->id; ?>"/></div>
+                    <div class="orderitems">
+                        <?php
+                            foreach($orderitems as $orderitem){
+                                $totalprice += $orderitem->quantity * $orderitem->product->getSalePrice();
+                                $orderitempricestring = \number_format($orderitem->product->getSalePrice());
+                                echo <<<ORDERITEM
+                                <div class="orderitem">
+                                    <input type="hidden" name="product_id[]" value="{$orderitem->product->id}"/>
+                                    <input type="hidden" name="quantity[]" value="{$orderitem->quantity}"/>
+                                    <input type="hidden" name="product_price[]" value="{$orderitem->product->getSalePrice()}"/>
+                                    <div class="orderitem-info">x{$orderitem->quantity} {$orderitem->product->name}</div><div class="orderitem-price">{$orderitempricestring}đ</div>
+                                </div>
+ORDERITEM;
+                            }
+                        ?>
+                    </div>
+                    <div class="total-price">
+                        <div class="total-price-label">Tổng tiền hàng</div><div class="total-price-string" data-value="<?php echo $totalprice; ?>" data-control-type="totalprice"><?php $totalpricestring = \number_format($totalprice); echo $totalpricestring . 'đ'; ?></div>
+                    </div>
+                    <div class="ship-fee">
+                        <div class="ship-fee-label">Phí vận chuyển</div><div class="ship-fee-string" data-value="<?php echo $ghnfee->CalculatedFee; ?>" data-control-type="shipfee"><?php echo \number_format($ghnfee->CalculatedFee) . 'đ'; ?></div>
+                    </div>
+                </div>
+            </div>
+            <div class="checkout-group-box">
+                <div class="checkout-group-header">
+                    <div class="checkout-group-title">Ghi chú</div>
+                </div>
+                <div class="checkout-group-body">
+                    <textarea name="note" placeholder="Ghi chú cho chủ cửa hàng" rows="5"></textarea>
+                </div>
+            </div>
+            <div class="checkout-group-box">
+                <div class="checkout-group-header">
+                    <div class="checkout-group-title">Thanh toán</div>
+                </div>
+                <div class="checkout-group-body">
+                    <div class="checkout-total">
+                        <div class="checkout-total-label">Tổng giá trị</div>
+                        <div class="checkout-total-string" data-control-type="checkouttotal" data-value="<?php $totalcheckout += $totalprice; echo $totalcheckout; ?>"><?php echo \number_format($totalcheckout) . 'đ'; ?></div>
+                    </div>
+                    <div>
+                        <button type="button" class="btn-checkout" data-control-type="btncheckout">Thanh toán</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</form>
+<script type="text/ktpl" id="service-tpl">
+    @if(this.services.length){
+        @{
+            var def = true;
+        @}
+        @for(var i=0; i<this.services.length; i++){
+            <div>
+            <label>
+                <input type="radio" name="ghnservice_id" value="@this.services[i].ServiceID" @(def == true ? 'checked' : '')/> @this.services[i].Name (thời gian dự kiến: @this.services[i].ExpectedDeliveryTime)</label>
+            </div>
+
+            @{
+                def = false;
+            @}
+        @}
+    @}else{
+        <div>Không có phương thức vận chuyển phù hợp</div>
+    @}
+</script>
+<script>
+    //module deliveryaddresschange
+    !function(){
+        var _deliveryaddresses = document.querySelectorAll('.checkout-wrapper input[name="deliveryaddress_id"]');
+        var _ghnservices = document.querySelectorAll('.checkout-wrapper input[name="ghnservice_id"]');
+        var _servicelist = document.querySelector('.checkout-wrapper [data-control-type="servicelist"]');
+        
+        var _checkouttotal = document.querySelector('.checkout-wrapper [data-control-type="checkouttotal"]');
+        var _totalprice = document.querySelector('.checkout-wrapper [data-control-type="totalprice"]');
+        var _shipfee = document.querySelector('.checkout-wrapper [data-control-type="shipfee"]');
+        
+        
+        var _service_ktpl = new IKTemplate(window['service-tpl'].innerHTML);
+        
+        _checkoutbutton = document.querySelector('.checkout-wrapper [data-control-type="btncheckout"]');
+        
+        _checkoutbutton.addEventListener('click', function(e){
+            var form = this.form;
+            var formdata = new FormData(form);
+            $.ajax().create().url('/api/checkout/checkout').success(function(e){
+                
+            }).error(function(e){
+                $Toast.makeError('Lỗi kết nối');
+            }).post(formdata);
+        });
+        
+        
+        function _daddress_change(e){
+            $LoadingPopup.show();
+            var form = _checkoutbutton.form;
+            var formdata = new FormData(form);
+            $.ajax().create().url('/api/checkout/servicelist').success(function(e){
+                var result = JSON.parse(this.response);
+                if(result.header.code === 0){
+                    //cap nhat thanh cong
+                    //cap nhat danh sach service list
+                    _servicelist.innerHTML = '';
+                    _service_ktpl.render(result.body.data, _servicelist);
+                    
+                    //thay doi giao dien gia ban
+                    $(_shipfee).data('value', result.body.data.fee.CalculatedFee);
+                    $(_shipfee).html($COMMON.moneyFormat(result.body.data.fee.CalculatedFee, 3, 0, ',', '.') + 'đ');
+                    $(_checkouttotal).data('value', parseInt($(_shipfee).data('value')) + parseInt($(_totalprice).data('value')));
+                    $(_checkouttotal).html($COMMON.moneyFormat(parseInt($(_checkouttotal).data('value')), 3, 0, ',', '.') + 'đ');
+                    $LoadingPopup.hide();
+                    _flashghnserviceevent();
+                }else if(result.header.code === 2){
+                    //khong dong nhat gio hang
+                    $Toast.makeError(result.header.message);
+                    window.setTimeout(function(e){
+                        document.location.reload();
+                    }, 1000);
+                }else{
+                    $Toast.makeError(result.header.message);
+                    $LoadingPopup.hide();
+                }
+            }).error(function(e){
+                $Toast.makeError('Lỗi kết nối');
+                $LoadingPopup.hide();
+            }).post(formdata);
+        }
+        
+        function _ghnservice_change(e){
+            $LoadingPopup.show();
+            var form = _checkoutbutton.form;
+            var formdata = new FormData(form);
+            $.ajax().create().url('/api/checkout/shipfee').success(function(e){
+                var result = JSON.parse(this.response);
+                if(result.header.code === 0){
+                    //cap nhat thanh cong
+                    //cap nhat danh sach service list
+                    //thay doi giao dien gia ban
+                    $(_shipfee).data('value', result.body.data.fee.CalculatedFee);
+                    $(_shipfee).html($COMMON.moneyFormat(result.body.data.fee.CalculatedFee, 3, 0, ',', '.') + 'đ');
+                    $(_checkouttotal).data('value', parseInt($(_shipfee).data('value')) + parseInt($(_totalprice).data('value')));
+                    $(_checkouttotal).html($COMMON.moneyFormat(parseInt($(_checkouttotal).data('value')), 3, 0, ',', '.') + 'đ');
+                    $LoadingPopup.hide();
+                }else if(result.header.code === 2){
+                    //khong dong nhat gio hang
+                    $Toast.makeError(result.header.message);
+                    window.setTimeout(function(e){
+                        document.location.reload();
+                    }, 1000);
+                }else{
+                    $Toast.makeError(result.header.message);
+                    $LoadingPopup.hide();
+                }
+            }).error(function(e){
+                $Toast.makeError(result.header.message);
+                $LoadingPopup.hide();
+            }).post(formdata);
+        }
+        
+        function _flashghnserviceevent(){
+            _ghnservices = document.querySelectorAll('.checkout-wrapper input[name="ghnservice_id"]');
+            
+            for(var i=0; i<_ghnservices.length; i++){
+                _ghnservices[i].addEventListener('change', function(e){
+                    _ghnservice_change.call(this, e);
+                });
+            }
+        }
+        
+        for(var i=0; i<_deliveryaddresses.length; i++){
+            var _dadd = _deliveryaddresses[i];
+            _dadd.addEventListener('change', function(e){
+                _daddress_change.call(this, e);
+            });
+        }
+
+        for(var i=0; i<_ghnservices.length; i++){
+            _ghnservices[i].addEventListener('change', function(e){
+                _ghnservice_change.call(this, e);
+            });
+        }
+    }();
+</script>

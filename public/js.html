@@ -19,49 +19,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </head>
     <body>
-        <div id="root"></div>
-        <button id="page1">TRANG 1</button>
-        <button id="page2">TRANG 2</button>
-        <button id="page3">TRANG 3</button>
-        <button id="page4">TRANG 4</button>
+        <div id="username_view"></div>
+        <input type="text" name="username" id="username">
         <script>
-            window.onload = function(e){
-                
-            }
-            window.onpopstate = function(e){
-                var path = location.pathname;
-                
-                switch(path){
-                    case '/trang1':
-                        root.innerHTML = 'Đang trình diễn trang 1';
-                        return;
-                    case '/trang2':
-                        root.innerHTML = 'Đang trình diễn trang 2';
-                        return;
-                    case '/trang3':
-                        root.innerHTML = 'Đang trình diễn trang 3';
-                        return;
-                    case '/trang4':
-                        root.innerHTML = 'Đang trình diễn trang 4';
-                        return;
-                }
-            }
-            page1.onclick = function(e){
-                root.innerHTML = 'Đang trình diễn trang 1';
-                history.pushState(null, null, 'trang1');
-            }
-            page2.onclick = function(e){
-                root.innerHTML = 'Đang trình diễn trang 2';
-                history.pushState(null, null, 'trang2');
-            }
-            page3.onclick = function(e){
-                root.innerHTML = 'Đang trình diễn trang 3';
-                history.pushState(null, null, 'trang3');
-            }
-            page4.onclick = function(e){
-                root.innerHTML = 'Đang trình diễn trang 4';
-                history.pushState(null, null, 'trang4');
-            }
+            Object.defineProperty(username, 'datavalue', {
+               set: function(value){
+                   username_view.innerHTML = value;
+                   this.value = value;
+               }
+            });
         </script>
     </body>
 </html>

@@ -27,8 +27,21 @@
             }
         }
         
+        public function loadFromTransactionRef(){
+            $rows = $this->database->selectall()->from(DB_TABLE_ONEPAYORDER)->where('transactionref=' . (new DBString($this->transactionref))->SqlValue())->execute();
+            if(count($rows)){
+                $row = $rows[0];
+                foreach($row as $k => $v){
+                    $this->$k = $v;
+                }
+                return true;
+            }else{
+                return false;
+            }
+        }
+        
         public function loadFromOrderId(){
-            $rows = $this->database->selectall()->from(DB_TABLE_ONEPAYORDER)->where('order_id=' . (int)$this->id)->execute();
+            $rows = $this->database->selectall()->from(DB_TABLE_ONEPAYORDER)->where('order_id=' . (int)$this->order_id)->execute();
             
             if(count($rows)){
                 $row = $rows[0];

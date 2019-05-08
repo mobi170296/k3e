@@ -65,4 +65,8 @@
                 return null;
             }
         }
+        
+        public function toLocalDateTime(){
+            return "{$this->hour}:{$this->minute}:{$this->seconds} {$this->day}/{$this->month}/{$this->year}";
+        }
     }

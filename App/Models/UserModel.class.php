@@ -21,6 +21,8 @@
         
         public $defaultdeliveryaddress;
         
+        public $shopcartitems = [];
+        
         public function checkValidForUserName(){
             if(isset($this->username) && is_string($this->username)){
                 if(!preg_match('/^[A-z0-9]{6,32}$/', $this->username)){
@@ -195,6 +197,26 @@
                     
                     $cartitem->loadData();
                     $this->cartitems[] = $cartitem;
+                }
+                return true;
+            }else{
+                return false;
+            }
+        }
+        
+        public function loadShopCartItems($shop_id){
+            $this->shopcartitems = [];
+            
+            $rows = $this->database->select('cartitem.client_id client_id, cartitem.product_id product_id')->from(DB_TABLE_CARTITEM)->join(DB_TABLE_PRODUCT)->on('cartitem.product_id=product.id')->where('product.shop_id=' . (int)$shop_id . ' and client_id=' . (int)$this->id)->execute();
+            
+            if(count($rows)){
+                foreach($rows as $row){
+                    $cartitem = new CartItemModel($this->database);
+                    $cartitem->client_id = $row->client_id;
+                    $cartitem->product_id = $row->product_id;
+                    
+                    $cartitem->loadData();
+                    $this->shopcartitems[] = $cartitem;
                 }
                 return true;
             }else{

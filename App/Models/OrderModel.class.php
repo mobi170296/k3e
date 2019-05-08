@@ -15,7 +15,7 @@
         #Trang thai don hang
         const NGUOI_MUA_DANG_THANH_TOAN = 1, NGUOI_MUA_THANH_TOAN_THAT_BAI = 2, CHO_NGUOI_BAN_XAC_NHAN = 3, HUY_DON_HANG = 4, KHONG_CON_HANG = 5, HUY_DO_HE_THONG = 6, DANG_GIAO = 7, GIAO_THAT_BAI = 8, DA_GIAO =9, HOAN_TAT = 10, CHO_LAY_HANG = 11, HUY_DO_KHONG_LAY_DUOC_HANG = 12, DON_HANG_DUOC_TAO = 13;
         
-        public $id, $ordercode, $shop_id, $client_id, $status, $note, $created_time, $total_price, $ship_fee, $paid, $paycomplete, $clientname, $clientphone, $clientaddress, $clientwardname, $clientdistrictname, $clientprovincename, $shopname, $shopphone, $shopaddress, $shopwardname, $shopdistrictname, $shopprovincename, $paymenttype_id, $transporter_id;
+        public $id, $ordercode, $shop_id, $client_id, $status, $note, $created_time, $total_price, $ship_fee, $paid, $paycomplete, $clientname, $clientphone, $clientaddress, $clientwardname, $clientdistrictname, $clientprovincename, $shopname, $shopphone, $shopaddress, $shopwardname, $shopdistrictname, $shopprovincename, $paymenttype_id, $transporter_id, $weight, $length, $width, $height;
         
         #objects
         public $shop, $client, $paymenttype, $transporter;
@@ -144,7 +144,7 @@
         
         public function add(){
             $this->database->insert(DB_TABLE_ORDER, [
-                'ordercode' => new DBString($this->ordercode),
+                'ordercode' => new DBString($this->database->escape($this->ordercode)),
                 'shop_id' => new DBNumber($this->shop_id),
                 'client_id' => new DBNumber($this->client_id),
                 'status' => new DBNumber($this->status),
@@ -153,21 +153,27 @@
                 'ship_fee' => new DBNumber($this->ship_fee),
                 'paid' => new DBNumber($this->paid),
                 'paycomplete' => new DBNumber($this->paycomplete),
-                'clientname' => new DBString($this->clientname),
-                'clientphone' => new DBString($this->clientphone),
-                'clientaddress' => new DBString($this->clientaddress),
-                'clientwardname' => new DBString($this->clientwardname),
-                'clientdistrictname' => new DBString($this->clientdistrictname),
-                'clientprovincename' => new DBString($this->clientprovincename),
-                'shopname' => new DBString($this->shopname),
-                'shopphone' => new DBString($this->shopphone),
-                'shopaddress' => new DBString($this->shopaddress),
-                'shopwardname' => new DBString($this->shopwardname),
-                'shopdistrictname' => new DBString($this->shopdistrictname),
-                'shopprovincename' => new DBString($this->shopprovincename),
+                'clientname' => new DBString($this->database->escape($this->clientname)),
+                'clientphone' => new DBString($this->database->escape($this->clientphone)),
+                'clientaddress' => new DBString($this->database->escape($this->clientaddress)),
+                'clientwardname' => new DBString($this->database->escape($this->clientwardname)),
+                'clientdistrictname' => new DBString($this->database->escape($this->clientdistrictname)),
+                'clientprovincename' => new DBString($this->database->escape($this->clientprovincename)),
+                'shopname' => new DBString($this->database->escape($this->shopname)),
+                'shopphone' => new DBString($this->database->escape($this->shopphone)),
+                'shopaddress' => new DBString($this->database->escape($this->shopaddress)),
+                'shopwardname' => new DBString($this->database->escape($this->shopwardname)),
+                'shopdistrictname' => new DBString($this->database->escape($this->shopdistrictname)),
+                'shopprovincename' => new DBString($this->database->escape($this->shopprovincename)),
                 'paymenttype_id' => new DBNumber($this->paymenttype_id),
-                'transporter_id' => new DBNumber($this->transporter_id)
+                'transporter_id' => new DBNumber($this->transporter_id),
+                'weight' => new DBNumber($this->weight),
+                'length' => new DBNumber($this->length),
+                'width' => new DBNumber($this->width),
+                'height' => new DBNumber($this->height)
             ]);
+            
+            $this->id = $this->database->lastInsertId();
             
             return true;
         }
@@ -176,7 +182,7 @@
             $this->database->update(DB_TABLE_ORDER, [
                 'status' => new DBNumber($status)
             ], 'id=' . (int)$this->id);
-            
+            $this->status = $status;
             return true;
         }
     }
