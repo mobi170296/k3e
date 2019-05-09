@@ -4,6 +4,7 @@
     
     use Library\Database\DBNumber;
     use Library\Database\DBString;
+    use Library\Database\DBDateTime;
     
     class OrderModel extends Model{
         const PAID = 1, UNPAID = 0;
@@ -39,6 +40,7 @@
                 foreach($row as $col => $value){
                     $this->$col = $value;
                 }
+                $this->created_time = DBDateTime::parse($this->created_time);
                 return true;
             }else{
                 return false;
@@ -46,13 +48,14 @@
         }
         
         public function loadFromOrderCode(){
-            $rows = $this->database->selectall()->from(DB_TABLE_ORDER)->where('ordercode=' . (int)$this->ordercode)->execute();
+            $rows = $this->database->selectall()->from(DB_TABLE_ORDER)->where('ordercode=' . (new DBString($this->ordercode))->SqlValue())->execute();
             if(count($rows)){
                 $row = $rows[0];
                 #lazy load data via key and value map
                 foreach($row as $col => $value){
                     $this->$col = $value;
                 }
+                $this->created_time = DBDateTime::parse($this->created_time);
                 return true;
             }else{
                 return false;
@@ -78,6 +81,14 @@
             return $this->paymenttype->loadData();
         }
         
+        public function loadTransporterUnit(){
+            if($this->transporter_id == TransporterModel::GHN){
+                return $this->loadGHNTransporter();
+            }
+            
+            return false;
+        }
+        
         public function loadTransporter(){
             $this->transporter = new TransporterModel($this->database);
             $this->transporter->id = $this->transporter_id;
@@ -92,7 +103,6 @@
             return $this->ghntransporter->loadFromOrderId();
         }
         
-        
         public function loadOnePayOrder(){
             $this->onepayorder = new OnePayOrderModel($this->database);
             $this->onepayorder->order_id = $this->id;
@@ -105,7 +115,7 @@
             $rows = $this->database->select('id')->from(DB_TABLE_ORDERLOG)->where('order_id=' . (int)$this->id)->orderby('created_time asc, id asc')->execute();
             
             foreach($rows as $row){
-                $orderlog = new OrderLogModel($database);
+                $orderlog = new OrderLogModel($this->database);
                 $orderlog->id = $row->id;
                 
                 if(!$orderlog->loadData()){
@@ -116,6 +126,60 @@
             }
             
             return true;
+        }
+        
+        public function loadOrderItems(){
+            $this->orderitems = [];
+            $rows = $this->database->select('order_id, product_id')->from(DB_TABLE_ORDERITEM)->where('order_id=' . (int)$this->id)->execute();
+            foreach($rows as $row){
+                $orderitem = new OrderItemModel($this->database);
+                $orderitem->product_id = $row->product_id;
+                $orderitem->order_id = $row->order_id;
+                if(!$orderitem->loadData()){
+                    return false;
+                }
+                $this->orderitems[] = $orderitem;
+            }
+            return true;
+        }
+        
+        public function clientCanCancel(){
+            $ac = [self::NGUOI_MUA_THANH_TOAN_THAT_BAI, self::CHO_NGUOI_BAN_XAC_NHAN];
+            return in_array($this->status, $ac);
+        }
+        
+        public function clientCancel(){
+            
+        }
+        
+        public function shopCancel(){
+            
+        }
+        
+        public function getPaidString(){
+            $name = [
+                self::PAID => 'Đã thanh toán',
+                self::UNPAID => 'Chưa thanh toán'
+            ];
+            
+            return $name[$this->paid];
+        }
+        
+        public function getClientFullAddress(){
+            return $this->clientaddress . ', ' . $this->clientwardname . ', ' . $this->clientdistrictname . ', ' . $this->clientprovincename;
+        }
+        
+        public function getTransporterOrderCode(){
+            $ad = [self::HUY_DO_KHONG_LAY_DUOC_HANG, self::CHO_LAY_HANG, self::DANG_GIAO, self::GIAO_THAT_BAI, self::DA_GIAO, self::HOAN_TAT];
+            if(in_array($this->status, $ad)){
+                if($this->transporter->id == TransporterModel::GHN && $this->ghntransporter != null){
+                    return $this->ghntransporter->ordercode;
+                }else{
+                    return "Không xác định được mã vận đơn";
+                }
+            }else{
+                return "Chưa vận chuyển";
+            }
         }
         
         public function getStatusString(){
@@ -138,8 +202,16 @@
             return isset($name[$this->status]) ? $name[$this->status] : 'trạng thái không xác định';
         }
         
+        public function getTransporterServiceName(){
+            if($this->transporter_id == TransporterModel::GHN && $this->ghntransporter != null){
+                return $this->ghntransporter->servicename;
+            }
+            
+            return "Không rõ";
+        }
+        
         public function getUserOrderLink(){
-            return "/User/Order/" . $this->id;
+            return "/User/Order?ordercode=" . $this->ordercode;
         }
         
         public function add(){
@@ -183,6 +255,15 @@
                 'status' => new DBNumber($status)
             ], 'id=' . (int)$this->id);
             $this->status = $status;
+            return true;
+        }
+        
+        public function updatePayStatus($paid, $paycomplete){
+            $this->database->update(DB_TABLE_ORDER, [
+                'paid' => new DBNumber($paid),
+                'paycomplete' => new DBNumber($paycomplete)
+            ], 'id=' . (int)$this->id);
+            
             return true;
         }
     }

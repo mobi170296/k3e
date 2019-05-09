@@ -1,1 +1,84 @@
+<?php
+    use App\Models\OrderModel;
+    $order = $this->Data->order;
+    $this->Data->Title = 'Kết quả đặt hàng đơn hàng - ' . $order->ordercode;
+    
+?>
+<style>
+    .checkoutresult-wrapper{
+        background-color: #fff;
+        margin: 20px auto;
+        padding: 10px 20px;
+        max-width: 600px;
+        border-radius: 5px;
+    }
+    
+    .checkoutresult-wrapper table{
+        
+    }
+    .checkoutresult-wrapper table td:first-child{
+        padding-right: 5em;
+        white-space: nowrap;
+        font-family: segoe ui;
+        font-weight: lighter;
+    }
+    
+    .checkoutresult-wrapper .btnorderlink{
+        display: inline-block;
+        border-radius: 1000px;
+        background-color: #fff;
+        color: #44b27c;
+        border: 1px solid #44b27c;
+        padding: 10px 20px;
+        font-family: segoe ui;
+        font-weight: lighter;
+    }
+</style>
 
+<div class="checkoutresult-wrapper">
+    <div style="font-weight: bold; font-size: 1.5em; text-align: center; margin: 10px 0px;">
+    <?php
+        if($order->status == OrderModel::CHO_NGUOI_BAN_XAC_NHAN){
+            echo '<div style="color:#44b27c">Đặt hàng thành công</div>';
+        }else if($order->status == OrderModel::NGUOI_MUA_DANG_THANH_TOAN){
+            echo 'Đang trong quá trình thanh toán';
+        }else{
+            echo '<div style="color:red">Đặt hàng thất bại</div>';
+        }
+    ?>
+    </div>
+    
+    <table>
+        <tr>
+            <td>Mã đơn hàng</td>
+            <td><?php echo $order->ordercode; ?></td>
+        </tr>
+        <tr>
+            <td>Địa chỉ vận chuyển đến</td>
+            <td>
+                <?php
+                    echo <<<ADDR
+                {$order->clientname}, {$order->clientphone}, {$order->clientaddress}, {$order->clientwardname}, {$order->clientdistrictname}, {$order->clientprovincename}
+ADDR;
+                ?>
+            </td>
+        </tr>
+        <tr>
+            <td>Phương thức thanh toán</td>
+            <td><?php echo $order->paymenttype->name; ?></td>
+        </tr>
+        <tr>
+            <td>Tổng giá trị</td>
+            <td style="color: red; font-weight: bold;"><?php echo \number_format($order->total_price + $order->ship_fee); ?>đ</td>
+        </tr>
+        <tr>
+            <td>Trạng thái đơn hàng</td>
+            <td><?php echo $order->getStatusString(); ?></td>
+        </tr>
+        <tr>
+            <td colspan="2" style="padding-right: 0px">
+                <div style="text-align: center; padding: 10px"><a class="btnorderlink" href="<?php echo $order->getUserOrderLink(); ?>">Chi tiết đơn hàng</a></div>
+            </td>
+        </tr>
+    </table>
+</div>

@@ -232,7 +232,22 @@
         }
         
         public function loadOrders(){
+            $this->orders = [];
+            $rows = $this->database->select('id')->from(DB_TABLE_ORDER)->where('client_id='. (int)$this->id)->execute();
             
+            if(count($rows)){
+                foreach($rows as $row){
+                    $order = new OrderModel($this->database);
+                    $order->id = $row->id;
+                    if(!$order->loadData()){
+                        return false;
+                    }
+                    $this->orders[] = $order;
+                }
+                return true;
+            }else{
+                return false;
+            }
         }
         
         public function loadDeliveryAddresses(){

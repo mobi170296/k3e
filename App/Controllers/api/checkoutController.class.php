@@ -623,11 +623,11 @@
                             
                             
                             if($paymenttype_id == PaymentTypeModel::COD){
-                                $nexturl = '/User/CheckoutResult/' . $order->ordercode;
+                                $nexturl = '/User/CheckoutResult/?ordercode=' . $order->ordercode;
                             }else{
                                 #khoi tao tham so lay url thanh toan
                                 $onepay = new OnePay();
-                                $nexturl = $onepay->getPaymentURL(new PaymentRequestParameter($onepayorder->orderinfo, $onepayorder->transactionref, $onepayorder->amount, '/User/PayResult?ordercode=' . $onepayorder->orderinfo, $onepayorder->ticketno, '/User/Checkout?shop_id=' . $shop_id, 'OrderPay'));
+                                $nexturl = $onepay->getPaymentURL(new PaymentRequestParameter($onepayorder->orderinfo, $onepayorder->transactionref, $onepayorder->amount, 'http://localhost/User/PayResult?ordercode=' . $onepayorder->orderinfo, $onepayorder->ticketno, '/User/Checkout?shop_id=' . $shop_id, 'OrderPay'));
                             }
                             
                             #xoa cartitem da thanh toan

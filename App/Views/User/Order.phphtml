@@ -1,0 +1,262 @@
+<?php
+    $order = $this->Data->order;
+    $this->Data->Title = 'Chi tiết đơn hàng ' . $order->ordercode;
+?>
+<style>
+    .order-wrapper{
+        padding: 0px 20px;
+    }
+    .order-wrapper .order-header{
+        font-size: 1.2em;
+        font-family: segoe ui;
+        font-weight: lighter;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 3px;
+        margin-bottom: 10px;
+    }
+    .order-wrapper .order-body{
+        background-color: #fff;
+        padding: 20px;
+    }
+    .order-wrapper .order-basic-info{
+        line-height: 1.5;
+        border: 1px solid #eee;
+        padding: 20px;
+        margin: 10px 0px;
+    }
+    .order-wrapper .order-basic-info .order-code-string{
+        font-weight: bold;
+        font-family: arial;
+    }
+    .order-wrapper .order-basic-info .order-paid-string{
+        
+        font-weight: bold;
+        font-family: arial;
+    }
+    .order-wrapper .order-basic-info .order-status-string{
+        
+        font-weight: bold;
+        font-family: arial;
+    }
+    .order-wrapper .order-delivery-group{
+        display: flex;
+        margin: 20px 0px;
+    }
+    .order-wrapper .order-transporter{
+        flex-basis: 50%;
+        border: 1px solid #eee;
+        padding: 20px;
+        margin-right: 10px;
+    }
+    .order-wrapper .order-transporter-title{
+        font-weight: bold;
+    }
+    .order-wrapper .order-transporter-ordercode{
+    }
+    .order-wrapper .order-address{
+        flex-basis: 50%;
+        border: 1px solid #eee;
+        padding: 20px;
+        margin-left: 10px;
+    }
+    .order-wrapper .order-address-title{
+        font-weight: bold;
+    }
+    .order-wrapper .order-logs{
+        line-height: 2;
+        border: 1px solid #eee;
+        padding: 20px;
+        margin: 20px 0px;
+    }
+    .order-wrapper .order-logs-title{
+        font-weight: bold;
+    }
+    .order-wrapper .order-log{
+        display: flex;
+    }
+    .order-wrapper .order-log .order-log-content{
+        flex-basis: 50%;
+    }
+    .order-wrapper .order-log .order-log-time{
+        
+        flex-basis: 50%;
+    }
+    .order-wrapper .order-shop{
+        
+    }
+    .order-wrapper .order-summary{
+        line-height: 2;
+        align-items: self-end;
+    }
+    .order-wrapper .product-item{
+        display: flex;
+        align-items: center;
+    }
+    .order-wrapper .product-image{
+        flex-shrink: 0;
+        background-size: cover;
+        background-repeat: no-repeat;
+        width: 50px;
+        height: 50px;
+        margin: 5px 10px;
+    }
+    .order-wrapper .product-name{
+        flex-basis: 100%;
+        text-align: left;
+    }
+    .order-wrapper .product-name a{
+        color: #44b27c;
+    }
+    .order-wrapper .order-products table{
+        width: 100%;
+        text-align: right;
+        border-collapse: collapse;
+    }
+    .order-wrapper .order-products table tr{
+        border-bottom: 1px solid #ccc;
+    }
+    .order-wrapper .order-products table tr:last-child{
+        border: none;
+    }
+    .order-wrapper .order-products table th{
+        font-family: segoe ui;
+        font-weight: lighter;
+        text-align: right;
+    }
+    .order-wrapper .order-products table td.product-image-col{
+        width: 450px;
+    }
+    .order-wrapper .order-products table th:first-child{
+        text-align: center;
+    }
+    .order-wrapper .order-summary{
+        display: flex;
+        flex-direction: column;
+    }
+    .order-wrapper .order-summary .order-total-price{
+        display: flex;
+        justify-content: space-between;
+        width: 20em;
+    }
+    .order-wrapper .order-summary .order-ship-fee{
+        display: flex;
+        justify-content: space-between;
+        width: 20em;
+    }
+    .order-wrapper .order-summary .order-checkout-total{
+        display: flex;
+        justify-content: space-between;
+        width: 20em;
+    }
+    .order-wrapper .order-checkout-total-string{
+        color: red;
+        font-weight: bold;
+    }
+</style>
+
+<div id="user-wrapper" class="clearfix u-my-5">
+    <div class="left-panel">
+        <div class="menu">
+            <div class="menu-item"><a href="/User/Info">Thông tin tài khoản</a></div>
+            <div class="menu-item"><a href="/User/ChangePassword">Đổi mật khẩu</a></div>
+            <div class="menu-item"><a href="/User/DeliveryAddresses">Địa chỉ giao hàng</a></div>
+            <div class="menu-item active"><a href="/User/Orders">Quản lý đơn hàng</a></div>
+            <div class="menu-item"><a href="/User/ViewHistory">Sản phẩm đã xem</a></div>
+            <div class="menu-item"><a href="/User/Assessment">Đánh giá sản phẩm</a></div>
+        </div>
+    </div>
+    <div class="right-panel">
+        <div class="order-wrapper">
+            <div class="order-header">Thông tin đơn hàng</div>
+            <div class="order-body">
+                <div class="order-basic-info">
+                    <div>
+                        <span class="order-code-title">Mã đơn hàng:</span> <span class="order-code-string"><?php echo $order->ordercode; ?></span>
+                    </div>
+                    <div>
+                        <span class="order-created-time-title">Đặt lúc: </span> <span class="order-created-time-string"><?php echo $order->created_time->toLocalDateTime(); ?></span>
+                    </div>
+                    <div>
+                        <span class="order-paid-title">Tình trạng thanh toán: </span> <span class="order-paid-string"><?php echo $order->getPaidString(); ?></span>
+                    </div>
+                    <div>
+                        <span class="order-status-tilte">Trạng thái hiện tại: </span> <span class="order-status-string"><?php echo $order->getStatusString(); ?></span>
+                    </div>
+                </div>
+                <div class="order-delivery-group">
+                    <div class="order-transporter">
+                        <div class="order-transporter-title">Đơn vị vận chuyển</div>
+                        <div>
+                            <?php echo $order->transporter->name; ?>
+                        </div>
+                        <div class="order-transporter-service"><?php echo $order->getTransporterServiceName(); ?></div>
+                        <div class="order-transporter-ordercode"><?php echo $order->getTransporterOrderCode();?></div>
+                    </div>
+                    <div class="order-address">
+                        <div class="order-address-title">Người nhận</div>
+                        <div><?php echo $order->clientname; ?></div>
+                        <div><?php echo $order->clientphone; ?></div>
+                        <div><?php echo $order->getClientFullAddress(); ?></div>
+                    </div>
+                </div>
+                <div class="order-logs">
+                    <div class="order-logs-title">Lịch sử đơn hàng</div>
+                    <?php
+                        $i = 0;
+                        foreach($order->orderlogs as $orderlog){
+                            $i++;
+                            echo <<<LOG
+                            <div class="order-log">
+                                <div class="order-log-content">
+                                    {$i}. {$orderlog->content}
+                                </div>
+                                <div class="order-log-time">
+                                    {$orderlog->created_time}
+                                </div>
+                            </div>
+LOG;
+                        }
+                    ?>
+                </div>
+                <div class="order-shop">
+                    <div><span>Cửa hàng: </span><?php echo $order->shop->name; ?></div>
+                </div>
+                <div class="order-products">
+                    <table>
+                        <tr>
+                            <th>Sản phẩm</th>
+                            <th>Giá mua</th>
+                            <th>Số lượng</th>
+                            <th>Thành tiền</th>
+                        </tr>
+                        <?php
+                            foreach($order->orderitems as $orderitem){
+                                $pricestring = \number_format($orderitem->price);
+                                $subtotalstring = \number_format($orderitem->price * $orderitem->quantity);
+                                echo <<<PRODUCT
+                                <tr>
+                                <td class="product-image-col">
+                                    <div class="product-item">
+                                        <div class="product-image" style="background-image: url('{$orderitem->product->getMainImageThumbnail()}')"></div>
+                                        <div class="product-name"><a href="{$orderitem->product->getProductLink()}">{$orderitem->product->name}</a></div>
+                                    </div>
+                                </td>
+                                <td>{$pricestring}đ</td>
+                                <td>{$orderitem->quantity}</td>
+                                <td>{$subtotalstring}đ</td>
+                                </tr>
+PRODUCT;
+                            }
+                        ?>
+                    </table>
+                </div>
+                <div class="order-summary">
+                    <div class="order-total-price"><div class="order-total-price-title">Tổng giá trị mua</div><div class="order-total-price-string"><?php echo \number_format($order->total_price); ?>đ</div></div>
+                    <div class="order-ship-fee"><div class="order-ship-fee-title">Phí vận chuyển</div><div class="order-ship-fee-string"><?php echo \number_format($order->ship_fee); ?>đ</div></div>
+                    <div class="order-checkout-total"><div class="order-checkout-total-title">Tổng cộng</div><div class="order-checkout-total-string"><?php echo \number_format($order->ship_fee + $order->total_price) ?>đ</div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

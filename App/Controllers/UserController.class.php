@@ -20,6 +20,13 @@
     use Library\VanChuyen\GHN\GHNFeeResult;
     use Library\VanChuyen\GHN\GHNException;
     
+    use App\Models\OrderModel;
+    use Library\ThanhToan\OnePay\OnePay;
+    use App\Models\OnePayOrderModel;
+    use App\Models\OrderLogModel;
+    use Library\ThanhToan\OnePay\OnePayException;
+    use App\Models\PaymentTypeModel;
+    
     class UserController extends Controller{
         public function Index(){
             return $this->redirectToAction('Info', 'User');
@@ -170,8 +177,62 @@
                 return $this->redirectToAction('Index', 'Home');
             }
         }
-        public function Order(){
-            
+        public function Order($ordercode){
+            try{
+                $database = new Database();
+                $user = (new Authenticate($database))->getUser();
+                
+                $order = new OrderModel($database);
+                $order->ordercode = $ordercode;
+                
+                if($order->loadFromOrderCode()){
+                    $order->loadTransporter();
+                    $order->loadTransporterUnit();
+                    $order->loadOrderLogs();
+                    $order->loadPaymentType();
+                    $order->loadShop();
+                    
+                    $order->loadOrderItems();
+                    foreach($order->orderitems as $orderitem){
+                        $orderitem->loadProduct();
+                        $orderitem->product->loadMainImage();
+                    }
+                    
+                    $this->View->Data->order = $order;
+                    return $this->View->RenderTemplate();
+                }else{
+                    return $this->redirectToAction('Orders', 'User');
+                }
+            } catch (DBException $ex) {
+                return $this->View->RenderTemplate('_error');
+            } catch (AuthenticateException $e){
+                return $this->redirectToAction('Login', 'User');
+            }
+        }
+        
+        public function Orders(){
+            try{
+                $database = new Database();
+                $user = (new Authenticate($database))->getUser();
+                
+                $user->loadOrders();
+                $orders =  $user->orders;
+                
+                foreach($orders as $order){
+                    $order->loadOrderItems();
+                    $order->orderitems[0]->loadProduct();
+                    $order->orderitems[0]->product->loadMainImage();
+                }
+                
+                $this->View->Data->orders = $orders;
+                
+                return $this->View->RenderTemplate();
+            } catch (DBException $ex) {
+                $this->View->Data->ErrorMessage = 'DBERR';
+                return $this->View->RenderTemplate('_error');
+            } catch (AuthenticateException $e){
+                return $this->redirectToAction('Login', 'User');
+            }
         }
         public function DeliveryAddresses(){
             try{
@@ -475,11 +536,91 @@
             }
         }
         
-        public function CheckoutResult(){
-            return $this->View->RenderContent('OK');
+        public function CheckoutResult($ordercode){
+            try{
+                $database = new Database();
+                
+                $user = (new Authenticate($database))->getUser();
+                
+                $order = new OrderModel($database);
+                $order->ordercode = $ordercode;
+                
+                if($order->loadFromOrderCode()){
+                    $order->loadPaymentType();
+                    $order->loadTransporter();
+                    $this->View->Data->order = $order;
+                    return $this->View->RenderTemplate();
+                }else{
+                    return $this->redirectToAction('Index', 'Home');
+                }
+            } catch (DBException $ex) {
+                $this->View->Data->ErrorMessage = 'DBERR';
+                return $this->View->RenderTemplate('_error');
+            } catch (AuthenticateException $e){
+                return $this->redirectToAction('Login', 'User');
+            }
         }
         
-        public function PayResult(){
-            return $this->View->RenderPartial();
+        public function PayResult($ordercode){
+            try{
+                $onepay = new OnePay();
+                $payresponse = $onepay->getPaymentResponse($_GET);
+                $database = new Database();
+                $order = new OrderModel($database);
+                
+                $order->ordercode = $payresponse->OrderInfo;
+                if($order->loadFromOrderCode() && $order->paymenttype_id == PaymentTypeModel::ONEPAY){
+                    #ton tai
+                    $onepayorder = new OnePayOrderModel($database);
+                    $onepayorder->order_id = $order->id;
+                    $onepayorder->loadFromOrderId();
+                    
+                    if($order->status == OrderModel::NGUOI_MUA_DANG_THANH_TOAN){
+                        if($payresponse->TxnResponseCode == 0){
+                            $onepayorder->additiondata = $payresponse->AdditionData;
+                            $onepayorder->transactioncode = $payresponse->TxnResponseCode;
+                            $onepayorder->transactionmessage = $payresponse->Message;
+                            $onepayorder->transactionno = $payresponse->TransactionNo;
+                            $onepayorder->update($onepayorder);
+                            
+                            $order->updatePayStatus(OrderModel::PAID, OrderModel::PAYCOMPLETE);
+                            
+                            $order->updateStatus(OrderModel::CHO_NGUOI_BAN_XAC_NHAN);
+                            
+                            $orderlog = new OrderLogModel($database);
+                            $orderlog->order_id = $order->id;
+                            $orderlog->order_status = $order->status;
+                            $orderlog->content = $order->getStatusString();
+                            $orderlog->add();
+                        }else if($payresponse->TxnResponseCode != 100){
+                            $onepayorder->additiondata = $payresponse->AdditionData;
+                            $onepayorder->transactioncode = $payresponse->TxnResponseCode;
+                            $onepayorder->transactionmessage = $payresponse->Message;
+                            $onepayorder->transactionno = $payresponse->TransactionNo;
+                            $onepayorder->update($onepayorder);
+                            
+                            $order->updatePayStatus(OrderModel::UNPAID, OrderModel::PAYCOMPLETE);
+                            $order->updateStatus(OrderModel::NGUOI_MUA_THANH_TOAN_THAT_BAI);
+                            
+                            $orderlog = new OrderLogModel($database);
+                            $orderlog->order_id = $order->id;
+                            $orderlog->order_status = $order->status;
+                            $orderlog->content = $order->getStatusString();
+                            $orderlog->add();
+                        }
+                        return $this->redirectToAction('CheckoutResult', 'User', ['ordercode' => $order->ordercode]);
+                    }else{
+                        return $this->redirectToAction('CheckoutResult', 'User', ['ordercode' => $order->ordercode]);
+                    }
+                }else{
+                    #khong ton tai
+                    return $this->View->RenderContent('DON HANG KHONG TON TAI');
+                }
+            } catch (DBException $ex) {
+                $this->View->Data->ErrorMessage = 'DBERR';
+                return $this->View->RenderTemplate('_error');
+            } catch (OnePayException $e){
+                return $this->View->RenderContent('???');
+            }
         }
     }

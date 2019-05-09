@@ -309,6 +309,8 @@
                                 $product->checkOriginalPrice()->checkPrice()->checkQuantity()->checkWarrantyMonthsNumber();
                                 if($product->isValid()){
                                     $oldproduct->update($product);
+                                    $result->header->code = 0;
+                                    $result->header->message = 'Sản phẩm ' . $oldproduct->name . ' đã được cập nhật';
                                 }else{
                                     throw new InputException($product->getErrorsMap());
                                 }

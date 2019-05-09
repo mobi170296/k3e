@@ -31,7 +31,7 @@
         public function loadFromOrderId(){
             #order_id
             
-            $rows = $this->database->selectall()->from(DB_TABLE_GHNTRANSPORTER)->where('order_id=' . (int)$this->id)->execute();
+            $rows = $this->database->selectall()->from(DB_TABLE_GHNTRANSPORTER)->where('order_id=' . (int)$this->order_id)->execute();
             
             if(count($rows)){
                 $row = $rows[0];

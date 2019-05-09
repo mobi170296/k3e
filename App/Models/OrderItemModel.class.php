@@ -25,6 +25,13 @@
             }
         }
         
+        public function loadProduct(){
+            $this->product = new ProductModel($this->database);
+            $this->product->id = $this->product_id;
+            
+            return $this->product->loadData();
+        }
+        
         public function add(){
             $this->database->insert(DB_TABLE_ORDERITEM, [
                 'order_id' => new DBNumber($this->order_id),
