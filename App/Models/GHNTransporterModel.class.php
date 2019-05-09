@@ -8,7 +8,9 @@
     use Library\Database\DBRaw;
     
     class GHNTransporterModel extends Model{
-        public $id, $order_id, $orderid, $ordercode, $currentstatus, $extrafee, $totalservicefee, $expecteddeliverytime, $note, $serviceid, $servicename, $insurancefee, $codamount, $fromdistrictid, $fromwardcode, $todistrictid, $towardcode, $created_time;
+        const SHOP_PAY = 1, BUYER_PAY = 2, GHNWALLET_PAY = 4, CREDIT_PAY = 5;
+        
+        public $id, $order_id, $orderid, $ordercode, $currentstatus, $extrafee, $totalservicefee, $expecteddeliverytime, $note, $serviceid, $servicename, $insurancefee, $codamount, $fromdistrictid, $fromwardcode, $todistrictid, $towardcode, $paymenttypeid, $clienthubid, $sortcode, $created_time;
         
         #foreign key object
         public $order;
@@ -69,6 +71,9 @@
             $fromwardcode = $this->fromwardcode === null ? new DBRaw('null') : new DBString($this->fromwardcode);
             $todistrictid = $this->todistrictid === null ? new DBRaw('null') : new DBNumber($this->todistrictid);
             $towardcode = $this->towardcode === null ? new DBRaw('null') : new DBString($this->towardcode);
+            $clienthubid = $this->clienthubid === null ? new DBRaw('null') : new DBNumber($this->clienthubid);
+            $sortcode = $this->sortcode === null ? new DBRaw('null') : new DBString($this->sortcode);
+            $paymenttypeid = $this->paymenttypeid === null ? new DBRaw('null') : new DBNumber($this->paymenttypeid);
             
             $this->database->insert(DB_TABLE_GHNTRANSPORTER, [
                 'order_id' => $order_id,
@@ -86,7 +91,10 @@
                 'fromdistrictid' => $fromdistrictid,
                 'fromwardcode' => $fromwardcode,
                 'todistrictid' => $todistrictid,
-                'towardcode' => $towardcode
+                'towardcode' => $towardcode,
+                'clienthubid' => $clienthubid,
+                'sortcode' => $sortcode,
+                'paymenttypeid' => $paymenttypeid
             ]);
             return true;
         }
@@ -114,8 +122,11 @@
             $fromwardcode = $ghntransporter->fromwardcode === null ? new DBRaw('null') : new DBString($ghntransporter->fromwardcode);
             $todistrictid = $ghntransporter->todistrictid === null ? new DBRaw('null') : new DBNumber($ghntransporter->todistrictid);
             $towardcode = $ghntransporter->towardcode === null ? new DBRaw('null') : new DBString($ghntransporter->towardcode);
+            $clienthubid = $this->clienthubid === null ? new DBRaw('null') : new DBNumber($this->clienthubid);
+            $sortcode = $this->sortcode === null ? new DBRaw('null') : new DBString($this->sortcode);
+            $paymenttypeid = $this->paymenttypeid === null ? new DBRaw('null') : new DBNumber($this->paymenttypeid);
             
-            $this->database->update(DB_TABLE_TRANSPORTER, [
+            $this->database->update(DB_TABLE_GHNTRANSPORTER, [
                 'order_id' => $order_id,
                 'orderid' => $orderid,
                 'ordercode' => $ordercode,
@@ -131,7 +142,10 @@
                 'fromdistrictid' => $fromdistrictid,
                 'fromwardcode' => $fromwardcode,
                 'todistrictid' => $todistrictid,
-                'towardcode' => $towardcode
+                'towardcode' => $towardcode,
+                'clienthubid' => $clienthubid,
+                'sortcode' => $sortcode,
+                'paymenttypeid' => $paymenttypeid
             ], 'id=' . (int)$this->id);
             
             return true;

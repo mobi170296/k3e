@@ -229,7 +229,7 @@
         }
         
         public function getCompletedOrdersTotal(){
-            $array = [OrderModel::HUY_DON_HANG, OrderModel::HUY_DO_KHONG_LAY_DUOC_HANG, OrderModel::HUY_DO_HE_THONG, OrderModel::GIAO_THAT_BAI];
+            $array = [OrderModel::HOAN_TAT, OrderModel::DA_GIAO];
             
             $in = '(' . implode(',', $array) . ')';
             $rows = $this->database->select('count(*) as count')->from(DB_TABLE_ORDER)->where('order.shop_id=' . (int)$this->id . ' and order.status in ' . $in)->execute();
@@ -238,7 +238,7 @@
         }
         
         public function getCancelledOrdersTotal(){
-            $array = [OrderModel::HOAN_TAT, OrderModel::DA_GIAO];
+            $array = [OrderModel::HUY_DON_HANG, OrderModel::KHONG_CON_HANG, OrderModel::HUY_DO_KHONG_LAY_DUOC_HANG, OrderModel::HUY_DO_HE_THONG, OrderModel::GIAO_THAT_BAI];
             
             $in = '(' . implode(',', $array) . ')';
             $rows = $this->database->select('count(*) as count')->from(DB_TABLE_ORDER)->where('order.shop_id=' . (int)$this->id . ' and order.status in ' . $in)->execute();

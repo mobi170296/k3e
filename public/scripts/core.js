@@ -358,6 +358,11 @@ $COMMON = {
             }
             return result;
         }
+    },
+    
+    
+    isInt: function(s){
+        return !isNaN(parseInt(s));
     }
 };
 

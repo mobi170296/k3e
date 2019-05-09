@@ -336,6 +336,7 @@
                     $order->ordercode = $ordercode;
                     if($order->loadFromOrderCode()){
                         $order->loadTransporter();
+                        $order->loadTransporterUnit();
                         $order->loadPaymentType();
                         $order->loadOrderLogs();
                         $order->loadOrderItems();
