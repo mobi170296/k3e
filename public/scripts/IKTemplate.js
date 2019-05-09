@@ -52,9 +52,10 @@ function IKTemplate(tmpl){
     
     this.render = function(data, holder){
         var h = document.createElement('div');
-        h.innerHTML = this.renderfn.call(data);
-        while(h.children.length){
-            holder.appendChild(h.children[0]);
-        }
+//        h.innerHTML = this.renderfn.call(data);
+        holder.innerHTML = this.renderfn.call(data);
+//        while(h.children.length){
+//            holder.appendChild(h.children[0]);
+//        }
     }
 }

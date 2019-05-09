@@ -233,7 +233,7 @@
         
         public function loadOrders(){
             $this->orders = [];
-            $rows = $this->database->select('id')->from(DB_TABLE_ORDER)->where('client_id='. (int)$this->id)->execute();
+            $rows = $this->database->select('id')->from(DB_TABLE_ORDER)->where('client_id='. (int)$this->id)->orderby('created_time')->desc()->execute();
             
             if(count($rows)){
                 foreach($rows as $row){
@@ -319,6 +319,13 @@
             $this->firstname = $this->database->unescape($user->firstname);
             $this->birthday = $user->birthday;
             $this->gender = $user->gender;
+            return true;
+        }
+        
+        public function addMoney($amount){
+            $this->database->update(DB_TABLE_USER, [
+                'money' => new DBRaw('money + ' . $amount)
+            ], 'id=' . (int)$this->id);
             return true;
         }
         

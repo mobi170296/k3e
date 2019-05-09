@@ -153,6 +153,13 @@
         color: red;
         font-weight: bold;
     }
+    
+    .btn-cancel-order{
+        padding: 10px 20px;
+        border: 1px solid red;
+        background-color: red;
+        color: #fff;
+    }
 </style>
 
 <div id="user-wrapper" class="clearfix u-my-5">
@@ -256,7 +263,45 @@ PRODUCT;
                     <div class="order-ship-fee"><div class="order-ship-fee-title">Phí vận chuyển</div><div class="order-ship-fee-string"><?php echo \number_format($order->ship_fee); ?>đ</div></div>
                     <div class="order-checkout-total"><div class="order-checkout-total-title">Tổng cộng</div><div class="order-checkout-total-string"><?php echo \number_format($order->ship_fee + $order->total_price) ?>đ</div></div>
                 </div>
+                <div class="order-action">
+                    <?php
+                        if($order->clientCanCancel()){
+                            echo <<<BUTTON
+                            <button class="btn-cancel-order" data-control-type="usercancelorder" data-order-id="{$order->id}">Hủy đơn hàng</button>
+BUTTON;
+                        }
+                    ?>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+
+<script>
+    !function(){
+        var btn = document.querySelector('[data-control-type="usercancelorder"]');
+        if(btn){
+            var _id = btn.dataset.orderId;
+            btn.addEventListener('click', function(e){
+                $ConfirmPopup.message('Bạn có thật sự muốn hủy đơn hàng?').active('Đồng ý', function(e){
+                    $LoadingPopup.show();
+                    $.ajax().create().url('/api/user/cancelorder').success(function(e){
+                        var result = JSON.parse(this.response);
+                        if(result.header.code === 0){
+                            $Toast.makeSuccess(result.header.message);
+                        }else{
+                            $Toast.makeError(result.header.message);
+                        }
+                        window.setTimeout(function(e){window.location.reload();}, 2000);
+                    }).error(function(e){
+                        $Toast.makeError('Lỗi kết nối');
+                        $LoadingPopup.hide();
+                    }).post('order_id=' + _id);
+                }).inactive('Không', function(e){
+                    $ConfirmPopup.hide();
+                }).show();
+            });
+        }
+    }();
+</script>

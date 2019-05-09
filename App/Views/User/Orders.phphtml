@@ -106,6 +106,7 @@ display: flex;
                             <div class="order-header-left">
                                 <span>Mã đơn hàng: {$order->ordercode}</span>
                                 <span>Ngày đặt: {$order->created_time->toLocalDateTime()}</span>
+                                <span>{$order->paymenttype->name}</span>
                             </div>
                             <div class="order-header-right">
                                 <span>{$order->getStatusString()}</span>

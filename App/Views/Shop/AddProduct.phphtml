@@ -1,6 +1,13 @@
 <?php
     $this->layout = DS . 'App' . DS . 'Template' . DS . 'Common' . DS . 'shop_layout.phphtml';
     $this->Data->Title = 'Thêm sản phẩm mới';
+    
+    
+    $waitorderstotal = $this->Data->waitorderstotal;
+    $toshiporderstotal = $this->Data->toshiporderstotal;
+    $shippingorderstotal = $this->Data->shippingorderstotal;
+    $completedorderstotal = $this->Data->completedorderstotal;
+    $cancelledorderstotal = $this->Data->cancelledorderstotal;
 ?>
 <script id="product-attribute-tpl" type="text/ktpl">
             <div class="product-attribute">
@@ -33,11 +40,14 @@
         <script src="/scripts/editor.js"></script>
             <div class="main-wrapper">
                 <div class="left-menu">
-                    <div class="menu">
+                    <div class="menu open">
                         <div class="menu-label"><i class="mi order"></i>Đơn hàng</div>
                         <div class="menu-items">
-                            <div class="menu-item"><a href="">Danh sách đơn hàng</a></div>
-                            <div class="menu-item"><a href="">Tạo đơn hàng</a></div>
+                            <div class="menu-item"><a href="/Shop/WaitOrders"><span class="orders-count"><?php echo $waitorderstotal; ?></span>Chờ xác nhận</a></div>
+                            <div class="menu-item"><a href="/Shop/ToshipOrders"><span class="orders-count"><?php echo $toshiporderstotal; ?></span>Chờ lấy hàng</a></div>
+                            <div class="menu-item"><a href="/Shop/ShippingOrders"><span class="orders-count"><?php echo $shippingorderstotal; ?></span>Đang giao</a></div>
+                            <div class="menu-item"><a href="/Shop/CompletedOrders"><span class="orders-count"><?php echo $completedorderstotal; ?></span>Hoàn thành</a></div>
+                            <div class="menu-item"><a href="/Shop/CancelledOrders"><span class="orders-count"><?php echo $cancelledorderstotal; ?></span>Đã hủy</a></div>
                         </div>
                     </div>
                     <div class="menu open">

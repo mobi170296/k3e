@@ -1,6 +1,7 @@
 ::selection{
-    background: #008549;
-    color: #fff;
+    /*background: #008549;*/
+    background-color: #eee;
+    color: #000;
 }
 body{
     margin: 0px;
@@ -230,7 +231,6 @@ a{
     text-align: right;
     font-family: segoe ui;
     font-weight: lighter;
-    font-size: 1.2em;
 }
 #top-bar > a{
     color: #fff;
@@ -238,6 +238,45 @@ a{
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
+}
+#top-bar a.register-button::before{
+    content: '';
+    display: inline-block;
+    background-size: cover;
+    width: 20px;
+    height: 20px;
+    background-image: url('/images/icons/register.png');
+    margin-right: 5px;
+    vertical-align: middle;
+}
+#top-bar a.login-button::before{
+    content: '';
+    display: inline-block;
+    background-size: cover;
+    width: 20px;
+    height: 20px;
+    background-image: url('/images/icons/login.png');
+    margin-right: 5px;
+    vertical-align: middle;
+}
+#top-bar a.contact-button::before{
+    content: '';
+    display: inline-block;
+    background-size: cover;
+    width: 20px;
+    height: 20px;
+    background-image: url('/images/icons/info.png');
+    margin-right: 5px;
+    vertical-align: middle;
+}
+#top-bar a.register-button{
+    margin-right: 1em;
+}
+#top-bar a.login-button{
+    margin-right: 1em;
+}
+#top-bar a.contact-button{
+    
 }
 #control-bar-wrapper{
     background-color: #44b27c;

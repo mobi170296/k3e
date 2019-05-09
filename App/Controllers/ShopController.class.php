@@ -48,6 +48,13 @@
                     $shop->loadAvatar();
                     $shop->loadBackground();
                     $this->View->Data->shop = $shop;
+                    $this->View->Data->waitorderstotal = $shop->getWaitOrdersTotal();
+                    $this->View->Data->toshiporderstotal = $shop->getToshipOrdersTotal();
+                    $this->View->Data->shippingorderstotal = $shop->getShippingOrdersTotal();
+                    $this->View->Data->completedorderstotal = $shop->getCompletedOrdersTotal();
+                    $this->View->Data->cancelledorderstotal = $shop->getCancelledOrdersTotal();
+                    
+                    
                     return $this->View->RenderTemplate();
                 } else {
                     return $this->redirectToAction('Open', 'Shop');
@@ -66,6 +73,14 @@
                 $user = (new Authenticate($database))->getUser();
                 
                 if($user->loadShop()){
+                    $shop = $user->shop;
+                    $this->View->Data->waitorderstotal = $shop->getWaitOrdersTotal();
+                    $this->View->Data->toshiporderstotal = $shop->getToshipOrdersTotal();
+                    $this->View->Data->shippingorderstotal = $shop->getShippingOrdersTotal();
+                    $this->View->Data->completedorderstotal = $shop->getCompletedOrdersTotal();
+                    $this->View->Data->cancelledorderstotal = $shop->getCancelledOrdersTotal();
+                    
+                    
                     $this->View->Data->maincategories = (new MainCategoryList($database))->getAll();
                     return $this->View->RenderTemplate();
                 }else{
@@ -109,6 +124,14 @@
                             $this->View->Data->maincategories = (new MainCategoryList($database))->getAll();
                             $this->View->Data->subcategories = (new SubCategoryList($database))->getWhere('maincategory_id='. $product->subcategory->maincategory_id);
                             $this->View->Data->product = $product;
+                            
+                            
+                            
+                            $this->View->Data->waitorderstotal = $shop->getWaitOrdersTotal();
+                            $this->View->Data->toshiporderstotal = $shop->getToshipOrdersTotal();
+                            $this->View->Data->shippingorderstotal = $shop->getShippingOrdersTotal();
+                            $this->View->Data->completedorderstotal = $shop->getCompletedOrdersTotal();
+                            $this->View->Data->cancelledorderstotal = $shop->getCancelledOrdersTotal();
                             return $this->View->RenderTemplate();
                         }else{
                             $this->View->Data->ErrorMessage = 'Không tìm thấy trang này';
@@ -135,6 +158,7 @@
                 $user = (new Authenticate($database))->getUser();
                 
                 if($user->loadShop()){
+                    $shop = $user->shop;
                     $user->shop->loadProducts();
                     $this->View->Data->products = $user->shop->products;
                     
@@ -148,6 +172,13 @@
                         }
                     }
                     
+                    
+                    
+                    $this->View->Data->waitorderstotal = $shop->getWaitOrdersTotal();
+                    $this->View->Data->toshiporderstotal = $shop->getToshipOrdersTotal();
+                    $this->View->Data->shippingorderstotal = $shop->getShippingOrdersTotal();
+                    $this->View->Data->completedorderstotal = $shop->getCompletedOrdersTotal();
+                    $this->View->Data->cancelledorderstotal = $shop->getCancelledOrdersTotal();
                     return $this->View->RenderTemplate();
                 }else{
                     return $this->redirectToAction('Open', 'Shop');
@@ -159,7 +190,139 @@
                 return $this->redirectToAction('Login', 'User', ['backurl' => '/Shop/ProductList']);
             }
         }
+        #danh sach don hang doi xac nhan
+        public function WaitOrders(){
+            try{
+                $database = new Database();
+                $user = (new Authenticate($database))->getUser();
+                
+                if($user->loadShop()){
+                    $shop = $user->shop;
+                    
+                    
+                    $this->View->Data->waitorderstotal = $shop->getWaitOrdersTotal();
+                    $this->View->Data->toshiporderstotal = $shop->getToshipOrdersTotal();
+                    $this->View->Data->shippingorderstotal = $shop->getShippingOrdersTotal();
+                    $this->View->Data->completedorderstotal = $shop->getCompletedOrdersTotal();
+                    $this->View->Data->cancelledorderstotal = $shop->getCancelledOrdersTotal();
+                    return $this->View->RenderTemplate();
+                }else{
+                    return $this->redirectToAction('Open', 'Shop');
+                }
+            } catch (DBException $ex) {
+                $this->View->Data->ErrorMessage = 'DBERR';
+                return $this->View->RenderTemplate('_error');
+            } catch (AuthenticateException $e){
+                return $this->redirectToAction('Login', 'User');
+            }
+        }
+        #danh dach don hang cho lay hang
+        public function ToshipOrders(){
+            try{
+                $database = new Database();
+                $user = (new Authenticate($database))->getUser();
+                
+                if($user->loadShop()){
+                    $shop = $user->shop;
+                    
+                    
+                    $this->View->Data->waitorderstotal = $shop->getWaitOrdersTotal();
+                    $this->View->Data->toshiporderstotal = $shop->getToshipOrdersTotal();
+                    $this->View->Data->shippingorderstotal = $shop->getShippingOrdersTotal();
+                    $this->View->Data->completedorderstotal = $shop->getCompletedOrdersTotal();
+                    $this->View->Data->cancelledorderstotal = $shop->getCancelledOrdersTotal();
+                    return $this->View->RenderTemplate();
+                }else{
+                    return $this->redirectToAction('Open', 'Shop');
+                }
+            } catch (DBException $ex) {
+                $this->View->Data->ErrorMessage = 'DBERR';
+                return $this->View->RenderTemplate('_error');
+            } catch (AuthenticateException $e){
+                return $this->redirectToAction('Login', 'User');
+            }
+        }
+        #danh sach don hang dang giao 
+        public function ShippingOrders(){
+            try{
+                $database = new Database();
+                $user = (new Authenticate($database))->getUser();
+                
+                if($user->loadShop()){
+                    $shop = $user->shop;
+                    
+                    
+                    $this->View->Data->waitorderstotal = $shop->getWaitOrdersTotal();
+                    $this->View->Data->toshiporderstotal = $shop->getToshipOrdersTotal();
+                    $this->View->Data->shippingorderstotal = $shop->getShippingOrdersTotal();
+                    $this->View->Data->completedorderstotal = $shop->getCompletedOrdersTotal();
+                    $this->View->Data->cancelledorderstotal = $shop->getCancelledOrdersTotal();
+                    return $this->View->RenderTemplate();
+                }else{
+                    return $this->redirectToAction('Open', 'Shop');
+                }
+            } catch (DBException $ex) {
+                $this->View->Data->ErrorMessage = 'DBERR';
+                return $this->View->RenderTemplate('_error');
+            } catch (AuthenticateException $e){
+                return $this->redirectToAction('Login', 'User');
+            }
+        }
+        #danh sach don hang hoan thanh
+        public function CompletedOrders(){
+            try{
+                $database = new Database();
+                $user = (new Authenticate($database))->getUser();
+                
+                if($user->loadShop()){
+                    $shop = $user->shop;
+                    
+                    
+                    $this->View->Data->waitorderstotal = $shop->getWaitOrdersTotal();
+                    $this->View->Data->toshiporderstotal = $shop->getToshipOrdersTotal();
+                    $this->View->Data->shippingorderstotal = $shop->getShippingOrdersTotal();
+                    $this->View->Data->completedorderstotal = $shop->getCompletedOrdersTotal();
+                    $this->View->Data->cancelledorderstotal = $shop->getCancelledOrdersTotal();
+                    return $this->View->RenderTemplate();
+                }else{
+                    return $this->redirectToAction('Open', 'Shop');
+                }
+            } catch (DBException $ex) {
+                $this->View->Data->ErrorMessage = 'DBERR';
+                return $this->View->RenderTemplate('_error');
+            } catch (AuthenticateException $e){
+                return $this->redirectToAction('Login', 'User');
+            }
+        }
+        #danh sach don hang huy
+        public function CancelledOrders(){
+            try{
+                $database = new Database();
+                $user = (new Authenticate($database))->getUser();
+                
+                if($user->loadShop()){
+                    $shop = $user->shop;
+                    
+                    
+                    $this->View->Data->waitorderstotal = $shop->getWaitOrdersTotal();
+                    $this->View->Data->toshiporderstotal = $shop->getToshipOrdersTotal();
+                    $this->View->Data->shippingorderstotal = $shop->getShippingOrdersTotal();
+                    $this->View->Data->completedorderstotal = $shop->getCompletedOrdersTotal();
+                    $this->View->Data->cancelledorderstotal = $shop->getCancelledOrdersTotal();
+                    return $this->View->RenderTemplate();
+                }else{
+                    return $this->redirectToAction('Open', 'Shop');
+                }
+            } catch (DBException $ex) {
+                $this->View->Data->ErrorMessage = 'DBERR';
+                return $this->View->RenderTemplate('_error');
+            } catch (AuthenticateException $e){
+                return $this->redirectToAction('Login', 'User');
+            }
+        }
         
+        
+        #thong tin shop voi khach hang
         public function View($id){
             return $this->View->RenderContent($id);
         }

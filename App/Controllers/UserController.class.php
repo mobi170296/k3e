@@ -219,6 +219,7 @@
                 $orders =  $user->orders;
                 
                 foreach($orders as $order){
+                    $order->loadPaymentType();
                     $order->loadOrderItems();
                     $order->orderitems[0]->loadProduct();
                     $order->orderitems[0]->product->loadMainImage();

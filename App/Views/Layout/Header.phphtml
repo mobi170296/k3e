@@ -5,9 +5,9 @@
         }
     }else{
         echo <<<LINK
-<a href="/User/Login">Đăng nhập</a>
-<a href="/User/Register">Đăng ký</a>
+<a class="login-button" href="/User/Login">Đăng nhập</a>
+<a class="register-button" href="/User/Register">Đăng ký</a> 
 LINK;
     }
 ?>
-<a href="/About/Contact">Liên hệ</a>
+<a class="contact-button" href="/About/Contact">Liên hệ</a>

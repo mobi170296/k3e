@@ -144,7 +144,7 @@
         }
         
         public function clientCanCancel(){
-            $ac = [self::NGUOI_MUA_THANH_TOAN_THAT_BAI, self::CHO_NGUOI_BAN_XAC_NHAN];
+            $ac = [self::CHO_NGUOI_BAN_XAC_NHAN];
             return in_array($this->status, $ac);
         }
         
@@ -187,7 +187,7 @@
                 self::NGUOI_MUA_DANG_THANH_TOAN => 'Người mua đang thanh toán',
                 self::NGUOI_MUA_THANH_TOAN_THAT_BAI => 'Người mua chưa thanh toán',
                 self::CHO_NGUOI_BAN_XAC_NHAN => 'Chờ người bán xác nhận',
-                self::HUY_DON_HANG => 'Hủy đơn hàng',
+                self::HUY_DON_HANG => 'Đơn hàng bị người mua hủy',
                 self::KHONG_CON_HANG => 'Không còn hàng',
                 self::HUY_DO_HE_THONG => 'Hủy do hệ thống',
                 self::DANG_GIAO => 'Đang giao hàng',

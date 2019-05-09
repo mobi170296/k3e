@@ -1,0 +1,147 @@
+<?php
+    $this->layout = DS . 'App' . DS . 'Template' . DS . 'Common' . DS . 'shop_layout.phphtml';
+    $this->Data->Title = 'Danh sách sản phẩm';
+    
+    
+    
+    $waitorderstotal = $this->Data->waitorderstotal;
+    $toshiporderstotal = $this->Data->toshiporderstotal;
+    $shippingorderstotal = $this->Data->shippingorderstotal;
+    $completedorderstotal = $this->Data->completedorderstotal;
+    $cancelledorderstotal = $this->Data->cancelledorderstotal;
+?>
+
+
+
+<style>
+    table#product-list{
+        border-collapse: collapse;
+        font-family: segoe ui;
+        width: 100%;
+        background-color: #fff;
+    }
+    table#product-list thead tr:first-child{
+        background-color: #eee;
+        font-size: .9rem;
+        font-weight: lighter;
+    }
+    table#product-list td{
+        border: 2px solid #eee;
+        padding: 5px 10px;
+    }
+    table#product-list .product-name-col{
+        width: 10em;
+    }
+    table#product-list .product-image-col{
+        width: 100px;
+    }
+    table#product-list .product-quantity-col, table#product-list .product-soldquantity-col{
+        text-align: center;
+    }
+    .product-list{
+        margin: 0px 20px;
+    }
+    
+    .product-list-title{
+        margin: 20px 0px;
+        font-size: 1.6em;
+        background-color: #fff;
+        padding: 10px 30px;
+        font-weight: lighter;
+        font-family: segoe ui;
+        box-shadow: 0px 10px 10px 0px rgba(0,0,0,0.1);
+        border-left: 10px solid #44b27c;
+    }
+    
+    .product-list-sections{
+        border-top: 1px solid transparent;
+    }
+    
+    .search-section{
+        margin: 10px 0px;
+    }
+    
+</style>
+
+
+    <div class="main-wrapper">
+        <div class="left-menu">
+            <div class="menu open">
+                <div class="menu-label"><i class="mi order"></i>Đơn hàng</div>
+                <div class="menu-items">
+                            <div class="menu-item"><a href="/Shop/WaitOrders"><span class="orders-count"><?php echo $waitorderstotal; ?></span>Chờ xác nhận</a></div>
+                            <div class="menu-item"><a href="/Shop/ToshipOrders"><span class="orders-count"><?php echo $toshiporderstotal; ?></span>Chờ lấy hàng</a></div>
+                            <div class="menu-item active"><a href="/Shop/ShippingOrders"><span class="orders-count"><?php echo $shippingorderstotal; ?></span>Đang giao</a></div>
+                            <div class="menu-item"><a href="/Shop/CompletedOrders"><span class="orders-count"><?php echo $completedorderstotal; ?></span>Hoàn thành</a></div>
+                            <div class="menu-item"><a href="/Shop/CancelledOrders"><span class="orders-count"><?php echo $cancelledorderstotal; ?></span>Đã hủy</a></div>
+                </div>
+            </div>
+            <div class="menu">
+                <div class="menu-label"><i class="mi product"></i>Sản phẩm</div>
+                <div class="menu-items">
+                    <div class="menu-item"><a href="/Shop/ProductList">Danh sách sản phẩm</a></div>
+                    <div class="menu-item"><a href="/Shop/AddProduct">Đăng sản phẩm</a></div>
+                </div>
+            </div>
+            <div class="menu">
+                <div class="menu-label"><i class="mi shop"></i>Thông tin cửa hàng</div>
+                <div class="menu-items">
+                    <div class="menu-item"><a href="/Shop/Info">Thông tin cơ bản</a></div>
+                </div>
+            </div>
+            <div class="menu">
+                <div class="menu-label">Chương trình khuyến mãi</div>
+                <div class="menu-items">
+                    <div class="menu-item"><a href="">Mã giảm giá</a></div>
+                    <div class="menu-item"><a href="">Tủ hàng</a></div>
+                    <div class="menu-item"><a href="">Flash sale</a></div>
+                </div>
+            </div>
+            <div class="menu">
+                <div class="menu-label">Khách hàng</div>
+                <div class="menu-items">
+                    <div class="menu-item"><a href="">Lịch sử quan tâm</a></div>
+                    <div class="menu-item"><a href="">Danh sách khách hàng</a></div>
+                    <div class="menu-item"><a href="">Danh sách chặn người mua</a></div>
+                </div>
+            </div>
+            
+            <script type="text/javascript">
+                //module cho left menu
+                !function(){
+                    var menu_labels = document.querySelectorAll('.left-menu .menu .menu-label');
+                    for(var i=0; i<menu_labels.length; i++){
+                        menu_labels[i].addEventListener('click', function(e){
+                            var height = parseInt(this.nextElementSibling.style.height);
+                            height = !height ? this.nextElementSibling.scrollHeight : 0;
+                            this.nextElementSibling.style.height = height + 'px';
+                        });
+                    }
+                }();
+            </script>
+        </div>
+        
+        
+        <div class="right-content">
+            <div class="product-list">
+                <div class="product-list-title">
+                    Đơn hàng đang vận chuyển
+                </div>
+                <div class="product-list-sections">
+                    <div class="product-table-section">
+                        <table id="product-list">
+                            <thead>
+
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="product-pagination-section">
+                        <div id="pagination-bar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

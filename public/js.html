@@ -19,15 +19,70 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </head>
     <body>
-        <div id="username_view"></div>
-        <input type="text" name="username" id="username">
+        <div id="div"></div>
+        <style>
+            table{
+                border-collapse: collapse;
+                
+            }
+            table td{
+                border: 1px solid #ccc;
+                padding: 20px;
+            }
+        </style>
+        <script src="/scripts/iktemplate.js"></script>
+        <script type="text/javascript" src="/scripts/iktable.js"></script>
+        <table id="user">
+            <thead>
+                
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+        
+        <script id="user-tpl" type="text/ktpl">
+            <td data-control-type="name">@this.name</td>
+            <td data-control-type="gender">@(this.gender !== 0 ? 'Nam' : 'Nữ')</td>
+            <td data-control-type="phone">@this.phone</td>
+        </script>
+        
         <script>
-            Object.defineProperty(username, 'datavalue', {
-               set: function(value){
-                   username_view.innerHTML = value;
-                   this.value = value;
-               }
+            function click_from_phone(e){
+                console.log('Phone = ' + this.innerHTML);
+            }
+            
+            function click_from_name(e){
+                
+                console.log('Name = ' + this.innerHTML);
+            }
+            
+            function click_from_gender(e){
+                
+                console.log('Gender = ' + this.innerHTML);
+            }
+            
+            user.addEventListener('click', function(e){
+                e.target.dataset.controlType !== undefined && e.target.dataset.controlType === "name" && click_from_name.call(e.target, e);
+                e.target.dataset.controlType !== undefined && e.target.dataset.controlType === "phone" && click_from_phone.call(e.target, e);
+                e.target.dataset.controlType !== undefined && e.target.dataset.controlType === "gender" && click_from_gender.call(e.target, e);
             });
+            
+            users = [
+                {name: 'TRỊNH VĂN LINH', gender: 1, phone: '32432432421'},
+                {name: 'NGUYEN THI THUY HANG', gender: 0, phone: '243543575'},
+                {name: 'NGUYEN DINH CHINH', gender: 1, phone: '21054420213'},
+                {name: 'NGO VAN LINH', gender: 0, phone: '242343213216'},
+                {name: 'BUI THI DIEM XUAN', gender: -1, phone: '23243245454'},
+                {name: 'NGO GIA TU', gender: 2, phone: '456776857657'},
+                {name: 'GIA CAT LUONG', gender: 1, phone: '32343457436'}
+            ];
+            table = new IKDataTable(user);
+            table.setRowTemplate(window['user-tpl'].innerHTML);
+            table.addHeader(['Tên người dùng', 'Giới tính', 'Số điện thoại']);
+            for(user of users){
+                table.addRow(user);
+            }
         </script>
     </body>
 </html>

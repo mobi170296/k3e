@@ -1,3 +1,23 @@
+/*phan trang*/
+button.btn-page{
+    background-color: #06a24f;
+    color: #fff;
+    display: inline-block;
+    border: 1px solid #06a24f;
+    cursor: pointer;
+    padding: 5px 10px;
+    margin: 0px 5px;
+}
+
+button.btn-page.active{
+    background-color: red;
+}
+
+#pagination-bar{
+    margin: 20px 0px;
+    text-align: center;
+}
+
 /*star rating*/
 div.star-rank{
     position: relative;
@@ -183,6 +203,8 @@ a.product-link{
     font-family: segoe ui;
     background: #fff;
     margin-bottom: 10px;
+    border-radius: 0px 0px 0px 10px;
+    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.1);
 }
 .filter-product-list-wrapper .product-list{
     display: flex;
@@ -251,6 +273,16 @@ a.product-link{
     color: #000;
     border-left: 5px solid #ebf4fc;
     border-right: 1px solid #ebf4fc;
+}
+.main-wrapper .left-menu .orders-count{
+    display: inline-block;
+    border: 100px;
+    border: 1px solid #eee;
+    background-color: #eee;
+    line-height: 1;
+    padding: 5px 10px;
+    border-radius: 100px;
+    margin-right: 5px;
 }
 .mi{
     margin-right: 5px;

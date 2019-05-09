@@ -159,6 +159,121 @@ $NotificationPopup = new (function(){
     }
 });
 
+
+
+
+var $Modal = new (function(){
+    this.modalwrapper = $('#modal-wrapper')[0];
+    if(this.modalwrapper !== null){
+        this.modal = $(this.modalwrapper).$('.modal')[0];
+        this.modalheader = $(this.modal).$('.modal-header')[0];
+        this.modalheadertitle = $(this.modal).$('.modal-header-title')[0];
+        this.modalbody = $(this.modal).$('.modal-body')[0];
+        this.modalclosebutton = $(this.modaltitle).$('.modal-header-button')[0];
+    }
+    
+    this.create = function(){
+        this.modalwrapper = $.create('div');
+        this.modalwrapper.id = 'modal-wrapper';
+        $(this.modalwwrapper).addClass('u-hidden');
+        this.modal = $.create('div');
+        $(this.modal).addClass('modal');
+        $(this.modal).on('mousedown', function (e) {
+            e.stopPropagation();
+        });
+        this.modalheader = $.create('div');
+        $(this.modalheader).addClass('modal-header').addClass('clearfix');
+        this.modalheadertitle = $.create('div');
+        $(this.modalheadertitle).addClass('modal-header-title');
+        $(this.modalheader).addEnd(this.modalheadertitle);
+        
+        this.modalclosebutton = $.create('div');
+        $(this.modalclosebutton).html('&times;');
+        $(this.modalclosebutton).addClass('modal-header-button');
+        $(this.modalclosebutton).on('click', function (e) {
+            window.$Modal.hide();
+        });
+        
+        $(this.modalheader).addEnd(this.modalclosebutton);
+        
+        $(this.modal).addEnd(this.modalheader);
+        
+        this.modalbody = $.create('div');
+        $(this.modalbody).addClass('modal-body');
+        $(this.modal).addEnd(this.modalbody);
+        
+        $(this.modalwrapper).addEnd(this.modal);
+        
+        $(document.body).addEnd(this.modalwrapper);
+        return this;
+    }
+    this.show = function(){
+        if (this.modalwrapper === undefined){
+            this.create();
+        }
+        $(this.modalwrapper).css('display', 'block');
+        $(window.document.body).css('overflow', 'hidden');
+        return this;
+    }
+    this.hide = function(){
+        if (this.modalwrapper === undefined){
+            this.create();
+        }
+        $(this.modalwrapper).css('display', 'none');
+        $(window.document.body).css('overflow', 'auto');
+        return this;
+    }
+    this.text = function(t){
+        if (this.modalwrapper === undefined){
+            this.create();
+        }
+        $(this.modalbody).text(t);
+        return this;
+    }
+    this.html = function(t){
+        if (this.modalwrapper === undefined){
+            this.create();
+        }
+        $(this.modalbody).html(t);
+        return this;
+    }
+    this.contenttext = function(t){
+        if (this.modalwrapper === undefined){
+            this.create();
+        }
+        $(this.modalbody).text(t);
+        return this;
+    }
+    this.contenthtml = function(t){
+        if(this.modalwrapper === undefined){
+            this.create();
+        }
+        $(this.modalbody).html(t);
+        return this;
+    }
+    this.title = function(t){
+        if (this.modalwrapper === undefined){
+            this.create();
+        }
+        $(this.modalheadertitle).text(t);
+        return this;
+    }
+    this.waiting = function(){
+        if (this.modalwrapper === undefined){
+            this.create();
+        }
+        this.html('<div class="loading-i-wrapper"><div class="loading-i"></div></div>');
+        return this;
+    }
+    this.setEvent = function(t, e){
+        $(this.modalwrapper).on(t, e);
+    }
+})();
+
+document.onmousedown = function(e){
+    window.$Modal.hide();
+}
+
 $(function(e){
     $(document.body).addBegin($LoadingPopup.container).addBegin($ConfirmPopup.container).addBegin($NotificationPopup.container);
     $('.tabpane .baritem').on('click', function(e){

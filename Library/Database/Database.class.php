@@ -260,6 +260,24 @@
             @self::$connection->close();
         }
         
+        public function query($str){
+            $result = self::$connection->query($str);
+            if($result === false){
+                throw new DBException(self::$connection->error, self::$connection->errno);
+            }
+            $rows = [];
+            while($r = $result->fetch_assoc()){
+                $row = new \stdClass();
+                foreach($r as $k => $v){
+                    $row->$k = $v;
+                }
+                
+                $rows[] = $row;
+            }
+            
+            return $rows;
+        }
+        
         #Test function
         public function get(){
             $query = "";
