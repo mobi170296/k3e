@@ -415,6 +415,7 @@
                 
                 $deliveryaddress = new DeliveryAddressModel($database);
                 $deliveryaddress->id = $deliveryaddress_id;
+                
                 if(!$deliveryaddress->loadData() || $deliveryaddress->user_id != $user->id){
                     $result->header->code = 1;
                     $result->header->message = 'Địa chỉ vận chuyển đến không tồn tại';
@@ -541,6 +542,17 @@
                             #them order vao db truoc, lay duoc order.id
                             $order->add();
                             
+                            #orderitems
+                            foreach($cartitems as $cartitem){
+                                $orderitem = new OrderItemModel($database);
+                                $orderitem->order_id = $order->id;
+                                $orderitem->product_id = $cartitem->product->id;
+                                $orderitem->quantity = $cartitem->quantity;
+                                $orderitem->price = $cartitem->product->getSalePrice();
+                                $orderitem->warranty_months_number = $cartitem->product->warranty_months_number;
+                                $orderitem->add();
+                            }
+                            
                             #them orderlog dau tien
                             $orderlog = new OrderLogModel($database);
                             $orderlog->content = $order->getStatusString();
@@ -601,7 +613,7 @@
                                 $onepayorder->order_id = $order->id;
                                 $onepayorder->orderinfo = $order->ordercode;
                                 $onepayorder->currencycode = OnePay::CURRENCYCODE;
-                                $onepayorder->amount = (int)($totalprice * 100);
+                                $onepayorder->amount = (int)(($order->total_price + $order->ship_fee)*100);
                                 $onepayorder->merchant = OnePay::MERCHANT;
                                 $onepayorder->accesscode = OnePay::ACCESSCODE;
                                 $onepayorder->ticketno = $_SERVER['REMOTE_ADDR'];
@@ -609,8 +621,26 @@
                                 $onepayorder->add();
                             }
                             
+                            
+                            if($paymenttype_id == PaymentTypeModel::COD){
+                                $nexturl = '/User/CheckoutResult/' . $order->ordercode;
+                            }else{
+                                #khoi tao tham so lay url thanh toan
+                                $onepay = new OnePay();
+                                $nexturl = $onepay->getPaymentURL(new PaymentRequestParameter($onepayorder->orderinfo, $onepayorder->transactionref, $onepayorder->amount, '/User/PayResult?ordercode=' . $onepayorder->orderinfo, $onepayorder->ticketno, '/User/Checkout?shop_id=' . $shop_id, 'OrderPay'));
+                            }
+                            
+                            #xoa cartitem da thanh toan
+                            foreach($cartitems as $cartitem){
+                                $cartitem->delete();
+                            }
+                            
                             $database->commit();
-                            return $this->View->RenderCONTENT('ORDER ID ' . $order->id);
+                            $result->header->code = 0;
+                            $result->header->message = 'Đặt hàng thành công!';
+                            $result->body = new \stdClass();
+                            $result->body->data = new \stdClass();
+                            $result->body->data->nexturl = $nexturl;
                         }else{
                             $result->header->code = 1;
                             $result->header->message = 'Dịch vụ vận chuyển không tồn tại';

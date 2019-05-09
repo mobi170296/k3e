@@ -478,4 +478,8 @@
         public function CheckoutResult(){
             return $this->View->RenderContent('OK');
         }
+        
+        public function PayResult(){
+            return $this->View->RenderPartial();
+        }
     }

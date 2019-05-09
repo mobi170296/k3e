@@ -96,4 +96,44 @@
         public function updateCurrentStatus(){
             
         }
+        
+        public function update($ghntransporter){
+            $order_id = new DBNumber($ghntransporter->order_id);
+            $orderid = $ghntransporter->orderid === null ? new DBRaw('null') : new DBNumber($ghntransporter->orderid);
+            $ordercode = $ghntransporter->ordercode === null ? new DBRaw('null') : new DBString($ghntransporter->ordercode);
+            $currentstatus = $ghntransporter->currentstatus === null ? new DBRaw('null') : new DBString($ghntransporter->currentstatus);
+            $extrafee = $ghntransporter->extrafee === null ? new DBRaw('null') : new DBNumber($ghntransporter->extrafee);
+            $totalservicefee = $ghntransporter->totalservicefee === null ? new DBRaw('null') : new DBNumber($ghntransporter->totalservicefee);
+            $expecteddeliverytime = $ghntransporter->expecteddeliverytime === null ? new DBRaw('null') : $ghntransporter->expecteddeliverytime;
+            $note = $ghntransporter->note === null ? new DBRaw('null') : new DBString($ghntransporter->note);
+            $serviceid = $ghntransporter->serviceid === null ? new DBRaw('null') : new DBNumber($ghntransporter->serviceid);
+            $servicename = $ghntransporter->servicename === null ? new DBRaw('null') : new DBString($ghntransporter->servicename);
+            $insurancefee = $ghntransporter->insurancefee === null ? new DBRaw('null') : new DBNumber($ghntransporter->insurancefee);
+            $codamount = $ghntransporter->codamount === null ? new DBRaw('null') : new DBNumber($ghntransporter->codamount);
+            $fromdistrictid = $ghntransporter->fromdistrictid === null ? new DBRaw('null') : new DBNumber($ghntransporter->fromdistrictid);
+            $fromwardcode = $ghntransporter->fromwardcode === null ? new DBRaw('null') : new DBString($ghntransporter->fromwardcode);
+            $todistrictid = $ghntransporter->todistrictid === null ? new DBRaw('null') : new DBNumber($ghntransporter->todistrictid);
+            $towardcode = $ghntransporter->towardcode === null ? new DBRaw('null') : new DBString($ghntransporter->towardcode);
+            
+            $this->database->update(DB_TABLE_TRANSPORTER, [
+                'order_id' => $order_id,
+                'orderid' => $orderid,
+                'ordercode' => $ordercode,
+                'currentstatus' => $currentstatus,
+                'extrafee' => $extrafee,
+                'totalservicefee' => $totalservicefee,
+                'expecteddeliverytime' => $expecteddeliverytime,
+                'note' => $note,
+                'serviceid' => $serviceid,
+                'servicename' => $servicename,
+                'insurancefee' => $insurancefee,
+                'codamount' => $codamount,
+                'fromdistrictid' => $fromdistrictid,
+                'fromwardcode' => $fromwardcode,
+                'todistrictid' => $todistrictid,
+                'towardcode' => $towardcode
+            ], 'id=' . (int)$this->id);
+            
+            return true;
+        }
     }

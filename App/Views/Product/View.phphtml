@@ -308,7 +308,7 @@ PI;
                     echo <<<ROW
                 <div class="product-info-top">
                     <div class="product-name">{$product->name}</div>
-                    <div class="product-soldout">Đã bán 659</div>
+                    <div class="product-soldout">Đã bán {$product->getSoldQuantity()}</div>
                     <div class="product-price">{$product->getPriceString()}đ</div>
                 </div>
                 <div class="product-info-bottom">

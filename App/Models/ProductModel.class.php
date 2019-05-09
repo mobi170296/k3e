@@ -308,8 +308,8 @@
         }
         
         public function getSoldQuantity(){
-            $rows = $this->database->select('count(quantity) as quantity')->from(DB_TABLE_ORDERITEM)->where('product_id=' . (int)$this->id)->execute();
+            $rows = $this->database->select('sum(quantity) as quantity')->from(DB_TABLE_ORDERITEM)->where('product_id=' . (int)$this->id)->execute();
             $row = $rows[0];
-            return $row->quantity;
+            return $row->quantity === null ? 0 : $row->quantity;
         }
     }
