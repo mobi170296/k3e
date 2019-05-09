@@ -1,0 +1,355 @@
+<?php
+    $order = $this->Data->order;
+    $this->layout = DS . 'App' . DS . 'Template' . DS . 'Common' . DS . 'shop_layout.phphtml';
+    $this->Data->Title = 'Chi tiết đơn hàng ' . $order->ordercode;
+    
+    
+    $waitorderstotal = $this->Data->waitorderstotal;
+    $toshiporderstotal = $this->Data->toshiporderstotal;
+    $shippingorderstotal = $this->Data->shippingorderstotal;
+    $completedorderstotal = $this->Data->completedorderstotal;
+    $cancelledorderstotal = $this->Data->cancelledorderstotal;
+?>
+
+<div class="main-wrapper shop-profile-wrapper">
+    <div class="left-menu">
+        <div class="menu open">
+            <div class="menu-label"><i class="mi order"></i>Đơn hàng</div>
+            <div class="menu-items">
+                <div class="menu-item"><a href="/Shop/WaitOrders"><span class="orders-count"><?php echo $waitorderstotal; ?></span>Chờ xác nhận</a></div>
+                <div class="menu-item"><a href="/Shop/ToshipOrders"><span class="orders-count"><?php echo $toshiporderstotal; ?></span>Chờ lấy hàng</a></div>
+                <div class="menu-item"><a href="/Shop/ShippingOrders"><span class="orders-count"><?php echo $shippingorderstotal; ?></span>Đang giao</a></div>
+                <div class="menu-item"><a href="/Shop/CompletedOrders"><span class="orders-count"><?php echo $completedorderstotal; ?></span>Hoàn thành</a></div>
+                <div class="menu-item"><a href="/Shop/CancelledOrders"><span class="orders-count"><?php echo $cancelledorderstotal; ?></span>Đã hủy</a></div>
+            </div>
+        </div>
+        <div class="menu">
+            <div class="menu-label"><i class="mi product"></i>Sản phẩm</div>
+            <div class="menu-items">
+                <div class="menu-item"><a href="/Shop/ProductList">Danh sách sản phẩm</a></div>
+                <div class="menu-item"><a href="/Shop/AddProduct">Đăng sản phẩm</a></div>
+            </div>
+        </div>
+        <div class="menu">
+            <div class="menu-label"><i class="mi shop"></i>Thông tin cửa hàng</div>
+            <div class="menu-items">
+                <div class="menu-item"><a href="">Thông tin cơ bản</a></div>
+            </div>
+        </div>
+        <div class="menu">
+            <div class="menu-label">Chương trình khuyến mãi</div>
+            <div class="menu-items">
+                <div class="menu-item"><a href="">Mã giảm giá</a></div>
+                <div class="menu-item"><a href="">Tủ hàng</a></div>
+                <div class="menu-item"><a href="">Flash sale</a></div>
+            </div>
+        </div>
+        <div class="menu">
+            <div class="menu-label">Khách hàng</div>
+            <div class="menu-items">
+                <div class="menu-item"><a href="">Lịch sử quan tâm</a></div>
+                <div class="menu-item"><a href="">Danh sách khách hàng</a></div>
+                <div class="menu-item"><a href="">Danh sách chặn người mua</a></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        //module cho left menu
+        !function(){
+            var menu_labels = document.querySelectorAll('.left-menu .menu .menu-label');
+            for(var i=0; i<menu_labels.length; i++){
+                menu_labels[i].addEventListener('click', function(e){
+                    var height = parseInt(this.nextElementSibling.style.height);
+                    height = !height ? this.nextElementSibling.scrollHeight : 0;
+                    this.nextElementSibling.style.height = height + 'px';
+                });
+            }
+        }();
+    </script>
+    
+    
+    <style>
+        .shop-order-detail{
+            margin: 0px 20px;
+        }
+        .shop-order-detail .shop-order-detail-header{
+            padding: 20px 30px;
+            font-size: 1.5em;
+            background-color: #fff;
+            margin-bottom: 20px;
+            font-family: segoe ui;
+            font-weight: lighter;
+        }
+        .shop-order-detail .info-groups{
+            margin: 20px 0px;
+            padding: 30px;
+            border: 1px solid #eee;
+            border-radius: 3px;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+            background-color: #fff;
+            
+        }
+        
+        .shop-order-detail .info-group{
+            margin: 10px 0px;
+        }
+        
+        .shop-order-detail .info-group .info-group-title{
+            font-size: 1.1em;
+            font-weight: bold;
+            font-family: arial;
+        }
+        
+        .shop-order-detail .info-group .info-group-content{
+            font-family: arial;
+        }
+        
+        .shop-order-detail .order-info .info-group-content{
+            line-height: 1.5;
+        }
+        
+        .shop-order-detail .orderlog{
+            display: flex;
+        }
+        .shop-order-detail .orderlog-content{
+            flex-basis: 50%;
+        }
+        .shop-order-detail .orderlog-time{
+            flex-basis: 50%;
+        }
+        
+        
+        .shop-order-detail table{
+            width: 100%;
+            text-align: right;
+            border-collapse: collapse;
+        }
+        .shop-order-detail table tr{
+            border-bottom: 1px solid #ccc;
+        }
+        .shop-order-detail table tr:last-child{
+            border: none;
+        }
+        .shop-order-detail table th{
+            font-family: segoe ui;
+            font-weight: lighter;
+            text-align: right;
+        }
+        .shop-order-detail table td.product-image-col{
+            width: 450px;
+        }
+        .shop-order-detail table th:first-child{
+            text-align: center;
+        }
+        
+
+        .shop-order-detail .product-item{
+            display: flex;
+            align-items: center;
+        }
+        .shop-order-detail .product-image{
+            flex-shrink: 0;
+            background-size: cover;
+            background-repeat: no-repeat;
+            width: 50px;
+            height: 50px;
+            margin: 5px 10px;
+        }
+        .shop-order-detail .product-name{
+            flex-basis: 100%;
+            text-align: left;
+        }
+        .shop-order-detail .product-name a{
+            color: #44b27c;
+        }
+        
+        .shop-order-detail .order-summary{
+            display: flex;
+            flex-direction: column;
+            align-items: self-end;
+        }
+        
+        .shop-order-detail .order-total{
+            display: flex;
+            justify-content: space-between;
+            width: 20em;
+        }
+        
+        .shop-order-detail .order-total-string{
+            color: red;
+            font-weight: bold;
+        }
+        
+        .shop-order-detail .btn-readytoship{
+            padding: 10px 30px;
+            border: 1px solid #44b27c;
+            background-color: #44b27c;
+            color: #fff;
+            font-size: 1.0em;
+            margin: 10px 0px;
+        }
+        
+        .shop-order-detail .btn-cancel{
+            padding: 10px 30px;
+            border: 1px solid #f00;
+            background-color: #f00;
+            color: #fff;
+            font-size: 1.0em;
+        }
+    </style>
+    <div class="right-content">
+        <div class="shop-order-detail">
+            <div class="shop-order-detail-header">Chi tiết đơn hàng</div>
+            <div class="order-status info-groups">
+                <div class="info-group">
+                    <div class="info-group-title">Trạng thái đơn hàng</div>
+                    <div class="info-group-content">
+                        <div><?php echo $order->getStatusString(); ?></div>
+                        <div>
+                            <?php
+                                if($order->shopCanShip()){
+                                    echo '<button type="button" class="btn-readytoship" data-control-type="readytoship" data-order-id="'.$order->id.'">Chuẩn bị hàng</button>';
+                                }
+                            ?>
+                        </div>
+                        <div>
+                            <?php
+                                if($order->shopCanCancel()){
+                                    echo '<button type="button" class="btn-cancel" data-control-type="cancel" data-order-id="'.$order->id.'">Hết hàng</button>';
+                                }
+                            ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="order-info info-groups">
+                <div class="info-group">
+                    <div class="info-group-title">ID Đơn hàng</div>
+                    <div class="info-group-content"><?php echo $order->ordercode; ?></div>
+                </div>
+                <div class="info-group">
+                    <div class="info-group-title">Địa chỉ giao hàng</div>
+                    <div class="info-group-content">
+                        <div><?php echo $order->clientname; ?></div>
+                        <div><?php echo $order->clientphone; ?></div>
+                        <div><?php echo $order->getClientFullAddress(); ?></div>
+                    </div>
+                </div>
+                <div class="info-group">
+                    <div class="info-group-title">Thông tin vận chuyển</div>
+                    <div class="info-group-content">
+                        <div><?php echo $order->transporter->name; ?></div>
+                    </div>
+                </div>
+                
+                <div class="info-group">
+                    <div class="info-group-title">Thông tin thanh toán</div>
+                    <div class="info-group-content">
+                        <div><?php echo $order->paymenttype->name; ?></div>
+                        <div style="color: red"><?php echo $order->getPaidString(); ?></div>
+                    </div>
+                </div>
+                
+                <div class="info-group">
+                    <div class="info-group-title">Lịch sử đơn hàng</div>
+                    <div class="info-group-content">
+                        
+                        <?php
+                            $i = 0;
+                            foreach($order->orderlogs as $orderlog){
+                                $i++;
+                                echo <<<LOG
+                                <div class="orderlog">
+                                    <div class="orderlog-content">{$i}. {$orderlog->content}</div>
+                                    <div class="orderlog-time">{$orderlog->created_time}</div>
+                                </div>
+LOG;
+                            }
+                        ?>
+                    </div>
+                </div>
+            </div>
+            <div class="order-detail info-groups">
+                <div class="info-group">
+                    <div class="info-group-title">Chi tiết hóa đơn</div>
+                    <div class="info-group-content">
+                        <table>
+                            <tr>
+                                <th>Sản phẩm</th>
+                                <th>Giá mua</th>
+                                <th>Số lượng</th>
+                                <th>Thành tiền</th>
+                            </tr>
+                            <?php
+                                foreach($order->orderitems as $orderitem){
+                                    $pricestring = \number_format($orderitem->price);
+                                    $subtotalstring = \number_format($orderitem->price * $orderitem->quantity);
+                                    echo <<<ITEM
+                                    <tr>
+                                    <td class="product-image-col">
+                                        <div class="product-item">
+                                            <div class="product-image" style="background-image: url('{$orderitem->product->getMainImageThumbnail()}')"></div>
+                                            <div class="product-name"><a href="{$orderitem->product->getProductLink()}">{$orderitem->product->name}</a></div>
+                                        </div>
+                                    </td>
+                                    <td>{$pricestring}đ</td>
+                                    <td>{$orderitem->quantity}</td>
+                                    <td>{$subtotalstring}đ</td>
+                                    </tr>
+ITEM;
+                                }
+                            ?>
+                        </table>
+                        
+                        
+                        <div class="order-summary">
+                            <div class="order-total"><div class="order-total-title">Tổng cộng</div><div class="order-total-string"><?php echo \number_format($order->total_price); ?>đ</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    !function(){
+        var _shipbtn = document.querySelector('[data-control-type="readytoship"]');
+        var _cancelbtn = document.querySelector('[data-control-type="cancel"]');
+        
+        if(_shipbtn){
+            _shipbtn.addEventListener('click', function(e){
+                
+            });
+        }
+        
+        if(_cancelbtn){
+            _cancelbtn.addEventListener('click', function(e){
+                var _order_id = this.dataset.orderId;
+                
+                $ConfirmPopup.message('Bạn có muốn hủy đơn hàng này không?').active('Đồng ý', function(e){
+                    $ConfirmPopup.hide();
+                    $LoadingPopup.show();
+                    $.ajax().create().url('/api/shoporders/cancelorder').success(function(e){
+                        var result = JSON.parse(this.response);
+                        if(result.header.code === 0){
+                            $Toast.makeSuccess(result.header.message);
+                        }else{
+                            $Toast.makeError(result.header.message);
+                        }
+
+                        window.setTimeout(function(e){
+                            window.location.reload();
+                        }, 2000);
+                    }).error(function(e){
+                        $Toast.makeError('Loi ket noi');
+                        $LoadingPopup.hide();
+                    }).post('order_id=' + _order_id);
+                }).inactive('Không', function(e){
+                    $ConfirmPopup.hide();
+                }).show();
+            });
+        }
+    }();
+</script>

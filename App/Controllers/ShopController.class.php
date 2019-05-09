@@ -8,6 +8,8 @@
     use App\Models\MainCategoryList;
     use App\Models\SubCategoryList;
     
+    use App\Models\OrderModel;
+    
     use App\Models\ProductModel;
     
     
@@ -321,6 +323,49 @@
             }
         }
         
+        #thong tin don hang tu phia cua hang
+        public function OrderDetail($ordercode){
+            try{
+                $database = new Database();
+                $user = (new Authenticate($database))->getUser();
+                
+                if($user->loadShop()){
+                    $shop = $user->shop;
+                    
+                    $order = new OrderModel($database);
+                    $order->ordercode = $ordercode;
+                    if($order->loadFromOrderCode()){
+                        $order->loadTransporter();
+                        $order->loadPaymentType();
+                        $order->loadOrderLogs();
+                        $order->loadOrderItems();
+                        foreach($order->orderitems as $orderitem){
+                            $orderitem->loadProduct();
+                            $orderitem->product->loadMainImage();
+                        }
+                        
+                        $this->View->Data->order = $order;
+
+                        $this->View->Data->waitorderstotal = $shop->getWaitOrdersTotal();
+                        $this->View->Data->toshiporderstotal = $shop->getToshipOrdersTotal();
+                        $this->View->Data->shippingorderstotal = $shop->getShippingOrdersTotal();
+                        $this->View->Data->completedorderstotal = $shop->getCompletedOrdersTotal();
+                        $this->View->Data->cancelledorderstotal = $shop->getCancelledOrdersTotal();
+                        return $this->View->RenderTemplate();
+                    }else{
+                        return $this->redirectToAction('Info', 'Shop');
+                    }
+                    
+                }else{
+                    return $this->redirectToAction('Open', 'Shop');
+                }
+            } catch (DBException $ex) {
+                $this->View->Data->ErrorMessage = 'DBERR';
+                return $this->View->RenderTemplate('_error');
+            } catch (AuthenticateException $e){
+                return $this->redirectToAction('Login', 'User');
+            }
+        }
         
         #thong tin shop voi khach hang
         public function View($id){

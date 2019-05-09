@@ -61,6 +61,29 @@
         margin: 10px 0px;
     }
     
+    table.shop-orders{
+        border-collapse: collapse;
+        width: 100%;
+    }
+    table.shop-orders thead tr:first-child{
+        background-color: #eee;
+    }
+    
+    table.shop-orders td{
+        padding: 5px 10px;
+        border: 2px solid #eee;
+    }
+    table.shop-orders .product-item{
+        display: flex;
+    }
+    table.shop-orders .product-image{
+        width: 50px;
+        height: 50px;
+        background-repeat: no-repeat;
+        background-size: cover;
+        margin-right: 10px;
+        border: 1px solid #eee;
+    }
 </style>
 
 
@@ -130,7 +153,7 @@
                 </div>
                 <div class="product-list-sections">
                     <div class="product-table-section">
-                        <table id="product-list">
+                        <table id="waitorders-table" class="shop-orders">
                             <thead>
 
                             </thead>
@@ -146,3 +169,50 @@
             </div>
         </div>
     </div>
+
+<script type="text/ktpl" id="waitorders-tpl">
+    <td>
+        @for(var i=0; i<this.orderitems.length;i++){
+            <div class="product-item">
+                <div class="product-image" style="background-image: url('@this.orderitems[i].product.mainimagethumbnail')"></div>
+                <div>
+                    <div>@this.orderitems[i].product.name (x@this.orderitems[i].quantity)</div>
+                    <div>@($COMMON.moneyFormat(this.orderitems[i].price, 3, 0, ',', '.'))đ</div>
+                    <div>@($COMMON.moneyFormat(this.orderitems[i].price * this.orderitems[i].quantity, 3, 0, ',', '.'))đ</div>
+                </div>
+            </div>
+        @}
+    </td>
+    <td>
+        @($COMMON.moneyFormat(this.total_price, 3, 0, ',', '.'))đ
+    </td>
+    <td>
+        <div>@this.statusstring</div>
+    </td>
+    <td>
+        <div>@this.transporter.name</div>
+    </td>
+    <td>
+        <a href="/Shop/OrderDetail?ordercode=@this.ordercode" class="btnlink">Xem chi tiết</a>
+    </td>
+</script>
+
+<script>
+    !function(){
+        filter = $DOMAIN.getQueryParams();
+        table = new IKDataTable(window['waitorders-table']);
+        table.addHeader(['Sản phẩm', 'Tổng đơn hàng', 'Tình trạng', 'Đơn vị vận chuyển', 'Thao tác']);
+        table.setRowTemplate(window['waitorders-tpl'].innerHTML);
+        
+        
+        $.ajax().create().url('/api/shoporders/waitorderslist').success(function(e){
+            result = JSON.parse(this.response);
+            data = result.body.data;
+            for(d of data){
+                table.addRow(d);
+            }
+        }).error(function(e){
+            
+        }).post('from=1&ipp=10');
+    }();
+</script>

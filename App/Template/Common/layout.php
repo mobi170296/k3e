@@ -16,6 +16,7 @@
         <script type="text/javascript" src="/scripts/xhr.js"></script>
         <script type="text/javascript" src="/scripts/ktemplate.js"></script>
         <script type="text/javascript" src="/scripts/iktemplate.js"></script>
+        <script type="text/javascript" src="/scripts/iktable.js"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <?php
             $this->renderSection('head-script');

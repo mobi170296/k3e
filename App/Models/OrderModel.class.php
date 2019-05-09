@@ -156,6 +156,14 @@
             
         }
         
+        public function shopCanShip(){
+            return $this->status == self::CHO_NGUOI_BAN_XAC_NHAN;
+        }
+        
+        public function shopCanCancel(){
+            return $this->status == self::CHO_NGUOI_BAN_XAC_NHAN;
+        }
+        
         public function getPaidString(){
             $name = [
                 self::PAID => 'Đã thanh toán',

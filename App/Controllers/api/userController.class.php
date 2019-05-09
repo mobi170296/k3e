@@ -58,6 +58,7 @@
             if(!is_numeric($order_id)){
                 $result->header->code = 1;
                 $result->header->message = 'invalid';
+                return $this->View->RenderJSON($result);
             }
             
             try{
@@ -102,7 +103,6 @@
                     $result->header->message = 'don hang hong ton tai';
                 }
                 
-                return $this->View->RenderJSON($result);
             } catch (DBException $ex) {
                 $result->header->code = 1;
                 $result->header->errors = [$ex->getMessage()];
@@ -110,5 +110,7 @@
                 $result->header->code = 1;
                 $result->header->errors = ['invalid'];
             }
+            
+            return $this->View->RenderJSON($result);
         }
     }
