@@ -534,6 +534,9 @@
                 return $this->View->RenderTemplate('_error');
             } catch (AuthenticateException $e){
                 return $this->redirectToAction('Login', 'User', ['backurl' => '/User/Checkout']);
+            } catch (GHNException $e){
+                $this->View->Data->ErrorMessage = 'Đã có sự cố kết nối với bên thứ ba vui lòng thử Thanh toán lại!';
+                return $this->View->RenderTemplate('_error');
             }
         }
         

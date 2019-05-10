@@ -1,6 +1,6 @@
 <?php
     $this->layout = DS . 'App' . DS . 'Template' . DS . 'Common' . DS . 'shop_layout.phphtml';
-    $this->Data->Title = 'Danh sách sản phẩm';
+    $this->Data->Title = 'Đơn hàng chờ xác nhận';
     
     
     
@@ -71,7 +71,7 @@
     
     table.shop-orders td{
         padding: 5px 10px;
-        border: 2px solid #eee;
+        border: 2px solid #ccc;
     }
     table.shop-orders .product-item{
         display: flex;
@@ -82,7 +82,7 @@
         background-repeat: no-repeat;
         background-size: cover;
         margin-right: 10px;
-        border: 1px solid #eee;
+        border: 1px solid #ccc;
     }
 </style>
 
@@ -172,6 +172,10 @@
 
 <script type="text/ktpl" id="waitorders-tpl">
     <td>
+        <div style="margin: 10px 0px;">
+            <div>@this.ordercode</div>
+            <div>@this.created_time.hour:@this.created_time.minute:@this.created_time.seconds - @this.created_time.day/@this.created_time.month/@this.created_time.year</div>
+        </div>
         @for(var i=0; i<this.orderitems.length;i++){
             <div class="product-item">
                 <div class="product-image" style="background-image: url('@this.orderitems[i].product.mainimagethumbnail')"></div>

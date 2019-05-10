@@ -222,7 +222,6 @@
         }
         
         public function getShippingOrdersTotal(){
-            
             $rows = $this->database->select('count(*) as count')->from(DB_TABLE_ORDER)->where('order.shop_id=' . (int)$this->id . ' and order.status=' . OrderModel::DANG_GIAO)->execute();
             
             return $rows[0]->count;

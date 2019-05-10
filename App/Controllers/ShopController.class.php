@@ -368,6 +368,10 @@
             }
         }
         
+        public function PrintInvoice(){
+            
+        }
+        
         #thong tin shop voi khach hang
         public function View($id){
             return $this->View->RenderContent($id);

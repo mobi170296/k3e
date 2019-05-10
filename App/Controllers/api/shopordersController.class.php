@@ -79,6 +79,244 @@
             return $this->View->RenderJSON($result);
         }
         
+        public function toshiporderslist($page = 1, $ipp = 10){
+            $result = new \stdClass();
+            $result->header = new \stdClass();
+            
+            
+            try{
+                $database = new Database();
+                $user = (new Authenticate($database))->getUser();
+                
+                if($user->loadShop()){
+                    $shop = $user->shop;
+                    
+                    $start = ($page - 1) * $ipp;
+                    
+                    $rows = $database->select('id')->from(DB_TABLE_ORDER)->where('shop_id=' . (int)$shop->id . ' and order.status=' . (int) OrderModel::CHO_LAY_HANG)->orderby('created_time')->limit($start, $ipp)->execute();
+                    
+                    $orders = [];
+                    foreach($rows as $row){
+                        $order = new OrderModel($database);
+                        $order->id = $row->id;
+                        $order->loadData();
+                        $order->loadPaymentType();
+                        $order->loadTransporter();
+                        $order->loadTransporterUnit();
+                        $order->loadOrderItems();
+                        $order->transporterordercode = $order->getTransporterOrderCode();
+                        $order->statusstring = $order->getStatusString();
+                        foreach($order->orderitems as $orderitem){
+                            $orderitem->loadProduct();
+                            $orderitem->product->loadMainImage();
+                            $orderitem->product->mainimagethumbnail = $orderitem->product->getMainImageThumbnail();
+                        }
+                        
+                        $orders[] = $order;
+                    }
+                    
+                    $total = $shop->getToShipOrdersTotal();
+                    
+                    $result->header->code = 0;
+                    $result->header->message = 'OK';
+                    $result->body = new \stdClass();
+                    $result->body->total = $total;
+                    $result->body->data = $orders;
+                }else{
+                    
+                }
+            }  catch (DBException $ex) {
+                $result->header->code = 1;
+                $result->header->message = 'DBERR';
+                $result->header->errors = [$ex->getMessage()];
+            } catch (AuthenticateException $e){
+                $result->header->code = 1;
+                $result->header->message = 'Invalid User';
+                $result->header->errors = ['invalid'];
+            }
+            
+            return $this->View->RenderJSON($result);
+        }
+        
+        public function shippingorderslist($page = 1, $ipp = 10){
+            $result = new \stdClass();
+            $result->header = new \stdClass();
+            
+            
+            try{
+                $database = new Database();
+                $user = (new Authenticate($database))->getUser();
+                
+                if($user->loadShop()){
+                    $shop = $user->shop;
+                    
+                    $start = ($page - 1) * $ipp;
+                    
+                    $rows = $database->select('id')->from(DB_TABLE_ORDER)->where('shop_id=' . (int)$shop->id . ' and order.status=' . (int) OrderModel::DANG_GIAO)->orderby('created_time')->limit($start, $ipp)->execute();
+                    
+                    $orders = [];
+                    foreach($rows as $row){
+                        $order = new OrderModel($database);
+                        $order->id = $row->id;
+                        $order->loadData();
+                        $order->loadPaymentType();
+                        $order->loadTransporter();
+                        $order->loadTransporterUnit();
+                        $order->loadOrderItems();
+                        $order->transporterordercode = $order->getTransporterOrderCode();
+                        $order->statusstring = $order->getStatusString();
+                        foreach($order->orderitems as $orderitem){
+                            $orderitem->loadProduct();
+                            $orderitem->product->loadMainImage();
+                            $orderitem->product->mainimagethumbnail = $orderitem->product->getMainImageThumbnail();
+                        }
+                        
+                        $orders[] = $order;
+                    }
+                    
+                    $total = $shop->getShippingOrdersTotal();
+                    
+                    $result->header->code = 0;
+                    $result->header->message = 'OK';
+                    $result->body = new \stdClass();
+                    $result->body->total = $total;
+                    $result->body->data = $orders;
+                }else{
+                    
+                }
+            }  catch (DBException $ex) {
+                $result->header->code = 1;
+                $result->header->message = 'DBERR';
+                $result->header->errors = [$ex->getMessage()];
+            } catch (AuthenticateException $e){
+                $result->header->code = 1;
+                $result->header->message = 'Invalid User';
+                $result->header->errors = ['invalid'];
+            }
+            
+            return $this->View->RenderJSON($result);
+        }
+        
+        public function completedorderslist($page = 1, $ipp = 10){
+            $result = new \stdClass();
+            $result->header = new \stdClass();
+            
+            
+            try{
+                $database = new Database();
+                $user = (new Authenticate($database))->getUser();
+                
+                if($user->loadShop()){
+                    $shop = $user->shop;
+                    
+                    $start = ($page - 1) * $ipp;
+                    
+                    $array = [OrderModel::HOAN_TAT, OrderModel::DA_GIAO];
+                    $in = '(' . implode(',', $array) . ')';
+                    
+                    $rows = $database->select('id')->from(DB_TABLE_ORDER)->where('shop_id=' . (int)$shop->id . ' and order.status in ' . $in)->orderby('created_time')->limit($start, $ipp)->execute();
+                    
+                    $orders = [];
+                    foreach($rows as $row){
+                        $order = new OrderModel($database);
+                        $order->id = $row->id;
+                        $order->loadData();
+                        $order->loadPaymentType();
+                        $order->loadTransporter();
+                        $order->loadOrderItems();
+                        $order->statusstring = $order->getStatusString();
+                        foreach($order->orderitems as $orderitem){
+                            $orderitem->loadProduct();
+                            $orderitem->product->loadMainImage();
+                            $orderitem->product->mainimagethumbnail = $orderitem->product->getMainImageThumbnail();
+                        }
+                        
+                        $orders[] = $order;
+                    }
+                    
+                    $total = $shop->getCompletedOrdersTotal();
+                    
+                    $result->header->code = 0;
+                    $result->header->message = 'OK';
+                    $result->body = new \stdClass();
+                    $result->body->total = $total;
+                    $result->body->data = $orders;
+                }else{
+                    
+                }
+            }  catch (DBException $ex) {
+                $result->header->code = 1;
+                $result->header->message = 'DBERR';
+                $result->header->errors = [$ex->getMessage()];
+            } catch (AuthenticateException $e){
+                $result->header->code = 1;
+                $result->header->message = 'Invalid User';
+                $result->header->errors = ['invalid'];
+            }
+            
+            return $this->View->RenderJSON($result);
+        }
+        
+        public function cancelledorderslist($page = 1, $ipp = 10){
+            $result = new \stdClass();
+            $result->header = new \stdClass();
+            
+            
+            try{
+                $database = new Database();
+                $user = (new Authenticate($database))->getUser();
+                
+                if($user->loadShop()){
+                    $shop = $user->shop;
+                    
+                    $start = ($page - 1) * $ipp;
+
+                    $array = [OrderModel::HUY_DON_HANG, OrderModel::KHONG_CON_HANG, OrderModel::HUY_DO_KHONG_LAY_DUOC_HANG, OrderModel::HUY_DO_HE_THONG, OrderModel::GIAO_THAT_BAI];
+
+                    $in = '(' . implode(',', $array) . ')';
+                    $rows = $database->select('id')->from(DB_TABLE_ORDER)->where('shop_id=' . (int)$shop->id . ' and order.status in ' . $in)->orderby('created_time')->limit($start, $ipp)->execute();
+                    
+                    $orders = [];
+                    foreach($rows as $row){
+                        $order = new OrderModel($database);
+                        $order->id = $row->id;
+                        $order->loadData();
+                        $order->loadPaymentType();
+                        $order->loadTransporter();
+                        $order->loadOrderItems();
+                        $order->statusstring = $order->getStatusString();
+                        foreach($order->orderitems as $orderitem){
+                            $orderitem->loadProduct();
+                            $orderitem->product->loadMainImage();
+                            $orderitem->product->mainimagethumbnail = $orderitem->product->getMainImageThumbnail();
+                        }
+                        
+                        $orders[] = $order;
+                    }
+                    
+                    $total = $shop->getCancelledOrdersTotal();
+                    
+                    $result->header->code = 0;
+                    $result->header->message = 'OK';
+                    $result->body = new \stdClass();
+                    $result->body->total = $total;
+                    $result->body->data = $orders;
+                }else{
+                    
+                }
+            }  catch (DBException $ex) {
+                $result->header->code = 1;
+                $result->header->message = 'DBERR';
+                $result->header->errors = [$ex->getMessage()];
+            } catch (AuthenticateException $e){
+                $result->header->code = 1;
+                $result->header->message = 'Invalid User';
+                $result->header->errors = ['invalid'];
+            }
+            
+            return $this->View->RenderJSON($result);
+        }
+        
         public function cancelorder($order_id){
             $result = new \stdClass();
             $result->header = new \stdClass();

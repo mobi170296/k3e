@@ -8,6 +8,7 @@
     use Library\Database\DBRaw;
     
     class GHNTransporterModel extends Model{
+        const READYTOPICK_STATUS = 101, PICKING_STATUS = 102, STORING_STATUS = 201, DELIVERYING_STATUS = 202, DELIVERED_STATUS = 203, RETURN_STATUS = 301, RETURNED_STATUS = 302, WAITINGTOFINISH_STATUS = 204, FINISH_STATUS = 301, CANCEL_STATUS = 0, LOSTORDER_STATUS = 111; 
         const SHOP_PAY = 1, BUYER_PAY = 2, GHNWALLET_PAY = 4, CREDIT_PAY = 5;
         
         public $id, $order_id, $orderid, $ordercode, $currentstatus, $extrafee, $totalservicefee, $expecteddeliverytime, $note, $serviceid, $servicename, $insurancefee, $codamount, $fromdistrictid, $fromwardcode, $todistrictid, $towardcode, $paymenttypeid, $clienthubid, $sortcode, $created_time;
@@ -24,6 +25,9 @@
                 foreach($row as $key => $value){
                     $this->$key = $value;
                 }
+                
+                
+                $this->expecteddeliverytime = DBDateTime::parse($this->expecteddeliverytime);
                 return true;
             }else{
                 return false;
@@ -41,6 +45,25 @@
                 foreach($row as $key => $value){
                     $this->$key = $value;
                 }
+                
+                
+                $this->expecteddeliverytime = DBDateTime::parse($this->expecteddeliverytime);
+                return true;
+            }else{
+                return false;
+            }
+        }
+        
+        public function loadFromOrderCode(){
+            $rows = $this->database->selectall()->from(DB_TABLE_GHNTRANSPORTER)->where('ordercode='. (new DBString($this->ordercode))->SqlValue())->execute();
+            
+            if(count($rows)){
+                $row = $rows[0];
+                foreach($row as $k => $v){
+                    $this->$k = $v;
+                }
+                
+                $this->expecteddeliverytime = DBDateTime::parse($this->expecteddeliverytime);
                 return true;
             }else{
                 return false;

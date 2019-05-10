@@ -1,6 +1,6 @@
 <?php
     $this->layout = DS . 'App' . DS . 'Template' . DS . 'Common' . DS . 'shop_layout.phphtml';
-    $this->Data->Title = 'Danh sách sản phẩm';
+    $this->Data->Title = 'Đơn hàng chờ lấy hàng';
     
     
     
@@ -61,6 +61,29 @@
         margin: 10px 0px;
     }
     
+    table.shop-orders{
+        border-collapse: collapse;
+        width: 100%;
+    }
+    table.shop-orders thead tr:first-child{
+        background-color: #eee;
+    }
+    
+    table.shop-orders td{
+        padding: 5px 10px;
+        border: 2px solid #ccc;
+    }
+    table.shop-orders .product-item{
+        display: flex;
+    }
+    table.shop-orders .product-image{
+        width: 50px;
+        height: 50px;
+        background-repeat: no-repeat;
+        background-size: cover;
+        margin-right: 10px;
+        border: 1px solid #ccc;
+    }
 </style>
 
 
@@ -126,11 +149,11 @@
         <div class="right-content">
             <div class="product-list">
                 <div class="product-list-title">
-                    Đơn hàng chờ nhà vận chuyển lấy
+                    Đơn hàng đang chờ nhà vận chuyển đến lấy
                 </div>
                 <div class="product-list-sections">
                     <div class="product-table-section">
-                        <table id="product-list">
+                        <table id="waitorders-table" class="shop-orders">
                             <thead>
 
                             </thead>
@@ -146,3 +169,208 @@
             </div>
         </div>
     </div>
+
+<script type="text/ktpl" id="waitorders-tpl">
+    <td>
+        <div style="margin: 10px 0px;">@this.ordercode</div>
+        @for(var i=0; i<this.orderitems.length;i++){
+            <div class="product-item">
+                <div class="product-image" style="background-image: url('@this.orderitems[i].product.mainimagethumbnail')"></div>
+                <div>
+                    <div>@this.orderitems[i].product.name (x@this.orderitems[i].quantity)</div>
+                    <div>@($COMMON.moneyFormat(this.orderitems[i].price, 3, 0, ',', '.'))đ</div>
+                    @if(this.orderitems[i].quantity > 1){
+                        <div>@($COMMON.moneyFormat(this.orderitems[i].price * this.orderitems[i].quantity, 3, 0, ',', '.'))đ</div>
+                    @}
+                </div>
+            </div>
+        @}
+    </td>
+    <td>
+        @($COMMON.moneyFormat(this.total_price, 3, 0, ',', '.'))đ
+    </td>
+    <td>
+        <div>@this.paymenttype.name</div>
+    </td>
+    <td>
+        <div>@this.transporter.name</div>
+        <div>@this.transporterordercode</div>
+        <div><a href="#">In phiếu giao</a></div>
+    </td>
+    <td>
+        <a href="/Shop/OrderDetail?ordercode=@this.ordercode" class="btnlink">Xem chi tiết</a>
+    </td>
+</script>
+
+<script>
+    !function(){
+        var _filter = {page: 1, ipp: 10};
+        
+        var querystring = $DOMAIN.getQueryParams();
+        
+        if(querystring.page === undefined){
+            _filter.page = 1;
+        }else{
+            if($COMMON.isInt(querystring.page)){
+                var p = parseInt(querystring.page);
+                _filter.page = p < 1 ? 1 : p;
+            }else{
+                _filter.page = 1;
+            }
+        }
+        
+        var _paginationbar = window['pagination-bar'];
+        
+        var _createPaginationBar = function (c, t){
+            c = parseInt(c);
+            t = parseInt(t);
+            var si = c - 2, ei = c + 2;
+            
+            var btns = [];
+            
+            var ci = 0;
+            
+            for(var i = 1; i <= 3 && i <= t; i++){
+                if(i > ci){
+                    ci = i;
+                    var btn = $.create('button');
+                    btn.dataset.page = ci;
+                    btn.dataset.controlType = 'pagebutton';
+                    btn.innerHTML = ci;
+                    btn.classList.add('btn-page');
+                    if(ci === c){
+                        btn.classList.add('active');
+                        btn.dataset.disabled = 'true';
+                    }
+                    btns.push(btn);
+                }
+            }
+            
+            if(si > 4){
+                var btn = $.create('button');
+                btn.innerHTML = '...';
+                btn.disabled = true;
+                btn.classList.add('btn-page');
+                btns.push(btn);
+            }
+            
+            for(var i = si; i<=ei && i<=t; i++){
+                if(i > ci){
+                    ci = i;
+                    var btn = $.create('button');
+                    btn.dataset.page = ci;
+                    btn.dataset.controlType = 'pagebutton';
+                    btn.innerHTML = ci;
+                    btn.classList.add('btn-page');
+                    if(ci === c){
+                        btn.classList.add('active');
+                        btn.dataset.disabled = 'true';
+                    }
+                    btns.push(btn);
+                }
+            }
+            
+            if(ei < t-3){
+                var btn = $.create('button');
+                btn.innerHTML = '...';
+                btn.disabled = true;
+                btn.classList.add('btn-page');
+                btns.push(btn);
+            }
+            
+            for(var i=t - 2; i<=t; i++){
+                if(i > ci){
+                    ci = i;
+                    var btn = $.create('button');
+                    btn.dataset.page = ci;
+                    btn.dataset.controlType = 'pagebutton';
+                    btn.innerHTML = ci;
+                    btn.classList.add('btn-page');
+                    if(ci === c){
+                        btn.classList.add('active');
+                        btn.dataset.disabled = 'true';
+                    }
+                    btns.push(btn);
+                }
+            }
+            
+            _paginationbar.innerHTML = '';
+            
+            for(var i=0; i<btns.length; i++){
+                _paginationbar.appendChild(btns[i]);
+            }
+        }
+        
+        
+        var table = new IKDataTable(window['waitorders-table']);
+        table.addHeader(['Sản phẩm', 'Tổng đơn hàng', 'Phương thức thanh toán', 'Đơn vị vận chuyển', 'Thao tác']);
+        table.setRowTemplate(window['waitorders-tpl'].innerHTML);
+        
+        function _refresh_table(){
+            var url = '/api/shoporders/toshiporderslist';
+            $LoadingPopup.show();
+            $.ajax().create().url(url).success(function(e){
+                var result = JSON.parse(this.response);
+                if(result.header.code === 0){
+                    var data = result.body.data;
+                    if(result.body.total > 0){
+                        var totalpage = Math.ceil(result.body.total/_filter.ipp);
+                        //so trang hien tai hop le
+                        if(totalpage >= _filter.page){
+                            table.clearRows();
+                            for(var d of data){
+                                table.addRow(d);
+                            }
+                            _createPaginationBar(_filter.page, totalpage);
+                        }else{
+                            //so trang khong du dua ve 1
+                            _filter.page = 1;
+                            _refresh_table();
+                        }
+                    }else{
+                        table.setMessage('Không có đơn hàng nào!');
+                    }
+                    $LoadingPopup.hide();
+                }else{
+                    $Toast.makeError(result.header.message);
+                    $LoadingPopup.hide();
+                }
+            }).error(function(e){
+                $Toast.makeError('Lỗi kết nối')
+                $LoadingPopup.hide();
+            }).post($DOMAIN.buildQueryString(_filter));
+        }
+        
+        _refresh_table();
+        
+        window.onpopstate = function(e){
+            var querystring = $DOMAIN.getQueryParams();
+        
+            if(querystring.page === undefined){
+                _filter.page = 1;
+            }else{
+                if($COMMON.isInt(querystring.page)){
+                    var p = parseInt(querystring.page);
+                    _filter.page = p < 1 ? 1 : p;
+                }else{
+                    _filter.page = 1;
+                }
+            }
+            
+            _refresh_table();
+        }
+        
+        
+        function _page_click(e){
+            var page = this.dataset.page;
+            _filter.page = page;
+            history.pushState(null, '', '?' + $DOMAIN.buildQueryString(_filter));
+            
+            _refresh_table();
+        }
+        
+        _paginationbar.addEventListener('click', function(e){
+            e.target.dataset.controlType === 'pagebutton' && e.target.dataset.disabled === undefined && _page_click.call(e.target, e);
+        });
+    }();
+</script>

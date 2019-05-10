@@ -80,6 +80,8 @@
             margin-bottom: 20px;
             font-family: segoe ui;
             font-weight: lighter;
+            border-left: 5px solid #44b27c;
+            box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);
         }
         .shop-order-detail .info-groups{
             margin: 20px 0px;
@@ -229,11 +231,21 @@
                     <div class="info-group-content"><?php echo $order->ordercode; ?></div>
                 </div>
                 <div class="info-group">
+                    <div class="info-group-title">Ngày đặt hàng</div>
+                    <div class="info-group-content"><?php echo $order->created_time->toLocalDateTime(); ?></div>
+                </div>
+                <div class="info-group">
                     <div class="info-group-title">Địa chỉ giao hàng</div>
                     <div class="info-group-content">
                         <div><?php echo $order->clientname; ?></div>
                         <div><?php echo $order->clientphone; ?></div>
                         <div><?php echo $order->getClientFullAddress(); ?></div>
+                    </div>
+                </div>
+                <div class="info-group">
+                    <div class="info-group-title">Thông điệp từ người mua</div>
+                    <div class="info-group-content">
+                        <div><?php echo $order->note; ?></div>
                     </div>
                 </div>
                 <div class="info-group">
