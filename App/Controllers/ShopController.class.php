@@ -368,8 +368,52 @@
             }
         }
         
-        public function PrintInvoice(){
-            
+        public function PrintInvoice($ordercode){
+            $status = [OrderModel::CHO_LAY_HANG, OrderModel::DANG_GIAO, OrderModel::DA_GIAO, OrderModel::HOAN_TAT, OrderModel::GIAO_THAT_BAI];
+            try{
+                if(!is_string($ordercode)){
+                    throw new \Exception('Thao tác không thành công!');
+                }
+                
+                $database = new Database();
+                $user = (new Authenticate($database))->getUser();
+                
+                if($user->loadShop()){
+                    $shop = $user->shop;
+                    $order = new OrderModel($database);
+                    
+                    $order->ordercode = $ordercode;
+                    
+                    if($order->loadFromOrderCode() && $order->shop_id == $shop->id){
+                        if(in_array($order->status, $status)){
+                            #load du lieu can thiet cho viec in hoa don
+                            $order->loadOrderItems();
+                            foreach($order->orderitems as $orderitem){
+                                $orderitem->loadProduct();
+                            }
+                            $order->loadPaymentType();
+                            $order->loadTransporter();
+                            $order->loadTransporterUnit();
+                            
+                            $this->View->Data->order = $order;
+                            
+                            return $this->View->RenderPartial();
+                        }else{
+                            throw new \Exception('Đơn hàng này không thể in hóa đơn');
+                        }
+                    }else{
+                        throw new \Exception('Đơn hàng không tồn tại');
+                    }
+                }else{
+                    throw new \Exception('Bạn không có quyền thực hiện thao tác này');
+                }
+            } catch (DBException $ex) {
+                return $this->View->RenderContent('Không thể in đơn hàng vui lòng thử lại');
+            } catch (AuthenticateException $e){
+                return $this->View->RenderContent('Bạn không có quyền thực hiện thao tác này');
+            } catch (\Exception $e){
+                return $this->View->RenderContent($e->getMessage());
+            }
         }
         
         #thong tin shop voi khach hang

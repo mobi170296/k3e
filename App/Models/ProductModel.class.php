@@ -308,8 +308,15 @@
         }
         
         public function getSoldQuantity(){
-            $rows = $this->database->select('sum(quantity) as quantity')->from(DB_TABLE_ORDERITEM)->where('product_id=' . (int)$this->id)->execute();
+            $inwhere = '(' . implode(',', [OrderModel::DA_GIAO, OrderModel::HOAN_TAT]) . ')';
+            $rows = $this->database->select('sum(orderitem.quantity) as quantity')->from(DB_TABLE_ORDERITEM)->join(DB_TABLE_ORDER)->on('orderitem.order_id=order.id')->where('orderitem.product_id=' . (int)$this->id . ' and order.status in ' . $inwhere)->execute();
+            
+//            $rows = $this->database->select('sum(quantity) as quantity')->from(DB_TABLE_ORDERITEM)->where('product_id=' . (int)$this->id)->execute();
             $row = $rows[0];
             return $row->quantity === null ? 0 : $row->quantity;
+        }
+        
+        public function isVisible(){
+            return true;
         }
     }

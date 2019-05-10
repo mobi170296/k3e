@@ -1,0 +1,158 @@
+<?php
+    $order = $this->Data->order;
+    
+    ?>
+
+
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>Đơn hàng - <?php echo $order->ordercode; ?></title>
+        <style>
+            body{
+                font-family: arial;
+            }
+            .invoice-wrapper{
+                margin: 0px auto;
+                width: 800px;
+            }
+            .invoice-header .logo{
+                color: #44b27c;
+                font-size: 24pt;
+                text-transform: uppercase;
+                font-family: segoe ui;
+                font-weight: bold;
+                display: inline-block;
+            }
+            table tr:first-child{
+                text-align: center;
+            }
+            .delivery-info-table{
+                width: 100%;
+                border-collapse: collapse;
+                margin: 20px 0px;
+            }
+            .delivery-info-table td{
+                border: 1px solid #000;
+                padding: 5px;
+            }
+            .invoice-basic-info{
+                margin: 20px 0px;
+                line-height: 1.5;
+            }
+            .invoice-detail-table{
+                width: 100%;
+                border-collapse: collapse;
+            }
+            .invoice-detail-table td{
+                border: 1px solid #000;
+                padding: 5px;
+            }
+            .invoice-basic-info .invoice-basic-info-title{
+                font-weight: bold;
+            }
+            .invoice-price{
+                text-align: right;
+            }
+            .invoice-quantity{
+                text-align: center;
+            }
+            .product-price, .product-subtotal{
+                width: 10em;
+            }
+            .product-quantity{
+                width: 5em;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="invoice-wrapper">
+            <div class="invoice-header">
+                <span class="logo">KAKAKA</span>
+            </div>
+            <div class="invoice-basic-info">
+                <div class="ordercode-section">
+                    <span class="invoice-basic-info-title">Mã đơn hàng:</span>
+                    <span class="invoice-basic-info-content"><?php echo $order->ordercode; ?></span>
+                </div>
+                <div class="created_time-section">
+                    <span class="invoice-basic-info-title">Ngày đặt hàng:</span>
+                    <span class="invoice-basic-info-content"><?php echo $order->created_time->toLocalDateTime(); ?></span>
+                </div>
+                <div class="paymenttype-section">
+                    <span class="invoice-basic-info-title">Hình thức thanh toán:</span>
+                    <span class="invoice-basic-info-content"><?php echo $order->paymenttype->name; ?></span>
+                </div>
+                <div class="transporter-section">
+                    <span class="invoice-basic-info-title">Tình trạng thanh toán:</span>
+                    <span class="invoice-basic-info-content"><?php echo $order->getPaidString(); ?></span>
+                </div>
+                <div class="transporter-section">
+                    <span class="invoice-basic-info-title">Đơn vị vận chuyển:</span>
+                    <span class="invoice-basic-info-content"><?php echo $order->transporter->name; ?></span>
+                </div>
+                <div class="transporter-section">
+                    <span class="invoice-basic-info-title">Mã vận đơn:</span>
+                    <span class="invoice-basic-info-content"><?php echo $order->getTransporterOrderCode(); ?></span>
+                </div>
+            </div>
+            <div class="invoice-delivery-info">
+                <table class="delivery-info-table">
+                    <tr>
+                        <td>Địa chỉ cửa hàng</td><td>Địa chỉ người mua</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="delivery-name"><?php echo $order->clientname; ?></div>
+                            <div class="delivery-phone"><?php echo $order->clientphone; ?></div>
+                            <div class="delivery-address"><?php echo $order->getClientFullAddress();?></div>
+                        </td>
+                        <td>
+                            <div class="delivery-name"><?php echo $order->shopname; ?></div>
+                            <div class="delivery-phone"><?php echo $order->shopphone; ?></div>
+                            <div class="delivery-address"><?php echo $order->getShopFullAddress();?></div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="invoice-detail-info">
+                <table class="invoice-detail-table">
+                    <tr>
+                        <td>Sản phẩm</td>
+                        <td>Đơn giá</td>
+                        <td>Số lượng</td>
+                        <td>Thành tiền</td>
+                    </tr>
+                    
+                    <?php
+                        foreach($order->orderitems as $orderitem){
+                            $pricestring = \number_format($orderitem->price);
+                            $subtotalstring = \number_format($orderitem->price * $orderitem->quantity);
+                            echo <<<ROW
+                            <tr>
+                                <td class="product-name">{$orderitem->product->name}</td>
+                                <td class="invoice-price product-price">{$pricestring}đ</td>
+                                <td class="invoice-quantity product-quantity">{$orderitem->quantity}</td>
+                                <td class="invoice-price product-subtotal">{$subtotalstring}đ</td>
+                            </tr>
+ROW;
+                        }
+                    ?>
+                    
+                    <tr>
+                        <td colspan="3" class="invoice-price">Tổng tiền hàng</td>
+                        <td class="invoice-price"><?php echo \number_format($order->total_price); ?>đ</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="invoice-price">Phí vận chuyển</td>
+                        <td class="invoice-price"><?php echo \number_format($order->ship_fee); ?>đ</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="invoice-price">Tổng thanh toán</td>
+                        <td class="invoice-price"><?php echo $order->isPaid() ? '0' : \number_format($order->total_price + $order->ship_fee); ?>đ</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>

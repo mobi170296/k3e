@@ -173,8 +173,16 @@
             return $name[$this->paid];
         }
         
+        public function isPaid(){
+            return $this->paid == self::PAID;
+        }
+        
         public function getClientFullAddress(){
             return $this->clientaddress . ', ' . $this->clientwardname . ', ' . $this->clientdistrictname . ', ' . $this->clientprovincename;
+        }
+        
+        public function getShopFullAddress(){
+            return $this->shopaddress . ', ' . $this->shopwardname . ', ' . $this->shopdistrictname . ', ' . $this->shopprovincename;
         }
         
         public function getTransporterOrderCode(){

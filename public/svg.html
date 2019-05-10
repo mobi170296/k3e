@@ -1,6 +1,7 @@
 <!doctype html>
 <html>
     <head>
+        <meta charset="utf-8"/>
         <title>Title</title>
         <style>
             div.star-rank{
@@ -14,9 +15,168 @@
                 overflow: hidden;
                 width: 55%;
             }
+            
+            div.staricon{
+                background-repeat: no-repeat;
+                background-size: cover;
+                width: 50px;
+                height: 50px;
+                background-image: url('/images/icons/star.png');
+            }
+            
+            @keyframes star-anim{
+                from{
+                    transform: scale(1);
+                    transform: rotate(0deg);
+                }
+                to{
+                    transform: scale(1.5);
+                    transform: rotate(360deg);
+                }
+            }
+            
+            div.staricon:hover{
+                background-image: url('/images/icons/starhover.png');
+                animation-name: star-anim;
+                animation-duration: 500ms;
+                animation-iteration-count: 1;
+                animation-timing-function: ease-in-out;
+            }
+        </style>
+        
+        
+        <style>
+            .star-rate{
+                position: relative;
+            }
+            
+            .star-rate svg{
+                width: 50px;
+                height: 50px;
+            }
+            
+            .star-rate input{
+                display: none;
+            }
+            
+            .star-rate .star-rate-background{
+                fill: #eee;
+            }
+            
+            .star-rate .star-rate-foreground{
+                fill: transparent;
+                position: absolute;
+                top: 0;
+            }
+            
+            @keyframes anim-star-scale{
+                from{
+                    opacity: 0;
+                    transform: scale(1);
+                }
+                to{
+                    opacity: 1;
+                    transform: scale(1.2);
+                }
+            }
+            
+            .star-rate .star-rate-foreground svg.active{
+                fill: #44b27c;
+                animation-name: anim-star-scale;
+                animation-duration: 200ms;
+                animation-iteration-count: 1;
+            }
         </style>
     </head>
     <body>
+        <button onclick="w = window.open('/', '_blank'); w.print();">Print</button>
+        <div class="star-rate" id="star" data-control-type="starrate" data-value="5">
+            <div class="star-rate-background">
+                <svg>
+                    <path d="M25,1.641L32.2,16.47,48.309,18.85,36.653,30.392l2.752,16.3L25,39l-14.405,7.7,2.752-16.3L1.691,18.85,17.8,16.47Z"/>
+                </svg>
+                <svg>
+                    <path d="M25,1.641L32.2,16.47,48.309,18.85,36.653,30.392l2.752,16.3L25,39l-14.405,7.7,2.752-16.3L1.691,18.85,17.8,16.47Z"/>
+                </svg>
+                <svg>
+                    <path d="M25,1.641L32.2,16.47,48.309,18.85,36.653,30.392l2.752,16.3L25,39l-14.405,7.7,2.752-16.3L1.691,18.85,17.8,16.47Z"/>
+                </svg>
+                <svg>
+                    <path d="M25,1.641L32.2,16.47,48.309,18.85,36.653,30.392l2.752,16.3L25,39l-14.405,7.7,2.752-16.3L1.691,18.85,17.8,16.47Z"/>
+                </svg>
+                <svg>
+                    <path d="M25,1.641L32.2,16.47,48.309,18.85,36.653,30.392l2.752,16.3L25,39l-14.405,7.7,2.752-16.3L1.691,18.85,17.8,16.47Z"/>
+                </svg>
+            </div>
+            <div class="star-rate-foreground">
+                <svg>
+                    <path d="M25,1.641L32.2,16.47,48.309,18.85,36.653,30.392l2.752,16.3L25,39l-14.405,7.7,2.752-16.3L1.691,18.85,17.8,16.47Z"/>
+                </svg>
+                <svg>
+                    <path d="M25,1.641L32.2,16.47,48.309,18.85,36.653,30.392l2.752,16.3L25,39l-14.405,7.7,2.752-16.3L1.691,18.85,17.8,16.47Z"/>
+                </svg>
+                <svg>
+                    <path d="M25,1.641L32.2,16.47,48.309,18.85,36.653,30.392l2.752,16.3L25,39l-14.405,7.7,2.752-16.3L1.691,18.85,17.8,16.47Z"/>
+                </svg>
+                <svg>
+                    <path d="M25,1.641L32.2,16.47,48.309,18.85,36.653,30.392l2.752,16.3L25,39l-14.405,7.7,2.752-16.3L1.691,18.85,17.8,16.47Z"/>
+                </svg>
+                <svg>
+                    <path d="M25,1.641L32.2,16.47,48.309,18.85,36.653,30.392l2.752,16.3L25,39l-14.405,7.7,2.752-16.3L1.691,18.85,17.8,16.47Z"/>
+                </svg>
+            </div>
+            <input type="hidden"/>
+        </div>
+        
+        <script>
+            !function(_s){
+                var _foreground = _s.querySelector('.star-rate-foreground');
+                var _background = _s.querySelector('.star-rate-foreground');
+                var _input = _s.querySelector('input');
+                var _fsvg = _foreground.querySelectorAll('svg');
+                
+                _input.value = _s.dataset.value === undefined ? 1 : _s.dataset.value;
+                
+                function _renderstarbyvalue(){
+                    for(var i=0; i<_fsvg.length; i++){
+                        _fsvg[i].classList.remove('active');
+                        if(_fsvg[i].dataset.value <= _input.value){
+                            _fsvg[i].classList.add('active');
+                        }
+                    }
+                }
+                
+                _foreground.addEventListener('mouseleave', function(e){
+                    //render theo gia tri hien tai
+                    _renderstarbyvalue();
+                })
+                
+                function _starover(e){
+                    //render by hover
+                    for(var i=0; i<_fsvg.length; i++){
+                        _fsvg[i].classList.remove('active');
+                        if(_fsvg[i].dataset.value <= this.dataset.value){
+                            _fsvg[i].classList.add('active');
+                        }
+                    }
+                }
+                
+                function _starclick(e){
+                    //set new value
+                    _input.value = this.dataset.value;
+                }
+                
+                for(var i=0; i<_fsvg.length; i++){
+                    _fsvg[i].dataset.value = i+1;
+                    _fsvg[i].addEventListener('click', _starclick);
+                    _fsvg[i].addEventListener('mouseenter', _starover);
+                }
+                
+                _renderstarbyvalue();
+            }(star);
+        </script>
+
+        
         <div class="star-rank">
             <div class="star-background">
                 <svg height="15" width="87">
