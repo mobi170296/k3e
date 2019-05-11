@@ -146,7 +146,7 @@
         word-wrap: anywhere;
     }
     .product-container .product-info .product-price{
-        font-size: 1.6em;
+        font-size: 3em;
         color: #44b27c;
         font-family: arial;
         font-weight: bold;
@@ -257,13 +257,13 @@
         padding-top: 20px;
     }
     
-    .product-container .product-assessment{
+    .product-container .product-assessments{
         margin-bottom: 20px;
         background-color: #fff;
         padding: 30px;
     }
     
-    .product-container .product-assessment .product-assessment-title{
+    .product-container .product-assessments .product-assessment-title{
         font-size: 1.2em;
         font-family: segoe ui;
         font-weight: lighter;
@@ -271,10 +271,27 @@
         padding-bottom: 5px;
     }
     
-    .product-container .product-assessment .product-assessment-content{
-        padding-top: 20px;
+    .product-container .product-assessments .product-assessment-content{
+        padding: 10px;
     }
-    
+    .product-container .product-assessment{
+        border-bottom: 1px solid #eee;
+        display: flex;
+        padding: 10px;
+    }
+    .product-container .product-assessment .product-assessment-client-avatar{
+        flex-shrink: 0;
+        margin-right: 10px;
+        background-size: cover;
+        background-repeat: no-repeat;
+        width: 50px;
+        height: 50px;
+        border: 3px solid #eee;
+        border-radius: 50%;
+    }
+    .product-container .product-assessment .product-assessment-section{
+        flex-basis: 100%;
+    }
 </style>
 
 <div class="product-container">
@@ -305,11 +322,35 @@ PI;
             </div>
             <div class="product-info">
                 <?php
+                    $starpercent = $product->getStarRatingPoint() / 5 * 100;
                     echo <<<ROW
                 <div class="product-info-top">
                     <div class="product-name">{$product->name}</div>
-                    <div class="product-soldout">Đã bán {$product->getSoldQuantity()}</div>
+                    <div class="product-starrating">
+                        <div class="star-rank">
+                            <div class="star-background" style="fill: #eee">
+                                <svg width="247px" height="48px">
+                                    <path fill-rule="evenodd" d="M23.499,0.974 L30.754,15.804 L46.976,18.183 L35.237,29.726 L38.008,46.026 L23.499,38.329 L8.990,46.026 L11.762,29.726 L0.024,18.183 L16.245,15.804 L23.499,0.974 Z"/>
+                                    <path fill-rule="evenodd" d="M73.499,0.974 L80.754,15.804 L96.976,18.183 L85.237,29.726 L88.008,46.026 L73.499,38.329 L58.990,46.026 L61.762,29.726 L50.024,18.183 L66.245,15.804 L73.499,0.974 Z"/>
+                                    <path fill-rule="evenodd" d="M123.499,1.974 L130.754,16.804 L146.976,19.183 L135.237,30.726 L138.008,47.026 L123.499,39.329 L108.990,47.026 L111.762,30.726 L100.024,19.183 L116.245,16.804 L123.499,1.974 Z"/>
+                                    <path fill-rule="evenodd" d="M172.499,1.974 L179.754,16.804 L195.976,19.183 L184.237,30.726 L187.008,47.026 L172.499,39.329 L157.990,47.026 L160.762,30.726 L149.024,19.183 L165.245,16.804 L172.499,1.974 Z"/>
+                                    <path fill-rule="evenodd" d="M223.499,0.974 L230.754,15.804 L246.976,18.183 L235.237,29.726 L238.008,46.026 L223.499,38.329 L208.990,46.026 L211.762,29.726 L200.024,18.183 L216.245,15.804 L223.499,0.974 Z"/>
+                                </svg>
+                            </div>
+                            <div class="star-foregound" style="fill: #44b27c; width: {$starpercent}%">
+                                <svg width="247px" height="48px">
+                                    <path fill-rule="evenodd" d="M23.499,0.974 L30.754,15.804 L46.976,18.183 L35.237,29.726 L38.008,46.026 L23.499,38.329 L8.990,46.026 L11.762,29.726 L0.024,18.183 L16.245,15.804 L23.499,0.974 Z"/>
+                                    <path fill-rule="evenodd" d="M73.499,0.974 L80.754,15.804 L96.976,18.183 L85.237,29.726 L88.008,46.026 L73.499,38.329 L58.990,46.026 L61.762,29.726 L50.024,18.183 L66.245,15.804 L73.499,0.974 Z"/>
+                                    <path fill-rule="evenodd" d="M123.499,1.974 L130.754,16.804 L146.976,19.183 L135.237,30.726 L138.008,47.026 L123.499,39.329 L108.990,47.026 L111.762,30.726 L100.024,19.183 L116.245,16.804 L123.499,1.974 Z"/>
+                                    <path fill-rule="evenodd" d="M172.499,1.974 L179.754,16.804 L195.976,19.183 L184.237,30.726 L187.008,47.026 L172.499,39.329 L157.990,47.026 L160.762,30.726 L149.024,19.183 L165.245,16.804 L172.499,1.974 Z"/>
+                                    <path fill-rule="evenodd" d="M223.499,0.974 L230.754,15.804 L246.976,18.183 L235.237,29.726 L238.008,46.026 L223.499,38.329 L208.990,46.026 L211.762,29.726 L200.024,18.183 L216.245,15.804 L223.499,0.974 Z"/>
+                                </svg>
+                            </div>
+                        </div>
+                        
+                    </div>
                     <div class="product-price">{$product->getPriceString()}đ</div>
+                    <div class="product-soldout">Đã bán {$product->getSoldQuantity()}</div>
                 </div>
                 <div class="product-info-bottom">
                     <div>
@@ -379,12 +420,55 @@ ROW;
                 <?php echo $product->description; ?>
             </div>
         </div>
-        <div class="product-assessment">
+        <div class="product-assessments">
             <div class="product-assessment-title">
                 Đánh giá sản phẩm
             </div>
             <div class="product-assessment-content">
-                Chưa có đánh giá
+                <?php
+                    if(count($product->assessments)){
+                        foreach($product->assessments as $assessment){
+                            $starpercent = $assessment->starpoint / 5 * 100;
+                            echo <<<ASSESSMENT
+                            <div class="product-assessment">
+                                <div class="product-assessment-client-avatar" style="background-image: url('{$assessment->client->getAvatarPath()}')"></div>
+                                <div class="product-assessment-section">
+                                    <div class="product-assessment-client-name">{$assessment->client->lastname} {$assessment->client->firstname}</div>
+                                    <div class="product-assessment-starpoint">
+                                        <div class="star-rank">
+                                            <div class="star-background">
+                                                <svg height="15" width="87">
+                                                    <g fill="#ccc" class="star-background">
+                                                        <path d="M7 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                        <path d="M25 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                        <path d="M43 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                        <path d="M61 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                        <path d="M79 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                    </g>
+                                                </svg>
+                                            </div>
+                                            <div class="star-foregound" style="width: {$starpercent}%">
+                                                <svg height="15" width="87">
+                                                    <g fill="#44b27c" class="star-background">
+                                                        <path d="M7 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                        <path d="M25 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                        <path d="M43 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                        <path d="M61 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                        <path d="M79 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                    </g>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="product-assessment-comment">{$assessment->comment}</div>
+                                </div>
+                            </div>
+ASSESSMENT;
+                        }
+                    }else{
+                        echo 'Chưa có đánh giá';
+                    }
+                ?>
             </div>
         </div>
     </div>

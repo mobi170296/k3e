@@ -191,6 +191,11 @@
                     $order->loadOrderLogs();
                     $order->loadPaymentType();
                     $order->loadShop();
+                    $order->loadAssessments();
+                    foreach($order->assessments as $assessment){
+                        $assessment->loadProduct();
+                        $assessment->product->loadMainImage();
+                    }
                     
                     $order->loadOrderItems();
                     foreach($order->orderitems as $orderitem){
@@ -463,6 +468,10 @@
                 $database = new Database;
                 $user = (new Authenticate($database))->getUser();
                 
+                if(!$user->loadDefaultDeliveryAddress()){
+                    return $this->View->RenderTemplate('RequireAddress');
+                }
+                
                 $user->loadCartItems();
                 
                 $items = [];
@@ -625,6 +634,44 @@
                 return $this->View->RenderTemplate('_error');
             } catch (OnePayException $e){
                 return $this->View->RenderContent('???');
+            }
+        }
+        
+        public function AssessmentOrder($ordercode){
+            try{
+                if(!is_string($ordercode)){
+                    return $this->redirectToAction('Orders', 'User');
+                }
+                
+                $database = new Database();
+                
+                $user = (new Authenticate($database))->getUser();
+                
+                $order = new OrderModel($database);
+                
+                $order->ordercode = $ordercode;
+                
+                if($order->loadFromOrderCode() && $order->client_id == $user->id){
+                    if($order->clientCanAssessment()){
+                        $order->loadOrderItems();
+                        
+                        foreach($order->orderitems as $orderitem){
+                            $orderitem->loadProduct();
+                            $orderitem->product->loadMainImage();
+                        }
+                        
+                        $this->View->Data->order = $order;
+                        return $this->View->RenderTemplate();
+                    }else{
+                        return $this->redirectToAction('Order', 'User', ['ordercode' => $ordercode]);
+                    }
+                }else{
+                    return $this->redirectToAction('Orders', 'User');
+                }
+            } catch (DBException $ex) {
+                return $this->View->RenderTemplate('_error');
+            } catch (AuthenticateException $e){
+                return $this->redirectToAction('Login', 'User', ['backurl' => '/User/AssessmentOrder?ordercode=' . $ordercode]);
             }
         }
     }

@@ -195,7 +195,7 @@
     <td>
         <div>@this.transporter.name</div>
         <div>@this.transporterordercode</div>
-        <div><a href="javascript:void(0)" onclick="var w = window.open('/Shop/PrintInvoice?ordercode=@this.ordercode', '_blank');w.print();">In phiếu giao</a></div>
+        <div><a href="/Shop/PrintInvoice?ordercode=@this.ordercode">In phiếu giao</a></div>
     </td>
     <td>
         <a href="/Shop/OrderDetail?ordercode=@this.ordercode" class="btnlink">Xem chi tiết</a>

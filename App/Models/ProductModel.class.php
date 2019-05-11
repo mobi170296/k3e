@@ -9,7 +9,7 @@
         const LOCKED = 1, UNLOCKED = 0;
         const VERIFIED = 1, UNVERIFIED = 0;
         
-        public $id, $name, $description, $quantity, $shop_id, $original_price, $price, $subcategory_id, $weight, $length, $width, $height, $mainimage_id, $warranty_months_number, $view_count;
+        public $id, $name, $description, $quantity, $shop_id, $original_price, $price, $subcategory_id, $weight, $length, $width, $height, $mainimage_id, $warranty_months_number, $views;
         
         public $created_time, $locked, $verified, $verified_time;
         
@@ -242,6 +242,23 @@
             }
         }
         
+        public function loadAssessments(){
+            $this->assessments = [];
+            $rows = $this->database->select('product_id, order_id')->from(DB_TABLE_ASSESSMENT)->where('product_id=' . (int)$this->id)->execute();
+            
+            foreach($rows as $row){
+                $assessment = new AssessmentModel($this->database);
+                $assessment->product_id = $row->product_id;
+                $assessment->order_id = $row->order_id;
+                if(!$assessment->loadData()){
+                    return false;
+                }
+                $this->assessments[] = $assessment;
+            }
+            
+            return true;
+        }
+        
         public function add(){
             $this->database->insert(DB_TABLE_PRODUCT, ['name' => new DBString($this->database->escape($this->name)), 'description' => new DBString($this->database->escape($this->description)), 'quantity' => new DBNumber($this->quantity), 'shop_id' => new DBNumber($this->shop_id), 'original_price' => new DBNumber($this->original_price), 'price' => new DBNumber($this->price), 'subcategory_id' => new DBNumber($this->subcategory_id), 'weight' => new DBNumber($this->weight), 'length' => new DBNumber($this->length), 'width' => new DBNumber($this->width), 'height' => new DBNumber($this->height), 'created_time' => new DBRaw('now()'), 'locked' => new DBNumber(self::UNLOCKED), 'verified' => new DBNumber(self::VERIFIED), 'verified_time' => new DBRaw('now()'), 'warranty_months_number' => new DBNumber($this->warranty_months_number), 'mainimage_id' => new DBNumber($this->mainimage_id)]);
             return true;
@@ -300,7 +317,11 @@
         }
         
         public function getStarRatingPoint(){
-            return rand() % 11 / 10;
+            $rows = $this->database->select('avg(starpoint) as star')->from(DB_TABLE_ASSESSMENT)->where('product_id=' . (int)$this->id)->execute();
+            
+            $row = $rows[0];
+            
+            return $row->star === null ? 0 : $row->star;
         }
         
         public function getAvailableQuantity(){
@@ -318,5 +339,11 @@
         
         public function isVisible(){
             return true;
+        }
+        
+        public function increaseViews(){
+            $this->database->update(DB_TABLE_PRODUCT, [
+                'views' => new DBRaw('views + 1')
+            ], "id={$this->id}");
         }
     }

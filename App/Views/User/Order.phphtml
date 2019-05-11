@@ -153,12 +153,29 @@
         color: red;
         font-weight: bold;
     }
-    
+    .order-wrapper .order-paymenttype-string{
+        font-weight: bold;
+    }
     .btn-cancel-order{
         padding: 10px 20px;
         border: 1px solid red;
         background-color: red;
         color: #fff;
+    }
+    .btn-assessment-order{
+        display: inline-block;
+        padding: 10px 20px;
+        border: 1px solid #fea503;
+        background-color: #fea503;
+        color: #fff;
+    }
+    .order-wrapper .order-assessments-body{
+        
+    }
+    
+    .order-wrapper .order-assessment{
+        border: 1px solid #eee;
+        margin: 10px 0px;
     }
 </style>
 
@@ -183,6 +200,9 @@
                     </div>
                     <div>
                         <span class="order-created-time-title">Đặt lúc: </span> <span class="order-created-time-string"><?php echo $order->created_time->toLocalDateTime(); ?></span>
+                    </div>
+                    <div>
+                        <span class="order-paymenttype-title">Phương thức thanh toán:</span> <span class="order-paymenttype-string"><?php echo $order->paymenttype->name; ?></span>
                     </div>
                     <div>
                         <span class="order-paid-title">Tình trạng thanh toán: </span> <span class="order-paid-string"><?php echo $order->getPaidString(); ?></span>
@@ -270,8 +290,63 @@ PRODUCT;
                             <button class="btn-cancel-order" data-control-type="usercancelorder" data-order-id="{$order->id}">Hủy đơn hàng</button>
 BUTTON;
                         }
+                        
+                        if($order->clientCanAssessment()){
+                            echo <<<BUTTON
+                            <a class="btn-assessment-order" href="{$order->getClientAssessmentOrderLink()}">Đánh giá đơn hàng</a>
+BUTTON;
+                        }
                     ?>
                 </div>
+                <?php
+                    if(count($order->assessments)){
+                        echo '<div class="order-assessments">';
+                        echo '<div class="order-assessments-header">Bài đánh giá sản phẩm của bạn</div>';
+                        echo '<div class="order-assessments-body">';
+                        foreach($order->assessments as $assessment){
+                            $starpercent = $assessment->starpoint / 5 * 100;
+                            echo <<<ASSESSMENT
+                            <div class="order-assessment">
+                                <div class="product-item">
+                                    <div class="product-image" style="background-image: url('{$assessment->product->getMainImageThumbnail()}');"></div>
+                                    <div class="product-name">{$assessment->product->name}</div>
+                                </div>
+                                <div class="product-rating">
+                                    <div class="star-rank">
+                                        <div class="star-background">
+                                            <svg height="15" width="87">
+                                                <g fill="#ccc" class="star-background">
+                                                    <path d="M7 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                    <path d="M25 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                    <path d="M43 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                    <path d="M61 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                    <path d="M79 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                </g>
+                                            </svg>
+                                        </div>
+                                        <div class="star-foregound" style="width: {$starpercent}%">
+                                            <svg height="15" width="87">
+                                                <g fill="#44b27c" class="star-background">
+                                                    <path d="M7 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                    <path d="M25 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                    <path d="M43 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                    <path d="M61 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                    <path d="M79 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                </g>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product-comment">
+                                    {$assessment->comment}
+                                </div>
+                            </div>
+ASSESSMENT;
+                        }
+                        echo '</div>';
+                        echo '</div>';
+                    }
+                ?>
             </div>
         </div>
     </div>

@@ -1,3 +1,45 @@
+/*sao danh gia*/
+.star-rate{
+    position: relative;
+}
+
+.star-rate svg{
+    width: 50px;
+    height: 50px;
+}
+
+.star-rate input{
+    display: none;
+}
+
+.star-rate .star-rate-background{
+    fill: #eee;
+}
+
+.star-rate .star-rate-foreground{
+    fill: transparent;
+    position: absolute;
+    top: 0;
+}
+
+@keyframes anim-star-scale{
+    from{
+        opacity: 0;
+        transform: scale(1);
+    }
+    to{
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}
+
+.star-rate .star-rate-foreground svg.active{
+    fill: #44b27c;
+    animation-name: anim-star-scale;
+    animation-duration: 200ms;
+    animation-iteration-count: 1;
+}
+
 /*phan trang*/
 button.btn-page{
     background-color: #06a24f;

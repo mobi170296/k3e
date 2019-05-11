@@ -86,11 +86,50 @@
                 animation-duration: 200ms;
                 animation-iteration-count: 1;
             }
+            
+            
+            .star-rank{
+                position: relative;
+                
+            }
+            .star-rank .star-background{
+                fill: #ccc;
+            }
+            .star-rank .star-foreground{
+                fill: #f00;
+                position: absolute;
+                top: 0px;
+                width: 32%;
+                overflow: hidden;
+            }
         </style>
     </head>
     <body>
+        <div class="star-rank">
+            <div class="star-background">
+                <svg width="247px" height="48px">
+                    <path fill-rule="evenodd" d="M23.499,0.974 L30.754,15.804 L46.976,18.183 L35.237,29.726 L38.008,46.026 L23.499,38.329 L8.990,46.026 L11.762,29.726 L0.024,18.183 L16.245,15.804 L23.499,0.974 Z"/>
+                    <path fill-rule="evenodd" d="M73.499,0.974 L80.754,15.804 L96.976,18.183 L85.237,29.726 L88.008,46.026 L73.499,38.329 L58.990,46.026 L61.762,29.726 L50.024,18.183 L66.245,15.804 L73.499,0.974 Z"/>
+                    <path fill-rule="evenodd" d="M123.499,1.974 L130.754,16.804 L146.976,19.183 L135.237,30.726 L138.008,47.026 L123.499,39.329 L108.990,47.026 L111.762,30.726 L100.024,19.183 L116.245,16.804 L123.499,1.974 Z"/>
+                    <path fill-rule="evenodd" d="M172.499,1.974 L179.754,16.804 L195.976,19.183 L184.237,30.726 L187.008,47.026 L172.499,39.329 L157.990,47.026 L160.762,30.726 L149.024,19.183 L165.245,16.804 L172.499,1.974 Z"/>
+                    <path fill-rule="evenodd" d="M223.499,0.974 L230.754,15.804 L246.976,18.183 L235.237,29.726 L238.008,46.026 L223.499,38.329 L208.990,46.026 L211.762,29.726 L200.024,18.183 L216.245,15.804 L223.499,0.974 Z"/>
+                </svg>
+            </div>
+            <div class="star-foreground">
+                <svg width="247px" height="48px">
+                    <path fill-rule="evenodd" d="M23.499,0.974 L30.754,15.804 L46.976,18.183 L35.237,29.726 L38.008,46.026 L23.499,38.329 L8.990,46.026 L11.762,29.726 L0.024,18.183 L16.245,15.804 L23.499,0.974 Z"/>
+                    <path fill-rule="evenodd" d="M73.499,0.974 L80.754,15.804 L96.976,18.183 L85.237,29.726 L88.008,46.026 L73.499,38.329 L58.990,46.026 L61.762,29.726 L50.024,18.183 L66.245,15.804 L73.499,0.974 Z"/>
+                    <path fill-rule="evenodd" d="M123.499,1.974 L130.754,16.804 L146.976,19.183 L135.237,30.726 L138.008,47.026 L123.499,39.329 L108.990,47.026 L111.762,30.726 L100.024,19.183 L116.245,16.804 L123.499,1.974 Z"/>
+                    <path fill-rule="evenodd" d="M172.499,1.974 L179.754,16.804 L195.976,19.183 L184.237,30.726 L187.008,47.026 L172.499,39.329 L157.990,47.026 L160.762,30.726 L149.024,19.183 L165.245,16.804 L172.499,1.974 Z"/>
+                    <path fill-rule="evenodd" d="M223.499,0.974 L230.754,15.804 L246.976,18.183 L235.237,29.726 L238.008,46.026 L223.499,38.329 L208.990,46.026 L211.762,29.726 L200.024,18.183 L216.245,15.804 L223.499,0.974 Z"/>
+                </svg>
+            </div>
+        </div>
+        
+        
+        
         <button onclick="w = window.open('/', '_blank'); w.print();">Print</button>
-        <div class="star-rate" id="star" data-control-type="starrate" data-value="5">
+        <div class="star-rate" id="star" data-control-type="starrate" data-name="starpoint[]" data-value="5">
             <div class="star-rate-background">
                 <svg>
                     <path d="M25,1.641L32.2,16.47,48.309,18.85,36.653,30.392l2.752,16.3L25,39l-14.405,7.7,2.752-16.3L1.691,18.85,17.8,16.47Z"/>
@@ -136,6 +175,7 @@
                 var _fsvg = _foreground.querySelectorAll('svg');
                 
                 _input.value = _s.dataset.value === undefined ? 1 : _s.dataset.value;
+                _input.name = _s.dataset.name;
                 
                 function _renderstarbyvalue(){
                     for(var i=0; i<_fsvg.length; i++){

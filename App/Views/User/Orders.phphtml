@@ -67,8 +67,14 @@ display: flex;
         display: inline-block;
         padding: 5px 30px;
         font-family: segoe ui;
-        margin: 5px 0px;
+        margin: 5px 5px 5px 0px;
         background-color: #44b27c;
+        color: #fff;
+    }
+    .orders-wrapper .btn-assessment-order{
+        display: inline-block;
+        padding: 5px 20px;
+        background-color: #fea503;
         color: #fff;
     }
 </style>
@@ -124,11 +130,14 @@ display: flex;
                                 </div>
                             </div>
                         </div>
+                                    
                         <div class="order-nav">
                             <a class="btn-order-detail" href="{$order->getUserOrderLink()}">Chi tiết</a>
-                        </div>
-                        </div>
 ORDER;
+                        if($order->clientCanAssessment()){
+                            echo '<a class="btn-assessment-order" href="' . $order->getClientAssessmentOrderLink() .'">Đánh giá đơn hàng</a>';
+                        }
+                        echo '</div></div>';
                     }
                 ?>
             </div>

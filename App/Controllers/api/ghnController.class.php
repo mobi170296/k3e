@@ -121,6 +121,8 @@
                         
                         $order->updateStatus(OrderModel::DA_GIAO);
                         
+                        $order->updatePayStatus(OrderModel::PAID, OrderModel::PAYCOMPLETE);
+                        
                         $orderlog = new OrderLogModel($database);
                         
                         $orderlog->order_id = $order->id;

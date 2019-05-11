@@ -10,12 +10,14 @@
         <link rel="stylesheet" href="/styles/toast.css"/>
         <link rel="stylesheet" href="/styles/form.css"/>
         <link rel="stylesheet" href="/styles/utility.css"/>
+        <link rel="stylesheet" href="/styles/Chart.min.css"/>
         <script type="text/javascript" src="/scripts/core.js"></script>
         <script type="text/javascript" src="/scripts/toast.js"></script>
         <script type="text/javascript" src="/scripts/xhr.js"></script>
         <script type="text/javascript" src="/scripts/ktemplate.js"></script>
         <script type="text/javascript" src="/scripts/iktemplate.js"></script>
         <script type="text/javascript" src="/scripts/iktable.js"></script>
+        <script type="text/javascript" src="/scripts/Chart.bundle.min.js"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </head>
     <body>

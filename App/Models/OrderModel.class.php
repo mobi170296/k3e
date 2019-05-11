@@ -81,6 +81,25 @@
             return $this->paymenttype->loadData();
         }
         
+        public function loadAssessments(){
+            $this->assessments = [];
+            $rows = $this->database->selectall('product_id')->from(DB_TABLE_ASSESSMENT)->where('order_id='.(int)$this->id)->execute();
+            
+            foreach($rows as $row){
+                $assessment = new AssessmentModel($this->database);
+                $assessment->order_id = $row->order_id;
+                $assessment->product_id = $row->product_id;
+                
+                if(!$assessment->loadData()){
+                    return false;
+                }
+                
+                $this->assessments[] = $assessment;
+            }
+            
+            return true;
+        }
+        
         public function loadTransporterUnit(){
             if($this->transporter_id == TransporterModel::GHN){
                 return $this->loadGHNTransporter();
@@ -146,6 +165,17 @@
         public function clientCanCancel(){
             $ac = [self::CHO_NGUOI_BAN_XAC_NHAN];
             return in_array($this->status, $ac);
+        }
+        
+        public function clientCanAssessment(){
+            $status = [self::DA_GIAO, self::HOAN_TAT];
+            
+            #kiem tra lien mien db
+            $rows = $this->database->select('count(*) count')->from(DB_TABLE_ASSESSMENT)->where('order_id='.(int)$this->id)->execute();
+            
+            $count = $rows[0]->count;
+            
+            return in_array($this->status, $status) && $count == 0;
         }
         
         public function clientCancel(){
@@ -227,7 +257,11 @@
         }
         
         public function getUserOrderLink(){
-            return "/User/Order?ordercode=" . $this->ordercode;
+            return '/User/Order?ordercode=' . $this->ordercode;
+        }
+        
+        public function getClientAssessmentOrderLink(){
+            return '/User/AssessmentOrder?ordercode=' . $this->ordercode;
         }
         
         public function add(){

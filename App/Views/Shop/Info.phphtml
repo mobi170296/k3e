@@ -260,126 +260,173 @@
                         </div>
                     </div>
                     
-                    <script type="text/javascript">
-                        //module shop update image meta
-                        !function(){
-                            var _shop_profile_background = $('.shop-profile-background')[0];
-                            var _shop_profile_avatar = $('.shop-profile-avatar')[0];
-                            var $loading_background_icon = $('.shop-profile-background .loading-i-wrapper');
-                            var $loading_avatar_icon = $('.shop-profile-avatar .loading-i-wrapper');
-                            $('#shopavatar').on('change', function(e){
-                                $LoadingPopup.show();
-                                var fd = new FormData();
-                                fd.append('shopavatar', this.files[0]);
-                                $.ajax().create().url('/api/upload/shopavatar').success(function(e){
-                                    var result = JSON.parse(this.response);
-                                    if(result.header.code == 0){
-                                        $loading_avatar_icon.removeClass('u-hidden');
-                                        var image = new Image();
-                                        image.src = result.body.data.urlpath;
-                                        image.onload = function(e){
-                                            $loading_avatar_icon.addClass('u-hidden');
-                                        }
-                                        _shop_profile_avatar.style.backgroundImage = "url('" + result.body.data.urlpath +"')";
-                                        $Toast.makeSuccess(result.header.message);
-                                    }else{
-                                        for(var p in result.header.errors){
-                                            $Toast.makeError(result.header.errors[p]);
-                                        }
-                                    }
-                                    $LoadingPopup.hide();
-                                }).error(function(e){
-                                    $Toast.makeError('Lỗi kết nối');
-                                    $LoadingPopup.hide();
-                                }).post(fd);
-                            });
-                            $('#shopbackground').on('change', function(e){
-                                $LoadingPopup.show();
-                                var fd = new FormData();
-                                fd.append('shopbackground', this.files[0]);
-                                $.ajax().create().url('/api/upload/shopbackground').success(function(e){
-                                    var result = JSON.parse(this.response);
-                                    if(result.header.code == 0){
-                                        $loading_background_icon.removeClass('u-hidden');
-                                        var image = new Image();
-                                        image.src = result.body.data.urlpath;
-                                        image.onload = function(e){
-                                            $loading_background_icon.addClass('u-hidden');
-                                        }
-                                        _shop_profile_background.style.backgroundImage = "url('" + result.body.data.urlpath +"')";
-                                        $Toast.makeSuccess(result.header.message);
-                                    }else{
-                                        
-                                        for(var p in result.header.errors){
-                                            $Toast.makeError(result.header.errors[p]);
-                                        }
-                                    }
-                                    $LoadingPopup.hide();
-                                }).error(function(e){
-                                    $Toast.makeError('Lỗi kết nối');
-                                    $LoadingPopup.hide();
-                                }).post(fd);
-                            });
-                        }();
-                        //module shop info form
-                        !function(){
-                            var _form = document.forms['shop-update-form']
-                            var _namef = _form.name;
-                            var _descf = _form.description;
-
-                            function _checkValid(){
-                                var err = 0;
-                                var nl = _namef.value.length;
-                                var dl = _descf.value.length;
-
-                                if(nl===0){
-                                    err |= 1;
-                                    $(_form).$('.invalid-data[data-valid-for="name"]').addClass('active').html('Phải đặt tên cho cửa hàng');
-                                }else{
-                                    if(nl > 40){
-                                        err |= 1;
-                                        $(_form).$('.invalid-data[data-valid-for="name"]').addClass('active').html('Tên cửa hàng có độ dài phải ít hơn 40 ký tự');
-                                    }else{
-                                        $(_form).$('.invalid-data[data-valid-for="name"]').removeClass('active');
-                                    }
-                                }
-
-                                if(dl > 512){
-                                    err |= 1;
-                                    $(_form).$('.invalid-data[data-valid-for="description"]').addClass('active').html('Độ dài mô tả không được vượt quá 512 ký tự');
-                                }else{
-                                    $(_form).$('.invalid-data[data-valid-for="description"]').removeClass('active');
-                                }
-
-                                return err === 0;
-                            }
-
-                            $(_form).on('submit', function(e){
-                                if(_checkValid()){
-                                    $LoadingPopup.show();
-                                    $.ajax().create().success(function(e){
-                                        var result = JSON.parse(this.response);
-                                        if(result.header.code===0){
-                                            $Toast.makeSuccess(result.header.message);
-                                        }else{
-                                            if(result.header.errors.description !== undefined){
-                                                $(_form).$('.invalid-data[data-valid-for="description"]').addClass('active').html(result.header.errors.description);
-                                            }
-
-                                            if(result.header.errors.name !== undefined){
-                                                $(_form).$('.invalid-data[data-valid-for="name"]').addClass('active').html(result.header.errors.name);
-                                            }
-
-                                            $Toast.makeError(result.header.message);
-                                        }
-                                        $LoadingPopup.hide();
-                                    }).error(function(e){
-                                        $Toast.makeError('Lỗi kết nối', 5e3);
-                                        $LoadingPopup.hide();
-                                    }).postForm(_form);
-                                }
-                            });
-                        }();
-                    </script>
+                    
+                    <!-- Chart test -->
+                    
+                    <div ok="notok">
+                        
+                        <canvas id="myChart" width="200" height="100" aria-label="Hello ARIA World" role="img"></canvas>
+<script>
+var ctx = document.getElementById('myChart');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        datasets: [{
+            label: '# of Votes',
+            data: [5, 5, 3, 5, 2, 3],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+</script>
+                        
+                    </div>
                 </div>
             </div>
+<script type="text/javascript">
+    //module shop update image meta
+    !function(){
+        var _shop_profile_background = $('.shop-profile-background')[0];
+        var _shop_profile_avatar = $('.shop-profile-avatar')[0];
+        var $loading_background_icon = $('.shop-profile-background .loading-i-wrapper');
+        var $loading_avatar_icon = $('.shop-profile-avatar .loading-i-wrapper');
+        $('#shopavatar').on('change', function(e){
+            $LoadingPopup.show();
+            var fd = new FormData();
+            fd.append('shopavatar', this.files[0]);
+            $.ajax().create().url('/api/upload/shopavatar').success(function(e){
+                var result = JSON.parse(this.response);
+                if(result.header.code == 0){
+                    $loading_avatar_icon.removeClass('u-hidden');
+                    var image = new Image();
+                    image.src = result.body.data.urlpath;
+                    image.onload = function(e){
+                        $loading_avatar_icon.addClass('u-hidden');
+                    }
+                    _shop_profile_avatar.style.backgroundImage = "url('" + result.body.data.urlpath +"')";
+                    $Toast.makeSuccess(result.header.message);
+                }else{
+                    for(var p in result.header.errors){
+                        $Toast.makeError(result.header.errors[p]);
+                    }
+                }
+                $LoadingPopup.hide();
+            }).error(function(e){
+                $Toast.makeError('Lỗi kết nối');
+                $LoadingPopup.hide();
+            }).post(fd);
+        });
+        $('#shopbackground').on('change', function(e){
+            $LoadingPopup.show();
+            var fd = new FormData();
+            fd.append('shopbackground', this.files[0]);
+            $.ajax().create().url('/api/upload/shopbackground').success(function(e){
+                var result = JSON.parse(this.response);
+                if(result.header.code == 0){
+                    $loading_background_icon.removeClass('u-hidden');
+                    var image = new Image();
+                    image.src = result.body.data.urlpath;
+                    image.onload = function(e){
+                        $loading_background_icon.addClass('u-hidden');
+                    }
+                    _shop_profile_background.style.backgroundImage = "url('" + result.body.data.urlpath +"')";
+                    $Toast.makeSuccess(result.header.message);
+                }else{
+
+                    for(var p in result.header.errors){
+                        $Toast.makeError(result.header.errors[p]);
+                    }
+                }
+                $LoadingPopup.hide();
+            }).error(function(e){
+                $Toast.makeError('Lỗi kết nối');
+                $LoadingPopup.hide();
+            }).post(fd);
+        });
+    }();
+    //module shop info form
+    !function(){
+        var _form = document.forms['shop-update-form']
+        var _namef = _form.name;
+        var _descf = _form.description;
+
+        function _checkValid(){
+            var err = 0;
+            var nl = _namef.value.length;
+            var dl = _descf.value.length;
+
+            if(nl===0){
+                err |= 1;
+                $(_form).$('.invalid-data[data-valid-for="name"]').addClass('active').html('Phải đặt tên cho cửa hàng');
+            }else{
+                if(nl > 40){
+                    err |= 1;
+                    $(_form).$('.invalid-data[data-valid-for="name"]').addClass('active').html('Tên cửa hàng có độ dài phải ít hơn 40 ký tự');
+                }else{
+                    $(_form).$('.invalid-data[data-valid-for="name"]').removeClass('active');
+                }
+            }
+
+            if(dl > 512){
+                err |= 1;
+                $(_form).$('.invalid-data[data-valid-for="description"]').addClass('active').html('Độ dài mô tả không được vượt quá 512 ký tự');
+            }else{
+                $(_form).$('.invalid-data[data-valid-for="description"]').removeClass('active');
+            }
+
+            return err === 0;
+        }
+
+        $(_form).on('submit', function(e){
+            if(_checkValid()){
+                $LoadingPopup.show();
+                $.ajax().create().success(function(e){
+                    var result = JSON.parse(this.response);
+                    if(result.header.code===0){
+                        $Toast.makeSuccess(result.header.message);
+                    }else{
+                        if(result.header.errors.description !== undefined){
+                            $(_form).$('.invalid-data[data-valid-for="description"]').addClass('active').html(result.header.errors.description);
+                        }
+
+                        if(result.header.errors.name !== undefined){
+                            $(_form).$('.invalid-data[data-valid-for="name"]').addClass('active').html(result.header.errors.name);
+                        }
+
+                        $Toast.makeError(result.header.message);
+                    }
+                    $LoadingPopup.hide();
+                }).error(function(e){
+                    $Toast.makeError('Lỗi kết nối', 5e3);
+                    $LoadingPopup.hide();
+                }).postForm(_form);
+            }
+        });
+    }();
+</script>

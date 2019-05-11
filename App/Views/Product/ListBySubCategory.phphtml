@@ -16,7 +16,7 @@
             <div class="product-list">
                 <?php
                     foreach($products as $product){
-                        $starratingpoint = $product->getStarRatingPoint() * 100;
+                        $starratingpoint = $product->getStarRatingPoint() / 5 * 100;
                         
                         echo <<<PRODUCT
                         <a class="product-link" href="{$product->getProductLink()}" style="margin: 12.5px">

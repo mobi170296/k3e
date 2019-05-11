@@ -8,6 +8,9 @@
     use App\Models\SubCategoryModel;
     use App\Models\ProductModel;
     
+    
+    use App\Models\ProductViewsLogModel;
+    
     use App\Models\Authenticate;
     use App\Exception\AuthenticateException;
     
@@ -97,6 +100,13 @@
                 $product->id = (int)$id;
                 
                 if($product->loadData()){
+                    if($user != null){
+                        $productviewslog = new ProductViewsLogModel($database);
+                        $productviewslog->product_id = $id;
+                        $productviewslog->user_id = $user->id;
+                        $productviewslog->increase();
+                    }
+                    $product->increaseViews();
                     $product->loadMainImage();
                     $product->loadProductAttributes();
                     $product->loadProductImageMaps();
@@ -106,6 +116,10 @@
                     $product->loadWard();
                     $product->ward->loadDistrict();
                     $product->ward->district->loadProvince();
+                    $product->loadAssessments();
+                    foreach($product->assessments as $assessment){
+                        $assessment->loadClient();
+                    }
                     $this->View->Data->user = $user;
                     $this->View->Data->product = $product;
                     return $this->View->RenderTemplate();

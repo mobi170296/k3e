@@ -11,6 +11,8 @@
     use App\Models\OrderModel;
     use App\Models\OrderLogModel;
     
+    use App\Models\AssessmentModel;
+    
     class userController extends Controller{
         public function changepassword($oldpassword, $password){
             $result = new \stdClass();
@@ -109,6 +111,93 @@
             } catch (AuthenticateException $e){
                 $result->header->code = 1;
                 $result->header->errors = ['invalid'];
+            }
+            
+            return $this->View->RenderJSON($result);
+        }
+        
+        public function assessmentorder($order_id, $product_id, $starpoint, $comment){
+            $result = new \stdClass();
+            $result->header = new \stdClass();
+            
+            try{
+                if(!is_numeric($order_id) || !is_array($product_id) || !is_array($starpoint) || !is_array($comment) || count($product_id) != count($starpoint) || count($starpoint) != count($comment)){
+                    $result->header->code = 1;
+                    $result->header->message = 'Yêu cầu không hợp lệ';
+                    
+                    return $this->View->RenderJSON($result);
+                }
+                $database = new Database();
+                
+                $user = (new Authenticate($database))->getUser();
+                
+                $order = new OrderModel($database);
+                $order->id = $order_id;
+                
+                if($order->loadData() && $order->client_id == $user->id){
+                    if($order->clientCanAssessment()){
+                        $order->loadOrderItems();
+                        
+                        $order_product_id = [];
+                        foreach($order->orderitems as $orderitem){
+                            $order_product_id[] = $orderitem->product_id;
+                        }
+                        
+                        if(count(array_intersect($product_id, $order_product_id)) == count($product_id)){
+                            #khoi tao mang model danh gia + check du lieu truoc khi them vao db
+                            $assessments = [];
+                            
+                            $length = count($product_id);
+                            $errors = [];
+                            for($i=0; $i<$length; $i++){
+                                $assessment = new AssessmentModel($database);
+                                $assessment->order_id = $order_id;
+                                $assessment->client_id = $user->id;
+                                $assessment->comment = $comment[$i];
+                                $assessment->product_id = $product_id[$i];
+                                $assessment->starpoint = $starpoint[$i];
+                                $assessment->checkComment()->checkStarPoint();
+                                
+                                if(!$assessment->isValid()){
+                                    $errors[] = 'Đánh giá số ' . ($i + 1) . ' không hợp lệ!';
+                                }
+                                $assessments[] = $assessment;
+                            }
+                            
+                            if(count($errors)){
+                                throw new InputException($errors, 'Thông tin đánh giá không hợp lệ');
+                            }
+                            
+                            $database->startTransaction();
+                            foreach($assessments as $assessment){
+                                $assessment->add();
+                            }
+                            
+                            $database->commit();
+                            $result->header->code = 0;
+                            $result->header->message = 'Đánh giá đơn hàng thành công cảm ơn bạn!';
+                        }else{
+                            $result->header->code = 1;
+                            $result->header->message = 'Sản phẩm muốn đánh giá không tồn tại trong đơn hàng';
+                        }
+                    }else{
+                        $result->header->code = 1;
+                        $result->header->message = 'Đơn hàng này không có thể đánh giá được';
+                    }
+                }else{
+                    $result->header->code = 1;
+                    $result->header->message = 'Đơn hàng không tồn tại';
+                }
+            } catch (DBException $ex) {
+                $result->header->code = 1;
+                $result->header->message = 'DBERR';
+            } catch (AuthenticateException $e){
+                $result->header->code = 1;
+                $result->header->message = 'Invalid user';
+            } catch (InputException $e){
+                $result->header->code = 1;
+                $result->header->message = $e->getMessage();
+                $result->header->errors = $e->getErrorsMap();
             }
             
             return $this->View->RenderJSON($result);

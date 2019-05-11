@@ -1,0 +1,208 @@
+<?php
+    $order = $this->Data->order;
+    $this->Data->Title = 'Đánh giá đơn hàng - ' . $order->ordercode;
+?>
+<style>
+    .assessment-order-wrapper .product{
+        display: flex;
+        margin: 10px 0px;
+    }
+    .assessment-order-wrapper .product-image{
+        background-size: cover;
+        background-repeat: no-repeat;
+        width: 100px;
+        height: 100px;
+        margin-right: 10px;
+    }
+    .assessment-order-wrapper .product-name{
+        font-weight: bold;
+    }
+    .assessment-order-wrapper .product-price{
+        font-weight: bold;
+        color: red;
+    }
+    .assessment-order-wrapper .comment{
+        width: 50%;
+        resize: vertical;
+    }
+    .btn-assessment{
+        margin: 10px 0px;
+        padding: 10px 20px;
+        border: 1px solid #44b27c;
+        background-color: #44b27c;
+        color: #fff;
+    }
+</style>
+
+
+<div id="user-wrapper" class="clearfix u-my-5">
+    <div class="left-panel">
+        <div class="menu">
+            <div class="menu-item"><a href="/User/Info">Thông tin tài khoản</a></div>
+            <div class="menu-item"><a href="/User/ChangePassword">Đổi mật khẩu</a></div>
+            <div class="menu-item"><a href="/User/DeliveryAddresses">Địa chỉ giao hàng</a></div>
+            <div class="menu-item active"><a href="/User/Orders">Quản lý đơn hàng</a></div>
+            <div class="menu-item"><a href="/User/ViewHistory">Sản phẩm đã xem</a></div>
+            <div class="menu-item"><a href="/User/Assessment">Đánh giá sản phẩm</a></div>
+        </div>
+    </div>
+    <div class="right-panel">
+        <div class="user-profile">
+            <div class="user-profile-card">
+                <div class="header">Đánh giá sản phẩm trong đơn hàng <a href="<?php echo $order->getUserOrderLink(); ?>">#<?php echo $order->ordercode; ?></a> (<?php echo count($order->orderitems); ?> sản phẩm)</div>
+                <div class="content">
+                    <div class="assessment-order-wrapper">
+                        <form name="assessmentform" onsubmit="return false;" data-next-url="<?php echo $order->getUserOrderLink(); ?>">
+                            <input type="hidden" name="order_id" value="<?php echo $order->id; ?>"/>
+                        <?php
+                            foreach($order->orderitems as $orderitem){
+                                $orderitempricestring = \number_format($orderitem->price);
+                                echo <<<ITEM
+                                <div class="product">
+                                    <div class="product-image" style="background-image: url('{$orderitem->product->getMainImageThumbnail()}')"></div>
+                                    <div class="product-info">
+                                        <div class="product-name">{$orderitem->product->name}</div>
+                                        <div class="product-price">{$orderitempricestring}đ</div>
+                                    </div>
+                                    <input type="hidden" name="product_id[]" value="{$orderitem->product_id}"/>
+                                </div>
+                                <div class="star-rate" data-control-type="starrate" data-name="starpoint[]" data-value="5">
+                                    <div class="star-rate-background">
+                                        <svg>
+                                            <path d="M25,1.641L32.2,16.47,48.309,18.85,36.653,30.392l2.752,16.3L25,39l-14.405,7.7,2.752-16.3L1.691,18.85,17.8,16.47Z"/>
+                                        </svg>
+                                        <svg>
+                                            <path d="M25,1.641L32.2,16.47,48.309,18.85,36.653,30.392l2.752,16.3L25,39l-14.405,7.7,2.752-16.3L1.691,18.85,17.8,16.47Z"/>
+                                        </svg>
+                                        <svg>
+                                            <path d="M25,1.641L32.2,16.47,48.309,18.85,36.653,30.392l2.752,16.3L25,39l-14.405,7.7,2.752-16.3L1.691,18.85,17.8,16.47Z"/>
+                                        </svg>
+                                        <svg>
+                                            <path d="M25,1.641L32.2,16.47,48.309,18.85,36.653,30.392l2.752,16.3L25,39l-14.405,7.7,2.752-16.3L1.691,18.85,17.8,16.47Z"/>
+                                        </svg>
+                                        <svg>
+                                            <path d="M25,1.641L32.2,16.47,48.309,18.85,36.653,30.392l2.752,16.3L25,39l-14.405,7.7,2.752-16.3L1.691,18.85,17.8,16.47Z"/>
+                                        </svg>
+                                    </div>
+                                    <div class="star-rate-foreground">
+                                        <svg>
+                                            <path d="M25,1.641L32.2,16.47,48.309,18.85,36.653,30.392l2.752,16.3L25,39l-14.405,7.7,2.752-16.3L1.691,18.85,17.8,16.47Z"/>
+                                        </svg>
+                                        <svg>
+                                            <path d="M25,1.641L32.2,16.47,48.309,18.85,36.653,30.392l2.752,16.3L25,39l-14.405,7.7,2.752-16.3L1.691,18.85,17.8,16.47Z"/>
+                                        </svg>
+                                        <svg>
+                                            <path d="M25,1.641L32.2,16.47,48.309,18.85,36.653,30.392l2.752,16.3L25,39l-14.405,7.7,2.752-16.3L1.691,18.85,17.8,16.47Z"/>
+                                        </svg>
+                                        <svg>
+                                            <path d="M25,1.641L32.2,16.47,48.309,18.85,36.653,30.392l2.752,16.3L25,39l-14.405,7.7,2.752-16.3L1.691,18.85,17.8,16.47Z"/>
+                                        </svg>
+                                        <svg>
+                                            <path d="M25,1.641L32.2,16.47,48.309,18.85,36.653,30.392l2.752,16.3L25,39l-14.405,7.7,2.752-16.3L1.691,18.85,17.8,16.47Z"/>
+                                        </svg>
+                                    </div>
+                                    <input type="hidden"/>
+                                </div>
+                                <textarea name="comment[]" rows="5" placeholder="Viết đánh giá của bạn về sản phẩm này đi nào" class="comment"></textarea>
+ITEM;
+                            }
+                        ?>
+                            <div><button class="btn-assessment" type="submit">Gửi đánh giá</button></div>
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    //module cho star rate
+    !function(){
+        function _starrate(_s){
+            var _foreground = _s.querySelector('.star-rate-foreground');
+            var _background = _s.querySelector('.star-rate-foreground');
+            var _input = _s.querySelector('input');
+            var _fsvg = _foreground.querySelectorAll('svg');
+
+            _input.value = _s.dataset.value === undefined ? 1 : _s.dataset.value;
+            _input.name = _s.dataset.name;
+
+            function _renderstarbyvalue(){
+                for(var i=0; i<_fsvg.length; i++){
+                    _fsvg[i].classList.remove('active');
+                    if(_fsvg[i].dataset.value <= _input.value){
+                        _fsvg[i].classList.add('active');
+                    }
+                }
+            }
+
+            _foreground.addEventListener('mouseleave', function(e){
+                //render theo gia tri hien tai
+                _renderstarbyvalue();
+            })
+
+            function _starover(e){
+                //render by hover
+                for(var i=0; i<_fsvg.length; i++){
+                    _fsvg[i].classList.remove('active');
+                    if(_fsvg[i].dataset.value <= this.dataset.value){
+                        _fsvg[i].classList.add('active');
+                    }
+                }
+            }
+
+            function _starclick(e){
+                //set new value
+                _input.value = this.dataset.value;
+            }
+
+            for(var i=0; i<_fsvg.length; i++){
+                _fsvg[i].dataset.value = i+1;
+                _fsvg[i].addEventListener('click', _starclick);
+                _fsvg[i].addEventListener('mouseenter', _starover);
+            }
+
+            _renderstarbyvalue();
+        }
+        
+        var _star_rate = document.querySelectorAll('[data-control-type="starrate"]');
+        
+        for(var i=0; i<_star_rate.length;i++){
+            _starrate(_star_rate[i]);
+        }
+    }();
+    
+    
+    //module for assessment form
+    !function(){
+        var form = document.forms['assessmentform'];
+        
+        form.onsubmit = function(e){
+            console.log('ok');
+            $LoadingPopup.show();
+            var nexturl = this.dataset.nextUrl;
+            var formdata = new FormData(form);
+            
+            $.ajax().create().url('/api/user/assessmentorder').success(function(e){
+                var result = JSON.parse(this.response);
+                if(result.header.code === 0){
+                    $Toast.makeSuccess(result.header.message);
+                    window.setTimeout(function(e){
+                        location.href = nexturl;
+                    }, 2000);
+                }else{
+                    $Toast.makeError(result.header.message);
+                    $LoadingPopup.hide();
+                }
+            }).error(function(e){
+                $Toast.makeError('Lỗi kết nối');
+                $LoadingPopup.hide();
+            }).post(formdata);
+            
+            
+            return false;
+        }
+    }();
+</script>

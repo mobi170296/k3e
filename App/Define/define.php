@@ -23,6 +23,7 @@
     define('DB_TABLE_ORDERLOG', 'orderlog');
     define('DB_TABLE_GHNTRANSPORTER', 'ghntransporter');
     define('DB_TABLE_ONEPAYORDER', 'onepayorder');
+    define('DB_TABLE_PRODUCTVIEWSlOG', 'productviewslog');
     
     #define upload image location
     define('PUBLIC_UPLOAD_IMAGE_DIR', k3_ROOT . DS . 'public' . DS . 'upload' . DS . 'images');
