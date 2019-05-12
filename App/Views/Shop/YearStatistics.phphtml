@@ -1,0 +1,317 @@
+<?php
+    $this->layout = DS . 'App' . DS . 'Template' . DS . 'Common' . DS . 'shop_layout.phphtml';
+    $this->Data->Title = 'Thống kê';
+    
+    
+    
+    $waitorderstotal = $this->Data->waitorderstotal;
+    $toshiporderstotal = $this->Data->toshiporderstotal;
+    $shippingorderstotal = $this->Data->shippingorderstotal;
+    $completedorderstotal = $this->Data->completedorderstotal;
+    $cancelledorderstotal = $this->Data->cancelledorderstotal;
+?>
+<style>
+    .btn-analyze{
+        padding: 3px 10px;
+        border: 1px solid #d12c66;
+        background-color: #d12c66;
+        color: #fff;
+        font-family: segoe ui;
+    }
+    .btn-analyze::before{
+        content: '';
+        width: 20px;
+        height: 20px;
+        background-size: cover;
+        background-image: url('/images/icons/analyze-icon.png');
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 10px;
+    }
+    .filter-selector-section .stattype{
+        padding: 10px 0px;
+    }
+    .filter-selector-section .year{
+        padding: 10px 0px;
+    }
+</style>
+<div class="main-wrapper shop-profile-wrapper">
+    <div class="left-menu">
+        <div class="menu open">
+            <div class="menu-label"><i class="mi order"></i>Đơn hàng</div>
+            <div class="menu-items">
+                <div class="menu-item"><a href="/Shop/WaitOrders"><span class="orders-count"><?php echo $waitorderstotal; ?></span>Chờ xác nhận</a></div>
+                <div class="menu-item"><a href="/Shop/ToshipOrders"><span class="orders-count"><?php echo $toshiporderstotal; ?></span>Chờ lấy hàng</a></div>
+                <div class="menu-item"><a href="/Shop/ShippingOrders"><span class="orders-count"><?php echo $shippingorderstotal; ?></span>Đang giao</a></div>
+                <div class="menu-item"><a href="/Shop/CompletedOrders"><span class="orders-count"><?php echo $completedorderstotal; ?></span>Hoàn thành</a></div>
+                <div class="menu-item"><a href="/Shop/CancelledOrders"><span class="orders-count"><?php echo $cancelledorderstotal; ?></span>Đã hủy</a></div>
+            </div>
+        </div>
+        <div class="menu">
+            <div class="menu-label"><i class="mi product"></i>Sản phẩm</div>
+            <div class="menu-items">
+                <div class="menu-item"><a href="/Shop/ProductList">Danh sách sản phẩm</a></div>
+                <div class="menu-item"><a href="/Shop/AddProduct">Đăng sản phẩm</a></div>
+            </div>
+        </div>
+        <div class="menu">
+            <div class="menu-label"><i class="mi shop"></i>Thông tin cửa hàng</div>
+            <div class="menu-items">
+                <div class="menu-item active"><a href="/Shop/Info">Thông tin cơ bản</a></div>
+            </div>
+        </div>
+        <div class="menu open">
+            <div class="menu-label"><i class="mi statistics"></i>Thống kê</div>
+            <div class="menu-items">
+                <div class="menu-item active"><a href="/Shop/YearStatistics">Thống kê theo năm</a></div>
+                <div class="menu-item"><a href="/Shop/MonthStatistics">Thống kê theo tháng</a></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        //module cho left menu
+        !function(){
+            var menu_labels = document.querySelectorAll('.left-menu .menu .menu-label');
+            for(var i=0; i<menu_labels.length; i++){
+                menu_labels[i].addEventListener('click', function(e){
+                    var height = parseInt(this.nextElementSibling.style.height);
+                    height = !height ? this.nextElementSibling.scrollHeight : 0;
+                    this.nextElementSibling.style.height = height + 'px';
+                });
+            }
+        }();
+    </script>
+    <div class="right-content">
+        <div class="shop-profile-card">
+            <div class="shop-profile-title">
+                <div class="header">Thống kê cho cửa hàng của bạn</div>
+                <div class="desc">Thông tin thống kê theo năm</div>
+            </div>
+            <div class="shop-profile-content">
+                <div class="filter-selector-section">
+                    <form>
+                    <div class="stattype" data-control-type="stattype">
+                        <label>
+                            <input type="radio" name="stattype" value="sales" checked/> Theo doanh số
+                        </label>
+                        <label>
+                            <input type="radio" name="stattype" value="revenue"/> Theo doanh thu
+                        </label>
+                    </div>
+                    <div class="year">
+                        <select name="year" data-control-type="year">
+                            <?php
+                                $year = getdate()['year'];
+                                $fromyear = $year - 10;
+                                for($i = $year; $i >= $fromyear; $i--){
+                                    echo <<<OPT
+                                    <option value="{$i}">Năm {$i}</option>
+OPT;
+                                }
+                            ?>
+                        </select>
+                    </div>
+                    <div>
+                        <button type="button" class="btn-analyze" data-control-type="yearstatistics">Thống kê</button>
+                    </div>
+                    </form>
+                </div>
+                <div class="chart">
+                    <canvas id="bieu-do-thong-ke"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    !function(){
+        this.getMaxDay = function(mon, y){
+            var m=[31,0,31,30,31,30,31,31,30,31,30,31];
+            if(mon!==2){
+                return m[mon-1];
+            }
+            var a=y%4===0,b=y%100===0,c=y%400===0;
+            return a&(!(b^c)) ? 29 : 28;
+        }
+
+        this.day = e.querySelector('select[data-date-field="day"]');
+        this.month = e.querySelector('select[data-date-field="month"]');
+        this.year = e.querySelector('select[data-date-field="year"]');
+
+        this.year._container = this.month._container = this.day._container = this;
+
+        this.onchange = function(e){
+            var m=parseInt(this.month.selectedOptions[0].value);
+            var y=parseInt(this.year.selectedOptions[0].value);
+            var d=parseInt(this.day.selectedOptions[0].value);
+            var osi=this.day.selectedIndex;
+            var md=this.getMaxDay(m, y);
+            while(this.day.options.length) this.day.options.remove(0);
+            for(var i=1; i<=md;i++){
+                var o=$.create('option');
+                $(o).html(i).val(i);
+                this.day.options.add(o);
+            }
+            if(osi<=md){
+                this.day.selectedIndex=osi;
+            }
+        }
+
+        this.year.onchange = function(e){
+            this._container.onchange(e);
+        }
+
+        this.month.onchange = function(e){
+            this._container.onchange(e);
+        }
+    }
+    
+    
+    !function(){
+        var btn = document.querySelector('[data-control-type="yearstatistics"]');
+        var cbieudothongke = window['bieu-do-thong-ke'];
+        cbieudothongke.classList.add('u-hidden');
+        
+         bieudothongke = new Chart(cbieudothongke, {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets:[
+                    {
+                        data: [],
+                        label: '',
+                        fill: false,
+                        backgroundColor: 'rgba(255,0,0,0.5)',
+                        yAxisID: 'left-y-axis'
+                    },
+                    {
+                        data: [],
+                        label: '',
+                        fill: false,
+                        backgroundColor: 'rgba(0,0,255,0.5)',
+                        yAxisID: 'right-y-axis'
+                    }
+                ]
+            },
+            options:{
+                scales:{
+                    yAxes: [
+                        {
+                            id: 'left-y-axis',
+                            type: 'linear',
+                            position: 'left',
+                            ticks: {
+                                beginAtZero: true
+                            },scaleLabel: {
+                                display: true,
+                                labelString: ''
+                            }
+                        },
+                        {
+                            id: 'right-y-axis',
+                            type: 'linear',
+                            position: 'right',
+                            ticks:{
+                                beginAtZero: true
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: ''
+                            }
+                        }
+                    ]
+                },
+                animation:{
+                    duration: 0
+                },
+                title:{
+                    display: true,
+                    text: ''
+                }
+            }
+        });
+        
+        function yearordersalesstatistics(year){
+            $LoadingPopup.show();
+            
+            var labels = [];
+            for(var i=1; i<=12; i++){
+                labels.push(i + '/' + year);
+            }
+            
+            $.ajax().create().url('/api/shop/yearordersalesstatistics').success(function(e){
+                var result = JSON.parse(this.response);
+                if(result.header.code === 0){
+                    var data = result.body.data.result;
+                    
+                    //cap nhat du lieu moi
+                    bieudothongke.data.labels = labels;
+                    bieudothongke.data.datasets[0].label = 'Doanh số';
+                    bieudothongke.data.datasets[0].data = data.totalprice;
+                    bieudothongke.data.datasets[1].label = 'Số đơn hàng';
+                    bieudothongke.data.datasets[1].data = data.totalorder;
+                    
+                    bieudothongke.options.title.text = 'Biểu đồ thống kê doanh số năm ' + year;
+                    bieudothongke.options.scales.yAxes[0].scaleLabel.labelString = 'Doanh số';
+                    bieudothongke.options.scales.yAxes[1].scaleLabel.labelString = 'Số đơn hàng';
+                    
+                    bieudothongke.update();
+                    
+                    $LoadingPopup.hide();
+                    cbieudothongke.classList.remove('u-hidden');
+                }else{
+                    $Toast.makeError(result.header.message);
+                }
+            }).error(function(e){
+                $Toast.makeError('Lỗi kết nối');
+            }).post('year=' + year);
+        }
+        
+        function yearorderrevenuestatistics(year){
+            
+            $LoadingPopup.show();
+            
+            var labels = [];
+            for(var i=1; i<=12; i++){
+                labels.push(i + '/' + year);
+            }
+            
+            
+            $.ajax().create().url('/api/shop/yearorderrevenuestatistics').success(function(e){
+                var result = JSON.parse(this.response);
+                if(result.header.code === 0){
+                    var data = result.body.data.result;
+                    
+                    //cap nhat du lieu moi
+                    bieudothongke.data.labels = labels;
+                    bieudothongke.data.datasets[0].data.label = 'Doanh thu';
+                    bieudothongke.data.datasets[0].data = data.totalprice;
+                    bieudothongke.data.datasets[1].data.label = 'Số đơn hàng';
+                    bieudothongke.data.datasets[1].data = data.totalorder;
+                    
+                    bieudothongke.options.title.text = 'Biểu đồ thống kê doanh thu năm ' + year;
+                    bieudothongke.options.scales.yAxes[0].scaleLabel.labelString = 'Doanh thu';
+                    bieudothongke.options.scales.yAxes[1].scaleLabel.labelString = 'Số đơn hàng';
+                    
+                    bieudothongke.update();
+                    
+                    $LoadingPopup.hide();
+                    cbieudothongke.classList.remove('u-hidden');
+                }else{
+                    
+                }
+            }).error(function(e){
+                
+            }).post('year=' + year);
+        }
+        
+        
+        btn.addEventListener('click', function(e){
+            this.form.stattype.value === 'sales' && yearordersalesstatistics.call(null, this.form.year.value);
+            this.form.stattype.value === 'revenue' && yearorderrevenuestatistics.call(null, this.form.year.value);
+        });
+    }();
+</script>

@@ -223,7 +223,9 @@
                         $order->loadData();
                         $order->loadPaymentType();
                         $order->loadTransporter();
+                        $order->loadTransporterUnit();
                         $order->loadOrderItems();
+                        $order->transporterordercode = $order->getTransporterOrderCode();
                         $order->statusstring = $order->getStatusString();
                         foreach($order->orderitems as $orderitem){
                             $orderitem->loadProduct();

@@ -25,6 +25,16 @@
         width: 50%;
         resize: vertical;
     }
+    .assessment-order-wrapper .assessment{
+        padding: 10px;
+        border: 1px solid #eee;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+    .assessment-order-wrapper .assessment textarea{
+        width: 100%;
+        box-sizing: border-box;
+    }
     .btn-assessment{
         margin: 10px 0px;
         padding: 10px 20px;
@@ -58,6 +68,7 @@
                             foreach($order->orderitems as $orderitem){
                                 $orderitempricestring = \number_format($orderitem->price);
                                 echo <<<ITEM
+                                <div class="assessment">
                                 <div class="product">
                                     <div class="product-image" style="background-image: url('{$orderitem->product->getMainImageThumbnail()}')"></div>
                                     <div class="product-info">
@@ -104,6 +115,7 @@
                                     <input type="hidden"/>
                                 </div>
                                 <textarea name="comment[]" rows="5" placeholder="Viết đánh giá của bạn về sản phẩm này đi nào" class="comment"></textarea>
+                                </div>
 ITEM;
                             }
                         ?>

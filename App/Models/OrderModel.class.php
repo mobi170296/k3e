@@ -316,4 +316,40 @@
             
             return true;
         }
+        
+        #method check current status
+        public function passWaitOrder(){
+            $cancelarray = [self::HUY_DON_HANG, self::HUY_DO_HE_THONG, self::GIAO_THAT_BAI, self::HUY_DO_KHONG_LAY_DUOC_HANG, self::KHONG_CON_HANG, self::NGUOI_MUA_DANG_THANH_TOAN, self::NGUOI_MUA_THANH_TOAN_THAT_BAI];
+            
+            $sarray = [OrderModel::CHO_NGUOI_BAN_XAC_NHAN, OrderModel::CHO_LAY_HANG, OrderModel::DANG_GIAO, OrderModel::DA_GIAO, OrderModel::HOAN_TAT];
+            return !in_array($this->status, $cancelarray) && in_array($this->status, $sarray);
+        }
+        
+        public function passWaitShipping(){
+            $cancelarray = [self::HUY_DON_HANG, self::HUY_DO_HE_THONG, self::GIAO_THAT_BAI, self::HUY_DO_KHONG_LAY_DUOC_HANG, self::KHONG_CON_HANG, self::NGUOI_MUA_DANG_THANH_TOAN, self::NGUOI_MUA_THANH_TOAN_THAT_BAI];
+            
+            $sarray = [OrderModel::CHO_LAY_HANG, OrderModel::DANG_GIAO, OrderModel::DA_GIAO, OrderModel::HOAN_TAT];
+            return !in_array($this->status, $cancelarray) && in_array($this->status, $sarray);
+        }
+        
+        public function passShipping(){
+            $cancelarray = [self::HUY_DON_HANG, self::HUY_DO_HE_THONG, self::GIAO_THAT_BAI, self::HUY_DO_KHONG_LAY_DUOC_HANG, self::KHONG_CON_HANG, self::NGUOI_MUA_DANG_THANH_TOAN, self::NGUOI_MUA_THANH_TOAN_THAT_BAI];
+            
+            $sarray = [OrderModel::DANG_GIAO, OrderModel::DA_GIAO, OrderModel::HOAN_TAT];
+            return !in_array($this->status, $cancelarray) && in_array($this->status, $sarray);
+        }
+        
+        public function passDelivered(){
+            $cancelarray = [self::HUY_DON_HANG, self::HUY_DO_HE_THONG, self::GIAO_THAT_BAI, self::HUY_DO_KHONG_LAY_DUOC_HANG, self::KHONG_CON_HANG, self::NGUOI_MUA_DANG_THANH_TOAN, self::NGUOI_MUA_THANH_TOAN_THAT_BAI];
+            
+            $sarray = [OrderModel::DA_GIAO, OrderModel::HOAN_TAT];
+            return !in_array($this->status, $cancelarray) && in_array($this->status, $sarray);
+        }
+        
+        public function passCompleted(){
+            $cancelarray = [self::HUY_DON_HANG, self::HUY_DO_HE_THONG, self::GIAO_THAT_BAI, self::HUY_DO_KHONG_LAY_DUOC_HANG, self::KHONG_CON_HANG, self::NGUOI_MUA_DANG_THANH_TOAN, self::NGUOI_MUA_THANH_TOAN_THAT_BAI];
+            
+            $sarray = [OrderModel::HOAN_TAT];
+            return !in_array($this->status, $cancelarray) && in_array($this->status, $sarray);
+        }
     }

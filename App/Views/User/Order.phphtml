@@ -1,4 +1,5 @@
 <?php
+    use App\Models\OrderModel;
     $order = $this->Data->order;
     $this->Data->Title = 'Chi tiết đơn hàng ' . $order->ordercode;
 ?>
@@ -194,6 +195,39 @@
         <div class="order-wrapper">
             <div class="order-header">Thông tin đơn hàng</div>
             <div class="order-body">
+                
+                <?php
+                
+                        
+                $passwaitorder = $order->passWaitOrder() ? 'active' : '';
+                $passwaitshipping = $order->passWaitShipping() ? 'active' : '';
+                $passshipping = $order->passshipping() ? 'active' : '';
+                $passdelivered = $order->passDelivered() ? 'active' : '';
+                $passcompleted = $order->passCompleted() ? 'active' : '';
+
+                $currentwaitorder = $order->status == OrderModel::CHO_NGUOI_BAN_XAC_NHAN ? 'current' : '';
+                $currentwaitshipping = $order->status == OrderModel::CHO_LAY_HANG ? 'current' : '';
+                $currentshipping = $order->status == OrderModel::DANG_GIAO ? 'current' : '';
+                $currentdelivered = $order->status == OrderModel::DA_GIAO ? 'current' : '';
+                $currentcompleted = $order->status == OrderModel::HOAN_TAT ? 'current' : '';
+
+                
+                
+                echo <<<TIMELINE
+                <div class="ordertimeline">
+                    <div class="ordertimeline-icon waitorder {$passwaitorder} {$currentwaitorder}"></div>
+                    <div class="ordertimeline-icon line {$passwaitshipping}"></div>
+                    <div class="ordertimeline-icon waitship {$passwaitshipping} {$currentwaitshipping}"></div>
+                    <div class="ordertimeline-icon line {$passshipping}"></div>
+                    <div class="ordertimeline-icon shipping {$passshipping} {$currentshipping}"></div>
+                    <div class="ordertimeline-icon line {$passdelivered}"></div>
+                    <div class="ordertimeline-icon delivered {$passdelivered} {$currentdelivered}"></div>
+                    <div class="ordertimeline-icon line {$passcompleted}"></div>
+                    <div class="ordertimeline-icon complete {$passcompleted} {$currentcompleted}"></div>
+                </div>
+TIMELINE;
+                ?>
+                
                 <div class="order-basic-info">
                     <div>
                         <span class="order-code-title">Mã đơn hàng:</span> <span class="order-code-string"><?php echo $order->ordercode; ?></span>
@@ -211,6 +245,7 @@
                         <span class="order-status-tilte">Trạng thái hiện tại: </span> <span class="order-status-string"><?php echo $order->getStatusString(); ?></span>
                     </div>
                 </div>
+
                 <div class="order-delivery-group">
                     <div class="order-transporter">
                         <div class="order-transporter-title">Đơn vị vận chuyển</div>

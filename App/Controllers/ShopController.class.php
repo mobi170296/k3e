@@ -416,6 +416,60 @@
             }
         }
         
+        
+        public function MonthStatistics(){
+            try{
+                $database = new Database();
+                $user = (new Authenticate($database))->getUser();
+                
+                if($user->loadShop()){
+                    $shop = $user->shop;
+                    
+                    $this->View->Data->waitorderstotal = $shop->getWaitOrdersTotal();
+                    $this->View->Data->toshiporderstotal = $shop->getToshipOrdersTotal();
+                    $this->View->Data->shippingorderstotal = $shop->getShippingOrdersTotal();
+                    $this->View->Data->completedorderstotal = $shop->getCompletedOrdersTotal();
+                    $this->View->Data->cancelledorderstotal = $shop->getCancelledOrdersTotal();
+                    return $this->View->RenderTemplate();
+                }else{
+                    return $this->redirectToAction('Open', 'Shop');
+                }
+            } catch (DBException $ex) {
+                $this->View->Data->ErrorMessage = 'DBERR';
+                return $this->View->RenderTemplate('_error');
+            } catch (AuthenticateException $e){
+                return $this->redirectToAction('Login', 'User');
+            }
+        }
+        
+        
+        public function YearStatistics(){
+            try{
+                $database = new Database();
+                $user = (new Authenticate($database))->getUser();
+                
+                if($user->loadShop()){
+                    $shop = $user->shop;
+                    
+                    
+                    
+                    $this->View->Data->waitorderstotal = $shop->getWaitOrdersTotal();
+                    $this->View->Data->toshiporderstotal = $shop->getToshipOrdersTotal();
+                    $this->View->Data->shippingorderstotal = $shop->getShippingOrdersTotal();
+                    $this->View->Data->completedorderstotal = $shop->getCompletedOrdersTotal();
+                    $this->View->Data->cancelledorderstotal = $shop->getCancelledOrdersTotal();
+                    return $this->View->RenderTemplate();
+                }else{
+                    return $this->redirectToAction('Open', 'Shop');
+                }
+            } catch (DBException $ex) {
+                $this->View->Data->ErrorMessage = 'DBERR';
+                return $this->View->RenderTemplate('_error');
+            } catch (AuthenticateException $e){
+                return $this->redirectToAction('Login', 'User');
+            }
+        }
+        
         #thong tin shop voi khach hang
         public function View($id){
             return $this->View->RenderContent($id);

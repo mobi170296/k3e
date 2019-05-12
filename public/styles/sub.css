@@ -1,3 +1,81 @@
+/*timeline don hang*/
+@keyframes anim-orderitemline-current{
+    0%{
+        transform: scale(1) rotate(0deg);
+    }
+    25%{
+        
+        transform: scale(1) rotate(-15deg);
+    }
+    75%{
+        
+        transform: scale(1) rotate(-30deg);
+    }
+    100%{
+        
+        transform: scale(2) rotate(-45deg);
+    }
+}
+
+.ordertimeline{
+    display: flex;
+    padding: 50px;
+    justify-content: center;
+}
+
+.ordertimeline-icon{
+    width: 50px;
+    height: 50px;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.ordertimeline-icon.waitorder{
+    background-image: url('/images/icons/waitorder.png');
+}
+.ordertimeline-icon.waitship{
+    background-image: url('/images/icons/waitship.png');
+}
+.ordertimeline-icon.shipping{
+    background-image: url('/images/icons/shipping.png');
+}
+.ordertimeline-icon.delivered{
+    background-image: url('/images/icons/delivered.png');
+}
+.ordertimeline-icon.complete{
+    background-image: url('/images/icons/complete.png');
+}
+.ordertimeline-icon.line{
+    background-image: url('/images/icons/line.png');
+    margin: 0px 25px;
+}
+
+
+.ordertimeline-icon.waitorder.active{
+    background-image: url('/images/icons/waitorderactive.png');
+}
+.ordertimeline-icon.waitship.active{
+    background-image: url('/images/icons/waitshipactive.png');
+}
+.ordertimeline-icon.shipping.active{
+    background-image: url('/images/icons/shippingactive.png');
+}
+.ordertimeline-icon.delivered.active{
+    background-image: url('/images/icons/deliveredactive.png');
+}
+.ordertimeline-icon.complete.active{
+    background-image: url('/images/icons/completeactive.png');
+}
+.ordertimeline-icon.line.active{
+    background-image: url('/images/icons/lineactive.png');
+}
+
+.ordertimeline-icon.current{
+    animation-name: anim-orderitemline-current;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+}
+
 /*sao danh gia*/
 .star-rate{
     position: relative;
@@ -345,6 +423,9 @@ a.product-link{
 }
 .mi.product{
     background-image: url('/images/icons/product-menu-icon.png');
+}
+.mi.statistics{
+    background-image: url('/images/icons/shop-statistics.png');
 }
 .main-wrapper .left-menu .menu-item{
     font-size: 0.85em;

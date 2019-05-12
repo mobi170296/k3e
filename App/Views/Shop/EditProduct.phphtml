@@ -63,20 +63,13 @@
                             <div class="menu-item"><a href="/Shop/Info">Thông tin cơ bản</a></div>
                         </div>
                     </div>
+                    
+                    
                     <div class="menu">
-                        <div class="menu-label">Chương trình khuyến mãi</div>
+                        <div class="menu-label"><i class="mi statistics"></i>Thống kê</div>
                         <div class="menu-items">
-                            <div class="menu-item"><a href="">Mã giảm giá</a></div>
-                            <div class="menu-item"><a href="">Tủ hàng</a></div>
-                            <div class="menu-item"><a href="">Flash sale</a></div>
-                        </div>
-                    </div>
-                    <div class="menu">
-                        <div class="menu-label">Khách hàng</div>
-                        <div class="menu-items">
-                            <div class="menu-item"><a href="">Lịch sử quan tâm</a></div>
-                            <div class="menu-item"><a href="">Danh sách khách hàng</a></div>
-                            <div class="menu-item"><a href="">Danh sách chặn người mua</a></div>
+                            <div class="menu-item"><a href="/Shop/YearStatistics">Thống kê theo năm</a></div>
+                            <div class="menu-item"><a href="/Shop/MonthStatistics">Thống kê theo tháng</a></div>
                         </div>
                     </div>
                 </div>

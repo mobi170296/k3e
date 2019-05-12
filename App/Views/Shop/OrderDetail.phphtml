@@ -1,4 +1,6 @@
 <?php
+    use App\Models\OrderModel;
+    
     $order = $this->Data->order;
     $this->layout = DS . 'App' . DS . 'Template' . DS . 'Common' . DS . 'shop_layout.phphtml';
     $this->Data->Title = 'Chi tiết đơn hàng ' . $order->ordercode;
@@ -36,20 +38,13 @@
                 <div class="menu-item"><a href="">Thông tin cơ bản</a></div>
             </div>
         </div>
+        
+        
         <div class="menu">
-            <div class="menu-label">Chương trình khuyến mãi</div>
+            <div class="menu-label"><i class="mi statistics"></i>Thống kê</div>
             <div class="menu-items">
-                <div class="menu-item"><a href="">Mã giảm giá</a></div>
-                <div class="menu-item"><a href="">Tủ hàng</a></div>
-                <div class="menu-item"><a href="">Flash sale</a></div>
-            </div>
-        </div>
-        <div class="menu">
-            <div class="menu-label">Khách hàng</div>
-            <div class="menu-items">
-                <div class="menu-item"><a href="">Lịch sử quan tâm</a></div>
-                <div class="menu-item"><a href="">Danh sách khách hàng</a></div>
-                <div class="menu-item"><a href="">Danh sách chặn người mua</a></div>
+                <div class="menu-item"><a href="/Shop/YearStatistics">Thống kê theo năm</a></div>
+                <div class="menu-item"><a href="/Shop/MonthStatistics">Thống kê theo tháng</a></div>
             </div>
         </div>
     </div>
@@ -199,10 +194,46 @@
             color: #fff;
             font-size: 1.0em;
         }
+        
+        
     </style>
     <div class="right-content">
         <div class="shop-order-detail">
             <div class="shop-order-detail-header">Chi tiết đơn hàng</div>
+            <div class="order-timeline info-groups">
+                
+                <?php
+                
+                        
+                $passwaitorder = $order->passWaitOrder() ? 'active' : '';
+                $passwaitshipping = $order->passWaitShipping() ? 'active' : '';
+                $passshipping = $order->passshipping() ? 'active' : '';
+                $passdelivered = $order->passDelivered() ? 'active' : '';
+                $passcompleted = $order->passCompleted() ? 'active' : '';
+
+                $currentwaitorder = $order->status == OrderModel::CHO_NGUOI_BAN_XAC_NHAN ? 'current' : '';
+                $currentwaitshipping = $order->status == OrderModel::CHO_LAY_HANG ? 'current' : '';
+                $currentshipping = $order->status == OrderModel::DANG_GIAO ? 'current' : '';
+                $currentdelivered = $order->status == OrderModel::DA_GIAO ? 'current' : '';
+                $currentcompleted = $order->status == OrderModel::HOAN_TAT ? 'current' : '';
+
+                
+                
+                echo <<<TIMELINE
+                <div class="ordertimeline">
+                    <div class="ordertimeline-icon waitorder {$passwaitorder} {$currentwaitorder}"></div>
+                    <div class="ordertimeline-icon line {$passwaitshipping}"></div>
+                    <div class="ordertimeline-icon waitship {$passwaitshipping} {$currentwaitshipping}"></div>
+                    <div class="ordertimeline-icon line {$passshipping}"></div>
+                    <div class="ordertimeline-icon shipping {$passshipping} {$currentshipping}"></div>
+                    <div class="ordertimeline-icon line {$passdelivered}"></div>
+                    <div class="ordertimeline-icon delivered {$passdelivered} {$currentdelivered}"></div>
+                    <div class="ordertimeline-icon line {$passcompleted}"></div>
+                    <div class="ordertimeline-icon complete {$passcompleted} {$currentcompleted}"></div>
+                </div>
+TIMELINE;
+                ?>
+            </div>
             <div class="order-status info-groups">
                 <div class="info-group">
                     <div class="info-group-title">Trạng thái đơn hàng</div>

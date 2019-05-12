@@ -84,6 +84,13 @@
         margin-right: 10px;
         border: 1px solid #ccc;
     }
+    .product-item{
+        margin-bottom: 5px;
+    }
+    .link-order-detail{
+        font-size: .9em;
+        color: #44b27c;
+    }
 </style>
 
 
@@ -112,20 +119,13 @@
                     <div class="menu-item"><a href="/Shop/Info">Thông tin cơ bản</a></div>
                 </div>
             </div>
+            
+            
             <div class="menu">
-                <div class="menu-label">Chương trình khuyến mãi</div>
+                <div class="menu-label"><i class="mi statistics"></i>Thống kê</div>
                 <div class="menu-items">
-                    <div class="menu-item"><a href="">Mã giảm giá</a></div>
-                    <div class="menu-item"><a href="">Tủ hàng</a></div>
-                    <div class="menu-item"><a href="">Flash sale</a></div>
-                </div>
-            </div>
-            <div class="menu">
-                <div class="menu-label">Khách hàng</div>
-                <div class="menu-items">
-                    <div class="menu-item"><a href="">Lịch sử quan tâm</a></div>
-                    <div class="menu-item"><a href="">Danh sách khách hàng</a></div>
-                    <div class="menu-item"><a href="">Danh sách chặn người mua</a></div>
+                    <div class="menu-item"><a href="/Shop/YearStatistics">Thống kê theo năm</a></div>
+                    <div class="menu-item"><a href="/Shop/MonthStatistics">Thống kê theo tháng</a></div>
                 </div>
             </div>
             
@@ -170,34 +170,35 @@
         </div>
     </div>
 
-<script type="text/ktpl" id="waitorders-tpl">
+<script type="text/ktpl" id="waitorders-tpl">    
     <td>
-        <div style="margin: 10px 0px;">
-            <div>@this.ordercode</div>
-            <div>@this.created_time.hour:@this.created_time.minute:@this.created_time.seconds - @this.created_time.day/@this.created_time.month/@this.created_time.year</div>
-        </div>
+        <div style="font-weight: bold; font-family: arial; font-size: 0.9em">#@this.ordercode</div>
+        <div style="margin-bottom: 20px;">@this.created_time.hour:@this.created_time.minute:@this.created_time.seconds - @this.created_time.day/@this.created_time.month/@this.created_time.year</div>
         @for(var i=0; i<this.orderitems.length;i++){
             <div class="product-item">
                 <div class="product-image" style="background-image: url('@this.orderitems[i].product.mainimagethumbnail')"></div>
                 <div>
-                    <div>@this.orderitems[i].product.name (x@this.orderitems[i].quantity)</div>
-                    <div>@($COMMON.moneyFormat(this.orderitems[i].price, 3, 0, ',', '.'))đ</div>
-                    <div>@($COMMON.moneyFormat(this.orderitems[i].price * this.orderitems[i].quantity, 3, 0, ',', '.'))đ</div>
+                    <div class="product-name">@this.orderitems[i].product.name (x@this.orderitems[i].quantity)</div>
+                    <div class="product-price">@($COMMON.moneyFormat(this.orderitems[i].price, 3, 0, ',', '.'))đ</div>
+                    @if(this.orderitems[i].quantity > 1){
+                        <div class="product-price">@($COMMON.moneyFormat(this.orderitems[i].price * this.orderitems[i].quantity, 3, 0, ',', '.'))đ</div>
+                    @}
                 </div>
             </div>
         @}
     </td>
-    <td>
+    <td style="width: 1em">
         @($COMMON.moneyFormat(this.total_price, 3, 0, ',', '.'))đ
     </td>
-    <td>
+    <td style="width: 10em">
         <div>@this.paymenttype.name</div>
     </td>
-    <td>
+    <td style="width: 10em">
         <div>@this.transporter.name</div>
+        <div>@this.transporterordercode</div>
     </td>
-    <td>
-        <a href="/Shop/OrderDetail?ordercode=@this.ordercode" class="btnlink">Xem chi tiết</a>
+    <td style="width: 5em">
+        <a href="/Shop/OrderDetail?ordercode=@this.ordercode" class="link-order-detail">Xem chi tiết</a>
     </td>
 </script>
 
@@ -302,7 +303,7 @@
         
         
         var table = new IKDataTable(window['waitorders-table']);
-        table.addHeader(['Sản phẩm', 'Tổng đơn hàng', 'Phương thức thanh toán', 'Đơn vị vận chuyển', 'Thao tác']);
+        table.addHeader(['Sản phẩm', 'Tổng giá trị', 'Phương thức thanh toán', 'Thông tin vận chuyển', 'Thao tác']);
         table.setRowTemplate(window['waitorders-tpl'].innerHTML);
         
         function _refresh_table(){
