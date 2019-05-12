@@ -22,7 +22,7 @@
     </head>
     <body>
         <div class="container">
-            <div class="header-mainmenu">
+            <div class="header-mainmenu" style="background-color: red;">
                 <a href="/"><div class="logo">KAKAKA</div></a>
             </div>
             <?php $this->renderBody(); ?>

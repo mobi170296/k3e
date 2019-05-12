@@ -146,10 +146,54 @@
         word-wrap: anywhere;
     }
     .product-container .product-info .product-price{
-        font-size: 3em;
+        font-size: 2em;
         color: #44b27c;
         font-family: arial;
         font-weight: bold;
+    }
+    .product-container .product-info .product-quantity{
+        font-weight: 400;
+        font-size: 16pt;
+        margin: 20px 0px;
+    }
+    .product-container .product-info .product-quantity-title{
+        
+        font-size: 0.9rem;
+    }
+    .product-container .product-info .product-quantity-content{
+        
+        font-weight: bold;
+    }
+    
+    .product-container .product-info .product-quantity-i{
+        display: inline-block;
+        background-size: cover;
+        background-image: url('/images/icons/warehouse-icon.png');
+        width: 36px;
+        height: 36px;
+        margin-right: 10px;
+        vertical-align: middle;
+    }
+    
+    .product-container .product-info .product-sold{
+        font-weight: 400;
+        font-size: 16pt;
+        margin: 20px 0px;
+    }
+    .product-container .product-info .product-sold-title{
+        font-size: 0.9rem;
+    }
+    .product-container .product-info .product-sold-content{
+        font-weight: bold;
+    }
+    .product-container .product-info .product-sold-i{
+        display: inline-block;
+        background-size: cover;
+        background-image: url('/images/icons/sold-icon.png');
+        width: 36px;
+        height: 36px;
+        margin-right: 10px;
+        vertical-align: middle;
     }
     .product-container .product-shop-info{
         margin-bottom: 20px;
@@ -350,13 +394,23 @@ PI;
                         
                     </div>
                     <div class="product-price">{$product->getPriceString()}đ</div>
-                    <div class="product-soldout">Đã bán {$product->getSoldQuantity()}</div>
+                    <div class="product-sold">
+                        <i class="product-sold-i"></i>
+                        <span class="product-sold-title">Đã bán</span>
+                        <span class="product-sold-content">{$product->getSoldQuantity()}</span>
+                    </div>
+                        
+                    <div class="product-quantity">
+                        <i class="product-quantity-i"></i>
+                        <span class="product-quantity-title">Tồn kho</span>
+                        <span class="product-quantity-content">{$product->getAvailableQuantity()}</span>
+                    </div>
                 </div>
                 <div class="product-info-bottom">
                     <div>
                         <div data-widget-type="qtyspinner">
                             <span class="minus">-</span><input class="qtybox" type="text" data-value="1" data-max="{$product->quantity}" data-min="1"/><span class="plus">+</span>
-                        </div> (có sẵn {$product->quantity} sản phẩm)
+                        </div> (có sẵn {$product->getAvailableQuantity()} sản phẩm)
                     </div>
                     <div>
 ROW;

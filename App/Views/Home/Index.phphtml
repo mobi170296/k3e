@@ -1,28 +1,7 @@
 <?php
     $this->Data->Title = 'Trang chủ';
 ?>
-    <div id="slider-wrapper">
-        <div id="slider">
-            <img src="/images/banner/banner (1).jpg"/>
-            <img src="/images/banner/banner (1).png"/>
-            <img src="/images/banner/banner (2).jpg"/>
-            <img src="/images/banner/banner (2).png"/>
-            <img src="/images/banner/banner (3).png"/>
-        </div>
-        <div id="slider-next">&gt;</div>
-        <div id="slider-previous">&lt;</div>
-        <div id="slider-indicator">
-            <div class="slider-indicator-index active"></div>
-                <div class="slider-indicator-index"></div>
-                <div class="slider-indicator-index"></div>
-                <div class="slider-indicator-index"></div>
-                <div class="slider-indicator-index"></div>
-        </div>
-    </div>
     <div id="main-body">
-        <?php
-            $this->Partial("_pagination");
-        ?>
     </div>
 
                 <script>
