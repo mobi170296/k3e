@@ -844,16 +844,16 @@ label.product-image-upload-select input{
     bottom: 0px;
     left: 0px;
     background-color: rgba(255,255,255,0.7);
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .user-avatar .uploadpoint::before{
     content: '';
     display: inline-block;
-    position: absolute;
-    bottom: 0px;
-    left: 50%;
-    height: 50px;
-    width: 50px;
-    margin-left: -25px;
+    height: 30px;
+    width: 30px;
     background-image: url('/images/icons/image-upload.png');
     background-repeat: no-repeat;
     background-size: contain;
@@ -870,11 +870,12 @@ label.product-image-upload-select input{
     padding: 5px;
     text-decoration: none;
     color: white;
-    background-color: #06a24f;
+    background-color: #44b27c;
     margin: 2px;
     width: 2em;
     height: 2em;
     line-height: 2em;
+    border-radius: 50%;
 }
 .pagination-wrapper > a.active{
     background-color: red;

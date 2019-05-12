@@ -399,4 +399,32 @@
             $this->database->update(DB_TABLE_USER, ['avatar_id' => new DBNumber((int)$id)], 'id=' . (int)$this->id);
             $this->avatar_id = $id;
         }
+        
+        public function loadProductViewsLogs(){
+            
+        }
+        
+        public function getProductViewsLogs($from, $length){
+            $productviewslogs = [];
+            
+            $rows = $this->database->select('user_id, product_id')->from(DB_TABLE_PRODUCTVIEWSlOG)->where('user_id=' . (int)$this->id)->orderby('latest_time')->desc()->limit($from, $length)->execute();
+            
+            foreach($rows as $row){
+                $productviewslog = new ProductViewsLogModel($this->database);
+                $productviewslog->product_id = $row->product_id;
+                $productviewslog->user_id = $row->user_id;
+                
+                $productviewslog->loadData();
+                
+                $productviewslogs[] = $productviewslog;
+            }
+            
+            return $productviewslogs;
+        }
+        
+        public function getProductViewsLogsTotal(){
+            $rows = $this->database->select('count(*) as count')->from(DB_TABLE_PRODUCTVIEWSlOG)->where('user_id=' . (int)$this->id)->execute();
+            
+            return $rows[0]->count;
+        }
     }

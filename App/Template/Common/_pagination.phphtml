@@ -5,11 +5,10 @@
     $endindex = $pagination->current + 2 > $pagination->total ? $pagination->total : $pagination->current + 2;
     
     echo '<div class="pagination-wrapper">';
-    
     for($i = 1; $i <=3 && $i < $startindex; $i++){
-        $pagination->params['p'] = $i;
+        $pagination->params['page'] = $i;
         if($i == $pagination->current){
-            echo '<a class="active" href="?'. http_build_query($pagination->params).'">' . $i . '</a>';
+            echo '<a class="active">' . $i . '</a>';
         }else{
             echo '<a href="?'. http_build_query($pagination->params).'">' . $i . '</a>';
         }
@@ -20,9 +19,9 @@
     }
     
     for($i = $startindex; $i <= $endindex; $i++){
-        $pagination->params['p'] = $i;
+        $pagination->params['page'] = $i;
         if($i == $pagination->current){
-            echo '<a class="active" href="?'. http_build_query($pagination->params).'">' . $i . '</a>';
+            echo '<a class="active">' . $i . '</a>';
         }else{
             echo '<a href="?'. http_build_query($pagination->params).'">' . $i . '</a>';
         }
@@ -33,9 +32,9 @@
     }
     
     for($i = max([$pagination->total - 2, $endindex + 1]); $i <= $pagination->total; $i++){
-        $pagination->params['p'] = $i;
+        $pagination->params['page'] = $i;
         if($i == $pagination->current){
-            echo '<a class="active" href="?'. http_build_query($pagination->params).'">' . $i . '</a>';
+            echo '<a class="active">' . $i . '</a>';
         }else{
             echo '<a href="?'. http_build_query($pagination->params).'">' . $i . '</a>';
         }

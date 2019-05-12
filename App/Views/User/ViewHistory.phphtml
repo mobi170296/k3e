@@ -1,0 +1,92 @@
+<?php
+    $this->Data->Title = 'Sản phẩm đã xem';
+    $productviewslogs = $this->Data->productviewslogs;
+?>
+
+
+<style>
+    .viewhistory-wrapper{
+        min-height: 100vh;
+        width: 1200px;
+        margin: 0px auto;
+    }
+    .viewhistory-wrapper .product-list{
+        display: flex;
+        flex-wrap: wrap;
+        background-color: #fff;
+    }
+    .viewhistory-wrapper .viewhistory-title{
+        padding: 20px 30px;
+        margin-bottom: 10px;
+        font-size: 1.2em;
+        font-weight: lighter;
+        background-color: #fff;
+    }
+    .viewhistory-wrapper .viewhistory-pagination{
+        background-color: #fff;
+        padding: 20px 0px;
+    }
+</style>
+
+<div class="viewhistory-wrapper">
+    <div class="viewhistory-title">Sản phẩm bạn đã xem</div>
+    <div class="product-list">
+        <?php
+            if(count($productviewslogs)==0){
+                echo '<div style="text-align: center; width: 100%">Không có sản phẩm đã xem ở trang này</div>';
+            }
+        ?>
+        <?php
+            foreach($productviewslogs as $productviewslog){
+                $product = $productviewslog->product;
+                $starratingpoint = $product->getStarRatingPoint() / 5 * 100;
+
+                echo <<<PRODUCT
+                <a class="product-link" href="{$product->getProductLink()}"  style="margin: 12.5px">
+                    <div class="product-card">
+                        <div class="product-image">
+                            <div class="back-image" style="background-image: url('{$product->getMainImageThumbnail()}')"></div>
+                            <div class="fore-image"></div>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-name">{$product->name}</div>
+                            <div class="product-rating">
+                                <div class="star-rank">
+                                    <div class="star-background">
+                                        <svg height="15" width="87">
+                                            <g fill="#ccc" class="star-background">
+                                                <path d="M7 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                <path d="M25 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                <path d="M43 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                <path d="M61 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                <path d="M79 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            </g>
+                                        </svg>
+                                    </div>
+                                    <div class="star-foregound" style="width: {$starratingpoint}%">
+                                        <svg height="15" width="87">
+                                            <g fill="#44b27c" class="star-background">
+                                                <path d="M7 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                <path d="M25 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                <path d="M43 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                <path d="M61 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                <path d="M79 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            </g>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="product-price">{$product->getPriceString()}</div>
+                        </div>
+                    </div>
+                </a>
+PRODUCT;
+            }
+        ?>
+    </div>
+    <div class="viewhistory-pagination">
+        <?php
+            $this->Partial('_pagination');
+        ?>
+    </div>
+</div>

@@ -46,6 +46,7 @@
                         echo '<a href="/Shop/Index">Cửa hàng</a>';
                     }
                     echo '<a href="/User/Orders">Đơn hàng</a>';
+                    echo '<a href="/User/ViewHistory">Sản phẩm đã xem</a>';
                     echo '<a href="/User/Logout">Thoát tài khoản</a>';
                     echo'</div>';
                     echo '</div>';

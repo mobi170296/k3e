@@ -20,6 +20,8 @@
     use Library\VanChuyen\GHN\GHNFeeResult;
     use Library\VanChuyen\GHN\GHNException;
     
+    use App\Models\Pagination;
+    
     use App\Models\OrderModel;
     use Library\ThanhToan\OnePay\OnePay;
     use App\Models\OnePayOrderModel;
@@ -672,6 +674,32 @@
                 return $this->View->RenderTemplate('_error');
             } catch (AuthenticateException $e){
                 return $this->redirectToAction('Login', 'User', ['backurl' => '/User/AssessmentOrder?ordercode=' . $ordercode]);
+            }
+        }
+        
+        
+        public function ViewHistory($page = 1, $ipp = 10){
+            
+            try{
+                $database = new Database();
+                $user = (new Authenticate($database))->getUser();
+                
+                $productviewslogs = $user->getProductViewsLogs(($page - 1) * $ipp, $ipp);
+                
+                foreach($productviewslogs as $productviewslog){
+                    $productviewslog->loadProduct();
+                    $productviewslog->product->loadMainImage();
+                }
+                
+                $this->View->Data->productviewslogs = $productviewslogs;
+                $this->View->TemplateData->pagination = new Pagination($page, $user->getProductViewsLogsTotal(), [], $ipp);
+                
+                return $this->View->RenderTemplate();
+            } catch (DBException $ex) {
+                $this->View->Data->ErrorMessage = 'DBERR';
+                return $this->View->RenderTemplate('_error');
+            } catch (AuthenticateException $e){
+                return $this->redirectToAction('Login', 'User');
             }
         }
     }
