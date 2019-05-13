@@ -71,9 +71,10 @@
 }
 
 .ordertimeline-icon.current{
-    animation-name: anim-orderitemline-current;
-    animation-duration: 2s;
-    animation-iteration-count: infinite;
+    /*animation-name: anim-orderitemline-current;*/
+    /*animation-duration: 2s;*/
+    /*animation-iteration-count: infinite;*/
+    transform: scale(2);
 }
 
 /*sao danh gia*/

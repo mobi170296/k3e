@@ -98,6 +98,9 @@
                         <label>
                             <input type="radio" name="stattype" value="revenue"/> Theo doanh thu
                         </label>
+                        <label>
+                            <input type="radio" name="stattype" value="salesandrevenue"/> Doanh thu và doanh số
+                        </label>
                     </div>
                     <div class="year">
                         <select name="year" data-control-type="year">
@@ -181,18 +184,21 @@ OPT;
                 labels: [],
                 datasets:[
                     {
+                        type: 'line',
                         data: [],
                         label: '',
                         fill: false,
-                        backgroundColor: 'rgba(255,0,0,0.5)',
-                        yAxisID: 'left-y-axis'
+                        backgroundColor: '#f00',
+                        borderColor: '#f00',
+                        yAxisID: 'right-y-axis'
                     },
                     {
                         data: [],
                         label: '',
                         fill: false,
-                        backgroundColor: 'rgba(0,0,255,0.5)',
-                        yAxisID: 'right-y-axis'
+                        backgroundColor: 'rgba(255,255,0,0.5)',
+                        borderColor: '#ff0',
+                        yAxisID: 'left-y-axis'
                     }
                 ]
             },
@@ -249,14 +255,61 @@ OPT;
                     
                     //cap nhat du lieu moi
                     bieudothongke.data.labels = labels;
-                    bieudothongke.data.datasets[0].label = 'Doanh số';
-                    bieudothongke.data.datasets[0].data = data.totalprice;
-                    bieudothongke.data.datasets[1].label = 'Số đơn hàng';
-                    bieudothongke.data.datasets[1].data = data.totalorder;
+                    bieudothongke.data.datasets[0] = {
+                        type: 'line',
+                        data: data.totalorder,
+                        label: 'Tổng đơn hàng',
+                        fill: false,
+                        backgroundColor: '#f00',
+                        borderColor: '#f00',
+                        yAxisID: 'right-y-axis'
+                    }
                     
-                    bieudothongke.options.title.text = 'Biểu đồ thống kê doanh số năm ' + year;
-                    bieudothongke.options.scales.yAxes[0].scaleLabel.labelString = 'Doanh số';
-                    bieudothongke.options.scales.yAxes[1].scaleLabel.labelString = 'Số đơn hàng';
+                    bieudothongke.data.datasets[1] = {
+                        type: 'bar',
+                        data: data.totalprice,
+                        label: 'Doanh số',
+                        backgroundColor: 'rgba(255,255,0,0.5)',
+                        borderColor: '#ff0',
+                        yAxisID: 'left-y-axis'
+                    }
+                    
+                    bieudothongke.options = {
+                        scales:{
+                            yAxes: [
+                                {
+                                    id: 'left-y-axis',
+                                    type: 'linear',
+                                    position: 'left',
+                                    ticks: {
+                                        beginAtZero: true
+                                    },scaleLabel: {
+                                        display: true,
+                                        labelString: 'Doanh số'
+                                    }
+                                },
+                                {
+                                    id: 'right-y-axis',
+                                    type: 'linear',
+                                    position: 'right',
+                                    ticks:{
+                                        beginAtZero: true
+                                    },
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: 'Tổng đơn hàng'
+                                    }
+                                }
+                            ]
+                        },
+                        animation:{
+                            duration: 0
+                        },
+                        title:{
+                            display: true,
+                            text: 'Biểu đồ thống kê doanh số năm ' + year
+                        }
+                    }
                     
                     bieudothongke.update();
                     
@@ -287,14 +340,131 @@ OPT;
                     
                     //cap nhat du lieu moi
                     bieudothongke.data.labels = labels;
-                    bieudothongke.data.datasets[0].data.label = 'Doanh thu';
-                    bieudothongke.data.datasets[0].data = data.totalprice;
-                    bieudothongke.data.datasets[1].data.label = 'Số đơn hàng';
-                    bieudothongke.data.datasets[1].data = data.totalorder;
+                    bieudothongke.data.datasets[0] = {
+                        type: 'line',
+                        data: data.totalorder,
+                        label: 'Tổng đơn hàng',
+                        fill: false,
+                        backgroundColor: '#f00',
+                        borderColor: '#f00',
+                        yAxisID: 'right-y-axis'
+                    }
                     
-                    bieudothongke.options.title.text = 'Biểu đồ thống kê doanh thu năm ' + year;
-                    bieudothongke.options.scales.yAxes[0].scaleLabel.labelString = 'Doanh thu';
-                    bieudothongke.options.scales.yAxes[1].scaleLabel.labelString = 'Số đơn hàng';
+                    bieudothongke.data.datasets[1] = {
+                        type: 'bar',
+                        data: data.totalprice,
+                        label: 'Doanh thu',
+                        backgroundColor: 'rgba(255,255,0,0.5)',
+                        borderColor: '#ff0',
+                        yAxisID: 'left-y-axis'
+                    }
+                    
+                    bieudothongke.options = {
+                        scales:{
+                            yAxes: [
+                                {
+                                    id: 'left-y-axis',
+                                    type: 'linear',
+                                    position: 'left',
+                                    ticks: {
+                                        beginAtZero: true
+                                    },scaleLabel: {
+                                        display: true,
+                                        labelString: 'Doanh thu'
+                                    }
+                                },
+                                {
+                                    id: 'right-y-axis',
+                                    type: 'linear',
+                                    position: 'right',
+                                    ticks:{
+                                        beginAtZero: true
+                                    },
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: 'Tổng đơn hàng'
+                                    }
+                                }
+                            ]
+                        },
+                        animation:{
+                            duration: 0
+                        },
+                        title:{
+                            display: true,
+                            text: 'Biểu đồ thống kê doanh thu năm ' + year
+                        }
+                    }
+                    
+                    bieudothongke.update();
+                    
+                    $LoadingPopup.hide();
+                    cbieudothongke.classList.remove('u-hidden');
+                }else{
+                    
+                }
+            }).error(function(e){
+                
+            }).post('year=' + year);
+        }
+        
+        function yearsalesandrevenuestatistics(year){
+            
+            $LoadingPopup.show();
+            
+            var labels = [];
+            for(var i=1; i<=12; i++){
+                labels.push(i + '/' + year);
+            }
+            
+            
+            $.ajax().create().url('/api/shop/yearsalesandrevenuestatistics').success(function(e){
+                var result = JSON.parse(this.response);
+                if(result.header.code === 0){
+                    var data = result.body.data.result;
+                    
+                    //cap nhat du lieu moi
+                    bieudothongke.data.labels = labels;
+                    bieudothongke.data.datasets[0] = {
+                        type: 'bar',
+                        data: data.salestotalprice,
+                        label: 'Tổng doanh số',
+                        fill: false,
+                        backgroundColor: '#f00',
+                        borderColor: '#f00'
+                    }
+                    
+                    bieudothongke.data.datasets[1] = {
+                        type: 'bar',
+                        data: data.revenuetotalprice,
+                        label: 'Tổng doanh thu',
+                        fill: false,
+                        backgroundColor: 'rgba(255,255,0,0.5)',
+                        borderColor: '#ff0'
+                    }
+                    
+                    bieudothongke.options = {
+                        scales:{
+                            yAxes: [
+                                {
+                                    type: 'linear',
+                                    ticks: {
+                                        beginAtZero: true
+                                    },scaleLabel: {
+                                        display: true,
+                                        labelString: 'Tổng giá trị (vnd)'
+                                    }
+                                }
+                            ]
+                        },
+                        animation:{
+                            duration: 0
+                        },
+                        title:{
+                            display: true,
+                            text: 'Biểu đồ thống kê doanh thu và doanh số năm ' + year
+                        }
+                    }
                     
                     bieudothongke.update();
                     
@@ -312,6 +482,7 @@ OPT;
         btn.addEventListener('click', function(e){
             this.form.stattype.value === 'sales' && yearordersalesstatistics.call(null, this.form.year.value);
             this.form.stattype.value === 'revenue' && yearorderrevenuestatistics.call(null, this.form.year.value);
+            this.form.stattype.value === 'salesandrevenue' && yearsalesandrevenuestatistics.call(null, this.form.year.value);
         });
     }();
 </script>

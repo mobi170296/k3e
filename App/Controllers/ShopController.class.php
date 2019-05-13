@@ -470,8 +470,15 @@
             }
         }
         
+        
+        
+        
+        
+        
+        
+        
         #thong tin shop voi khach hang
-        public function View($id){
+        public function Profile($id){
             return $this->View->RenderContent($id);
         }
     }

@@ -700,7 +700,7 @@
                     $sales = new \stdClass();
                     $sales->totalorder = [];
                     $sales->totalprice = [];
-                    for($i = 0; $i<12; $i++){
+                    for($i = 0; $i<31; $i++){
                         $sales->totalorder[] = 0;
                         $sales->totalprice[] = 0;
                     }
@@ -801,7 +801,7 @@
                     $sales = new \stdClass();
                     $sales->totalorder = [];
                     $sales->totalprice = [];
-                    for($i = 0; $i<12; $i++){
+                    for($i = 0; $i<31; $i++){
                         $sales->totalorder[] = 0;
                         $sales->totalprice[] = 0;
                     }
@@ -858,6 +858,132 @@
                     foreach($rows as $row){
                         $sales->totalorder[$row->month - 1] = (int)$row->totalorder;
                         $sales->totalprice[$row->month - 1] = (int)$row->totalprice;
+                    }
+                    
+                    $result->header->code = 0;
+                    $result->header->message = 'OK';
+                    $result->body = new \stdClass();
+                    $result->body->data = new \stdClass();
+                    $result->body->data->result = $sales;
+                    $result->body->data->year = (int)$year;
+                }else{
+                    #khong co cua hang
+                }
+            } catch (DBException $ex) {
+                
+            } catch (AuthenticateException $e){
+                
+            }
+            return $this->View->RenderJSON($result);
+        }
+        
+        
+        
+        
+        public function yearsalesandrevenuestatistics($year){
+            $result = new \stdClass();
+            $result->header = new \stdClass();
+            
+            try{
+                $database = new Database();
+                $user = (new Authenticate($database))->getUser();
+                
+                if($user->loadShop()){
+                    $shop = $user->shop;
+                    #thong ke doanh so theo nam
+                    $status = [OrderModel::HUY_DON_HANG, OrderModel::HUY_DO_HE_THONG, OrderModel::HUY_DO_KHONG_LAY_DUOC_HANG, OrderModel::KHONG_CON_HANG, OrderModel::NGUOI_MUA_DANG_THANH_TOAN, OrderModel::NGUOI_MUA_THANH_TOAN_THAT_BAI, OrderModel::GIAO_THAT_BAI];
+                    
+                    $inwhere = '(' . implode(',', $status) . ')';
+                    
+                    $rows = $database->select('count(distinct order.id) as totalorder, sum(order.total_price) as totalprice, month(created_time) as month')->from(DB_TABLE_ORDER)->where("order.status not in $inwhere and order.shop_id={$shop->id} and order.created_time >= '{$year}-01-01' and order.created_time <= '{$year}-12-31'")->groupby('month(order.created_time)')->execute();
+                    
+                    $sales = new \stdClass();
+                    $sales->salestotalprice = [];
+                    for($i = 0; $i<12; $i++){
+                        $sales->salestotalprice[] = 0;
+                    }
+                    
+                    foreach($rows as $row){
+                        $sales->salestotalprice[$row->month - 1] = (int)$row->totalprice;
+                    }
+                    
+                    
+                    
+                    #thong ke doanh thu theo nam
+                    $status = [OrderModel::HOAN_TAT];
+                    $inwhere = '(' . implode(',', $status) . ')';
+                    
+                    $rows = $database->select('count(distinct order.id) as totalorder, sum(order.total_price) as totalprice, month(created_time) as month')->from(DB_TABLE_ORDER)->where("order.status in $inwhere and order.shop_id={$shop->id} and order.created_time >= '{$year}-01-01' and order.created_time <= '{$year}-12-31'")->groupby('month(order.created_time)')->execute();
+                    
+                    $sales->revenuetotalprice = [];
+                    for($i = 0; $i<12; $i++){
+                        $sales->revenuetotalprice[] = 0;
+                    }
+                    
+                    foreach($rows as $row){
+                        $sales->revenuetotalprice[$row->month - 1] = (int)$row->totalprice;
+                    }
+                    
+                    $result->header->code = 0;
+                    $result->header->message = 'OK';
+                    $result->body = new \stdClass();
+                    $result->body->data = new \stdClass();
+                    $result->body->data->result = $sales;
+                    $result->body->data->year = (int)$year;
+                }else{
+                    #khong co cua hang
+                }
+            } catch (DBException $ex) {
+                
+            } catch (AuthenticateException $e){
+                
+            }
+            return $this->View->RenderJSON($result);
+        }
+        
+        
+        public function monthsalesandrevenuestatistics($year, $month){
+            $result = new \stdClass();
+            $result->header = new \stdClass();
+            
+            try{
+                $database = new Database();
+                $user = (new Authenticate($database))->getUser();
+                
+                if($user->loadShop()){
+                    $shop = $user->shop;
+                    #thong ke doanh so theo nam
+                    $status = [OrderModel::HUY_DON_HANG, OrderModel::HUY_DO_HE_THONG, OrderModel::HUY_DO_KHONG_LAY_DUOC_HANG, OrderModel::KHONG_CON_HANG, OrderModel::NGUOI_MUA_DANG_THANH_TOAN, OrderModel::NGUOI_MUA_THANH_TOAN_THAT_BAI, OrderModel::GIAO_THAT_BAI];
+                    
+                    $inwhere = '(' . implode(',', $status) . ')';
+                    
+                    $rows = $database->select('count(distinct order.id) as totalorder, sum(order.total_price) as totalprice, day(created_time) as month')->from(DB_TABLE_ORDER)->where("order.status not in $inwhere and order.shop_id={$shop->id} and order.created_time >= '{$year}-{$month}-01' and order.created_time <= last_day('{$year}-{$month}-1')")->groupby('day(order.created_time)')->execute();
+                    
+                    $sales = new \stdClass();
+                    $sales->salestotalprice = [];
+                    for($i = 0; $i<31; $i++){
+                        $sales->salestotalprice[] = 0;
+                    }
+                    
+                    foreach($rows as $row){
+                        $sales->salestotalprice[$row->month - 1] = (int)$row->totalprice;
+                    }
+                    
+                    
+                    
+                    #thong ke doanh thu theo nam
+                    $status = [OrderModel::HOAN_TAT];
+                    $inwhere = '(' . implode(',', $status) . ')';
+                    
+                    $rows = $database->select('count(distinct order.id) as totalorder, sum(order.total_price) as totalprice, day(created_time) as month')->from(DB_TABLE_ORDER)->where("order.status in $inwhere and order.shop_id={$shop->id} and order.created_time >= '{$year}-{$month}-01' and order.created_time <= last_day('{$year}-{$month}-1')")->groupby('day(order.created_time)')->execute();
+                    
+                    $sales->revenuetotalprice = [];
+                    for($i = 0; $i<31; $i++){
+                        $sales->revenuetotalprice[] = 0;
+                    }
+                    
+                    foreach($rows as $row){
+                        $sales->revenuetotalprice[$row->month - 1] = (int)$row->totalprice;
                     }
                     
                     $result->header->code = 0;
