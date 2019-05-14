@@ -2,11 +2,12 @@
     namespace App\Models;
     use Library\Database\DBString;
     use Library\Database\DBNumber;
+    use Library\Database\DBDateTime;
     use Core\Model;
     
     class SubCategoryModel extends Model{
         #name:
-        public $id, $name, $link, $norder, $maincategory_id, $maincategory;
+        public $id, $name, $norder, $maincategory_id, $maincategory, $created_time;
         #danh mục phụ bao gồm nhiều sản phẩm
         
 
@@ -20,11 +21,6 @@
         public function getName() {
             return $this->name;
         }
-
-        public function getLink() {
-            return $this->link;
-        }
-
         public function getMainCategory() {
             return $this->maincategory;
         }
@@ -49,18 +45,6 @@
             return $this;
         }
         
-        public function checkValidForLink(){
-            if(isset($this->link) && is_string($this->link)){
-                $length = mb_strlen($this->link);
-                if($length > 1024){
-                    $this->addErrorMessage('link', 'Liên kết danh mục phụ có chiều dài không hợp lệ, độ dài phải nhỏ hơn 1024 ký tự');
-                }
-            }else{
-                $this->addErrorMessage('link', 'Liên kết không hợp lệ!');
-            }
-            
-            return $this;
-        }
         
         public function checkValidForNOrder(){
             if(!isset($this->norder) || !is_numeric($this->norder)){
@@ -90,7 +74,6 @@
         }
         
         public function standardization(){
-            $this->link = $this->database->escape($this->link);
             $this->name = $this->database->escape($this->name);
             return $this;
         }
@@ -107,6 +90,7 @@
                 foreach($row as $k => $v){
                     $this->$k = $v;
                 }
+                $this->created_time = DBDateTime::parse($row->created_time);
                 return true;
             }else{
                 return false;
@@ -139,14 +123,13 @@
             $rows = $this->database->select('max(norder) as maxorder')->from(DB_TABLE_SUBCATEGORY)->lock();
             $maxorder = $rows[0]->maxorder;
             $maxorder += 1;
-            $this->database->insert(DB_TABLE_SUBCATEGORY, ['name'=>new DBString($this->name), 'link'=>new DBString($this->link), 'maincategory_id'=>new DBNumber($this->maincategory_id), 'norder'=>new DBNumber($maxorder)]);
+            $this->database->insert(DB_TABLE_SUBCATEGORY, ['name'=>new DBString($this->name), 'maincategory_id'=>new DBNumber($this->maincategory_id), 'norder'=>new DBNumber($maxorder)]);
             return true;
         }
         
         public function update($subcate){
-            $this->database->update(DB_TABLE_SUBCATEGORY, ['name'=>new DBString($subcate->name), 'link'=>new DBString($subcate->link), 'maincategory_id'=>new DBNumber($subcate->maincategory_id)], 'id='.new DBNumber($this->id));
+            $this->database->update(DB_TABLE_SUBCATEGORY, ['name'=>new DBString($subcate->name), 'maincategory_id'=>new DBNumber($subcate->maincategory_id)], 'id='.new DBNumber($this->id));
             $this->name = $subcate->name;
-            $this->link = $subcate->link;
             return true;
         }
         

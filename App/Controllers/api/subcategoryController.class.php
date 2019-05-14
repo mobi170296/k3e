@@ -28,7 +28,7 @@
                 $user = $authenticate->getUser();
                 if($user->haveRole(UserModel::ADMIN_ROLE)){
                     $subcategory->setDatabase($database);
-                    $subcategory->checkValidForName()->checkValidForLink()->checkValidForMainCategoryId();
+                    $subcategory->checkValidForName()->checkValidForMainCategoryId();
                     if(!$subcategory->isValid()){
                         throw new InputException($subcategory->getErrorsMap());
                     }else{
@@ -82,7 +82,7 @@
                 $user = $authenticate->getUser();
                 if($user->haveRole(UserModel::ADMIN_ROLE)){
                     $input->setDatabase($database);
-                    $input->checkValidForLink()->checkValidForName()->checkValidForMainCategoryId();
+                    $input->checkValidForName()->checkValidForMainCategoryId();
                     if($input->isValid()){
                         $subcategory = new SubCategoryModel($database);
                         $subcategory->id = $input->id;
@@ -205,7 +205,6 @@
                         $s = new \stdClass();
                         $s->name = $subcategory->name;
                         $s->id = $subcategory->id;
-                        $s->link = $subcategory->link;
                         $result->body->data[] = $s;
                     }
                 }else{

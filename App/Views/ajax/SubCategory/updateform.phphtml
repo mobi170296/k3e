@@ -22,13 +22,6 @@
                 </td>
             </tr>
             <tr>
-                <td>Liên kết danh mục</td>
-                <td>
-                    <input type="text" size="60" name="link" placeholder="Liên kết" value="<?php echo $this->Data->subcategory->link; ?>"/>
-                    <p class="invalid-data"></p>
-                </td>
-            </tr>
-            <tr>
                 <td><input type="hidden" name="id" value="<?php echo $this->Data->subcategory->id; ?>"/></td>
                 <td><button class="btn btn-save btn-save-i" name="add" value="">Lưu lại</button></td>
             </tr>

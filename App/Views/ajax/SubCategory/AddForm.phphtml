@@ -22,13 +22,6 @@
                 </td>
             </tr>
             <tr>
-                <td>Liên kết danh mục</td>
-                <td>
-                    <input type="text" size="60" name="link" placeholder="Liên kết" value=""/>
-                    <p class="invalid-data"></p>
-                </td>
-            </tr>
-            <tr>
                 <td></td>
                 <td><button class="btn btn-save btn-save-i">Thêm danh mục phụ</button></td>
             </tr>

@@ -28,7 +28,7 @@
                 $user = $authenticate->getUser();
                 if($user->haveRole(UserModel::ADMIN_ROLE)){
                     $maincategory->setDatabase($database);
-                    $maincategory->checkValidForName()->checkValidForLink();
+                    $maincategory->checkValidForName();
                     if(!$maincategory->isValid()){
                         $result = new \stdClass();
                         $result->header = new \stdClass();
@@ -110,7 +110,7 @@
                     $maincategory->id = $id;
                     if($maincategory->loadData()){
                         $input->setDatabase($database);
-                        $input->checkValidForLink()->checkValidForName();
+                        $input->checkValidForName();
                         if($input->isValid()){
                             $input->standardization();
                             $maincategory->update($input);
@@ -338,7 +338,6 @@
                     $m = new \stdClass();
                     $m->name = $maincategory->name;
                     $m->id = $maincategory->id;
-                    $m->link = $maincategory->link;
                     $result->body->data[] = $m;
                 }
             } catch (DBException $ex) {

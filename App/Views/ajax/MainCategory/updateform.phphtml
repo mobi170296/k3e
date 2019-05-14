@@ -9,13 +9,6 @@
                 </td>
             </tr>
             <tr>
-                <td>Đường link</td>
-                <td>
-                    <input type="text" size="60" name="link" placeholder="Đường dẫn liên kết" value="<?php echo $this->Data->maincategory->link; ?>"/>
-                    <p class="invalid-data"></p>
-                </td>
-            </tr>
-            <tr>
                 <td><input type="hidden" name="id" value="<?php echo $this->Data->maincategory->id; ?>"/></td>
                 <td>
                     <button type="submit" name="update" class="btn btn-save btn-save-i">Lưu thay đổi</button></td>

@@ -9,13 +9,6 @@
                 </td>
             </tr>
             <tr>
-                <td>Đường link</td>
-                <td>
-                    <input type="text" size="60" name="link" placeholder="Đường dẫn liên kết" value=""/>
-                    <p class="invalid-data"></p>
-                </td>
-            </tr>
-            <tr>
                 <td></td>
                 <td>
                     <button type="submit" name="add" class="btn btn-save btn-save-i">Thêm danh mục</button></td>

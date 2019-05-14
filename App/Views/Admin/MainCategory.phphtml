@@ -26,9 +26,9 @@
         var presentation = $('[data-role="table-presentation"][data-table="maincategory"]');
         var checkMainCategory = function(f){
             var n=f['name'];
-            var l=f['link'];
+//            var l=f['link'];
             var nv=n.value;
-            var lv=l.value;
+//            var lv=l.value;
             var err=0;
             if(nv.length>200||nv.length===0){
                 $(n).next().text('Độ dài tên danh mục chính không hợp lệ!').addClass('active');
@@ -36,12 +36,12 @@
             }else{
                 $(n).next().removeClass('active');
             }
-            if(lv.length>1024||lv.length===0){
-                $(l).next().text('Độ dài liên kết không hợp lệ!').addClass('active');
-                err|=1;
-            }else{
-                $(l).next().text('').removeClass('active');
-            }
+//            if(lv.length>1024||lv.length===0){
+//                $(l).next().text('Độ dài liên kết không hợp lệ!').addClass('active');
+//                err|=1;
+//            }else{
+//                $(l).next().text('').removeClass('active');
+//            }
             if(err){
                 return false;
             }else{

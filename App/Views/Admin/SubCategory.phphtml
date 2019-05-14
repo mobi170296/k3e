@@ -32,25 +32,25 @@ DATAPRESENTATION;
     </div>
 </div>
 <script>
-    (function(){
+    !function(){
         function checkSubCategory(f){
             var err=0;
             var n=f.name;
-            var l=f.link;
+//            var l=f.link;
             var nv=$(n).val();
-            var lv=$(l).val();
+//            var lv=$(l).val();
             if(nv.length>200 || nv.length===0){
                 $(n).next().text('Tên danh mục không được rỗng và chỉ có nhiều nhất 200 ký tự').addClass('active');
                 err|=1;
             }else{
                 $(n).next().text('').removeClass('active');
             }
-            if(lv.length>1024){
-                $(l).next().text('Độ dài liên kết không hợp lệ').addClass('active');
-                err|=1;
-            }else{
-                $(l).next().text('').removeClass('active');
-            }
+//            if(lv.length>1024){
+//                $(l).next().text('Độ dài liên kết không hợp lệ').addClass('active');
+//                err|=1;
+//            }else{
+//                $(l).next().text('').removeClass('active');
+//            }
             return err===0;
         }
         var ss = $('select[data-role="toggle-subcategory"]');
@@ -120,7 +120,7 @@ DATAPRESENTATION;
                 
                 $.ajax().create().url('/api/subcategory/delete').success(function(e){
                     var result = JSON.parse(this.response);
-                    if(result.header.code == 0){
+                    if(result.header.code === 0){
                         $Toast.makeSuccess(result.header.message);
                         loadtable(mid);
                     }else{
@@ -152,5 +152,5 @@ DATAPRESENTATION;
                 loadtable(mid);
             }
         });
-    })();
+    }();
 </script>

@@ -2,9 +2,10 @@
     namespace App\Models;
     use Library\Database\DBString;
     use Library\Database\DBNumber;
+    use Library\Database\DBDateTime;
     
     class MainCategoryModel extends \Core\Model{
-        public $id, $name, $link, $norder, $subcategories = [];
+        public $id, $name, $norder, $subcategories = [], $created_time;
         
         #tat ca san pham thuoc danh muc
         public $products;
@@ -16,11 +17,6 @@
 
         public function setName($name) {
             $this->name = $name;
-            return $this;
-        }
-
-        public function setLink($link) {
-            $this->link = $link;
             return $this;
         }
 
@@ -41,11 +37,7 @@
         public function getName(){
             return $this->name;
         }
-        
-        public function getLink(){
-            return $this->link;
-        }
-        
+       
         public function getNOrder(){
             return $this->norder;
         }
@@ -68,19 +60,6 @@
             return $this;
         }
         
-        public function checkValidForLink(){
-            if(isset($this->link) && is_string($this->link)){
-                $length = mb_strlen($this->link);
-                if($length > 1024){
-                    $this->addErrorMessage('link', 'Độ dài liên kết không hợp lệ phải không vượt quá 1024 ký tự');
-                }
-            }else{
-                $this->addErrorMessage('link', 'Liên kết không hợp lệ!');
-            }
-            
-            return $this;
-        }
-        
         public function checkValidForId(){
             if(!isset($this->id) || !is_numeric($this->id)){
                 $this->addErrorMessage('id', 'ID không hợp lệ');
@@ -97,7 +76,6 @@
         
         public function standardization(){
             $this->name = $this->database->escape($this->name);
-            $this->link = $this->database->escape($this->link);
             return $this;
         }
         
@@ -115,6 +93,8 @@
                 foreach($row as $k => $v){
                     $this->$k = $v;
                 }
+                
+                $this->created_time = DBDateTime::parse($row->created_time);
                 return true;
             }else{
                 return false;
@@ -151,7 +131,7 @@
             $rows = $this->database->select('max(norder) as maxorder')->from(DB_TABLE_MAINCATEGORY)->lock();
             $row = $rows[0];
             $nextid = $row->maxorder + 1;
-            $this->database->insert(DB_TABLE_MAINCATEGORY, ['name'=>new DBString($this->name), 'link'=>new DBString($this->link), 'norder'=>new DBNumber($nextid)]);
+            $this->database->insert(DB_TABLE_MAINCATEGORY, ['name'=>new DBString($this->name), 'norder'=>new DBNumber($nextid)]);
             return true;
         }
         
@@ -161,9 +141,8 @@
         }
         
         public function update($mc){
-            $this->database->update(DB_TABLE_MAINCATEGORY, ['name'=>new DBString($mc->name), 'link'=>new DBString($mc->link)], 'id=' . (new DBNumber($this->id))->SqlValue());
+            $this->database->update(DB_TABLE_MAINCATEGORY, ['name'=>new DBString($mc->name)], 'id=' . (new DBNumber($this->id))->SqlValue());
             $this->name = $mc->name;
-            $this->link = $mc->link;
             $this->norder = $mc->norder;
             return true;
         }
