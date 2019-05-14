@@ -129,7 +129,7 @@
                             </tr>
                             <tr>
                                 <td>Số dư tài khoản</td>
-                                <td><?php echo \number_format($this->Data->user->money, 2); ?>đ</td>
+                                <td><div class="money-string"><?php echo \number_format($this->Data->user->money, 2); ?>đ</div></td>
                             </tr>
                             <tr>
                                 <td></td>

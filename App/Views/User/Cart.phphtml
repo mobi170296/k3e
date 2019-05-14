@@ -97,6 +97,14 @@
         font-size: 1.2em;
         font-weight: bold;
     }
+    .cart-wrapper .ordertotal{
+        display: flex;
+        justify-content: space-between;
+    }
+    .cart-wrapper .ordershop{
+        display: flex;
+        flex-direction: column;
+    }
     [data-widget-type="qtyspinner"]{
         display: inline-flex;
     }
@@ -199,8 +207,8 @@ ROW;
                 echo '<div class="cart-checkout-info">';
                 echo <<<SHOP
                 <div class="orderinfo">
-                    <div class="ordertotal"><b>Tổng:</b> <span data-control-type="total-price" data-value="{$total}" class="total-price">{$totalstring}đ</span></div>
-                    <div><b>Tên cửa hàng:</b> <span class="shop-name">{$cartgroup->shop->name}</span></div>
+                    <div class="ordertotal"><span>Tổng:</span> <span data-control-type="total-price" data-value="{$total}" class="total-price">{$totalstring}đ</span></div>
+                    <div class="ordershop"><span>Tên cửa hàng:</span> <span class="shop-name">{$cartgroup->shop->name}</span></div>
                 </div>
                 <div>
                     <a href="/User/Checkout?shop_id={$cartgroup->shop->id}" class="btn-checkout">Tiến hành thanh toán</a>

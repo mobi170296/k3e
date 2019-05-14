@@ -1,5 +1,5 @@
 <?php
-    $this->Data->Title = 'Thương mại điện thử KAKAKA';
+    $this->Data->Title = 'Thương mại điện tử KAKAKA';
     $cancareproducts = $this->Data->cancareproducts;
     $viewedproducts = $this->Data->viewedproducts;
     $bestsellingproducts = $this->Data->bestsellingproducts;

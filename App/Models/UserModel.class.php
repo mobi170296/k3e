@@ -9,12 +9,11 @@
     class UserModel extends Model{
         const MALE = 1, FEMALE = 0;
         const ADMIN_ROLE = 1, NORMAL_ROLE = 0;
-        public $id, $username, $firstname, $lastname, $password, $email, $phone, $district_id, $created_time, $locked, $birthday, $money, $role, $gender, $avatar_id;
+        public $id, $username, $firstname, $lastname, $password, $email, $phone, $created_time, $locked, $birthday, $money, $role, $gender, $avatar_id;
         public $shop;
         public $orders = [];
         public $assessments = [];
         public $cartitems = [];
-        public $district;
         public $deliveryaddresses = [];
         public $imagemaps = [];
         public $avatar;
@@ -100,17 +99,17 @@
             return $this;
         }
         
-        public function checkValidForDistrictId(){
-            if(!isset($this->district_id) || !is_numeric($this->district_id)){
-                $this->addErrorMessage('districtid', 'Địa chỉ Quận/Huyện không hợp lệ!');
-                return $this;
-            }
-            $result = $this->database->select('*')->from(DB_TABLE_DISTRICT)->where('id=' . (int)$this->district_id)->execute();
-            if(!count($result)){
-                $this->addErrorMessage('districtid', 'Quận/huyện không hợp lệ');
-            }
-            return $this;
-        }
+//        public function checkValidForDistrictId(){
+//            if(!isset($this->district_id) || !is_numeric($this->district_id)){
+//                $this->addErrorMessage('districtid', 'Địa chỉ Quận/Huyện không hợp lệ!');
+//                return $this;
+//            }
+//            $result = $this->database->select('*')->from(DB_TABLE_DISTRICT)->where('id=' . (int)$this->district_id)->execute();
+//            if(!count($result)){
+//                $this->addErrorMessage('districtid', 'Quận/huyện không hợp lệ');
+//            }
+//            return $this;
+//        }
         
         public function checkValidForBirthday(){
             if(!isset($this->birthday) || !isset($this->birthday->day) || !is_numeric($this->birthday->day) || !isset($this->birthday->month) || !is_numeric($this->birthday->month) || !isset($this->birthday->year) || !is_numeric($this->birthday->year) || !checkdate($this->birthday->month, $this->birthday->day, $this->birthday->year)){
@@ -180,9 +179,9 @@
             }
         }
         
-        public function loadDistrict(){
-            
-        }
+//        public function loadDistrict(){
+//            
+//        }
         
         public function loadCartItems(){
             $this->cartitems = [];
@@ -309,7 +308,7 @@
         }
         
         public function register(){
-            $this->database->insert(DB_TABLE_USER, ['username' => new DBString($this->username), 'firstname' => new DBString($this->firstname), 'lastname' => new DBString($this->lastname), 'password' => new DBRaw("md5('{$this->password}')"), 'email' => new DBString($this->email), 'phone' => new DBString($this->phone), 'district_id' => new DBRaw('null'), 'locked' => new DBNumber(0), 'birthday' => new DBDateTime($this->birthday->day, $this->birthday->month, $this->birthday->year), 'gender' => new DBNumber($this->gender), 'money' => new DBNumber(0), 'role' => new DBNumber(UserModel::NORMAL_ROLE)]);
+            $this->database->insert(DB_TABLE_USER, ['username' => new DBString($this->username), 'firstname' => new DBString($this->firstname), 'lastname' => new DBString($this->lastname), 'password' => new DBRaw("md5('{$this->password}')"), 'email' => new DBString($this->email), 'phone' => new DBString($this->phone), 'locked' => new DBNumber(0), 'birthday' => new DBDateTime($this->birthday->day, $this->birthday->month, $this->birthday->year), 'gender' => new DBNumber($this->gender), 'money' => new DBNumber(0), 'role' => new DBNumber(UserModel::NORMAL_ROLE)]);
             return true;
         }
         
