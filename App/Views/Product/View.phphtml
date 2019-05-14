@@ -205,6 +205,25 @@
     }
     .product-container .product-shop-right{
         flex-basis: 100%;
+        display: flex;
+    }
+    
+    .product-container .product-total{
+        display: flex;
+        flex-direction: column;
+        padding: 0px 30px;
+        align-items: center;
+        justify-content: center;
+    }
+    .product-container .product-total .product-total-icon{
+        background-image: url('/images/icons/product-icon.png');
+        background-size: 32px 32px;
+        background-repeat: no-repeat;
+        padding-left: 40px;
+        height: 32px;
+    }
+    .product-total .product-total-string{
+        
     }
     .product-container .product-shop-background{
         width: 450px;
@@ -402,7 +421,7 @@ PI;
                         
                     <div class="product-quantity">
                         <i class="product-quantity-i"></i>
-                        <span class="product-quantity-title">Tồn kho</span>
+                        <span class="product-quantity-title">Sản phẩm có sẵn</span>
                         <span class="product-quantity-content">{$product->getAvailableQuantity()}</span>
                     </div>
                 </div>
@@ -440,7 +459,14 @@ ROW;
                 </div>
             </div>
             <div class="product-shop-right">
-                
+                <div class="product-total">
+                    <div class="product-total-icon">
+                        Sản phẩm
+                    </div>
+                    <div class="product-total-string">
+                        <?php echo $shop->getProductTotal(); ?>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="product-attribute">

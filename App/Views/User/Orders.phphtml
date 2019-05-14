@@ -41,6 +41,7 @@ flex-direction: column;
 display: flex;
     }
     .orders-wrapper .order-total-price{
+        font-size: 1.5em;
         color: red;
         font-weight: bold;
     }
