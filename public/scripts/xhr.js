@@ -86,7 +86,7 @@ function $AJAX(){
     }
     this.post = function(data=null, cb=null, cbs=null){
         this._xhr.open('post', this._url, this._sync);
-        if(cbs!=null){
+        if(cbs!==null){
             this._xhr._cb = cbs;
             this._xhr._cb();
         }
@@ -99,7 +99,7 @@ function $AJAX(){
 //            this._xhr.onreadystatechange = this._xhr._onsuccess;
             this._xhr.onreadystatechange = function(e){
                 if(this.readyState===4 && this.status===200){
-                    if(this._onsuccess != undefined){
+                    if(this._onsuccess !== undefined){
                         this._onsuccess(e);
                     }
                 }

@@ -88,7 +88,7 @@
     }
     .order-wrapper .order-summary{
         line-height: 2;
-        align-items: self-end;
+        align-items: flex-end;
     }
     .order-wrapper .product-item{
         display: flex;

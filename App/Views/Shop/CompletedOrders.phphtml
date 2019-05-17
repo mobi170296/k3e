@@ -208,10 +208,12 @@
     <td style="width: 10em">
         <div>@this.transporter.name</div>
         <div>@this.transporterordercode</div>
-        <div><a class="link-print-invoice" href="/Shop/PrintInvoice?ordercode=@this.ordercode"><i class="print-invoice-i"></i>In phiếu giao</a></div>
     </td>
-    <td style="width: 5em">
-        <a href="/Shop/OrderDetail?ordercode=@this.ordercode" class="link-order-detail">Xem chi tiết</a>
+    <td style="width: 6em">
+        
+        <div><a href="/Shop/OrderDetail?ordercode=@this.ordercode" class="link-order-detail">Xem chi tiết</a></div>
+        
+        <div><a class="link-print-invoice" href="/Shop/PrintInvoice?ordercode=@this.ordercode"><i class="print-invoice-i"></i>In hóa đơn</a></div>
     </td>
 </script>
 

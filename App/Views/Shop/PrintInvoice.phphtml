@@ -17,7 +17,7 @@
             }
             .invoice-header .logo{
                 color: #44b27c;
-                font-size: 24pt;
+                font-size: 4em;
                 text-transform: uppercase;
                 font-family: segoe ui;
                 font-weight: bold;
@@ -164,7 +164,7 @@ ROW;
                     </tr>
                     <tr>
                         <td colspan="3" class="invoice-price">Tổng thanh toán</td>
-                        <td class="invoice-price"><?php echo $order->isPaid() ? '0' : \number_format($order->total_price + $order->ship_fee); ?>đ</td>
+                        <td class="invoice-price"><?php echo \number_format($order->total_price + $order->ship_fee); ?>đ</td>
                     </tr>
                 </table>
             </div>

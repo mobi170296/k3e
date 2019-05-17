@@ -104,7 +104,7 @@
         }
         
         public function checkPrice(){
-            if(!is_numeric($this->price)){
+            if(!is_numeric($this->price) || !is_numeric($this->original_price) || $this->price > $this->original_price){
                 $this->addErrorMessage('price', 'Giá bán của sản phẩm không hợp lệ');
             }else{
                 if($this->price < 10e3 || $this->price > 100e6){
@@ -314,6 +314,10 @@
         
         public function getPriceString(){
             return number_format($this->price);
+        }
+        
+        public function getOriginalPriceString(){
+            return number_format($this->original_price);
         }
         
         public function getStarRatingPoint(){

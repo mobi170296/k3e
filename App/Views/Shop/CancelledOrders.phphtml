@@ -204,7 +204,7 @@
         <div>@this.transporter.name</div>
         <div>@this.transporterordercode</div>
     </td>
-    <td style="width: 5em">
+    <td style="width: 6em">
         <a href="/Shop/OrderDetail?ordercode=@this.ordercode" class="link-order-detail">Xem chi tiết</a>
     </td>
 </script>

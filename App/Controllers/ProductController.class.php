@@ -117,6 +117,8 @@
                     $product->ward->loadDistrict();
                     $product->ward->district->loadProvince();
                     $product->loadAssessments();
+                    $product->loadSubcategory();
+                    $product->subcategory->loadMainCategory();
                     foreach($product->assessments as $assessment){
                         $assessment->loadClient();
                     }

@@ -53,7 +53,7 @@
         }
         
         public function getThumbnailLink($w = 300, $h = 300){
-            $params = ['w' => $w , 'h' => $h, 'url' => $this->urlpath];
+            //$params = ['w' => $w , 'h' => $h, 'url' => $this->urlpath];
             //return '/img/thumbnail?' . http_build_query($params);
             return $this->urlpath;
         }

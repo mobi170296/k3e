@@ -141,7 +141,7 @@
     }
     .product-container .product-info .product-name{
         font-weight: bold;
-        font-size: 1.2em;
+        font-size: 1.5em;
         height: 3.6em;
         word-wrap: anywhere;
     }
@@ -150,6 +150,13 @@
         color: #44b27c;
         font-family: arial;
         font-weight: bold;
+    }
+    .product-container .product-info .product-original-price{
+        font-size: 2em;
+        color: #777;
+        font-weight: bold;
+        font-family: arial;
+        text-decoration: line-through;
     }
     .product-container .product-info .product-quantity{
         font-weight: 400;
@@ -386,8 +393,10 @@ PI;
             <div class="product-info">
                 <?php
                     $starpercent = $product->getStarRatingPoint() / 5 * 100;
+                    $originalpricehtml = $product->price < $product->original_price ? '<div class="product-original-price">'.$product->getOriginalPriceString().'đ</div>' : '';
                     echo <<<ROW
                 <div class="product-info-top">
+                    <div class="product-category">{$product->subcategory->maincategory->name} > {$product->subcategory->name}</div>
                     <div class="product-name">{$product->name}</div>
                     <div class="product-starrating">
                         <div class="star-rank">
@@ -412,6 +421,7 @@ PI;
                         </div>
                         
                     </div>
+                    {$originalpricehtml}
                     <div class="product-price">{$product->getPriceString()}đ</div>
                     <div class="product-sold">
                         <i class="product-sold-i"></i>

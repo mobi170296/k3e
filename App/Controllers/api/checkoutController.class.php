@@ -655,7 +655,7 @@
                 }
             } catch (DBException $ex) {
                 $result->header->code = 1;
-                $result->header->message = 'DBERR' . $ex->getMessage();
+                $result->header->message = 'DBERR' . $ex->getMessage() . $database->lastquery;
             } catch (AuthenticateException $e){
                 $result->header->code = 1;
                 $result->header->message = 'invalid user';

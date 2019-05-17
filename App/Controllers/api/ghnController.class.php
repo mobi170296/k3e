@@ -14,6 +14,8 @@
             #moi truong kiem thu bo qua viec nay
             $statusarray = ['ReadyToPick', 'Picking', 'Storing', 'Delivering', 'Delivered', 'Return', 'Returned', 'WaitingToFinish', 'Finish', 'Cancel', 'LostOrder'];
             
+            $result = new \stdClass();
+            $result->header = new \stdClass();
             
             if($OrderCode !== null && $CurrentStatus !== null && is_string($CurrentStatus) && in_array($CurrentStatus, $statusarray)){        
                 $database = new Database();
@@ -44,7 +46,9 @@
                         
                         $database->commit();
                         
-                        return $this->View->RenderContent('Đã cập nhật thành công đơn hàng sang trạng thái đang giao');
+                        $result->header->code = 0;
+                        $result->header->message = 'Đã cập nhật thành công đơn hàng sang trạng thái đang giao';
+                        return $this->View->RenderJSON($result);
                     }
                     
                     
@@ -79,7 +83,9 @@
                         
                         $database->commit();
                         
-                        return $this->View->RenderContent('Đã cập nhật thành công đơn hàng sang trạng thái đã hủy do không lấy được hàng');
+                        $result->header->code = 0;
+                        $result->header->message = 'Đã cập nhật thành công đơn hàng sang trạng thái đã hủy do không lấy được hàng';
+                        return $this->View->RenderJSON($result);
                     }
                     
                     
@@ -112,7 +118,9 @@
                         
                         $database->commit();
                         
-                        return $this->View->RenderContent('Đã cập nhật thành công đơn hàng sang trạng thái đã hủy do người mua không nhận (giao không thành công)');
+                        $result->header->code = 0;
+                        $result->header->message = 'Đã cập nhật thành công đơn hàng sang trạng thái đã hủy do người mua không nhận (giao không thành công)';
+                        return $this->View->RenderJSON($result);
                     }
                     
                     if($CurrentStatus === 'Delivered' && $order->status == OrderModel::DANG_GIAO){
@@ -160,15 +168,24 @@
                         
                         $database->commit();
                         
-                        return $this->View->RenderContent('Đã cập nhật đơn hàng sang trạng thái đã giao thành công');
+                        $result->header->code = 0;
+                        $result->header->message = 'Đã cập nhật đơn hàng sang trạng thái đã giao thành công';
+                        return $this->View->RenderJSON($result);
                     }
-                    
-                    return $this->View->RenderContent('TRANG THAI KHONG HOP LE');
+                    $result->header->code = 0;
+                    $result->header->message = 'Trạng thái cập nhật không hợp lệ';
+                    return $this->View->RenderJSON($result);
                 }else{
-                    return $this->View->RenderContent('DON VAN CHUYEN KHONG TON TAI');
+                    $result->header->code = 0;
+                    $result->header->message = 'Không tồn tại order code';
+                    return $this->View->RenderJSON($result);
                 }
             }else{
-                return $this->View->RenderContent('THAM SO YEU CAU KHONG HOP LE');
+                $result->header->code = 1;
+                $result->header->message = 'Yêu cầu không hợp lệ!';
+                
+                
+                return $this->View->RenderJSON($result);
             }
 
         }

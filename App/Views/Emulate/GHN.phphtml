@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Bộ giả lập Trạng thái đơn hàng GHN</title>
+        <link rel="stylesheet" href="/styles/utility.css"/>
+        <link rel="stylesheet" href="/styles/main.css"/>
+        <link rel="stylesheet" href="/styles/sub.css"/>
+        <link rel="stylesheet" href="/styles/toast.css"/>
+        <link rel="stylesheet" href="/styles/form.css"/>
+        <link rel="stylesheet" href="/styles/utility.css"/>
+        <link rel="stylesheet" href="/styles/Chart.min.css"/>
+        <script type="text/javascript" src="/scripts/core.js"></script>
+        <script type="text/javascript" src="/scripts/toast.js"></script>
+        <script type="text/javascript" src="/scripts/xhr.js"></script>
+        <script type="text/javascript" src="/scripts/ktemplate.js"></script>
+        <script type="text/javascript" src="/scripts/iktemplate.js"></script>
+        <script type="text/javascript" src="/scripts/iktable.js"></script>
+        <script type="text/javascript" src="/scripts/Chart.bundle.min.js"></script>
+    </head>
+    
+    
+    <body style="background-color: white; margin: 0px auto; width: 400px;">
+        
+
+        <form action="/api/ghn/ghnupdate" onsubmit="return false;">
+            <div><input type="text" name="OrderCode"/></div>
+            <label><input type="radio" name="CurrentStatus" value="Storing" /> Lưu kho</label>
+            <label><input type="radio" name="CurrentStatus" value="Delivered" /> Đã giao đến tay người mua</label>
+            <div><button class="" id="update">Cập nhật</button></div>
+        </form>
+    </body>
+    <script>
+        
+        update.onclick = function(e){
+            $.ajax().create().success(function(e){
+                var result = JSON.parse(this.response);
+                if(result.header.code === 0){
+                    $NotificationPopup.message(result.header.message).ok('OK').show();
+                }else{
+                    $NotificationPopup.message(result.header.message).ok('OK').show();
+                }
+            }).error(function(e){
+                $NotificationPopup.message('Lỗi kết nối').ok('OK').show();
+            }).postForm(this.form);
+        }
+    </script>
+</html>
