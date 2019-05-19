@@ -435,24 +435,27 @@ PI;
                         <span class="product-quantity-content">{$product->getAvailableQuantity()}</span>
                     </div>
                 </div>
-                <div class="product-info-bottom">
-                    <div>
-                        <div data-widget-type="qtyspinner">
-                            <span class="minus">-</span><input class="qtybox" type="text" data-value="1" data-max="{$product->quantity}" data-min="1"/><span class="plus">+</span>
-                        </div> (có sẵn {$product->getAvailableQuantity()} sản phẩm)
-                    </div>
-                    <div>
+                
 ROW;
 ?>
                 <?php
-                    if($user != null && $user->id != $shop->owner_id){
-                        echo '<button class="btn-product-addtocart" type="button" data-field-id="' . $product->id . '">Thêm vào giỏ hàng</button>';
+                    if($user != null && $user->id != $shop->owner_id && $product->getAvailableQuantity()){
+                        echo <<<BOTTOM
+                        <div class="product-info-bottom">
+                            <div>
+                                <div data-widget-type="qtyspinner">
+                                    <span class="minus">-</span><input class="qtybox" type="text" data-value="1" data-max="{$product->quantity}" data-min="1"/><span class="plus">+</span>
+                                </div> (có sẵn {$product->getAvailableQuantity()} sản phẩm)
+                            </div>
+                            <button class="btn-product-addtocart" type="button" data-field-id="{$product->id}">Thêm vào giỏ hàng</button>
+                        </div>
+BOTTOM;
+                        echo '';
+                    }else if($product->getAvailableQuantity() == 0){
+                        echo <<<BOTTOM
+                        <div class="">Hết hàng</div>
+BOTTOM;
                     }
-                ?>
-                
-                <?php
-                    echo '</div>';
-                    echo '</div>';
                 ?>
             </div>
         </div>
@@ -596,6 +599,10 @@ ASSESSMENT;
         var _minus = document.querySelector('[data-widget-type="qtyspinner"] .minus');
         var _plus = document.querySelector('[data-widget-type="qtyspinner"] .plus');
         var _box = document.querySelector('[data-widget-type="qtyspinner"] .qtybox');
+        
+        if(_box === null){
+            return;
+        }
         
         _box.value = _box.dataset.value;
         _box.onkeydown = function(e){

@@ -1,5 +1,6 @@
 <?php
     use App\Models\UserModel;
+    use Library\Common\Text;
     $this->Data->Title = 'Thông tin tài khoản';
 ?>
 <div id="user-wrapper" class="clearfix u-my-5">
@@ -86,12 +87,12 @@
                             </tr>
                             <tr>
                                 <td>Họ và tên đệm</td>
-                                <td><input type="text" name="lastname" size="30" value="<?php echo empty($this->Data->update) ?$this->Data->user->lastname : $this->Data->input->lastname; ?>"/></td>
+                                <td><input type="text" name="lastname" size="30" value="<?php echo Text::htmlentities(empty($this->Data->update) ?$this->Data->user->lastname : $this->Data->input->lastname); ?>"/></td>
                             </tr>
 
                             <tr>
                                 <td>Tên</td>
-                                <td><input type="text" name="firstname" size="30" value="<?php echo empty($this->Data->update) ?$this->Data->user->firstname : $this->Data->input->firstname; ?>"/></td>
+                                <td><input type="text" name="firstname" size="30" value="<?php echo Text::htmlentities(empty($this->Data->update) ?$this->Data->user->firstname : $this->Data->input->firstname); ?>"/></td>
                             </tr>
                             
                             <tr>

@@ -261,8 +261,12 @@ OPT;
                                     type: 'linear',
                                     position: 'left',
                                     ticks: {
-                                        beginAtZero: true
-                                    },scaleLabel: {
+                                        beginAtZero: true,
+                                        callback: function(label, index, labels){
+                                            return $COMMON.moneyFormat(label, 3, 0, ',', '.') + 'đ';
+                                        }
+                                    },
+                                    scaleLabel: {
                                         display: true,
                                         labelString: 'Doanh số'
                                     }
@@ -346,8 +350,12 @@ OPT;
                                     type: 'linear',
                                     position: 'left',
                                     ticks: {
-                                        beginAtZero: true
-                                    },scaleLabel: {
+                                        beginAtZero: true,
+                                        callback: function(label, index, labels){
+                                            return $COMMON.moneyFormat(label, 3, 0, ',', '.') + 'đ';
+                                        }
+                                    },
+                                    scaleLabel: {
                                         display: true,
                                         labelString: 'Doanh thu'
                                     }
@@ -430,8 +438,12 @@ OPT;
                                 {
                                     type: 'linear',
                                     ticks: {
-                                        beginAtZero: true
-                                    },scaleLabel: {
+                                        beginAtZero: true,
+                                        callback: function(label, index, labels){
+                                            return $COMMON.moneyFormat(label, 3, 0, ',', '.') + 'đ';
+                                        }
+                                    },
+                                    scaleLabel: {
                                         display: true,
                                         labelString: 'Tổng giá trị (vnd)'
                                     }

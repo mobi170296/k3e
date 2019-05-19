@@ -21,7 +21,7 @@
                 }
                 
                 #thong ke san pham ngau nghien
-                $rows = $database->select('id')->from(DB_TABLE_PRODUCT)->orderby('rand()')->limit(0, 10)->execute();
+                $rows = $database->select('id')->from(DB_TABLE_PRODUCT)->where('quantity > 0')->orderby('rand()')->limit(0, 10)->execute();
                 
                 $cancareproducts = [];
                 
@@ -37,7 +37,7 @@
                 }
                 
                 #thong ke san pham ban chay nhat
-                $rows = $database->select('product.id id')->from(DB_TABLE_PRODUCT)->join(DB_TABLE_ORDERITEM)->on('product.id=orderitem.product_id')->join(DB_TABLE_ORDER)->on('order.id=orderitem.order_id')->where('order.status='.OrderModel::HOAN_TAT)->groupby('product.id')->orderby('count(*)')->desc()->limit(0,10)->execute();
+                $rows = $database->select('product.id id')->from(DB_TABLE_PRODUCT)->where('product.quantity > 0')->join(DB_TABLE_ORDERITEM)->on('product.id=orderitem.product_id')->join(DB_TABLE_ORDER)->on('order.id=orderitem.order_id')->where('order.status='.OrderModel::HOAN_TAT)->groupby('product.id')->orderby('count(*)')->desc()->limit(0,10)->execute();
                 
                 $bestsellingproducts = [];
                 
@@ -79,7 +79,7 @@
                 }
                 
             } catch (DBException $ex) {
-                $this->View->ErrorMessage = 'DBERR';
+                $this->View->Data->ErrorMessage = 'DBERR';
                 return $this->View->RenderTemplate('_error');
             }
         }

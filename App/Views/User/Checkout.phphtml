@@ -145,7 +145,7 @@
 </style>
 <form>
 <div class="checkout-wrapper">
-    <div class="checkout-header">Thanh toán đơn hàng</div>
+    <div class="checkout-header">Đặt hàng</div>
     <div class="checkout-body">
         <div class="checkout-left">
             <div class="message-box error u-hidden">
@@ -258,7 +258,7 @@ ORDERITEM;
                         <div class="checkout-total-string" data-control-type="checkouttotal" data-value="<?php $totalcheckout += $totalprice; echo $totalcheckout; ?>"><?php echo \number_format($totalcheckout) . 'đ'; ?></div>
                     </div>
                     <div>
-                        <button type="button" class="btn-checkout" data-control-type="btncheckout">Thanh toán</button>
+                        <button type="button" class="btn-checkout" data-control-type="btncheckout">Đặt hàng</button>
                     </div>
                 </div>
             </div>

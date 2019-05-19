@@ -272,6 +272,16 @@ a{
     margin-right: 5px;
     vertical-align: middle;
 }
+#top-bar a.open-shop-button::before{
+    content: '';
+    display: inline-block;
+    background-size: cover;
+    width: 20px;
+    height: 20px;
+    background-image: url('/images/icons/open-shop-icon.png');
+    margin-right: 5px;
+    vertical-align: middle;
+}
 #top-bar a.register-button{
     margin-right: 1em;
 }

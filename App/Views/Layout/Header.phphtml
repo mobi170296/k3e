@@ -1,7 +1,7 @@
 <?php
     if($this->Data->user){
         if(!$this->Data->user->isMerchant()){
-            echo '<a href="/Shop/Open">Mở cửa hàng</a>';
+            echo '<a class="open-shop-button" href="/Shop/Open">Mở cửa hàng</a> ';
         }
     }else{
         echo <<<LINK

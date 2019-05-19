@@ -51,9 +51,16 @@
                 try{
                     $input->setDatabase($database);
                     $input->birthday = new DBDateTime($day, $month, $year);
-                    $input->checkValidForUserName()->checkValidForUserNameExists()->checkValidForPassword($input->password[0], $input->password[1])->checkValidForEmail()->checkValidForPhone()->checkValidForBirthday()->checkValidForGender()->checkValidForLastName()->checkValidForFirstName();
+                    $input->checkValidForUserName()->checkValidForPassword($input->password[0], $input->password[1])->checkValidForEmail()->checkValidForPhone()->checkValidForBirthday()->checkValidForGender()->checkValidForLastName()->checkValidForFirstName();
                     
-                    if($input->getErrorsLength()){
+                    $newuser = new UserModel($database);
+                    $newuser->username = $input->username;
+                    
+                    if($newuser->loadFromUserName()){
+                        $input->addErrorMessage('username', 'Tên tài khoản đã tồn tại');
+                    }
+                    
+                    if(!$input->isValid()){
                         $this->View->Data->Model = $input;
                         throw new InputException($input->getErrorsMap());
                     }

@@ -211,7 +211,7 @@ ROW;
                     <div class="ordershop"><span>Tên cửa hàng:</span> <span class="shop-name">{$cartgroup->shop->name}</span></div>
                 </div>
                 <div>
-                    <a href="/User/Checkout?shop_id={$cartgroup->shop->id}" class="btn-checkout">Tiến hành thanh toán</a>
+                    <a href="/User/Checkout?shop_id={$cartgroup->shop->id}" class="btn-checkout">Tiến hành đặt hàng</a>
                 </div>
 SHOP;
                 echo '</div>';

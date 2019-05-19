@@ -9,7 +9,7 @@
     class UserModel extends Model{
         const MALE = 1, FEMALE = 0;
         const ADMIN_ROLE = 1, NORMAL_ROLE = 0;
-        public $id, $username, $firstname, $lastname, $password, $email, $phone, $created_time, $locked, $birthday, $money, $role, $gender, $avatar_id;
+        public $id, $username, $firstname, $lastname, $password, $email, $phone, $created_time, $locked, $birthday, $money, $role, $gender, $avatar_id, $lastaccess_time;
         public $shop;
         public $orders = [];
         public $assessments = [];
@@ -34,13 +34,13 @@
             return $this;
         }
         
-        public function checkValidForUserNameExists(){
-            $rows = $this->database->select('*')->from(DB_TABLE_USER)->where('username=' . new DBString($this->username))->execute();
-            if(count($rows)){
-                $this->addErrorMessage('usernameduplicate', 'Tên đăng nhập ' . $this->username .' đã tồn tại!');
-            }
-            return $this;
-        }
+//        public function checkValidForUserNameExists(){
+//            $rows = $this->database->select('*')->from(DB_TABLE_USER)->where('username=' . new DBString($this->username))->execute();
+//            if(count($rows)){
+//                $this->addErrorMessage('usernameduplicate', 'Tên đăng nhập ' . $this->username .' đã tồn tại!');
+//            }
+//            return $this;
+//        }
         
         public function checkValidForFirstName(){
             if(!isset($this->firstname) || !is_string($this->firstname) || mb_strlen($this->firstname) > 20){
@@ -307,8 +307,36 @@
             }
         }
         
+        public function loadFromUserName(){
+            $rows = $this->database->selectall()->from(DB_TABLE_USER)->where('username=' . new DBString($this->database->escape($this->username)))->execute();
+            
+            
+            if(count($rows)){
+                $row = $rows[0];
+                foreach($row as $k => $v){
+                    $this->$k = $v;
+                }
+                
+                $this->created_time = DBDateTime::parse($this->created_time);
+                $this->lastaccess_time = DBDateTime::parse($this->lastaccess_time);
+                return true;
+            }else{
+                return false;
+            }
+        }
+        
         public function register(){
-            $this->database->insert(DB_TABLE_USER, ['username' => new DBString($this->username), 'firstname' => new DBString($this->firstname), 'lastname' => new DBString($this->lastname), 'password' => new DBRaw("md5('{$this->password}')"), 'email' => new DBString($this->email), 'phone' => new DBString($this->phone), 'locked' => new DBNumber(0), 'birthday' => new DBDateTime($this->birthday->day, $this->birthday->month, $this->birthday->year), 'gender' => new DBNumber($this->gender), 'money' => new DBNumber(0), 'role' => new DBNumber(UserModel::NORMAL_ROLE)]);
+            $this->database->insert(DB_TABLE_USER, ['username' => new DBString($this->username),
+                        'firstname' => new DBString($this->database->escape($this->firstname)),
+                        'lastname' => new DBString($this->database->escape($this->lastname)),
+                        'password' => new DBRaw("md5('{$this->database->escape($this->password)}')"),
+                        'email' => new DBString($this->database->escape($this->email)),
+                        'phone' => new DBString($this->database->escape($this->phone)),
+                        'locked' => new DBNumber(0),
+                        'birthday' => new DBDateTime($this->birthday->day, $this->birthday->month, $this->birthday->year),
+                        'gender' => new DBNumber($this->gender),
+                        'money' => new DBNumber(0),
+                        'role' => new DBNumber(UserModel::NORMAL_ROLE)]);
             return true;
         }
         

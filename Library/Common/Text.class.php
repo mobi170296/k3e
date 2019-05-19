@@ -49,4 +49,8 @@
             $text = mb_strtolower($text);
             return self::toASCII($text);
         }
+        
+        public static function htmlentities($s){
+            return htmlentities($s);
+        }
     }
