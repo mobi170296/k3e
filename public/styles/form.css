@@ -98,12 +98,29 @@ textarea:focus{
     font-size: 11pt;
 }
 
+
+.btn-register{
+    border: 2px solid #06a24f;
+    color: #fff;
+    background-color: #44b27c;
+    transition: all 1s;
+    font-size: 12pt;
+    width: 100%;
+    border-radius: 1000px;
+    font-weight: lighter;
+}
+
+
 .btn-login{
     border: 2px solid #06a24f;
     color: #06a24f;
     background-color: #fff;
     transition: all 1s;
     font-size: 12pt;
+    width: 100%;
+    background-color: transparent;
+    border-radius: 1000px;
+    font-weight: lighter;
 }
 
 .btn-login:hover{

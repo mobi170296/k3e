@@ -9,7 +9,6 @@
             <div class="menu-item active"><a href="/User/DeliveryAddresses">Địa chỉ giao hàng</a></div>
             <div class="menu-item"><a href="/User/Orders">Quản lý đơn hàng</a></div>
             <div class="menu-item"><a href="/User/ViewHistory">Sản phẩm đã xem</a></div>
-            <div class="menu-item"><a href="/User/Assessment">Đánh giá sản phẩm</a></div>
         </div>
     </div>
     <div class="right-panel">

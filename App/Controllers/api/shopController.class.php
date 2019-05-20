@@ -258,7 +258,7 @@
                 }
             } catch (DBException $ex) {
                 $result->header->code = 1;
-                $result->header->message = 'DBException';
+                $result->header->message = 'DBException ' . $database->lastquery;
                 $result->header->errors = [$ex->getMessage()];
                 $database->rollback();
             } catch (AuthenticateException $e){

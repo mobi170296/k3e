@@ -1,7 +1,3 @@
-<?php
-    $this->layout = null;
-    $message = $this->Data->ErrorMessage;
-?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -24,20 +20,24 @@
             .error-box{
                 width: 600px;
                 padding: 20px;
-                background-color: rgba(255,255,255,0.7);
+                background-color: rgba(255,255,255,0.5);
                 box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.2);
-                border-radius: 10px;
             }
             .error-header{
                 font-weight: lighter;
                 font-size: 3em;
-                color: #000;
+                color: #fff;
             }
             .error-content{
                 font-weight: lighter;
-                color: #000;
+                color: #fff;
             }
-            
+            .error-box{
+                width: 600px;
+                padding: 20px;
+                background-color: rgba(255,255,255,0.1);
+                border-radius: 10px;
+            }
             .error-box a{
                 display: block;
                 padding: 15px 0px;
@@ -53,8 +53,8 @@
     <body>
         <div class="error-wrapper">
             <div class="error-box">
-                <div class="error-header">Đã xảy ra lỗi</div>
-                <div class="error-content"><?php echo $message; ?></div>
+                <div class="error-header">404 Error</div>
+                <div class="error-content">Trang này không tìm thấy</div>
                 <div class=""><a href="/">Quay về trang chủ</a></div>
             </div>
         </div>

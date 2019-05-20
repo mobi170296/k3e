@@ -68,7 +68,22 @@
     } catch (Core\RouterException $e) {
         $message = $e->getMessage();
         header('HTTP/1.1 404 Not Found');
-        require k3_ROOT . DS . 'Core' . DS . '_errortemplate.phphtml';
+        
+        $view = new \Core\View('.controller.khong.bao.gio.ton.tai', '.action.khong.bao.gio.ton.tai');
+        
+        $view->Data->ErrorMessage = $e->getMessage();
+        
+        $view->RenderTemplate('_error');
+        
+        $view->render();
+//        require k3_ROOT . DS . 'App' . DS . 'Template' . DS . 'Common' . DS . '_error.phphtml';
     } catch (Exception $e){
-        echo $e->getMessage();
+//        require k3_ROOT . DS . 'App' . DS . 'Template' . DS . 'Common' . DS . '_error.phphtml';
+        $view = new \Core\View('.controller.khong.bao.gio.ton.tai', '.action.khong.bao.gio.ton.tai');
+        
+        $view->Data->ErrorMessage = $e->getMessage();
+        
+        $view->RenderTemplate('_error');
+        
+        $view->render();
     }

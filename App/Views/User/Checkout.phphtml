@@ -2,7 +2,7 @@
     use Library\Database\DBDateTime;
     use App\Models\PaymentTypeModel;
     
-    $this->Data->Title = 'Thanh toán';
+    $this->Data->Title = 'Đặt hàng';
     $shop = $this->Data->shop;
     $deliveryaddresses = $this->Data->deliveryaddresses;
     $orderitems = $this->Data->orderitems;
@@ -23,9 +23,9 @@
         background-color: #fff;
         margin-bottom: 10px;
         font-size: 1.3em;
-        font-weight: lighter;
-        font-family: segoe ui;
+        font-family: arial;
         border-radius: 0px 0px 5px 5px;
+        box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);
     }
     .checkout-wrapper .checkout-body{
         display: flex;

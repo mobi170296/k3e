@@ -99,8 +99,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td></td>
-                            <td><button class="btn btn-add" type="submit" name="register" value="Đăng ký">Đăng ký</button></td>
+                            <td colspan="2"><button class="btn btn-register" type="submit" name="register" value="Đăng ký">Đăng ký</button></td>
                         </tr>
                     </table>
                 </form>
