@@ -624,6 +624,12 @@ ITEM;
                         return false;
                     }
                     
+                    if(price_value > original_price_value){
+                        $Toast.makeError('Giá bản của sản phẩm không được lớn hơn giá gốc');
+                        price.scrollIntoView();
+                        return false;
+                    }
+                    
                     if(isNaN(parseInt(warranty_months_number.value))){
                         $Toast.makeError('Thời gian bảo hành phải là số');
                         warranty_months_number.scrollIntoView();

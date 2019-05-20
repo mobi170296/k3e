@@ -4,6 +4,7 @@
     
     use Library\Database\DBNumber;
     use Library\Database\DBString;
+    use Library\Database\DBDateTime;
     
     class OrderLogModel extends Model{
         public $id, $order_id, $order_status, $content, $created_time;
@@ -17,6 +18,8 @@
                     $this->$key = $value;
                 }
                 
+                
+                $this->created_time = DBDateTime::parse($this->created_time);
                 return true;
             }else{
                 return false;

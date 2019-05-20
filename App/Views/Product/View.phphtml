@@ -101,7 +101,8 @@
         background-repeat: no-repeat;
         border: 2px solid #ccc;
         border-radius: 50%;
-        box-shadow: 0px 0px 40px 0px rgba(0,0,0,0.4) inset;
+        box-shadow: 0px 0px 40px 0px rgba(0,0,0,0.6) inset;
+        background-color: #fff;
     }
     .product-container .product-basic-info .product-image-swiper{
         height: 90px;

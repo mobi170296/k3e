@@ -4,12 +4,16 @@
     
     $this->Data->Title = 'Đặt hàng';
     $shop = $this->Data->shop;
+    $shopdeliveryaddress = $shop->defaultdeliveryaddress;
     $deliveryaddresses = $this->Data->deliveryaddresses;
     $orderitems = $this->Data->orderitems;
     $ghnservices = $this->Data->ghnservices;
     $ghnfee = $this->Data->ghnfee;
     $totalprice = 0;
-    $totalcheckout = $ghnfee == null ? 0 : $ghnfee->CalculatedFee;;
+    $totalcheckout = $ghnfee == null ? 0 : $ghnfee->CalculatedFee;
+    
+    
+    $validquantity = $this->Data->validquantity;
 ?>
 
 <style>
@@ -148,9 +152,15 @@
     <div class="checkout-header">Đặt hàng</div>
     <div class="checkout-body">
         <div class="checkout-left">
-            <div class="message-box error u-hidden">
-                Đơn hàng đã có sản phẩm không đủ số lượng vui lòng kiểm tra lại
-            </div>
+            <?php
+                if(!$validquantity){
+                    echo <<<MESSAGE
+                <div class="message-box error">
+                    Đơn hàng đã có sản phẩm không đủ số lượng vui lòng kiểm tra lại
+                </div>
+MESSAGE;
+                }
+            ?>
             <div class="checkout-group-box">
                 <div class="checkout-group-header">
                     <div class="checkout-group-title">Địa chỉ vận chuyển</div>
@@ -215,7 +225,7 @@ SERVICE;
                     <div class="checkout-group-title">Thông tin đơn hàng</div>
                 </div>
                 <div class="checkout-group-body">
-                    <div style="margin-bottom: 20px;">Được bán bởi: <?php echo $shop->name; ?><input type="hidden" name="shop_id" value="<?php echo $shop->id; ?>"/></div>
+                    <div style="margin-bottom: 20px;">Được bán bởi: <?php echo $shop->name; ?><input type="hidden" name="shop_id" value="<?php echo $shop->id; ?>"/><input type="hidden" name="shop_deliveryaddress_id" value="<?php echo $shop->defaultdeliveryaddress->id; ?>"/></div>
                     <div class="orderitems">
                         <?php
                             foreach($orderitems as $orderitem){

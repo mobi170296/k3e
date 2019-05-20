@@ -163,6 +163,17 @@ function $qr(){
             return this;
         }
     }
+    
+    $qr.prototype.prop = function (k, v = null) {
+        if (arguments.length === 1) {
+            return this[0][k];
+        } else {
+            for (var i = 0; i < this.length; i++) {
+                this[i][k] = v;
+            }
+            return this;
+        }
+    }
     $qr.prototype.next = function(){
             if(this.length){
                     return $(this[0].nextElementSibling);
@@ -385,13 +396,13 @@ $DOMAIN = new (function(){
         return query;
     }
 
-    this.buildQueryString = function(params){
+    this.buildQueryString = function(params, encode = true){
         var querystring = '';
 
         for(var k in params){
-            querystring += k + '=' + encodeURIComponent(params[k]) + '&';
+            querystring += k + '=' + (encode ? encodeURIComponent(params[k]) : params[k]) + '&';
         }
-
+        
         return querystring.substr(0, querystring.length - 1);
     }
 })();

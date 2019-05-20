@@ -6,7 +6,7 @@
     use Library\Database\DBNumber;
     
     class ShopModel extends Model{
-        const LOCK = 1, UNLOCK = 0;
+        const LOCKED = 1, UNLOCKED = 0;
         
         public $id, $name, $owner_id, $description, $avatar_id, $background_id, $locked, $created_time;
         
@@ -15,6 +15,10 @@
         
         #contains objects
         public $orders, $products;
+        
+        #default deliveryaddress
+        
+        public $defaultdeliveryaddress;
         
         #address object
         public $ward;
@@ -62,6 +66,10 @@
             return $this;
         }
         
+        public function isLocked(){
+            return $this->locked == self::LOCKED;
+        }
+        
         public function loadOrders(){
             $this->orders = [];
             $rows = $this->database->select('id')->from(DB_TABLE_ORDER)->where('shop_id=' . (int)$this->id)->execute();
@@ -85,6 +93,8 @@
                 }
             }
         }
+        
+        
         
         public function loadOwner(){
             $this->owner = new UserModel($this->database);
@@ -117,6 +127,16 @@
             }else{
                 return false;
             }
+        }
+        
+        public function loadDefaultDeliveryAddress(){
+            $this->defaultdeliveryaddress = new DeliveryAddressModel($this->database);
+            
+            $rows = $this->database->select('deliveryaddress.id')->from(DB_TABLE_SHOP)->join(DB_TABLE_USER)->on('shop.owner_id=user.id')->join(DB_TABLE_DELIVERYADDRESS)->on('user.id=deliveryaddress.user_id')->where('deliveryaddress.def=' . DeliveryAddressModel::DEF . ' and user.id=' . $this->owner_id)->execute();
+            
+            $this->defaultdeliveryaddress->id = $rows[0]->id;
+            
+            return $this->defaultdeliveryaddress->loadData();
         }
         
         public function loadWard(){

@@ -485,13 +485,32 @@
                 
                 $items = [];
                 
+                //dat trang thai hop le cho so luong gia dinh
+                $this->View->Data->validquantity = true;
+                
                 if(count($user->cartitems)){
                     //load product vao cartitem de check shop
                     foreach($user->cartitems as $cartitem){
                         $cartitem->loadProduct();
                         $cartitem->product->loadMainImage();
                         if($cartitem->product->shop_id == $shop_id){
-                            $items[] = $cartitem;
+                            
+                            //kiem tra so luong san pham va so luong cua san pham trong cart
+                            if($cartitem->quantity > $cartitem->product->getAvailableQuantity()){
+                                if($cartitem->product->getAvailableQuantity()==0){
+                                    //chu dong xoa
+                                    $cartitem->delete();
+                                }else{
+                                    //cap nhat lai so luong lon nhat co the
+                                    $cartitem->updateQuantity($cartitem->product->getAvailableQuantity());
+                                    $items[] = $cartitem;
+                                }
+                                
+                                $this->View->Data->validquantity = false;
+                            }else{
+                                //so luong binh thuong
+                                $items[] = $cartitem;
+                            }
                         }
                     }
                     
@@ -500,8 +519,9 @@
                         //load thong tin van chuyen cua shop
                         $items[0]->product->loadShop();
                         $shop = $items[0]->product->shop;
-                        $items[0]->product->shop->loadWard();
-                        $items[0]->product->shop->ward->loadDistrict();
+                        $shop->loadDefaultDeliveryAddress();
+                        $shop->defaultdeliveryaddress->loadWard();
+                        $shop->defaultdeliveryaddress->ward->loadDistrict();
                         
                         //ton tai san pham thuoc ve cua hang bay gio kiem tra tinh hop le cua tung san pham
                         //load deliveryaddress cua user
@@ -522,12 +542,12 @@
                         
                         $ghn = new GHNRequest();
                         
-                        $ghnservices = $ghn->getServices(new GHNServiceParameter((int)$shop->ward->district->ghn_district_id, (int)$user->defaultdeliveryaddress->ward->district->ghn_district_id, $totalweight, $avglength, $avglength, $avglength));
+                        $ghnservices = $ghn->getServices(new GHNServiceParameter((int)$shop->defaultdeliveryaddress->ward->district->ghn_district_id, (int)$user->defaultdeliveryaddress->ward->district->ghn_district_id, $totalweight, $avglength, $avglength, $avglength));
                         
                         $ghnfee = null;
                         
                         if(count($ghnservices)){
-                            $ghnfee = $ghn->calculateFee(new GHNFeeParameter((int)$shop->ward->district->ghn_district_id, (int)$user->defaultdeliveryaddress->ward->district->ghn_district_id, $ghnservices[0]->ServiceID, $totalweight, $avglength, $avglength, $avglength, 0));
+                            $ghnfee = $ghn->calculateFee(new GHNFeeParameter((int)$shop->defaultdeliveryaddress->ward->district->ghn_district_id, (int)$user->defaultdeliveryaddress->ward->district->ghn_district_id, $ghnservices[0]->ServiceID, $totalweight, $avglength, $avglength, $avglength, 0));
                         }
                         
                         #gan du lieu render view

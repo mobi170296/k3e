@@ -27,9 +27,13 @@
                     $ghntransporter->loadOrder();
                     $order = $ghntransporter->order;
                     
+                    //bat dau transaction
                     $database->startTransaction();
+                    
+                    
                     if($CurrentStatus === 'Storing' && $order->status == OrderModel::CHO_LAY_HANG){
                         #nha van chuyen thong bao da lay hang -> cap nhat lai trang thai
+                        
                         
                         $order->updateStatus(OrderModel::DANG_GIAO);
                         
@@ -54,6 +58,12 @@
                     
                     if($CurrentStatus === 'Cancel' && $order->status == OrderModel::CHO_LAY_HANG){
                         #nha van chuyen thong bao lay hang khong thanh cong -> hoan tien lai neu nguoi mua chon thanh toan truc tuyen
+                        //cap nhat lai so san pham kho khong lay duoc hang
+                        $order->loadOrderItems();
+                        foreach($order->orderitems as $orderitem){
+                            $orderitem->loadProduct();
+                            $orderitem->product->increaseQuantity($orderitem->quantity);
+                        }
                         
                         $order->updateStatus(OrderModel::HUY_DO_KHONG_LAY_DUOC_HANG);
                         
@@ -126,6 +136,7 @@
                     if($CurrentStatus === 'Delivered' && $order->status == OrderModel::DANG_GIAO){
                         #Da giao thanh cong
                         #cap nhat sang DA_GIAO
+                        
                         
                         $order->updateStatus(OrderModel::DA_GIAO);
                         

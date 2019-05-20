@@ -376,11 +376,11 @@
             return $this->View->RenderJSON($result);
         }
         
-        public function checkout($shop_id, $product_id, $quantity, $product_price, $deliveryaddress_id, $ghnservice_id, $paymenttype_id, $note){
+        public function checkout($shop_id, $shop_deliveryaddress_id, $product_id, $quantity, $product_price, $deliveryaddress_id, $ghnservice_id, $paymenttype_id, $note){
             $result = new \stdClass();
             $result->header = new \stdClass();
             
-            if(!is_numeric($shop_id) || !is_array($product_id) || !is_array($product_price) || !is_numeric($deliveryaddress_id) || !is_numeric($ghnservice_id) || count($product_id) != count($product_price) || count($product_price) != count($quantity)){
+            if(!is_numeric($shop_deliveryaddress_id) || !is_numeric($shop_id) || !is_array($product_id) || !is_array($product_price) || !is_numeric($deliveryaddress_id) || !is_numeric($ghnservice_id) || count($product_id) != count($product_price) || count($product_price) != count($quantity)){
                 $result->header->code = 1;
                 $result->header->message = 'invalid';
                 return $this->View->RenderJSON($result);
@@ -403,6 +403,11 @@
                     $shop->loadOwner();
                     $shop->owner->loadDefaultDeliveryAddress();
                     $shopdeliveryaddress = $shop->owner->defaultdeliveryaddress;
+                    if($shopdeliveryaddress->id != $shop_deliveryaddress_id){
+                        $result->header->code = 2;
+                        $result->header->message = 'Người bán đã thay đổi địa chỉ vận chuyển, vui lòng kiểm tra lại giỏ hàng về phí vận chuyển!';
+                        return $this->View->RenderJSON($result);
+                    }
                 }
                 
                 $paymenttype = new PaymentTypeModel($database);

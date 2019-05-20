@@ -273,7 +273,7 @@ TIMELINE;
                                     {$i}. {$orderlog->content}
                                 </div>
                                 <div class="order-log-time">
-                                    {$orderlog->created_time}
+                                    {$orderlog->created_time->toLocalDateTime()}
                                 </div>
                             </div>
 LOG;

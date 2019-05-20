@@ -47,6 +47,11 @@
                 
                 if($user->loadShop()){
                     $shop = $user->shop;
+                    if($shop->isLocked()){
+                        $this->View->Data->ErrorMessage = 'Cửa hàng của bạn đã bị khóa. Vui lòng liên hệ với quản trị viên để biết thêm thông tin.';
+                        return $this->View->RenderTemplate('_error');
+                    }
+                    
                     $shop->loadAvatar();
                     $shop->loadBackground();
                     $this->View->Data->shop = $shop;
@@ -76,6 +81,11 @@
                 
                 if($user->loadShop()){
                     $shop = $user->shop;
+                    if($shop->isLocked()){
+                        $this->View->Data->ErrorMessage = 'Cửa hàng của bạn đã bị khóa. Vui lòng liên hệ với quản trị viên để biết thêm thông tin.';
+                        return $this->View->RenderTemplate('_error');
+                    }
+                    
                     $this->View->Data->waitorderstotal = $shop->getWaitOrdersTotal();
                     $this->View->Data->toshiporderstotal = $shop->getToshipOrdersTotal();
                     $this->View->Data->shippingorderstotal = $shop->getShippingOrdersTotal();
@@ -107,6 +117,11 @@
                 
                 if($user->loadShop()){
                     $shop = $user->shop;
+                    
+                    if($shop->isLocked()){
+                        $this->View->Data->ErrorMessage = 'Cửa hàng của bạn đã bị khóa. Vui lòng liên hệ với quản trị viên để biết thêm thông tin.';
+                        return $this->View->RenderTemplate('_error');
+                    }
                     
                     $product = new ProductModel($database);
                     
@@ -161,6 +176,13 @@
                 
                 if($user->loadShop()){
                     $shop = $user->shop;
+                    
+                    if($shop->isLocked()){
+                        $this->View->Data->ErrorMessage = 'Cửa hàng của bạn đã bị khóa. Vui lòng liên hệ với quản trị viên để biết thêm thông tin.';
+                        return $this->View->RenderTemplate('_error');
+                    }
+                    
+                    
                     $user->shop->loadProducts();
                     $this->View->Data->products = $user->shop->products;
                     
@@ -201,6 +223,11 @@
                 if($user->loadShop()){
                     $shop = $user->shop;
                     
+                    if($shop->isLocked()){
+                        $this->View->Data->ErrorMessage = 'Cửa hàng của bạn đã bị khóa. Vui lòng liên hệ với quản trị viên để biết thêm thông tin.';
+                        return $this->View->RenderTemplate('_error');
+                    }
+                    
                     
                     $this->View->Data->waitorderstotal = $shop->getWaitOrdersTotal();
                     $this->View->Data->toshiporderstotal = $shop->getToshipOrdersTotal();
@@ -226,6 +253,11 @@
                 
                 if($user->loadShop()){
                     $shop = $user->shop;
+                    
+                    if($shop->isLocked()){
+                        $this->View->Data->ErrorMessage = 'Cửa hàng của bạn đã bị khóa. Vui lòng liên hệ với quản trị viên để biết thêm thông tin.';
+                        return $this->View->RenderTemplate('_error');
+                    }
                     
                     
                     $this->View->Data->waitorderstotal = $shop->getWaitOrdersTotal();
@@ -254,6 +286,11 @@
                     $shop = $user->shop;
                     
                     
+                    if($shop->isLocked()){
+                        $this->View->Data->ErrorMessage = 'Cửa hàng của bạn đã bị khóa. Vui lòng liên hệ với quản trị viên để biết thêm thông tin.';
+                        return $this->View->RenderTemplate('_error');
+                    }
+                    
                     $this->View->Data->waitorderstotal = $shop->getWaitOrdersTotal();
                     $this->View->Data->toshiporderstotal = $shop->getToshipOrdersTotal();
                     $this->View->Data->shippingorderstotal = $shop->getShippingOrdersTotal();
@@ -280,6 +317,11 @@
                     $shop = $user->shop;
                     
                     
+                    if($shop->isLocked()){
+                        $this->View->Data->ErrorMessage = 'Cửa hàng của bạn đã bị khóa. Vui lòng liên hệ với quản trị viên để biết thêm thông tin.';
+                        return $this->View->RenderTemplate('_error');
+                    }
+                    
                     $this->View->Data->waitorderstotal = $shop->getWaitOrdersTotal();
                     $this->View->Data->toshiporderstotal = $shop->getToshipOrdersTotal();
                     $this->View->Data->shippingorderstotal = $shop->getShippingOrdersTotal();
@@ -304,6 +346,11 @@
                 
                 if($user->loadShop()){
                     $shop = $user->shop;
+                    
+                    if($shop->isLocked()){
+                        $this->View->Data->ErrorMessage = 'Cửa hàng của bạn đã bị khóa. Vui lòng liên hệ với quản trị viên để biết thêm thông tin.';
+                        return $this->View->RenderTemplate('_error');
+                    }
                     
                     
                     $this->View->Data->waitorderstotal = $shop->getWaitOrdersTotal();
@@ -331,6 +378,11 @@
                 
                 if($user->loadShop()){
                     $shop = $user->shop;
+                    
+                    if($shop->isLocked()){
+                        $this->View->Data->ErrorMessage = 'Cửa hàng của bạn đã bị khóa. Vui lòng liên hệ với quản trị viên để biết thêm thông tin.';
+                        return $this->View->RenderTemplate('_error');
+                    }
                     
                     $order = new OrderModel($database);
                     $order->ordercode = $ordercode;
@@ -380,6 +432,14 @@
                 
                 if($user->loadShop()){
                     $shop = $user->shop;
+                    
+                    
+                    if($shop->isLocked()){
+                        $this->View->Data->ErrorMessage = 'Cửa hàng của bạn đã bị khóa. Vui lòng liên hệ với quản trị viên để biết thêm thông tin.';
+                        return $this->View->RenderTemplate('_error');
+                    }
+                    
+                    
                     $order = new OrderModel($database);
                     
                     $order->ordercode = $ordercode;
@@ -425,6 +485,13 @@
                 if($user->loadShop()){
                     $shop = $user->shop;
                     
+                    
+                    if($shop->isLocked()){
+                        $this->View->Data->ErrorMessage = 'Cửa hàng của bạn đã bị khóa. Vui lòng liên hệ với quản trị viên để biết thêm thông tin.';
+                        return $this->View->RenderTemplate('_error');
+                    }
+                    
+                    
                     $this->View->Data->waitorderstotal = $shop->getWaitOrdersTotal();
                     $this->View->Data->toshiporderstotal = $shop->getToshipOrdersTotal();
                     $this->View->Data->shippingorderstotal = $shop->getShippingOrdersTotal();
@@ -452,6 +519,11 @@
                     $shop = $user->shop;
                     
                     
+                    if($shop->isLocked()){
+                        $this->View->Data->ErrorMessage = 'Cửa hàng của bạn đã bị khóa. Vui lòng liên hệ với quản trị viên để biết thêm thông tin.';
+                        return $this->View->RenderTemplate('_error');
+                    }
+                    
                     
                     $this->View->Data->waitorderstotal = $shop->getWaitOrdersTotal();
                     $this->View->Data->toshiporderstotal = $shop->getToshipOrdersTotal();
@@ -469,12 +541,6 @@
                 return $this->redirectToAction('Login', 'User');
             }
         }
-        
-        
-        
-        
-        
-        
         
         
         #thong tin shop voi khach hang

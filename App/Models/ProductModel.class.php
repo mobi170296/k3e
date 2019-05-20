@@ -351,4 +351,20 @@
                 'views' => new DBRaw('views + 1')
             ], "id={$this->id}");
         }
+        
+        public function decreaseQuantity($diffquantity){
+            $this->database->update(DB_TABLE_PRODUCT, [
+                'quantity' => new DBRaw('quantity - ' . $diffquantity)
+            ], 'id=' . $this->id);
+            
+            $this->quantity -= $diffquantity;
+        }
+        
+        public function increaseQuantity($diffquantity){
+            $this->database->update(DB_TABLE_PRODUCT, [
+                'quantity' => new DBRaw('quantity + ' . $diffquantity)
+            ], 'id=' . $this->id);
+            
+            $this->quantity += $diffquantity;
+        }
     }

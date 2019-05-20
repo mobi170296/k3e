@@ -307,7 +307,7 @@ TIMELINE;
                                 echo <<<LOG
                                 <div class="orderlog">
                                     <div class="orderlog-content">{$i}. {$orderlog->content}</div>
-                                    <div class="orderlog-time">{$orderlog->created_time}</div>
+                                    <div class="orderlog-time">{$orderlog->created_time->toLocalDateTime()}</div>
                                 </div>
 LOG;
                             }

@@ -1,0 +1,562 @@
+<?php
+    $this->Data->Title = 'Tìm kiếm ' . $this->Data->keyword;
+    $maincategorylist = $this->Data->maincategorylist;
+?>
+
+<style>
+    .filter-product-list-wrapper .product-list-container{
+        background: #fff;
+    }
+    
+    .filter-product-list-wrapper .product-sort{
+        text-align: right;
+        padding: 20px;
+    }
+    
+    .filter-product-list-wrapper .star-filter-wrapper{
+        margin: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #ccc;
+    }
+    
+    .filter-product-list-wrapper .star-filter-header{
+        font-weight: bold;
+    }
+    
+    
+    .filter-product-list-wrapper .mc-filter-header{
+        font-weight: bold;
+    }
+    
+    
+    .filter-product-list-wrapper .mc-filter-wrapper{
+        margin: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #ccc;
+        
+    }
+    
+    input[type="checkbox"],input[type="radio"]{
+        margin: 10px 10px 10px 0px;
+    }
+    .product-filter{
+        background-color: #f9f9f9;
+        border-bottom-left-radius: 10px;
+    }
+    
+    .product-pagination{
+        text-align: center;
+        padding: 20px;
+    }
+</style>
+
+<div class="filter-product-list-wrapper">
+    <div class="filter-product-list">
+        <div class="product-filter">
+            <div class="star-filter-wrapper" data-control-type="starfilter">
+                <div class="star-filter-header">Theo đánh giá</div>
+                <div>
+                    <div>
+                        <label>
+                            <input type="radio" name="star" data-control-type="starrad" value="5"/>
+                            <div class="star-rank">
+                                <div class="star-background">
+                                    <svg height="15" width="87">
+                                        <g fill="#ccc" class="star-background">
+                                            <path d="M7 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M25 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M43 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M61 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M79 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                        </g>
+                                    </svg>
+                                </div>
+                                <div class="star-foregound" style="width: 100%">
+                                    <svg height="15" width="87">
+                                        <g fill="#44b27c" class="star-background">
+                                            <path d="M7 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M25 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M43 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M61 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M79 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                        </g>
+                                    </svg>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input type="radio" name="star" data-control-type="starrad" value="4"/>
+                            <div class="star-rank">
+                                <div class="star-background">
+                                    <svg height="15" width="87">
+                                        <g fill="#ccc" class="star-background">
+                                            <path d="M7 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M25 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M43 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M61 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M79 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                        </g>
+                                    </svg>
+                                </div>
+                                <div class="star-foregound" style="width: 80%">
+                                    <svg height="15" width="87">
+                                        <g fill="#44b27c" class="star-background">
+                                            <path d="M7 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M25 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M43 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M61 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M79 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                        </g>
+                                    </svg>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input type="radio" name="star" data-control-type="starrad" value="3"/>
+                            <div class="star-rank">
+                                <div class="star-background">
+                                    <svg height="15" width="87">
+                                        <g fill="#ccc" class="star-background">
+                                            <path d="M7 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M25 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M43 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M61 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M79 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                        </g>
+                                    </svg>
+                                </div>
+                                <div class="star-foregound" style="width: 60%">
+                                    <svg height="15" width="87">
+                                        <g fill="#44b27c" class="star-background">
+                                            <path d="M7 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M25 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M43 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M61 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M79 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                        </g>
+                                    </svg>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input type="radio" name="star" data-control-type="starrad" value="2"/>
+                            <div class="star-rank">
+                                <div class="star-background">
+                                    <svg height="15" width="87">
+                                        <g fill="#ccc" class="star-background">
+                                            <path d="M7 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M25 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M43 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M61 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M79 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                        </g>
+                                    </svg>
+                                </div>
+                                <div class="star-foregound" style="width: 40%">
+                                    <svg height="15" width="87">
+                                        <g fill="#44b27c" class="star-background">
+                                            <path d="M7 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M25 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M43 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M61 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M79 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                        </g>
+                                    </svg>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input type="radio" name="star" data-control-type="starrad" value="1"/>
+                            <div class="star-rank">
+                                <div class="star-background">
+                                    <svg height="15" width="87">
+                                        <g fill="#ccc" class="star-background">
+                                            <path d="M7 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M25 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M43 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M61 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M79 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                        </g>
+                                    </svg>
+                                </div>
+                                <div class="star-foregound" style="width: 20%">
+                                    <svg height="15" width="87">
+                                        <g fill="#44b27c" class="star-background">
+                                            <path d="M7 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M25 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M43 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M61 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M79 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                        </g>
+                                    </svg>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input type="radio" name="star" data-control-type="starrad" value="0"/>
+                            <div class="star-rank">
+                                <div class="star-background">
+                                    <svg height="15" width="87">
+                                        <g fill="#ccc" class="star-background">
+                                            <path d="M7 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M25 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M43 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M61 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M79 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                        </g>
+                                    </svg>
+                                </div>
+                                <div class="star-foregound" style="width: 0%">
+                                    <svg height="15" width="87">
+                                        <g fill="#44b27c" class="star-background">
+                                            <path d="M7 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M25 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M43 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M61 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                            <path d="M79 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                        </g>
+                                    </svg>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="mc-filter-wrapper" data-control-type="mcfilter">
+                <div class="mc-filter-header">Theo danh mục chính</div>
+                <div>
+                    <?php
+                        foreach($maincategorylist as $maincategory){
+                            echo <<<MAINCATEGORY
+                            <div>
+                                <label><input type="checkbox" name="" value="{$maincategory->id}" data-control-type="mccbx"/>{$maincategory->name}</label>
+                            </div>
+MAINCATEGORY;
+                        }
+                    ?>
+                </div>
+            </div>
+        </div>
+        <div class="product-list-container">
+            <div class="product-sort">
+                <select data-control-type="sortbyprice">
+                    <option value="no">Ngẫu nhiên</option>
+                    <option value="asc">Giá từ thấp đến cao</option>
+                    <option value="desc">Giá từ cao đến thấp</option>
+                </select>
+            </div>
+            <div class="product-list" data-control-type="productlist">
+                
+            </div>
+            <div class="product-pagination" data-control-type="productpagination">
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<script id="product-tpl" type="text/ktpl">
+    @for(var i=0; i<this.length; i++){
+        <a class="product-link" href="@this[i].link"  style="margin: 12.5px">
+            <div class="product-card">
+                <div class="product-image">
+                    <div class="back-image" style="background-image: url('@this[i].mainimageurl')"></div>
+                    <div class="fore-image"></div>
+                </div>
+                <div class="product-info">
+                    <div class="product-name">@this[i].name</div>
+                    <div class="product-rating">
+                        <div class="star-rank">
+                            <div class="star-background">
+                                <svg height="15" width="87">
+                                    <g fill="#ccc" class="star-background">
+                                        <path d="M7 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                        <path d="M25 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                        <path d="M43 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                        <path d="M61 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                        <path d="M79 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                    </g>
+                                </svg>
+                            </div>
+                            <div class="star-foregound" style="width: @this[i].starpercent%">
+                                <svg height="15" width="87">
+                                    <g fill="#44b27c" class="star-background">
+                                        <path d="M7 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                        <path d="M25 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                        <path d="M43 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                        <path d="M61 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                        <path d="M79 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                    </g>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-price">@($COMMON.moneyFormat(this[i].price, 3, 0, ',', '.'))đ</div>
+                    <div style="text-decoration: line-through; font-size: 0.9em; color: #777; height: 1.3em">@($COMMON.moneyFormat(this[i].old_price, 3, 0, ',' , '.'))đ</div>
+                    <div class="product-warehouse">@this[i].provincename</div>
+                </div>
+            </div>
+        </a>
+    @}
+</script>
+
+<script>
+    !function(){
+        _filter = {
+            keyword: '',
+            priceorder: '',
+            star: '',
+            mcids: '',
+            ipp: 8,
+            page: 1
+        };
+        
+        function _updatemodelfromurl(){
+            var query = $DOMAIN.getQueryParams();
+
+console.log(query);
+            if(query.keyword!==undefined){
+                _filter.keyword = query.keyword;
+            }else{
+                _filter.keyword = '';
+            }
+
+
+            if(query.priceorder !== undefined){
+                if(query.priceorder === 'desc'){
+                    _filter.priceorder = 'desc';
+                    _sortbyprice.value = 'desc';
+                }else{
+                    _filter.priceorder = 'asc';
+                    _sortbyprice.value = 'asc';
+                }
+            }else{
+                _filter.priceorder = 'no';
+                _sortbyprice.value = 'no';
+            }
+
+            if(query.star !== undefined && query.star >= 1 && query.star <= 5){
+                _filter.star = query.star;
+            }else{
+                _filter.star = 0;
+            }
+            
+            document.querySelector('[data-control-type="starrad"][value="' + _filter.star + '"]').checked = true;
+
+            if(query.page !== undefined && query.page > 0){
+                _filter.page = query.page;
+            }else{
+                _filter.page = 1;
+            }
+            
+            if(query.mcids !== undefined){
+                _filter.mcids = query.mcids;
+                
+                $('[data-control-type="mccbx"]').prop('checked', false);
+                
+                for(var el of _filter.mcids.split(',')){
+                    $('[data-control-type="mccbx"][value="' + el + '"]').prop('checked', true);
+                }
+            }else{
+                _filter.mcids = '';
+            }
+        }
+        
+        window.onpopstate = function(e){
+            _updatemodelfromurl();
+            _loadProducts();
+        }
+        
+        var _ktemplate = new IKTemplate(window['product-tpl'].innerHTML);
+        
+        //FUNCTIONs
+        function _loadProducts(){
+            $.ajax().create().url('/api/search/product').success(function(e){
+                var result = JSON.parse(this.response);
+                if(result.header.code === 0){
+                    if(result.body.products.length === 0 && result.body.total === 0){
+                        _productlist.innerHTML = 'Không tìm thấy sản phẩm vào!';
+                        _paginationbar.innerHTML = '';
+                    }else{
+                        if(result.body.products.length){
+                            _ktemplate.render(result.body.products, _productlist);
+                            _createPaginationBar(_filter.page, Math.ceil(result.body.total / _filter.ipp));
+                        }else{
+                            _filter.page = 1;
+                            _loadProducts();
+                        }
+                    }
+                }else{
+                    $Toast.makeError(result.header.message);
+                }
+                $LoadingPopup.hide();
+            }).error(function(e){
+                $Toast.makeError('Lỗi kết nối');
+                $LoadingPopup.hide();
+            }).post($DOMAIN.buildQueryString(_filter, false));
+        }
+        
+        function _mccbx_click(e){
+            var checkbox = document.querySelectorAll('[data-control-type="mccbx"]');
+            
+            var a = [];
+            
+            for(var box of checkbox){
+                if(box.checked){
+                    a.push(box.value);
+                }
+            }
+            
+            _filter.mcids = a.join(',');
+            
+            window.history.pushState(null, '', '?' + $DOMAIN.buildQueryString(_filter, false));
+            
+            _loadProducts();
+        }
+        
+        function _starrad_change(e){
+            _filter.star = this.value;
+            window.history.pushState(null, '', '?' + $DOMAIN.buildQueryString(_filter, false));
+            _loadProducts();
+        }
+        
+        function _sortbyprice_change(e){
+            console.log(this);
+            console.log(_filter.priceorder = this.value);
+            _filter.page = 1;
+            
+            window.history.pushState(null, '', '?' + $DOMAIN.buildQueryString(_filter, false));
+            _loadProducts();
+        }
+        
+        function _pagination_click(e){
+            _filter.page = this.dataset.page;
+            
+            
+            window.history.pushState(null, '', '?' + $DOMAIN.buildQueryString(_filter, false));
+            _loadProducts();
+        }
+        
+        //DOM lien quan
+        var _sortbyprice = document.querySelector('[data-control-type="sortbyprice"]');
+        
+        var _productlist = document.querySelector('[data-control-type="productlist"]');
+        
+        var _paginationbar = document.querySelector('[data-control-type="productpagination"]');
+        
+        var _starfilter = document.querySelector('[data-control-type="starfilter"]');
+        
+        var _mcfilter = document.querySelector('[data-control-type="mcfilter"]');
+        
+        _starfilter.addEventListener('change', function(e){
+            e.target.dataset.controlType !== undefined && e.target.dataset.controlType === 'starrad' && _starrad_change.call(e.target, e);
+        });
+        
+        _sortbyprice.addEventListener('change', function(e){
+            e.target.dataset.controlType !== undefined && e.target.dataset.controlType === 'sortbyprice' && _sortbyprice_change.call(e.target, e);
+        });
+        
+        _mcfilter.addEventListener('change', function(e){
+            e.target.dataset.controlType !== undefined && e.target.dataset.controlType === 'mccbx' && _mccbx_click.call(e.target, e);
+        });
+        
+        _paginationbar.addEventListener('click', function(e){
+            e.target.dataset.controlType !== undefined && e.target.dataset.controlType === 'pagebutton' && e.target.dataset.disabled !== 'true' && _pagination_click.call(e.target, e);
+        });
+        
+        var _createPaginationBar = function (c, t){
+            c = parseInt(c);
+            t = parseInt(t);
+            var si = c - 2, ei = c + 2;
+            
+            var btns = [];
+            
+            var ci = 0;
+            
+            for(var i = 1; i <= 3 && i <= t; i++){
+                if(i > ci){
+                    ci = i;
+                    var btn = $.create('button');
+                    btn.dataset.page = ci;
+                    btn.dataset.controlType = 'pagebutton';
+                    btn.innerHTML = ci;
+                    btn.classList.add('btn-page');
+                    if(ci === c){
+                        btn.classList.add('active');
+                        btn.dataset.disabled = 'true';
+                    }
+                    btns.push(btn);
+                }
+            }
+            
+            if(si > 4){
+                var btn = $.create('button');
+                btn.classList.add('active');
+                btn.innerHTML = '...';
+                btn.disabled = true;
+                btn.classList.add('btn-page');
+                btns.push(btn);
+            }
+            
+            for(var i = si; i<=ei && i<=t; i++){
+                if(i > ci){
+                    ci = i;
+                    var btn = $.create('button');
+                    btn.dataset.page = ci;
+                    btn.dataset.controlType = 'pagebutton';
+                    btn.innerHTML = ci;
+                    btn.classList.add('btn-page');
+                    if(ci === c){
+                        btn.classList.add('active');
+                        btn.dataset.disabled = 'true';
+                    }
+                    btns.push(btn);
+                }
+            }
+            
+            if(ei < t-3){
+                var btn = $.create('button');
+                btn.innerHTML = '...';
+                btn.classList.add('active');
+                btn.disabled = true;
+                btn.classList.add('btn-page');
+                btns.push(btn);
+            }
+            
+            for(var i=t - 2; i<=t; i++){
+                if(i > ci){
+                    ci = i;
+                    var btn = $.create('button');
+                    btn.dataset.page = ci;
+                    btn.dataset.controlType = 'pagebutton';
+                    btn.innerHTML = ci;
+                    btn.classList.add('btn-page');
+                    if(ci === c){
+                        btn.classList.add('active');
+                        btn.dataset.disabled = 'true';
+                    }
+                    btns.push(btn);
+                }
+            }
+            
+            _paginationbar.innerHTML = '';
+            
+            for(var i=0; i<btns.length; i++){
+                _paginationbar.appendChild(btns[i]);
+            }
+        }
+        
+        _updatemodelfromurl();
+        _loadProducts();
+    }();
+</script>

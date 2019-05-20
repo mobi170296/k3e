@@ -50,7 +50,6 @@
         display: flex;
         flex-wrap: wrap;
         background-color: #fff;
-        justify-content: space-between;
     }
 </style>
 <div id="homepage-wrapper">
@@ -74,7 +73,7 @@
                         
                     $oldpricehtml = '<div style="text-decoration: line-through; font-size: 0.9em; color: #777; height: 1.3em">'. ($product->price < $product->original_price ?  $product->getOriginalPriceString() .'đ' : '') . '</div>';
                     echo <<<PRODUCT
-                    <a class="product-link" href="{$product->getProductLink()}"  style="margin: 12.5px">
+                    <a class="product-link" href="{$product->getProductLink()}"  style="margin: 10px 20px">
                         <div class="product-card">
                             <div class="product-image">
                                 <div class="back-image" style="background-image: url('{$product->getMainImageThumbnail()}')"></div>
@@ -141,7 +140,7 @@ PRODUCT;
                         
                         $oldpricehtml = '<div style="text-decoration: line-through; font-size: 0.9em; color: #777; height: 1.3em">'. ($product->price < $product->original_price ?  $product->getOriginalPriceString() .'đ' : '') . '</div>';
                     echo <<<PRODUCT
-                    <a class="product-link" href="{$product->getProductLink()}"  style="margin: 12.5px">
+                    <a class="product-link" href="{$product->getProductLink()}"  style="margin: 10px 20px">
                         <div class="product-card">
                             <div class="product-image">
                                 <div class="back-image" style="background-image: url('{$product->getMainImageThumbnail()}')"></div>

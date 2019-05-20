@@ -35,7 +35,7 @@
     #san pham theo danh muc
     $route->mapRoute('m/{id:"\d+"}/{sm:"[^/]+"}', ['controller' => 'Product', 'action' => 'ListByMainCategory']);
     $route->mapRoute('s/{id:"\d+"}/{ss:"[^/]+"}', ['controller' => 'Product', 'action' => 'ListBySubCategory']);
-    $route->mapRoute('p/{id:"\d+"}/{pm:"[^/]+"}', ['controller' => 'Product', 'action' => 'View']);
+    $route->mapRoute('p/{id:"\d+"}/{pm:".+"}', ['controller' => 'Product', 'action' => 'View']);
     $route->mapRoute('Shop/{id:"\d+"}', ['controller' => 'Shop', 'action' => 'View']);
     $route->mapRoute('Product/{id:"\d+"}', ['controller' => 'Product', 'action' => 'View']);
     #chuyen huong cho api

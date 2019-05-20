@@ -24,6 +24,7 @@
 
         <form action="/api/ghn/ghnupdate" onsubmit="return false;">
             <div><input type="text" name="OrderCode"/></div>
+            <label><input type="radio" name="CurrentStatus" value="Cancel" /> Không lấy được hàng</label>
             <label><input type="radio" name="CurrentStatus" value="Storing" /> Lưu kho</label>
             <label><input type="radio" name="CurrentStatus" value="Delivered" /> Đã giao đến tay người mua</label>
             <div><button class="" id="update">Cập nhật</button></div>

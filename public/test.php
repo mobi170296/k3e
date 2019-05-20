@@ -1,4 +1,6 @@
-
+<?php
+    print_r($_GET);
+?>
 
 <form action="/api/upload/shopavatar" method="post" enctype="multipart/form-data">
     <input type="file" name="shopavatar"/>

@@ -405,12 +405,31 @@
                     $database->startTransaction();
                     
                     if($order->shopCanShip()){
+                        //kiem tra so luong san pham o thoi diem hien tai
+                        $order->loadOrderItems();
+                        foreach($order->orderitems as $orderitem){
+                            $orderitem->loadProduct();
+                            if($orderitem->quantity > $orderitem->product->getAvailableQuantity()){
+                                $database->rollback();
+                                $result->header->code = 1;
+                                $result->header->message = 'Sản phẩm "' . $orderitem->product->name . '" chỉ còn ' . $orderitem->product->getAvailableQuantity() . ' không đủ ' . $orderitem->quantity . ' đơn vị';
+                                
+                                return $this->View->RenderJSON($result);
+                            }
+                        }
+                        
                         $order->loadPaymentType();
                         $order->loadTransporter();
                         $order->loadTransporterUnit();
                         $order->loadGHNTransporter();
                         
                         $order->updateStatus(OrderModel::CHO_LAY_HANG);
+                        
+                        //cap nhat so luong san pham voi so luong cua order item
+                        foreach($order->orderitems as $orderitem){
+                            $orderitem->product->decreaseQuantity($orderitem->quantity);
+                        }
+                        
                         $orderlog = new OrderLogModel($database);
                         $orderlog->order_id = $order->id;
                         $orderlog->content = $order->getStatusString();
@@ -466,27 +485,38 @@
                             $result->header->code = 0;
                             $result->header->message = 'Đơn hàng '.$order->ordercode.' đã chuẩn bị thành công, thông tin đơn hàng đã gửi cho ' . $order->transporter->name;
                         }else{
+                            $database->rollback();
                             $result->header->code = 1;
                             $result->header->message = 'Đơn vị vận chuyển không tìm thấy';
                         }
                     }else{
+                        
+                        $database->rollback();
                         $result->header->code = 1;
                         $result->header->message = 'Đơn hàng không thể hủy';
                     }
                 }else{
+                    
+                    $database->rollback();
                     $result->header->code = 1;
                     $result->header->message = 'invalid';
                 }
             } catch (DBException $ex) {
+                
+                $database->rollback();
                 return $this->View->RenderContent($ex->getMessage() . ' ' . $database->lastquery);
                 $result->header->code = 1;
                 $result->header->message = 'DBERR';
                 $result->header->errors = [$ex->getMessage()];
             } catch (AuthenticateException $e){
+                
+                $database->rollback();
                 $result->header->code = 1;
                 $result->header->message = 'Invalid User';
                 $result->header->errors = ['invalid'];
             } catch (GHNException $e){
+                
+                $database->rollback();
                 $result->header->code = 1;
                 $result->header->message = 'GHNException' . $e->getMessage();
                 $result->header->errors = ['invalid'];

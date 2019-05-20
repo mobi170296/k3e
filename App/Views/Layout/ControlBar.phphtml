@@ -28,8 +28,8 @@
             </div>
 
             <div id="search-bar">
-                <form>
-                    <input type="text" name="query" placeholder="Search query" size="75" autocomplete="off"/><button>Tìm kiếm</button>
+                <form action="/Search/Product" method="get" enctype="text/plain">
+                    <input type="text" name="keyword" placeholder="Search query" size="75" autocomplete="off"/><button>Tìm kiếm</button>
                 </form>
             </div>
             <?php
@@ -249,6 +249,10 @@ CART;
                         !function(){
                             function scartmodule(){
                                 var _scart_wrapper = document.querySelector('#scart-wrapper');
+                                
+                                if(_scart_wrapper===null){
+                                    return;
+                                }
                                 var _scart_list = document.querySelector('#scart-list');
                                 var _scart_quantity = document.querySelector('#scart-quantity');
                                 var _scart_list_tpl = window['scart-list-tpl'].innerHTML;
