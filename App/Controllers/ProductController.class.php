@@ -8,6 +8,7 @@
     use App\Models\SubCategoryModel;
     use App\Models\ProductModel;
     
+    use App\Models\UserModel;
     
     use App\Models\ProductViewsLogModel;
     
@@ -124,7 +125,17 @@
                     }
                     $this->View->Data->user = $user;
                     $this->View->Data->product = $product;
-                    return $this->View->RenderTemplate();
+                    
+                    if($user != null && $user->haveRole(UserModel::ADMIN_ROLE)){
+                        
+                        return $this->View->RenderTemplate('AdminView');
+                    }else if(!$product->isLocked ()){
+                        
+                        return $this->View->RenderTemplate();
+                    }else{
+                        $this->View->Data->ErrorMessage = 'Sản phẩm không tồn tại';
+                        return $this->View->RenderTemplate('_error');
+                    }
                 }else{
                     throw new \Exception('Trang này không tồn tại');
                 }

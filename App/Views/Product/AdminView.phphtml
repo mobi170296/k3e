@@ -1,0 +1,898 @@
+<?php
+    $user = $this->Data->user;
+    $product = $this->Data->product;
+    $productattributes = $product->productattributes;
+    $shop = $product->shop;
+    $ward = $product->ward;
+    $mainimage = $product->mainimage;
+    $productimages = $product->productimagemaps;
+    $this->Data->Title = 'Quản trị viên đang xem ' . $product->name;
+?>
+
+<style>
+    
+    .product-view .btn-product-addtocart{
+        background-color: #44b27c;
+        border: 0px;
+        padding: 10px 30px;
+        color: #fff;
+        font-size: 1em;
+        font-family: segoe ui;
+        font-weight: lighter;
+        margin-top: 20px;
+    }
+    [data-widget-type="qtyspinner"]{
+        display: inline-flex;
+    }
+    [data-widget-type="qtyspinner"] .minus{
+        background-color: #fff;
+        border: 1px solid #ccc;
+        padding: 0px 10px;
+        display: inline-block;
+        width: 1em;
+        text-align: center;
+        border-radius: 5px 0px 0px 5px;
+        line-height: 2;
+        cursor: pointer;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+    }
+    [data-widget-type="qtyspinner"] .plus{
+        border: 1px solid #ccc;
+        padding: 0px 10px;
+        display: inline-block;
+        width: 1em;
+        text-align: center;
+        border-radius: 0px 5px 5px 0px;
+        line-height: 2;
+        cursor: pointer;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+    }
+    [data-widget-type="qtyspinner"] .disabled{
+        background-color: #ccc;
+    }
+    [data-widget-type="qtyspinner"] .qtybox{
+        text-align: right;
+        padding: 5px;
+        width: 3em;
+        border-style: solid;
+        border-color: #ccc;
+        border-width: 1px 0px;
+    }
+    .product-container{
+        width: 1200px;
+        margin: 0px auto;
+    }
+    
+    .product-container .product-basic-info{
+        margin-bottom: 20px;
+        background-color: #fff;
+        display: flex;
+        padding-bottom: 20px;
+        border-radius: 0px 0px 5px 5px;
+    }
+    
+    .product-container .product-basic-info .product-image-slideshow{
+        height: 540px;
+        width: 450px;
+    }
+    
+    .product-container .product-basic-info .product-image-current{
+        padding: 20px;
+        flex-shrink: 0;
+    }
+    
+    .product-container .product-basic-info .product-image-current-background{
+        background-size: cover;
+        background-repeat: no-repeat;
+        width: 410px;
+        height: 410px;
+        position: relative;
+    }
+    .product-container .product-image-current-background .product-magnifier{
+        width: 200px;
+        height: 200px;
+        position: absolute;
+        display: none;
+        z-index: 100;
+        background-repeat: no-repeat;
+        border: 2px solid #ccc;
+        border-radius: 50%;
+        box-shadow: 0px 0px 40px 0px rgba(0,0,0,0.6) inset;
+        background-color: #fff;
+    }
+    .product-container .product-basic-info .product-image-swiper{
+        height: 90px;
+    }
+    
+    .product-container .product-basic-info .product-image-swiper-holder{
+        padding: 0px 50px;
+    }
+    
+    .product-container .product-basic-info .product-image-item{
+        background-size: cover;
+        background-repeat: no-repeat;
+        height: 90px;
+        width: 90px;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+        margin: 0px 5px;
+        cursor: pointer;
+    }
+    
+    .product-container .product-image-item.active{
+        border-color: #44b27c;
+    }
+    
+    .product-container .product-basic-info .product-image-item:hover{
+        border-color: #999;
+    }
+    
+    .product-container .product-basic-info .product-info{
+        flex-basis: 100%;
+        border-left: 1px solid #eee;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .product-container .product-info .product-name{
+        font-weight: bold;
+        font-size: 1.5em;
+        height: 3.6em;
+        word-wrap: anywhere;
+    }
+    .product-container .product-info .product-price{
+        font-size: 2em;
+        color: #44b27c;
+        font-family: arial;
+        font-weight: bold;
+    }
+    .product-container .product-info .product-original-price{
+        font-size: 2em;
+        color: #777;
+        font-weight: bold;
+        font-family: arial;
+        text-decoration: line-through;
+    }
+    .product-container .product-info .product-quantity{
+        font-weight: 400;
+        font-size: 16pt;
+        margin: 20px 0px;
+    }
+    .product-container .product-info .product-quantity-title{
+        
+        font-size: 0.9rem;
+    }
+    .product-container .product-info .product-quantity-content{
+        
+        font-weight: bold;
+    }
+    
+    .product-container .product-info .product-quantity-i{
+        display: inline-block;
+        background-size: cover;
+        background-image: url('/images/icons/warehouse-icon.png');
+        width: 36px;
+        height: 36px;
+        margin-right: 10px;
+        vertical-align: middle;
+    }
+    
+    .product-container .product-info .product-sold{
+        font-weight: 400;
+        font-size: 16pt;
+        margin: 20px 0px;
+    }
+    .product-container .product-info .product-sold-title{
+        font-size: 0.9rem;
+    }
+    .product-container .product-info .product-sold-content{
+        font-weight: bold;
+    }
+    .product-container .product-info .product-sold-i{
+        display: inline-block;
+        background-size: cover;
+        background-image: url('/images/icons/sold-icon.png');
+        width: 36px;
+        height: 36px;
+        margin-right: 10px;
+        vertical-align: middle;
+    }
+    .product-container .product-shop-info{
+        margin-bottom: 20px;
+        background-color: #fff;
+        display: flex;
+    }
+    .product-container .product-shop-left{
+        
+    }
+    .product-container .product-shop-right{
+        flex-basis: 100%;
+        display: flex;
+    }
+    
+    .product-container .product-total{
+        display: flex;
+        flex-direction: column;
+        padding: 0px 30px;
+        align-items: center;
+        justify-content: center;
+    }
+    .product-container .product-total .product-total-icon{
+        background-image: url('/images/icons/product-icon.png');
+        background-size: 32px 32px;
+        background-repeat: no-repeat;
+        padding-left: 40px;
+        height: 32px;
+    }
+    .product-total .product-total-string{
+        
+    }
+    .product-container .product-shop-background{
+        width: 450px;
+        height: 113px;
+        background-size: cover;
+    }
+    .product-container .product-shop-background .product-shop-avatar{
+        margin-left: 6px;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background-size: cover;
+        border: 2px solid #fff;
+        align-self: center;
+        flex-shrink: 0;
+    }
+    .product-container .product-shop-foreground{
+        height: 100%;
+        display: flex;
+        background-color: rgba(0,0,0,0.3);
+        color: #fff;
+    }
+    .product-container .product-shop-name{
+        flex-basis: 100%;
+        padding: 10px 30px;
+        overflow: hidden;
+    }
+    .product-container .product-shop-name .shop-name{
+        font-size: 1.2em;
+        font-weight: bold;
+        font-family: segoe ui;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .product-container .product-shop-name .shop-warehouse{
+        font-size: 1.1em;
+    }
+    .product-container .product-detail{
+        margin-bottom: 20px;
+        background-color: #fff;
+        padding: 30px;
+    }
+    
+    .product-container .product-detail .product-detail-title{
+        font-size: 1.2em;
+        font-family: segoe ui;
+        font-weight: lighter;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 5px;
+    }
+    
+    .product-container .product-detail .product-description{
+        padding-top: 20px;
+    }
+    
+    .product-container .product-attribute{
+        margin-bottom: 20px;
+        background-color: #fff;
+        padding: 30px;
+    }
+    
+    .product-container .product-attribute table.pattributes{
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .product-container .product-attribute table.pattributes tr:nth-child(2n + 1){
+        background-color: #eee;
+    }
+    
+    .product-container .product-attribute table.pattributes tr:nth-child(2n){
+        background-color: #f6f6f6;
+    }
+    
+    .product-container .product-attribute table.pattributes td{
+        padding: 5px 10px;
+    }
+    
+    .product-container .product-attribute table.pattributes td:first-child{
+        width: 200px;
+        border-right: 1px solid #ddd;
+    }
+    
+    .product-container .product-attribute .product-attribute-title{
+        font-family: segoe ui;
+        font-weight: lighter;
+        font-size: 1.2em;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 5px;
+    }
+    
+    .product-container .product-attribute .product-attribute-content{
+        padding-top: 20px;
+    }
+    
+    .product-container .product-assessments{
+        margin-bottom: 20px;
+        background-color: #fff;
+        padding: 30px;
+    }
+    
+    .product-container .product-assessments .product-assessment-title{
+        font-size: 1.2em;
+        font-family: segoe ui;
+        font-weight: lighter;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 5px;
+    }
+    
+    .product-container .product-assessments .product-assessment-content{
+        padding: 10px;
+    }
+    .product-container .product-assessment{
+        border-bottom: 1px solid #eee;
+        display: flex;
+        padding: 10px;
+    }
+    .product-container .product-assessment .product-assessment-client-avatar{
+        flex-shrink: 0;
+        margin-right: 10px;
+        background-size: cover;
+        background-repeat: no-repeat;
+        width: 50px;
+        height: 50px;
+        border: 3px solid #eee;
+        border-radius: 50%;
+    }
+    .product-container .product-assessment .product-assessment-section{
+        flex-basis: 100%;
+    }
+</style>
+
+<div class="product-container">
+    <div class="product-view">
+        <div class="product-basic-info">
+            <div class="product-image-slideshow">
+                <div class="product-image-current">
+                    <div class="product-image-current-background" style="background-image: url('<?php echo $mainimage->urlpath; ?>')">
+                        <div class="product-magnifier"></div>
+                    </div>
+                </div>
+                <div class="product-image-swiper swiper-wrapper">
+                    <div class="product-image-swiper-holder swiper-holder">  
+                    <?php
+                        echo <<<PI
+                            <div class="product-image-item swiper-item active" style="background-image: url('{$mainimage->urlpath}')"></div>
+PI;
+                        foreach($productimages as $productimage){
+                            echo <<<PI
+                            <div class="product-image-item swiper-item" style="background-image: url('{$productimage->urlpath}')"></div>
+PI;
+                        }
+                    ?>
+                    </div>
+                    <div class="swiper-previous active"></div>
+                    <div class="swiper-next active"></div>
+                </div>
+            </div>
+            <div class="product-info">
+                <?php
+                    $starpercent = $product->getStarRatingPoint() / 5 * 100;
+                    $originalpricehtml = $product->price < $product->original_price ? '<div class="product-original-price">'.$product->getOriginalPriceString().'đ</div>' : '';
+                    echo <<<ROW
+                <div class="product-info-top">
+                    <div class="product-category">{$product->subcategory->maincategory->name} > {$product->subcategory->name}</div>
+                    <div class="product-name">{$product->name}</div>
+                    <div class="product-starrating">
+                        <div class="star-rank">
+                            <div class="star-background" style="fill: #eee">
+                                <svg width="247px" height="48px">
+                                    <path fill-rule="evenodd" d="M23.499,0.974 L30.754,15.804 L46.976,18.183 L35.237,29.726 L38.008,46.026 L23.499,38.329 L8.990,46.026 L11.762,29.726 L0.024,18.183 L16.245,15.804 L23.499,0.974 Z"/>
+                                    <path fill-rule="evenodd" d="M73.499,0.974 L80.754,15.804 L96.976,18.183 L85.237,29.726 L88.008,46.026 L73.499,38.329 L58.990,46.026 L61.762,29.726 L50.024,18.183 L66.245,15.804 L73.499,0.974 Z"/>
+                                    <path fill-rule="evenodd" d="M123.499,1.974 L130.754,16.804 L146.976,19.183 L135.237,30.726 L138.008,47.026 L123.499,39.329 L108.990,47.026 L111.762,30.726 L100.024,19.183 L116.245,16.804 L123.499,1.974 Z"/>
+                                    <path fill-rule="evenodd" d="M172.499,1.974 L179.754,16.804 L195.976,19.183 L184.237,30.726 L187.008,47.026 L172.499,39.329 L157.990,47.026 L160.762,30.726 L149.024,19.183 L165.245,16.804 L172.499,1.974 Z"/>
+                                    <path fill-rule="evenodd" d="M223.499,0.974 L230.754,15.804 L246.976,18.183 L235.237,29.726 L238.008,46.026 L223.499,38.329 L208.990,46.026 L211.762,29.726 L200.024,18.183 L216.245,15.804 L223.499,0.974 Z"/>
+                                </svg>
+                            </div>
+                            <div class="star-foregound" style="fill: #44b27c; width: {$starpercent}%">
+                                <svg width="247px" height="48px">
+                                    <path fill-rule="evenodd" d="M23.499,0.974 L30.754,15.804 L46.976,18.183 L35.237,29.726 L38.008,46.026 L23.499,38.329 L8.990,46.026 L11.762,29.726 L0.024,18.183 L16.245,15.804 L23.499,0.974 Z"/>
+                                    <path fill-rule="evenodd" d="M73.499,0.974 L80.754,15.804 L96.976,18.183 L85.237,29.726 L88.008,46.026 L73.499,38.329 L58.990,46.026 L61.762,29.726 L50.024,18.183 L66.245,15.804 L73.499,0.974 Z"/>
+                                    <path fill-rule="evenodd" d="M123.499,1.974 L130.754,16.804 L146.976,19.183 L135.237,30.726 L138.008,47.026 L123.499,39.329 L108.990,47.026 L111.762,30.726 L100.024,19.183 L116.245,16.804 L123.499,1.974 Z"/>
+                                    <path fill-rule="evenodd" d="M172.499,1.974 L179.754,16.804 L195.976,19.183 L184.237,30.726 L187.008,47.026 L172.499,39.329 L157.990,47.026 L160.762,30.726 L149.024,19.183 L165.245,16.804 L172.499,1.974 Z"/>
+                                    <path fill-rule="evenodd" d="M223.499,0.974 L230.754,15.804 L246.976,18.183 L235.237,29.726 L238.008,46.026 L223.499,38.329 L208.990,46.026 L211.762,29.726 L200.024,18.183 L216.245,15.804 L223.499,0.974 Z"/>
+                                </svg>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    {$originalpricehtml}
+                    <div class="product-price">{$product->getPriceString()}đ</div>
+                    <div class="product-sold">
+                        <i class="product-sold-i"></i>
+                        <span class="product-sold-title">Đã bán</span>
+                        <span class="product-sold-content">{$product->getSoldQuantity()}</span>
+                    </div>
+                        
+                    <div class="product-quantity">
+                        <i class="product-quantity-i"></i>
+                        <span class="product-quantity-title">Sản phẩm có sẵn</span>
+                        <span class="product-quantity-content">{$product->getAvailableQuantity()}</span>
+                    </div>
+                </div>
+                
+ROW;
+?>
+                <div>
+                    <?php
+                        if($product->isLocked()){
+                            echo '<button class="btn btn-add" data-control-type="unlockproduct" data-id="' . $product->id . '">Mở khóa sản phẩm</button>';
+                        }else{
+                            echo '<button class="btn btn-edit" data-control-type="lockproduct" data-id="' . $product->id . '">Khóa sản phẩm</button>';
+                        }
+                    ?>
+                </div>
+                <?php
+                    if($user != null && $user->id != $shop->owner_id && $product->getAvailableQuantity()){
+                        echo <<<BOTTOM
+                        <div class="product-info-bottom">
+                            <div>
+                                <div data-widget-type="qtyspinner">
+                                    <span class="minus">-</span><input class="qtybox" type="text" data-value="1" data-max="{$product->quantity}" data-min="1"/><span class="plus">+</span>
+                                </div> (có sẵn {$product->getAvailableQuantity()} sản phẩm)
+                            </div>
+                            <button class="btn-product-addtocart" type="button" data-field-id="{$product->id}">Thêm vào giỏ hàng</button>
+                        </div>
+BOTTOM;
+                        echo '';
+                    }else if($product->getAvailableQuantity() == 0){
+                        echo <<<BOTTOM
+                        <div class="">Hết hàng</div>
+BOTTOM;
+                    }
+                ?>
+            </div>
+        </div>
+        <div class="product-shop-info">
+            <div class="product-shop-left">
+                <div class="product-shop-background" style="background-image: url('<?php echo $shop->getBackgroundPath(); ?>')">
+                    <div class="product-shop-foreground">
+                        <div class="product-shop-avatar" style="background-image: url('<?php echo $shop->getAvatarPath(); ?>')"></div>
+                        <div class="product-shop-name">
+                            <div class="shop-name"><?php echo $shop->name; ?></div>
+                            <div class="shop-warehouse">Kho hàng: <?php echo $ward->district->province->name; ?></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="product-shop-right">
+                <div class="product-total">
+                    <div class="product-total-icon">
+                        Sản phẩm
+                    </div>
+                    <div class="product-total-string">
+                        <?php echo $shop->getProductTotal(); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="product-attribute">
+            <div class="product-attribute-title">
+                Thuộc tính sản phẩm
+            </div>
+            <div class="product-attribute-content">
+                <table class="pattributes">
+                <?php
+                    foreach($productattributes as $productattribute){
+                        echo <<<ROW
+                        <tr>
+                            <td>{$productattribute->attributename}</td><td>{$productattribute->attributevalue}</td>
+                        </tr>
+ROW;
+                    }
+                    echo <<<ROW
+                        <tr>
+                            <td>Bảo hành</td><td>{$product->warranty_months_number} tháng</td>
+                        </tr>
+ROW;
+                ?>
+                </table>
+            </div>
+        </div>
+        <div class="product-detail">
+            <div class="product-detail-title">
+                Mô tả thông tin sản phẩm
+            </div>
+            <div class="product-description">
+                <?php echo $product->description; ?>
+            </div>
+        </div>
+        <div class="product-assessments">
+            <div class="product-assessment-title">
+                Đánh giá sản phẩm
+            </div>
+            <div class="product-assessment-content">
+                <?php
+                    if(count($product->assessments)){
+                        foreach($product->assessments as $assessment){
+                            $deletehtml = '<button class="btn btn-del btn-del-i" data-control-type="deleteassessment" data-order-id="'.$assessment->order_id.'" data-product-id="'.$assessment->product_id.'">Xóa</button>';
+                            $starpercent = $assessment->starpoint / 5 * 100;
+                            echo <<<ASSESSMENT
+                            <div class="product-assessment">
+                                <div class="product-assessment-client-avatar" style="background-image: url('{$assessment->client->getAvatarPath()}')"></div>
+                                <div class="product-assessment-section">
+                                    <div class="product-assessment-client-name">{$assessment->client->lastname} {$assessment->client->firstname}</div>
+                                    <div class="product-assessment-starpoint">
+                                        <div class="star-rank">
+                                            <div class="star-background">
+                                                <svg height="15" width="87">
+                                                    <g fill="#ccc" class="star-background">
+                                                        <path d="M7 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                        <path d="M25 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                        <path d="M43 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                        <path d="M61 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                        <path d="M79 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                    </g>
+                                                </svg>
+                                            </div>
+                                            <div class="star-foregound" style="width: {$starpercent}%">
+                                                <svg height="15" width="87">
+                                                    <g fill="#44b27c" class="star-background">
+                                                        <path d="M7 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                        <path d="M25 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                        <path d="M43 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                        <path d="M61 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                        <path d="M79 0 l-4 15 l12 -10 l-15 0 l12 10 Z"></path>
+                                                    </g>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="product-assessment-comment">{$assessment->comment}</div>
+                                </div>
+                                <div>{$deletehtml}</div>
+                            </div>
+ASSESSMENT;
+                        }
+                    }else{
+                        echo 'Chưa có đánh giá';
+                    }
+                ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    //module add to cart
+    !function(){
+        var _qty = document.querySelector('[data-widget-type="qtyspinner"] input');
+        var _btn = document.querySelector('.btn-product-addtocart');
+        if(_btn === null){
+            return;
+        }
+        _btn.addEventListener('click', function(e){
+            var _id = this.dataset.fieldId;
+            var _quantity = _qty.value;
+            
+            $.ajax().create().url('/api/cartitem/add?product_id=' + _id + '&quantity=' + _quantity).success(function(e){
+                var result = JSON.parse(this.response);
+                if(result.header.code === 0){
+                    $Toast.makeSuccess(result.header.message);
+                    App.SCart.load_cart();
+                }else{
+                    $Toast.makeError(result.header.message);
+                }
+            }).error(function(e){
+                $Toast.makeError('Lỗi kết nối');
+            }).get();
+        });
+    }();
+    
+    //module quantity spinner
+    !function(){
+        var _minus = document.querySelector('[data-widget-type="qtyspinner"] .minus');
+        var _plus = document.querySelector('[data-widget-type="qtyspinner"] .plus');
+        var _box = document.querySelector('[data-widget-type="qtyspinner"] .qtybox');
+        
+        if(_box === null){
+            return;
+        }
+        
+        _box.value = _box.dataset.value;
+        _box.onkeydown = function(e){
+            !(e.keyCode>=48 && e.keyCode<=57) && !(e.ctrlKey && e.keyCode===65) && !(e.keyCode === 8) && e.preventDefault();
+        }
+        _box.oninput = function(e){
+            var v = parseInt(this.value), mxv = parseInt(this.dataset.max), mnv = parseInt(this.dataset.min);
+            if(this.value.length===0 || v > mxv){
+                this.value = 1;
+            }
+        }
+        function _cs(){
+            var v = parseInt(_box.value), mxv = parseInt(_box.dataset.max), mnv = parseInt(_box.dataset.min);
+            if(v===mxv){
+                _plus.classList.add('disabled');
+            }else{
+                _plus.classList.remove('disabled');
+            }
+            if(v===mnv){
+                _minus.classList.add('disabled');
+            }else{
+                _minus.classList.remove('disabled');
+            }
+        }
+        _cs();
+        _plus.onclick = function(e){
+            var v = parseInt(_box.value), mxv = parseInt(_box.dataset.max);
+            
+            if(v < mxv){
+                _box.value = ++v;
+            }
+            _cs();
+        }
+        _minus.onclick = function(e){
+            var v = parseInt(_box.value), mnv = parseInt(_box.dataset.min);
+            
+            if(v > mnv){
+                _box.value = --v;
+            }
+            _cs();
+        }
+    }();
+    //module product image slideshow
+    !function(){
+        var _currentimage = document.querySelector('.product-image-slideshow .product-image-current-background');
+        var _productimageitem = document.querySelectorAll('.product-image-slideshow .product-image-item');
+        var _productmagnifier = document.querySelector('.product-image-current-background .product-magnifier');
+        //ti le cua anh thuc : vung chua
+        var _loaded = false;
+        var _iw, _ih;
+        var _ratiow, _ratioh;
+        
+        //product magnifier change
+        function _pmc(){
+            var url = _currentimage.style.backgroundImage.replace(/^url\("/, '').replace(/"\)$/, '');
+            _productmagnifier.style.backgroundImage = _currentimage.style.backgroundImage;
+            var image = new Image();
+            image.onload = function(e){
+                _loaded = true;
+                _iw = this.naturalWidth;
+                _ih = this.naturalHeight;
+                _ratiow = _iw / _currentimage.offsetWidth;
+                _ratioh = _ih / _currentimage.offsetHeight;
+            }
+            image.src = url;
+            if(image.complete){
+                _loaded = true;
+                _ratiow = _iw / _currentimage.offsetWidth;
+                _ratioh = _ih / _currentimage.offsetHeight;
+                _iw = image.naturalWidth;
+                _ih = image.naturalHeight;
+            }
+        }
+        
+        function _ca(){
+            for(var i=0; i<_productimageitem.length; i++){
+                var _e = _productimageitem[i];
+                _e.classList.remove('active');
+            }
+        }
+        //product image change
+        function _pic(e){
+            _ca();
+            this.classList.add('active');
+            _currentimage.style.backgroundImage = this.style.backgroundImage;
+            _pmc();
+        }
+        
+        for(var i=0; i<_productimageitem.length; i++){
+            var _e = _productimageitem[i];
+            _e.addEventListener('click', function(e){
+                _pic.call(this, e);
+            });
+        }
+        
+        //init
+        _pmc();
+        _currentimage.addEventListener('mouseenter', function(e){
+            this.style.cursor = 'none';
+            _productmagnifier.style.display = 'block';
+        });
+        _currentimage.addEventListener('mouseleave', function(e){
+            this.style.cursor = 'normal';
+            _productmagnifier.style.display = 'none';
+        });
+        _currentimage.addEventListener('mousemove', function(e){
+            //xu ly phan magnifier
+            var cw = _currentimage.offsetWidth, ch = _currentimage.offsetHeight, mw = _productmagnifier.offsetWidth, mh = _productmagnifier.offsetHeight, x = (e.pageX - this.offsetLeft), y = (e.pageY - this.offsetTop);
+            if(cw >= x + mw){
+                _productmagnifier.style.left = x + 'px';
+            }
+            
+            if(ch >= y + mh){
+                _productmagnifier.style.top = y + 'px';
+            }
+            
+            if(_loaded){
+                _productmagnifier.style.backgroundPosition = (-x * _ratiow + 'px ') + (-y * _ratioh + 'px');
+            }
+        });
+    }();
+    
+    //module swiper
+    !function(){
+        var _wrapper = document.querySelector('.swiper-wrapper');
+        var _holder = _wrapper.querySelector('.swiper-holder');
+        var _previous = _wrapper.querySelector('.swiper-previous');
+        var _next = _wrapper.querySelector('.swiper-next');
+
+        var _sw = _wrapper.scrollWidth;
+        var _cw = _wrapper.clientWidth;
+
+        _holder.style.marginLeft = '0px';
+
+        function _sa(){
+            var ml = parseInt(_holder.style.marginLeft);
+            var w = _sw + ml;
+            if(ml < 0){
+                _previous.classList.add('active');
+            }else{
+                _previous.classList.remove('active');
+            }
+
+            if(w > _cw){
+                _next.classList.add('active');
+            }else{
+                _next.classList.remove('active');
+            }
+        }
+
+        _sa();
+
+        _previous.addEventListener('click', function(e){
+            var lw = _cw/2;
+            var ml = parseInt(_holder.style.marginLeft);
+            var left = Math.min(ml + lw, 0);
+            _holder.style.marginLeft = left + 'px';
+            _sa();
+        });
+        _next.addEventListener('click', function(e){
+            var lw = _cw/2;
+            var ml = parseInt(_holder.style.marginLeft);
+            var w = ml + _sw;
+            w = Math.max(w-lw, _cw);
+            ml = _sw - w;
+            _holder.style.marginLeft = -ml + 'px';
+            _sa();
+        });
+    }();
+
+
+    //module cho viec mo khoa san pham
+    !function(){
+        var btnlock = document.querySelector('[data-control-type="lockproduct"]');
+        
+        if(btnlock){
+            btnlock.onclick = function(e){
+                var that = this;
+                $ConfirmPopup.message('Khóa sản phẩm này?').active('Khóa', function(e){
+                    $LoadingPopup.show();
+                    $ConfirmPopup.hide();
+                    
+                    $.ajax().create().url('/api/admin/lockproduct').success(function(e){
+                        var result = JSON.parse(this.response);
+                        
+                        if(result.header.code === 0){
+                            
+                            $Toast.makeSuccess(result.header.message);
+                            
+                            window.setTimeout(function(e){
+                                location.reload();
+                            },2000);
+                        }else{
+                            
+                            $LoadingPopup.hide();
+                            $Toast.makeError(result.header.message);
+                        }
+                    }).error(function(e){
+                        $Toast.makeError('Lỗi kết nối');
+                        $LoadingPopup.hide();
+                    }).post('id=' + that.dataset.id);
+                }).inactive('Không', function(e){
+                    
+                    $ConfirmPopup.hide();
+                }).show();
+            }
+        }
+        
+        var btnunlock = document.querySelector('[data-control-type="unlockproduct"]');
+        
+        if(btnunlock){
+            btnunlock.onclick = function(e){
+                var that = this;
+                $ConfirmPopup.message('Mở khóa cho sản phẩm này?').active('Mở khóa', function(e){
+                    $LoadingPopup.show();
+                    $ConfirmPopup.hide();
+                    
+                    $.ajax().create().url('/api/admin/unlockproduct').success(function(e){
+                        var result = JSON.parse(this.response);
+                        
+                        if(result.header.code === 0){
+                            
+                            $Toast.makeSuccess(result.header.message);
+                            
+                            window.setTimeout(function(e){
+                                location.reload();
+                            },2000);
+                        }else{
+                            
+                            $LoadingPopup.hide();
+                            $Toast.makeError(result.header.message);
+                        }
+                    }).error(function(e){
+                        $Toast.makeError('Lỗi kết nối');
+                        $LoadingPopup.hide();
+                    }).post('id=' + that.dataset.id);
+                }).inactive('Không', function(e){
+                    $ConfirmPopup.hide();
+                }).show();
+            }
+        }
+    }();
+    
+    
+    !function(){
+        var btns = document.querySelectorAll('[data-control-type="deleteassessment"]');
+        
+        
+        for(btn of btns){
+            btn.onclick = function(e){
+                var that = this;
+                $ConfirmPopup.message('Xóa đánh giá này?').active('Xóa', function(e){
+                    $LoadingPopup.show();
+                    $ConfirmPopup.hide();
+                    
+                    $.ajax().create().url('/api/admin/deleteassessment').success(function(e){
+                        var result = JSON.parse(this.response);
+                        
+                        if(result.header.code === 0){
+                            
+                            $Toast.makeSuccess(result.header.message);
+                            
+                            window.setTimeout(function(e){
+                                location.reload();
+                            },2000);
+                        }else{
+                            
+                            $LoadingPopup.hide();
+                            $Toast.makeError(result.header.message);
+                        }
+                    }).error(function(e){
+                        $Toast.makeError('Lỗi kết nối');
+                        $LoadingPopup.hide();
+                    }).post('order_id=' + that.dataset.orderId + '&product_id=' + that.dataset.productId);
+                }).inactive('Không', function(e){
+                    $ConfirmPopup.hide();
+                }).show();
+            }
+        }
+    }();
+</script>

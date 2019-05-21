@@ -1,0 +1,159 @@
+<?php
+    $this->Data->Title = 'Quản lý cửa hàng';
+    
+    $shops = $this->Data->shops;
+?>
+<style>
+    table{
+        border-collapse: collapse;
+        width: 100%;
+    }
+    
+    table td{
+        padding: 10px;
+        border: 1px solid #eee;
+    }
+</style>
+    <div id="admin-wrapper" class="clearfix">
+        <div class="left-menu">
+            <div>
+                <a href="/Admin/MainCategory" >Quản lý danh mục chính</a>
+            </div>
+            <div>
+                <a href="/Admin/SubCategory">Quản lý danh mục phụ</a>
+            </div>
+            <div>
+                <a href="/Admin/ShopManage" class="active">Quản lý cửa hàng</a>
+            </div>
+            <div>
+                <a href="/Admin/UserManage"  >Quản lý người dùng</a>
+            </div>
+        </div>
+        <div class="right-content">
+            <div style="padding: 20px;">
+                <form method="get">
+                    <input type="text" name="name"/>
+                    <button type="submit" name="s" value="s" class="btn btn-add">Tìm</button>
+                </form>
+            </div>
+            <?php
+                if(count($shops)){
+                    echo '<table>';
+                    
+                    echo <<<HEADER
+                    <tr>
+                        <th>Tên cửa hàng</th>
+                        <th>Ảnh đại diện</th>
+                        <th>Tổng số đơn hàng</th>
+                        <th>Số đơn bị cửa hàng hủy</th>
+                        <th>Thao tác</th>
+                    </tr>
+HEADER;
+                    
+                    foreach($shops as $shop){
+                        $buttonhtml = '';
+                        
+                        if($shop->isLocked()){
+                            $buttonhtml = '<button type="button" class="btn btn-add" data-control-type="unlock" data-id="'.$shop->id.'">Mở khóa</button>';
+                        }else{
+                            
+                            $buttonhtml = '<button type="button" class="btn btn-edit" data-control-type="lock" data-id="'.$shop->id.'">Khóa</button>';
+                        }
+                        
+                        echo <<<ROW
+                        <tr>
+                            <td>{$shop->name}</td>
+                            <td style="width: 100px"><img src="{$shop->getAvatarPath()}" width="100"/></td>
+                            <td>{$shop->getOrdersTotal()}</td>
+                            <td>{$shop->getShopCancelOrdersTotal()}</td>
+                            <td>{$buttonhtml}</td>
+                        </tr>
+ROW;
+                    }
+                    
+                    echo '</table>';
+                    
+                    
+                    echo '<div>';
+                    
+                    $this->Partial('_pagination');
+                    
+                    echo '</div>';
+                }else{
+                    echo 'Không có cửa hàng nào';
+                }
+            ?>
+        </div>
+    </div>
+<script>
+    !function(){
+        btns = document.querySelectorAll('[data-control-type="lock"]');
+        
+        for(btn of btns){
+            btn.onclick = function(e){
+                var that = this;
+                $ConfirmPopup.message('Khóa cửa hàng này?').active('Khóa', function(e){
+                    $LoadingPopup.show();
+                    $ConfirmPopup.hide();
+                    
+                    $.ajax().create().url('/api/admin/lockshop').success(function(e){
+                        var result = JSON.parse(this.response);
+                        
+                        if(result.header.code === 0){
+                            
+                            $Toast.makeSuccess(result.header.message);
+                            
+                            window.setTimeout(function(e){
+                                location.reload();
+                            },2000);
+                        }else{
+                            
+                            $LoadingPopup.hide();
+                            $Toast.makeError(result.header.message);
+                        }
+                    }).error(function(e){
+                        $Toast.makeError('Lỗi kết nối');
+                        $LoadingPopup.hide();
+                    }).post('id=' + that.dataset.id);
+                }).inactive('Không', function(e){
+                    $ConfirmPopup.hide();
+                }).show();
+            }
+        }
+        
+        
+        btns = document.querySelectorAll('[data-control-type="unlock"]');
+        
+        for(btn of btns){
+            btn.onclick = function(e){
+                var that = this;
+                $ConfirmPopup.message('Mở Khóa cửa hàng này?').active('Mở khóa', function(e){
+                    $LoadingPopup.show();
+                    $ConfirmPopup.hide();
+                    
+                    $.ajax().create().url('/api/admin/unlockshop').success(function(e){
+                        var result = JSON.parse(this.response);
+                        
+                        if(result.header.code === 0){
+                            
+                            $Toast.makeSuccess(result.header.message);
+                            
+                            window.setTimeout(function(e){
+                                location.reload();
+                            },2000);
+                        }else{
+                            
+                            $LoadingPopup.hide();
+                            $Toast.makeError(result.header.message);
+                        }
+                    }).error(function(e){
+                        $Toast.makeError('Lỗi kết nối');
+                        $LoadingPopup.hide();
+                    }).post('id=' + that.dataset.id);
+                }).inactive('Không', function(e){
+                    $ConfirmPopup.hide();
+                }).show();
+            }
+        }
+    }();
+</script>

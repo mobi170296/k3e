@@ -8,8 +8,11 @@
     
     class UserModel extends Model{
         const MALE = 1, FEMALE = 0;
+        const LOCKED = 1, UNLOCKED = 0;
         const ADMIN_ROLE = 1, NORMAL_ROLE = 0;
         public $id, $username, $firstname, $lastname, $password, $email, $phone, $created_time, $locked, $birthday, $money, $role, $gender, $avatar_id, $lastaccess_time;
+        
+        
         public $shop;
         public $orders = [];
         public $assessments = [];
@@ -166,6 +169,20 @@
         
         public function isLocked(){
             return $this->locked == 1;
+        }
+        
+        public function lock(){
+            $this->database->update(DB_TABLE_USER, [
+                'locked' => new DBNumber(self::LOCKED)
+                
+            ], 'id=' . $this->id);
+        }
+        
+        public function unlock(){
+            $this->database->update(DB_TABLE_USER, [
+                'locked' => new DBNumber(self::UNLOCKED)
+                
+            ], 'id=' . $this->id);
         }
         
         public function loadShop(){

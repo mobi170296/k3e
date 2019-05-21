@@ -14,7 +14,8 @@
                         <?php
                             foreach($this->Data->maincategorylist as $maincategory){
                                 echo '<div class="menu l1">';
-                                echo '<a href="/m/' . $maincategory->id . '/' . Text::toSeqASCII($maincategory->name) .'">' . $maincategory->name . '</a>';
+//                                echo '<a href="/m/' . $maincategory->id . '/' . Text::toSeqASCII($maincategory->name) .'">' . $maincategory->name . '</a>';
+                                echo '<a href="/Search/Product?mcids=' . $maincategory->id . '&mcname=' . Text::toSeqASCII($maincategory->name) .'">' . $maincategory->name . '</a>';
                                 echo '<div class="menu l2">';
                                 foreach($maincategory->subcategories as $subcategory){
                                     echo '<a href="/s/' . $subcategory->id . '/' . Text::toSeqASCII($subcategory->name) . '">' . $subcategory->name . '</a>';

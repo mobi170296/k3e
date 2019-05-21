@@ -3,21 +3,21 @@
         <div id="footer-wrapper">
             <div class="clearfix">
                 <div class="fl col">
-                    <div class="text-header">HỖ TRỢ KHÁCH HÀNG</div>
-                    <div class="text-content">Hotline đặt hàng: 1800-1111</div>
+                    <div class="text-header">DEMO</div>
+                    <div class="text-content">Luận văn tốt nghiệp</div>
                 </div>
                 <div class="fl col">
-                    <div class="text-header">HỖ TRỢ KHÁCH HÀNG</div>
-                    <div class="text-content">Hotline đặt hàng: 1800-1111</div>
+                    <div class="text-header">GIẢNG VIÊN HƯỚNG DẪN</div>
+                    <div class="text-content">Ths. Võ Huỳnh Trâm</div>
                 </div>
                 <div class="fl col">
-                    <div class="text-header">HỖ TRỢ KHÁCH HÀNG</div>
-                    <div class="text-content">Hotline đặt hàng: 1800-1111</div>
+                    <div class="text-header">SINH VIÊN BÁO CÁO</div>
+                    <div class="text-content">Trịnh Văn Linh</div>
                 </div>
             </div>
             <div class="col">
-                <div class="text-content"><b>Địa chỉ văn phòng:</b> </div>
-                <div class="text-desc">K3 Nhận đặt hàng trực tuyến và giao hàng tận nơi, chưa hỗ trợ mua và nhận hàng trực tiếp tại văn phòng hoặc trung tâm xử lý đơn hàng</div>
+                <div class="text-content"><b>Khoa Công Nghệ Thông Tin - Trường Đại Học Cần Thơ</b> </div>
+                <div class="text-desc">Đường 3/2, Phường Xuân Khánh, Quận Ninh Kiều, TP. Cần Thơ</div>
             </div>
         </div>
     </div>

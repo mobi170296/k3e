@@ -1,0 +1,167 @@
+<?php
+
+    use Library\Common\Text;
+    $this->Data->Title = 'Quản lý nguời dùng';
+    
+    $users = $this->Data->users;
+    
+?>
+<style>
+    table{
+        border-collapse: collapse;
+        width: 100%;
+    }
+    
+    table td{
+        padding: 10px;
+        border: 1px solid #eee;
+    }
+</style>
+    <div id="admin-wrapper" class="clearfix">
+        <div class="left-menu">
+            <div>
+                <a href="/Admin/MainCategory" >Quản lý danh mục chính</a>
+            </div>
+            <div>
+                <a href="/Admin/SubCategory">Quản lý danh mục phụ</a>
+            </div>
+            <div>
+                <a href="/Admin/ShopManage" >Quản lý cửa hàng</a>
+            </div>
+            <div>
+                <a href="/Admin/UserManage"  class="active">Quản lý người dùng</a>
+            </div>
+        </div>
+        <div class="right-content">
+            <div style="padding: 20px;">
+                <form method="get">
+                    <input type="text" name="phone"/>
+                    <button type="submit" name="s" value="s" class="btn btn-add">Tìm</button>
+                </form>
+            </div>
+            <?php
+                if(count($users)){
+                    echo '<table>';
+                    
+                    echo <<<HEADER
+                    <tr>
+                        <th>Tên</th>
+                        <th>Tên đăng nhập</th>
+                        <th>Ảnh đại diện</th>
+                        <th>Số điện thoại</th>
+                        <th>Email</th>
+                        <th>Thao tác</th>
+                    </tr>
+HEADER;
+                    
+                    foreach($users as $user){
+                        $buttonhtml = '';
+                        
+                        if($user->isLocked()){
+                            $buttonhtml = '<button type="button" class="btn btn-add" data-control-type="unlock" data-id="'.$user->id.'">Mở khóa</button>';
+                        }else{
+                            
+                            $buttonhtml = '<button type="button" class="btn btn-edit" data-control-type="lock" data-id="'.$user->id.'">Khóa</button>';
+                        }
+                        
+                        $lastname = Text::htmlentities($user->lastname);
+                        $firstname = Text::htmlentities($user->firstname);
+                        
+                        echo <<<ROW
+                        <tr>
+                            <td>{$lastname} {$firstname}</td>
+                            <td>{$user->username}</td>
+                            <td style="width: 100px"><img src="{$user->getAvatarPath()}" width="100"/></td>
+                            <td>{$user->phone}</td>
+                            <td>{$user->email}</td>
+                            <td>{$buttonhtml}</td>
+                        </tr>
+ROW;
+                    }
+                    
+                    echo '</table>';
+                    
+                    
+                    echo '<div>';
+                    
+                    $this->Partial('_pagination');
+                    
+                    echo '</div>';
+                }else{
+                    echo 'Không có người dùng nào';
+                }
+            ?>
+        </div>
+    </div>
+<script>
+    !function(){
+        btns = document.querySelectorAll('[data-control-type="lock"]');
+        
+        for(btn of btns){
+            btn.onclick = function(e){
+                var that = this;
+                $ConfirmPopup.message('Khóa người dùng này?').active('Khóa', function(e){
+                    $LoadingPopup.show();
+                    $ConfirmPopup.hide();
+                    
+                    $.ajax().create().url('/api/admin/lockuser').success(function(e){
+                        var result = JSON.parse(this.response);
+                        
+                        if(result.header.code === 0){
+                            
+                            $Toast.makeSuccess(result.header.message);
+                            
+                            window.setTimeout(function(e){
+                                location.reload();
+                            },2000);
+                        }else{
+                            
+                            $LoadingPopup.hide();
+                            $Toast.makeError(result.header.message);
+                        }
+                    }).error(function(e){
+                        $Toast.makeError('Lỗi kết nối');
+                        $LoadingPopup.hide();
+                    }).post('id=' + that.dataset.id);
+                }).inactive('Không', function(e){
+                    $ConfirmPopup.hide();
+                }).show();
+            }
+        }
+        
+        
+        btns = document.querySelectorAll('[data-control-type="unlock"]');
+        
+        for(btn of btns){
+            btn.onclick = function(e){
+                var that = this;
+                $ConfirmPopup.message('Mở Khóa người dùng?').active('Mở khóa', function(e){
+                    $LoadingPopup.show();
+                    $ConfirmPopup.hide();
+                    
+                    $.ajax().create().url('/api/admin/unlockuser').success(function(e){
+                        var result = JSON.parse(this.response);
+                        
+                        if(result.header.code === 0){
+                            
+                            $Toast.makeSuccess(result.header.message);
+                            
+                            window.setTimeout(function(e){
+                                location.reload();
+                            },2000);
+                        }else{
+                            
+                            $LoadingPopup.hide();
+                            $Toast.makeError(result.header.message);
+                        }
+                    }).error(function(e){
+                        $Toast.makeError('Lỗi kết nối');
+                        $LoadingPopup.hide();
+                    }).post('id=' + that.dataset.id);
+                }).inactive('Không', function(e){
+                    $ConfirmPopup.hide();
+                }).show();
+            }
+        }
+    }();
+</script>

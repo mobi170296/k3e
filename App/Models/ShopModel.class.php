@@ -175,7 +175,10 @@
         }
         
         public function lock(){
-            $this->database->update(DB_TABLE_SHOP, ['lock' => new DBNumber(ShopModel::LOCK)], 'id='.(int)$this->id);
+            $this->database->update(DB_TABLE_SHOP, ['locked' => new DBNumber(ShopModel::LOCKED)], 'id='.(int)$this->id);
+        }
+        public function unlock(){
+            $this->database->update(DB_TABLE_SHOP, ['locked' => new DBNumber(ShopModel::UNLOCKED)], 'id='.(int)$this->id);
         }
         
         public function getAvatarPath(){
@@ -280,5 +283,25 @@
             }
             
             return $orders;
+        }
+        
+        public function getOrdersTotal(){
+            $notinarray = [OrderModel::NGUOI_MUA_THANH_TOAN_THAT_BAI, OrderModel::NGUOI_MUA_DANG_THANH_TOAN];
+            
+            $notin = '(' . implode(',', $notinarray) . ')';
+            
+            $rows = $this->database->select('count(*) total')->from(DB_TABLE_ORDER)->where('shop_id=' . $this->id . ' and status not in ' . $notin)->execute();
+            
+            return $rows[0]->total;
+        }
+        
+        public function getShopCancelOrdersTotal(){
+            $notinarray = [OrderModel::KHONG_CON_HANG];
+            
+            $notin = '(' . implode(',', $notinarray) . ')';
+            
+            $rows = $this->database->select('count(*) total')->from(DB_TABLE_ORDER)->where('shop_id=' . $this->id . ' and status in ' . $notin)->execute();
+            
+            return $rows[0]->total;
         }
     }

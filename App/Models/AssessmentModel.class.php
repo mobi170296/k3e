@@ -84,4 +84,8 @@
         public function update(){
             
         }
+        
+        public function delete(){
+            $this->database->delete(DB_TABLE_ASSESSMENT, 'order_id=' . $this->order_id . ' and product_id=' . $this->product_id);
+        }
     }

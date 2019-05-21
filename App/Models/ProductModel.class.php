@@ -291,6 +291,20 @@
             }
         }
         
+        public function lock(){
+            $this->database->update(DB_TABLE_PRODUCT, ['locked' => new DBNumber(self::LOCKED)], 'id=' . $this->id);
+            $this->locked = self::LOCKED;
+        }
+        
+        public function unlock(){
+            $this->database->update(DB_TABLE_PRODUCT, ['locked' => new DBNumber(self::UNLOCKED)], 'id=' . $this->id);
+            $this->locked = self::UNLOCKED;
+        }
+        
+        public function isLocked(){
+            return $this->locked == self::LOCKED;
+        }
+        
         public function setSoldOut(){
             $this->database->update(DB_TABLE_PRODUCT, ['quantity' => new DBNumber(0)], 'id=' . (int)$this->id);
         }
@@ -329,7 +343,7 @@
         }
         
         public function getAvailableQuantity(){
-            return $this->quantity;
+            return $this->locked == self::LOCKED ? 0 : $this->quantity;
         }
         
         public function getSoldQuantity(){

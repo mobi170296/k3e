@@ -5,11 +5,8 @@
 ?>
 
 <div class="filter-product-list-wrapper">
-    <div class="filter-product-list">
-        <div class="product-filter">
-            <div>Filter box</div>
-        </div>
-        <div class="product-list-container">
+    <div class="filter-product-list" style="display: block;">
+        <div class="product-list-container" style="width: auto">
             <div class="product-list-category">
                 <span style="font-weight: 400;">Danh mục:</span> <?php echo $subcategory->maincategory->name; ?> > <?php echo $subcategory->name; ?>
             </div>

@@ -21,7 +21,7 @@
                 }
                 
                 #thong ke san pham ngau nghien
-                $rows = $database->select('id')->from(DB_TABLE_PRODUCT)->where('quantity > 0')->orderby('rand()')->limit(0, 10)->execute();
+                $rows = $database->select('id')->from(DB_TABLE_PRODUCT)->where('quantity > 0 and locked = 0')->orderby('rand()')->limit(0, 10)->execute();
                 
                 $cancareproducts = [];
                 
@@ -33,7 +33,10 @@
                     $product->loadWard();
                     $product->ward->loadDistrict();
                     $product->ward->district->loadProvince();
-                    $cancareproducts[] = $product;
+                    if(!$product->isLocked()){
+                        $cancareproducts[] = $product;
+                    }
+                        
                 }
                 
                 #thong ke san pham ban chay nhat
@@ -50,7 +53,9 @@
                     $product->ward->loadDistrict();
                     $product->ward->district->loadProvince();
                     
-                    $bestsellingproducts[] = $product;
+                    if(!$product->isLocked()){
+                        $bestsellingproducts[] = $product;
+                    }
                 }
                 
                 $this->View->Data->cancareproducts = $cancareproducts;
@@ -67,7 +72,10 @@
                         $productviewslog->product->ward->loadDistrict();
                         $productviewslog->product->ward->district->loadProvince();
                         
-                        $viewedproducts[] = $productviewslog->product;
+                        if(!$productviewslog->product->isLocked()){
+                            
+                            $viewedproducts[] = $productviewslog->product;
+                        }
                     }
                 }
                 

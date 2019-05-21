@@ -8,7 +8,10 @@
     use App\Models\Authenticate;
     use App\Models\UserModel;
     use Core\Controller;
+    use App\Models\ShopModel;
     use Library\Database\DBException;
+    
+    use App\Models\Pagination;
     
     class AdminController extends Controller{
         public function Index(){
@@ -74,5 +77,93 @@
                 return $this->View->RenderTemplate('error_page', 'error');
             }
             return $this->View->RenderTemplate();
+        }
+        
+        public function ShopManage($name = '', $page = 1){
+            try{
+                $database = new Database();
+                
+                $user = (new Authenticate($database))->getUser();
+                
+                if($user->haveRole(UserModel::ADMIN_ROLE)){
+                    $totalrows = $database->select('count(*) total')->from(DB_TABLE_SHOP)->where("name like '%". $database->escape($name) ."%'")->execute();
+                    
+                    if(count($totalrows)){
+                        $total = $totalrows[0]->total;
+                    }else{
+                        $total = 0;
+                    }
+                    
+                    $rows = $database->select('id')->from(DB_TABLE_SHOP)->where("name like '%". $database->escape($name) ."%'")->limit(($page - 1) * 2, 2)->execute();
+                    
+                    $shops = [];
+                    foreach($rows as $row){
+                        $shop = new ShopModel($database);
+                        $shop->id = $row->id;
+                        if($shop->loadData()){
+                            $shop->loadAvatar();
+                            $shops[] = $shop;
+                        }
+                    }
+                    
+                    
+                    $this->View->TemplateData->pagination = new Pagination($page, $total, ['name' => $name], 2);
+                    $this->View->Data->shops = $shops;
+                    
+                    return $this->View->RenderTemplate();
+                }else{
+                    $this->View->Data->ErrorMessage = 'Khong co quyen thuc hien';
+                    return $this->View->RenderTemplate('_error');
+                }
+            } catch (DBException $ex) {
+                $this->View->Data->ErrorMessage = 'DBERR';
+                return $this->View->RenderTemplate('_error');
+            } catch (AuthenticateException $e){
+                return $this->redirectToAction('Login', 'User');
+            }
+        }
+        
+        public function UserManage($phone = '', $page = 1){
+            try{
+                $database = new Database();
+                
+                $user = (new Authenticate($database))->getUser();
+                
+                if($user->haveRole(UserModel::ADMIN_ROLE)){
+                    $totalrows = $database->select('count(*) total')->from(DB_TABLE_USER)->where("phone like '%". $database->escape($phone) ."%'")->execute();
+                    
+                    if(count($totalrows)){
+                        $total = $totalrows[0]->total;
+                    }else{
+                        $total = 0;
+                    }
+                    
+                    $rows = $database->select('id')->from(DB_TABLE_USER)->where("phone like '%". $database->escape($phone) ."%'")->limit(($page - 1) * 2, 2)->execute();
+                    
+                    $users = [];
+                    foreach($rows as $row){
+                        $user = new UserModel($database);
+                        $user->id = $row->id;
+                        if($user->loadData()){
+                            $user->loadAvatar();
+                            $users[] = $user;
+                        }
+                    }
+                    
+                    
+                    $this->View->TemplateData->pagination = new Pagination($page, $total, ['phone' => $phone], 2);
+                    $this->View->Data->users = $users;
+                    
+                    return $this->View->RenderTemplate();
+                }else{
+                    $this->View->Data->ErrorMessage = 'Khong co quyen thuc hien';
+                    return $this->View->RenderTemplate('_error');
+                }
+            } catch (DBException $ex) {
+                $this->View->Data->ErrorMessage = 'DBERR ' . $database->lastquery;
+                return $this->View->RenderTemplate('_error');
+            } catch (AuthenticateException $e){
+                return $this->redirectToAction('Login', 'User');
+            }
         }
     }
